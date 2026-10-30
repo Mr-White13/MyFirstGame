@@ -21,6 +21,11 @@ export interface GameSceneOptions {
   onLevelSolved: () => void;
   /** Called once the board's win effect has had a moment to play: time to show the summary. */
   onCelebrationEnd: () => void;
+  /**
+   * Called exactly once per play-through, the moment the failure sequence
+   * starts (after the losing tap's feedback): stop timing, record the attempt.
+   */
+  onLevelLost: () => void;
   /** Called once, after the last life is lost and its feedback has played: time to show Game Over. */
   onLevelFailed: () => void;
 }
@@ -293,6 +298,7 @@ export class GameScene extends Phaser.Scene {
   private beginFailure(): void {
     this.ended = true;
     this.releasePress();
+    this.options.onLevelLost();
     this.board.playFailure();
     this.endTimer = this.time.delayedCall(FAIL_DIALOG_DELAY, () => {
       this.endTimer = undefined;

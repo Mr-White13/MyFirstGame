@@ -4,7 +4,7 @@ A 2D arrow-clearing puzzle game for mobile, built with **Phaser 3**, **TypeScrip
 
 Tap an arrow to send it flying off the board in the direction it points. It can only leave if nothing is in its way. Clear every arrow to finish the level.
 
-The game has **10 hand-made levels** that grow from a 5-arrow tutorial to dense 9×9 boards. It includes a level select screen, unlockable progression and progress saved in the browser.
+It opens on a **Home** screen with your local **player profile** (nickname, avatar, country) and lifetime **statistics**. Every level is **timed**, with personal bests. The game has **10 hand-made levels** that grow from a 5-arrow tutorial to dense 9×9 boards. It includes a level select screen, unlockable progression and progress saved in the browser.
 
 ## Requirements
 
@@ -97,40 +97,102 @@ Finishing a level awards one spark-shaped star per life left: **3 lives = 3 star
 | Chain reactions | Red arrows that left automatically |
 | Left | Arrows still on the board |
 | Moves | Kept for compatibility: equals "cleared by you". Automatic releases never count as moves. |
+| Time | Active play time of the attempt (see "Timer") |
+
+### Timer
+
+Every level is timed, and the time shows under the level title in the HUD (`00:24`, `12:48`, `01:02:15`).
+
+- **When it counts:** timing starts at 00:00 once the level is on screen and interactive. Loading and the screen transition don't count. Arrow animations and chain reactions do, because they are part of playing.
+- **When it pauses:** while the tab is hidden or the app is in the background, and while the "Leave level?" confirmation is open. It resumes afterwards, and repeated pause and resume events can't double-count.
+- **When it stops:** when the level is completed or the last life is lost. It can't keep running after you leave a level.
+- **Restart and new levels:** restarting resets it to 00:00, and every new level starts a fresh timer.
+- **How it measures:** the time is accumulated from a monotonic clock (`performance.now()`), not by counting interval ticks. The HUD refreshes four times a second, but only rewrites the text when the displayed second changes.
+
+The completion dialog shows the time precisely (`24.6 s`, `1:35.2`) next to your **personal best**, with a **New best time!** chip when you beat it.
 
 ## Screens and progression
 
-1. **Level select** (start screen): all 10 levels with their grid size, a "*n* / 10 levels completed" bar and a Start / Continue / Play again button that opens the next unfinished level.
-   - Completed levels show a green check.
-   - The next level to play has a purple glow.
-   - Locked levels are dimmed with a lock and can't be opened.
-2. **Gameplay**: a compact HUD sits directly above the board: back, the level title and restart, then a strip with your three hearts, a progress meter and arrows left. Restart is disabled until you have made a move or a mistake. The back button returns to level select. If you've made moves on an unfinished level, you're asked to confirm first. Your saved progress is never affected. **Escape** works as back on desktop.
-3. **Level complete**: shows the stars earned, the run statistics, a "New best" chip when the rating improves and which level was just unlocked, with **Next level**, **Restart** and **Levels**. After level 10, a **game-complete** variant congratulates you and offers **Play from level 1**.
+The game opens on **Home**:
+- **Header:** settings (coming soon) and your avatar and nickname, which open the Profile.
+- **Play card:** the next level to play, a big **Play / Continue / Play again** button, your level progress and your total stars.
+- **Menu:** **Levels**, **Profile**, and **Events** and **Settings** (both "coming soon").
+- **Daily activity:** a preview of the login streak, daily challenge and special events. These aren't implemented yet.
 
-A failed level shows **Game Over** instead (see "Lives" above).
+Other screens:
+
+1. **Level select:** all 10 levels with grid size or best stars, your completion count and star total, and a Continue button. Completed levels show a check, the next level glows, and locked levels show a lock and can't be opened.
+2. **Gameplay:** a compact HUD above the board: back, the level title with the timer, restart, then your hearts, a progress meter and arrows left. Restart is disabled until you've made a move or a mistake. If leaving would lose an unfinished attempt, you're asked to confirm first.
+3. **Profile:** your avatar, nickname, country and rank, then a progress summary, statistics and personal records (see below).
+4. **Level complete:** stars and lives left, time and personal best, arrows cleared (with chain clears) and mistakes, plus "New best time!", "Best rating!" and "Level *n* unlocked" chips. Buttons: **Next level**, **Restart** and **Levels**. After level 10 a **game-complete** variant offers **Play from level 1**.
+5. **Game Over:** see "Lives" above.
+
+**Back** works the way you'd expect:
+- Levels and Profile go back to wherever you opened them from.
+- Leaving a level returns to the screen you started it from (Home or Levels).
+- A level you've left never reappears in the back history.
+- **Escape** closes the top dialog or acts as Back on desktop.
+- Navigation is locked during transitions, so double taps can't open two screens.
 
 Only level 1 is unlocked at first. Completing a level unlocks the next one. You can replay any unlocked level, and replaying never locks anything again.
 
-### Saved progress
+## Player profile
 
-Progress is stored in `localStorage` under the key `neon-escape.progress`:
+Everything is local: no account, no backend, nothing leaves the device.
+
+- **Nickname:** "Player" by default, editable on the Profile screen. Up to 16 characters (an emoji counts as one). Whitespace is trimmed and collapsed. Control and invisible formatting characters are removed, and an empty name is refused with a message. Names are always rendered as plain text, so markup can't be injected.
+- **Avatars:** 10 original code-drawn neon avatars: Neon Bot, Cyber Fox, Star Walker, Energy Orb, Grid Runner, Holo Cat, Cyber Wyrm, AI Core, Glitch and Escape Artist. They are inline SVG in `src/profile/avatars.ts`, with no image files or third-party art. The selected avatar appears on Home and Profile.
+- **Country:** optional. "Prefer not to say" is the default, and the game never asks for or infers your location. A searchable list of ISO 3166-1 alpha-2 codes; only the code is stored. Names come from the browser (`Intl.DisplayNames`). Flags use emoji where the platform supports them; on Windows they show as two letters.
+- **Rank:** a cosmetic title derived from total stars: Rookie, Runner (5★), Tracer (12★), Navigator (20★), Grid Master (27★).
+
+### Statistics and records
+
+| Shown as | Meaning |
+| -------- | ------- |
+| Levels (of 10) | Unique levels completed |
+| Stars (of 30) | Sum of best ratings; unranked levels count 0 |
+| Perfect levels | Levels whose best rating is 3 stars |
+| Play time | Active play across all attempts: completed, failed and abandoned. Same rules as the level timer. |
+| Levels cleared | Successful runs, **including replays** (unlike "Levels", which counts each level once) |
+| Failed attempts | Runs that ended by losing all lives |
+| Flawless runs | Successful runs with no mistakes |
+| Arrows cleared | Arrows removed in all attempts, tapped plus chain |
+| Chain reactions | Arrows removed by chain reactions in all attempts |
+| Personal records | Best time and best stars for each level |
+
+- **Statistics start from zero.** They are counted from the day this version first ran ("Runs counted since …"). Older saves never recorded them, so no history is invented.
+- **Best stars and best time are separate records.** Each one only ever improves, and they may come from different runs. For example: 3 stars in 50 s, then 2 stars in 35 s, keeps 3 stars and 35 s.
+- **Only completed runs set a best time.** Failed and restarted attempts count toward play time and arrows, never toward records.
+- **Play time survives closing the app.** It is checkpointed when the app goes to the background, so closing the app mid-level doesn't lose it.
+
+### Saved data
+
+Three separate keys in `localStorage`, each versioned and loaded with the same safety rules (`src/storage/SafeStore.ts`):
+
+| Key | Contents | Version |
+| --- | -------- | ------- |
+| `neon-escape.progress` | Unlocks and per-level records: best moves, stars, mistakes, time and layout revision | 4 |
+| `neon-escape.profile` | Nickname, avatar, country | 1 |
+| `neon-escape.stats` | Lifetime counters and `trackedSince` | 1 |
 
 ```json
-{ "version": 3, "highestUnlocked": 4, "completed": {
-  "1": { "bestMoves": 5, "revision": 1, "bestStars": null, "bestMistakes": null },
-  "2": { "bestMoves": 6, "revision": 2, "bestStars": 2, "bestMistakes": 1 } } }
+{ "version": 4, "highestUnlocked": 4, "completed": {
+  "1": { "bestMoves": 5, "revision": 1, "bestStars": null, "bestMistakes": null, "bestTimeMs": null },
+  "2": { "bestMoves": 6, "revision": 2, "bestStars": 2, "bestMistakes": 1, "bestTimeMs": 35210 } } }
 ```
 
-- Progress is saved the moment the last arrow leaves the board, before any dialog, so leaving early can't lose a completion.
-- Missing or corrupted data starts a new game. Individual bad entries are dropped and valid ones are kept.
-- **Nothing is silently destroyed.** Unreadable data is copied to `neon-escape.progress.backup` before it can be replaced. A save written by a *newer* game version is backed up and never overwritten.
-- **Older saves are migrated.** Version 1 and 2 saves keep every unlock and completion. The next save writes version 3.
-- **Stars and unranked levels.** `bestStars` (1–3) and `bestMistakes` hold the best result under the lives rules. Completions from before lives existed are **unranked** (`null`): still completed and unlocked, but never credited with stars they didn't earn. The next clear gives them their first rating. Replays only ever raise the rating, and missing or malformed star values are read as unranked.
-- **Level revisions.** Each record stores the `revision` of the level layout it was set on. When a level is redesigned (its `revision` goes up), the player keeps the completion and the unlock, but the old best moves, stars and mistakes aren't compared with the new layout. The next clear starts fresh records.
-- Unlocks are repaired to match completions, so if levels are added later, players who finished the old last level get the new one unlocked.
-- If storage is unavailable (private mode, blocked or full), the game still works. Progress just isn't saved.
+- **Saving:** progress and statistics are saved the moment a level is won or lost, before any dialog, so leaving early can't lose a result.
+- **Nothing is silently destroyed:** unreadable data is copied to `<key>.backup` before it can be replaced, and a save written by a *newer* game version is backed up and never overwritten.
+- **Bad data:** missing or corrupted data starts fresh for that key only. Individual bad fields are dropped or reset, and valid ones are kept.
+- **Older progress saves are migrated:** versions 1–3 keep every unlock, completion and star rating, and the next save writes version 4.
+  - **Unranked:** completions from before lives existed stay `bestStars: null` until replayed. They are never credited with stars they didn't earn.
+  - **Not timed:** completions from before the timer existed have `bestTimeMs: null` and show "not timed" until replayed.
+- **Level revisions:** when a level is redesigned (its `revision` goes up), you keep the completion and the unlock, but old bests (moves, stars, mistakes, time) aren't compared with the new layout.
+- **Unlocks are repaired** to match completions, so levels added later unlock for players who finished the old last level.
+- **No storage:** if storage is unavailable (private mode, blocked or full), the game still works, just unsaved.
 
-To reset your progress, run `localStorage.removeItem('neon-escape.progress')` in the DevTools console, or clear the site's data.
+To reset everything, clear the site's data, or run this in the DevTools console:
+`Object.keys(localStorage).filter(k => k.startsWith('neon-escape')).forEach(k => localStorage.removeItem(k))`
 
 ## Levels
 
@@ -180,7 +242,9 @@ count. The only real challenge is **finding an arrow that can escape**, again an
 └── src/
     ├── main.ts            Entry point: creates the parts and hands them to App
     ├── app/
-    │   └── App.ts         Navigation and progression: screens, level loading, saving, transition lock
+    │   ├── App.ts         Navigation, progression and records: screens, level loading, attempts, saving
+    │   ├── AttemptTracker.ts  One attempt's timer and bookkeeping; applyAttempt() updates progress + stats
+    │   └── Navigation.ts  Back-navigation history (Home is the root; gameplay is never a back target)
     ├── createGame.ts      Phaser bootstrap: high-DPI canvas covering the game screen
     ├── style.css          All styling: screens, HUD, level tiles, dialogs (mobile-first, landscape variants)
     │
@@ -193,6 +257,8 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     │   ├── levelValidation.ts Checks arrow shapes, overlaps and solvability
     │   ├── solver.ts          Finds a clearing order (proves solvability)
     │   ├── difficulty.ts      Difficulty metrics and the 0–100 score
+    │   ├── LevelTimer.ts      Active-play timer on a monotonic clock, with named pause reasons
+    │   ├── time.ts            Time formatting (HUD clock, precise results, totals)
     │   └── random.ts          Seeded random numbers (reproducible analysis and generation)
     │
     ├── levels/            Level data only
@@ -202,6 +268,15 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     │
     ├── levelgen/          Offline level generator (developer tool, not in the game bundle)
     │   └── generateLevel.ts   Seeded generation, refinement, layout similarity
+    │
+    ├── profile/           Local player identity and lifetime statistics
+    │   ├── Profile.ts         Nickname rules, avatar/country choice, rank, profile storage
+    │   ├── avatars.ts         10 original inline-SVG avatars
+    │   ├── countries.ts       ISO 3166-1 alpha-2 list, names via Intl, flag emoji, search
+    │   └── Stats.ts           Lifetime counters per attempt, stats storage
+    │
+    ├── storage/
+    │   └── SafeStore.ts       One versioned localStorage record: backups, newer-save protection
     │
     ├── progress/          Progression, independent of rendering and game rules
     │   ├── Progress.ts        Unlock/complete rules (pure functions)
@@ -221,11 +296,15 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     │   └── MoveSequencer.ts Plays one action's animations in order; input lock with cancel tokens
     │
     └── ui/                DOM views, no game rules
-        ├── Screens.ts         Switches between the level select and game screens
+        ├── Screens.ts         Switches between Home, Levels, Game and Profile
+        ├── HomeScreen.ts      Start screen: identity, next level, progress, menu
+        ├── ProfileScreen.ts   Identity, summary, statistics, personal records, nickname editing
+        ├── Pickers.ts         Avatar grid and searchable country list
+        ├── Toast.ts           Short "coming soon" messages
         ├── GameLayout.ts      Sizes the board slot so the HUD and board form one centred group
         ├── LevelSelect.ts     Level tiles and progress summary
-        ├── Hud.ts             In-game hearts, arrows left, back and restart buttons
-        ├── CompleteDialog.ts  Level-complete / game-complete dialog with stars and run statistics
+        ├── Hud.ts             In-game timer, hearts, arrows left, back and restart buttons
+        ├── CompleteDialog.ts  Level-complete / game-complete dialog: stars, time, personal best, statistics
         ├── GameOverDialog.ts  Out-of-lives dialog
         ├── ConfirmDialog.ts   "Leave level?" confirmation
         └── dom.ts             Small DOM helpers (element lookup, overlay fade)
@@ -238,6 +317,8 @@ Tests live next to the code they cover: `*.test.ts` in `core/`, `levels/` and `p
 - **Logic is separate from presentation.** `core/` has no idea Phaser exists. `GameScene` asks `GameState.tryMove(id)` and animates the returned `MoveResult` (`cleared`, `blocked` or `ignored`).
 - **Arrows** are chains of adjacent cells ordered tail → head. When an arrow is released, only the head's line to the edge needs to be clear, because the body follows the head through cells the arrow already owns.
 - **Solvability:** removing an arrow only ever frees cells, so repeatedly removing any clear arrow solves a level whenever a solution exists. `validateLevel()` runs this solver when a level loads and throws if the level is malformed or cannot be solved.
+- **Attempts:** `AttemptTracker` (Phaser-free) owns the timer for the attempt in progress and ends each attempt exactly once, as won, failed or abandoned. `applyAttempt()` turns that into records. Every outcome updates statistics, but only a win touches per-level progress, so a failed or restarted run can never set a personal best.
+- **Timer:** `LevelTimer` banks time from a monotonic clock at every state change. Pauses are named reasons (`hidden`, `confirm`) that each need their own resume. The timer runs only when none are active, which makes repeated events harmless. It is unit-tested with a fake clock.
 - **Rules first, animation second:** `GameState.tryMove` resolves a whole tap synchronously, including lives, red arrows and the full chain reaction. It returns a result listing every removal in order. Visuals can never change the outcome.
 - **Interaction:** `GameScene` turns that result into animation steps, and `MoveSequencer` (Phaser-free and unit-tested) plays them one after another while holding the input lock. Taps during a sequence are dropped before they reach `GameState`, so they can't cost a life. Each exit step hands over when the arrow's tail crosses the grid edge. Win and Game Over start only after the last step. Restart, level change and resize cancel the sequence: its token is invalidated so late callbacks are ignored, and the board is re-synced from `GameState`.
 - **Layout:** the canvas covers the whole game screen, so arrows can fly past the board. The HUD and an empty `#board-slot` element sit on top of it. `GameLayout` sizes the slot to the largest board that fits beside the HUD (true aspect, max 620 px). `GameScene` reads the slot's rectangle and fits the board into it, so CSS layout and canvas drawing always agree. Taps on anything but a button fall through the UI to the canvas.

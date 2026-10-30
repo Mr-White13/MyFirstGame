@@ -1,6 +1,7 @@
+import type { ScreenName } from '../app/Navigation';
 import { prefersReducedMotion, requireElement, TRANSITION_MS } from './dom';
 
-export type ScreenName = 'levels' | 'game';
+export type { ScreenName } from '../app/Navigation';
 
 /**
  * Switches between the full-screen views. Inactive screens stay in the
@@ -9,8 +10,10 @@ export type ScreenName = 'levels' | 'game';
  */
 export class Screens {
   private readonly screens: Record<ScreenName, HTMLElement> = {
+    home: requireElement('screen-home'),
     levels: requireElement('screen-levels'),
     game: requireElement('screen-game'),
+    profile: requireElement('screen-profile'),
   };
   private current: ScreenName | null = null;
 

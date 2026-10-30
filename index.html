@@ -23,6 +23,19 @@
       </symbol>
       <symbol id="icon-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></symbol>
       <symbol id="icon-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" /></symbol>
+      <symbol id="icon-settings" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="3.2" />
+        <path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.9 1.9M16.6 16.6l1.9 1.9M5.5 18.5l1.9-1.9M16.6 7.4l1.9-1.9" />
+      </symbol>
+      <symbol id="icon-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.8" /><path d="M4.5 20c1.2-4 4-5.8 7.5-5.8s6.3 1.8 7.5 5.8" /></symbol>
+      <symbol id="icon-bolt" viewBox="0 0 24 24"><path d="M13 2.5L5 13.5h6l-1 8 8-11h-6z" /></symbol>
+      <symbol id="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" /><path d="M12 7.5V12l3 2" /></symbol>
+      <symbol id="icon-flame" viewBox="0 0 24 24"><path d="M12 21c-4 0-6.5-2.6-6.5-6.2 0-3.4 2.6-5.3 3.6-8.3 2.2 1.6 2.6 3.6 2.4 5 1.1-.7 1.9-2.2 1.8-4.2 3 2 5.2 4.6 5.2 7.6 0 3.5-2.5 6.1-6.5 6.1z" /></symbol>
+      <symbol id="icon-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="4.5" /><circle cx="12" cy="12" r="0.8" /></symbol>
+      <symbol id="icon-edit" viewBox="0 0 24 24"><path d="M4 20h4L19.5 8.5a2.1 2.1 0 0 0-3-3L5 17z" /><path d="M14.5 7.5l3 3" /></symbol>
+      <symbol id="icon-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6" /><path d="M15 15l5 5" /></symbol>
+      <symbol id="icon-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" /><path d="M3.5 12h17M12 3.5c2.4 2.4 3.4 5.2 3.4 8.5s-1 6.1-3.4 8.5c-2.4-2.4-3.4-5.2-3.4-8.5s1-6.1 3.4-8.5z" /></symbol>
+      <symbol id="icon-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" /></symbol>
       <symbol id="icon-heart" viewBox="0 0 24 24">
         <path d="M12 20.5s-7.5-4.6-7.5-10.3A4.2 4.2 0 0 1 12 7.6a4.2 4.2 0 0 1 7.5 2.6c0 5.7-7.5 10.3-7.5 10.3z" />
       </symbol>
@@ -39,8 +52,76 @@
     </div>
 
     <div id="app">
+      <!-- Home: the start screen -->
+      <section class="screen screen--home" id="screen-home" aria-labelledby="home-title">
+        <header class="topbar">
+          <button type="button" class="icon-btn" id="btn-home-settings" aria-label="Settings (coming soon)">
+            <svg class="icon" aria-hidden="true"><use href="#icon-settings" /></svg>
+          </button>
+          <span class="topbar__spacer" aria-hidden="true"></span>
+          <button type="button" class="avatar-chip" id="btn-home-avatar" aria-label="Open profile">
+            <span class="avatar-chip__name" id="home-nickname">Player</span>
+            <span class="avatar avatar--small" id="home-avatar"></span>
+          </button>
+        </header>
+
+        <div class="home__brand">
+          <h1 class="title" id="home-title">NEON ESCAPE</h1>
+          <p class="home__tagline">Find the path. Escape the grid.</p>
+        </div>
+
+        <section class="home__play surface" aria-label="Play">
+          <div class="home__next">
+            <span class="eyebrow" id="home-next-label">Next level</span>
+            <span class="home__next-level">Level <strong id="home-next-level">1</strong></span>
+            <span class="home__next-grid" id="home-next-grid">7×7</span>
+          </div>
+          <button type="button" class="btn btn--primary btn--hero" id="btn-home-play">
+            <svg class="icon" aria-hidden="true"><use href="#icon-next" /></svg>
+            <span id="home-play-label">Play</span>
+          </button>
+          <div class="home__progress">
+            <div class="progress__row">
+              <span class="progress__count"><strong id="home-progress-count">0</strong> / <span id="home-progress-total">10</span> levels</span>
+              <span class="progress__stars"><svg class="star-mini" aria-hidden="true"><use href="#icon-spark" /></svg><strong id="home-stars">0</strong> / <span id="home-stars-total">30</span></span>
+            </div>
+            <div class="meter"><div class="meter__fill" id="home-progress-fill"></div></div>
+          </div>
+        </section>
+
+        <nav class="home__nav" aria-label="Main menu">
+          <button type="button" class="nav-tile" id="btn-home-levels">
+            <svg class="icon" aria-hidden="true"><use href="#icon-grid" /></svg><span>Levels</span>
+          </button>
+          <button type="button" class="nav-tile" id="btn-home-profile">
+            <svg class="icon" aria-hidden="true"><use href="#icon-user" /></svg><span>Profile</span>
+          </button>
+          <button type="button" class="nav-tile nav-tile--soon" id="btn-home-events" aria-label="Events (coming soon)">
+            <svg class="icon" aria-hidden="true"><use href="#icon-bolt" /></svg><span>Events</span><em class="soon">Soon</em>
+          </button>
+          <button type="button" class="nav-tile nav-tile--soon" id="btn-home-settings-tile" aria-label="Settings (coming soon)">
+            <svg class="icon" aria-hidden="true"><use href="#icon-settings" /></svg><span>Settings</span><em class="soon">Soon</em>
+          </button>
+        </nav>
+
+        <section class="home__daily" aria-label="Daily activity (coming soon)">
+          <div class="home__daily-head">
+            <span class="eyebrow">Daily activity</span>
+            <em class="soon">Coming soon</em>
+          </div>
+          <ul class="daily-list">
+            <li><svg class="icon" aria-hidden="true"><use href="#icon-flame" /></svg><span>Login streak</span></li>
+            <li><svg class="icon" aria-hidden="true"><use href="#icon-target" /></svg><span>Daily challenge</span></li>
+            <li><svg class="icon" aria-hidden="true"><use href="#icon-bolt" /></svg><span>Special events</span></li>
+          </ul>
+        </section>
+      </section>
+
       <!-- Screen 1: level selection -->
       <section class="screen screen--levels" id="screen-levels" aria-labelledby="levels-title">
+        <button type="button" class="icon-btn levels__back" id="btn-levels-back" aria-label="Back">
+          <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
+        </button>
         <header class="levels__header">
           <p class="eyebrow">Arrow puzzle</p>
           <h1 class="title" id="levels-title">NEON ESCAPE</h1>
@@ -69,8 +150,10 @@
                 <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
               </button>
               <div class="hud__heading">
-                <span class="hud__brand">NEON ESCAPE</span>
                 <h1 class="hud__level">Level <span id="hud-level">1</span></h1>
+                <span class="hud__timer" role="timer" aria-label="Level time">
+                  <svg class="icon" aria-hidden="true"><use href="#icon-clock" /></svg><span id="hud-time">00:00</span>
+                </span>
               </div>
               <button type="button" class="icon-btn icon-btn--restart" id="btn-restart" aria-label="Restart level">
                 <svg class="icon" aria-hidden="true"><use href="#icon-restart" /></svg>
@@ -93,6 +176,67 @@
         </div>
       </section>
 
+      <!-- Profile -->
+      <section class="screen screen--profile" id="screen-profile" aria-labelledby="profile-title">
+        <header class="topbar">
+          <button type="button" class="icon-btn" id="btn-profile-back" aria-label="Back">
+            <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
+          </button>
+          <h1 class="topbar__title" id="profile-title">Profile</h1>
+          <span class="topbar__spacer" aria-hidden="true"></span>
+        </header>
+
+        <div class="profile__scroll">
+          <section class="profile__identity surface" aria-label="Player">
+            <button type="button" class="avatar avatar--large avatar--button" id="profile-avatar" aria-label="Change avatar"></button>
+            <div class="profile__who">
+              <div class="profile__name-row" id="profile-name-view">
+                <span class="profile__name" id="profile-nickname">Player</span>
+                <button type="button" class="icon-btn icon-btn--small" id="btn-edit-name" aria-label="Edit nickname">
+                  <svg class="icon" aria-hidden="true"><use href="#icon-edit" /></svg>
+                </button>
+              </div>
+              <form class="profile__name-form" id="profile-name-form" hidden>
+                <label class="visually-hidden" for="profile-name-input">Nickname</label>
+                <input id="profile-name-input" class="text-input" type="text" maxlength="32" autocomplete="off" spellcheck="false" />
+                <button type="submit" class="btn btn--primary btn--small">Save</button>
+                <button type="button" class="btn btn--ghost btn--small" id="btn-name-cancel">Cancel</button>
+                <p class="field-error" id="profile-name-error" role="alert"></p>
+              </form>
+              <button type="button" class="profile__country" id="btn-country">
+                <span id="profile-country-flag" aria-hidden="true"></span>
+                <span id="profile-country-name">Add country</span>
+              </button>
+              <span class="chip chip--rank" id="profile-rank">Rookie</span>
+            </div>
+          </section>
+
+          <section class="profile__summary" aria-label="Progress">
+            <div class="summary-tile"><strong id="profile-levels">0</strong><span>of <span id="profile-levels-total">10</span> levels</span></div>
+            <div class="summary-tile"><strong id="profile-stars">0</strong><span>of <span id="profile-stars-total">30</span> stars</span></div>
+            <div class="summary-tile"><strong id="profile-perfect">0</strong><span>perfect levels</span></div>
+          </section>
+
+          <section class="profile__card surface" aria-labelledby="profile-stats-title">
+            <h2 class="card-heading" id="profile-stats-title">Statistics</h2>
+            <dl class="stat-grid">
+              <div><dt>Play time</dt><dd id="stat-time">0 s</dd></div>
+              <div><dt>Levels cleared</dt><dd id="stat-clears">0</dd></div>
+              <div><dt>Failed attempts</dt><dd id="stat-failed">0</dd></div>
+              <div><dt>Flawless runs</dt><dd id="stat-flawless">0</dd></div>
+              <div><dt>Arrows cleared</dt><dd id="stat-arrows">0</dd></div>
+              <div><dt>Chain reactions</dt><dd id="stat-chains">0</dd></div>
+            </dl>
+            <p class="card-note" id="profile-tracked-since"></p>
+          </section>
+
+          <section class="profile__card surface" aria-labelledby="profile-records-title">
+            <h2 class="card-heading" id="profile-records-title">Personal records</h2>
+            <ol class="records" id="profile-records"></ol>
+          </section>
+        </div>
+      </section>
+
       <!-- Screen 3: level complete / game complete -->
       <div class="overlay" id="complete-dialog" role="dialog" aria-modal="true" aria-labelledby="complete-title" hidden>
         <div class="card card--success">
@@ -106,14 +250,17 @@
             <svg class="star" aria-hidden="true"><use href="#icon-spark" /></svg>
             <svg class="star" aria-hidden="true"><use href="#icon-spark" /></svg>
           </div>
+          <p class="stars__caption" id="complete-lives"></p>
           <p class="card__detail" id="complete-detail"></p>
-          <dl class="run-stats">
-            <div><dt>Cleared by you</dt><dd id="complete-direct">0</dd></div>
-            <div><dt>Chain reactions</dt><dd id="complete-auto">0</dd></div>
+          <dl class="run-stats run-stats--two">
+            <div class="run-stats__time"><dt>Time</dt><dd id="complete-time">0.0 s</dd></div>
+            <div><dt>Personal best</dt><dd id="complete-best-time">–</dd></div>
+            <div><dt>Arrows cleared</dt><dd><span id="complete-arrows">0</span><small id="complete-chain"></small></dd></div>
             <div><dt>Mistakes</dt><dd id="complete-mistakes">0</dd></div>
           </dl>
           <div class="chips">
-            <p class="chip chip--best" id="complete-best" hidden>New best</p>
+            <p class="chip chip--time" id="complete-new-time" hidden>New best time!</p>
+            <p class="chip chip--best" id="complete-best" hidden>Best rating!</p>
             <p class="chip" id="complete-unlocked" hidden></p>
           </div>
           <div class="card__actions">
@@ -164,6 +311,40 @@
           </div>
         </div>
       </div>
+
+      <!-- Avatar picker -->
+      <div class="overlay" id="avatar-dialog" role="dialog" aria-modal="true" aria-labelledby="avatar-title" hidden>
+        <div class="card card--picker">
+          <header class="picker__head">
+            <h2 class="card__title card__title--small" id="avatar-title">Choose avatar</h2>
+            <button type="button" class="icon-btn icon-btn--small" id="btn-avatar-close" aria-label="Close">
+              <svg class="icon" aria-hidden="true"><use href="#icon-close" /></svg>
+            </button>
+          </header>
+          <div class="avatar-grid" id="avatar-grid" role="listbox" aria-label="Avatars"></div>
+        </div>
+      </div>
+
+      <!-- Country picker -->
+      <div class="overlay" id="country-dialog" role="dialog" aria-modal="true" aria-labelledby="country-title" hidden>
+        <div class="card card--picker card--tall">
+          <header class="picker__head">
+            <h2 class="card__title card__title--small" id="country-title">Country</h2>
+            <button type="button" class="icon-btn icon-btn--small" id="btn-country-close" aria-label="Close">
+              <svg class="icon" aria-hidden="true"><use href="#icon-close" /></svg>
+            </button>
+          </header>
+          <p class="card-note">Optional and only shown on your profile. Nothing leaves this device.</p>
+          <label class="search">
+            <svg class="icon" aria-hidden="true"><use href="#icon-search" /></svg>
+            <span class="visually-hidden">Search countries</span>
+            <input id="country-search" class="text-input" type="search" placeholder="Search" autocomplete="off" />
+          </label>
+          <ul class="country-list" id="country-list" role="listbox" aria-label="Countries"></ul>
+        </div>
+      </div>
+
+      <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
       <!-- Leave-level confirmation -->
       <div class="overlay" id="confirm-dialog" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-text" hidden>

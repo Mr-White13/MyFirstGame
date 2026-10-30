@@ -28,9 +28,9 @@ function completeUpTo(n: number, moves = 5): Progress {
   return progress;
 }
 
-/** A run with the given move count; stars and mistakes default to a flawless clear. */
-function run(moves: number, stars = 3, mistakes = 0) {
-  return { moves, stars, mistakes };
+/** A run with the given move count; stars, mistakes and time default to a flawless 30-second clear. */
+function run(moves: number, stars = 3, mistakes = 0, timeMs = 30_000) {
+  return { moves, stars, mistakes, timeMs };
 }
 
 class MemoryStore implements KeyValueStore {
@@ -128,7 +128,7 @@ describe('save data', () => {
         99: { bestMoves: 4 },
       },
     });
-    expect(parseProgress(raw, LEVELS)).toEqual({ highestUnlocked: 2, completed: { 1: { bestMoves: 5, revision: 1, bestStars: null, bestMistakes: null } } });
+    expect(parseProgress(raw, LEVELS)).toEqual({ highestUnlocked: 2, completed: { 1: { bestMoves: 5, revision: 1, bestStars: null, bestMistakes: null, bestTimeMs: null } } });
   });
 
   it('clamps an out-of-range unlock to the available levels', () => {
@@ -191,9 +191,9 @@ describe('save migration and protection', () => {
     expect(status).toBe('migrated');
     expect(progress.highestUnlocked).toBe(4);
     expect(progress.completed).toEqual({
-      1: { bestMoves: 5, revision: 1, bestStars: null, bestMistakes: null },
-      2: { bestMoves: 7, revision: 1, bestStars: null, bestMistakes: null },
-      3: { bestMoves: 9, revision: 1, bestStars: null, bestMistakes: null },
+      1: { bestMoves: 5, revision: 1, bestStars: null, bestMistakes: null, bestTimeMs: null },
+      2: { bestMoves: 7, revision: 1, bestStars: null, bestMistakes: null, bestTimeMs: null },
+      3: { bestMoves: 9, revision: 1, bestStars: null, bestMistakes: null, bestTimeMs: null },
     });
   });
 
@@ -208,12 +208,12 @@ describe('save migration and protection', () => {
   it('keeps a completion from an older layout but starts a fresh best for the new one', () => {
     const old = readProgress(v1, LEVELS).progress;
     const replayed = recordCompletion(old, 2, run(12), LEVELS, 2);
-    expect(replayed.progress.completed[2]).toEqual({ bestMoves: 12, revision: 2, bestStars: 3, bestMistakes: 0 });
+    expect(replayed.progress.completed[2]).toEqual({ bestMoves: 12, revision: 2, bestStars: 3, bestMistakes: 0, bestTimeMs: 30_000 });
     expect(replayed.firstClear).toBe(false);
     expect(replayed.progress.highestUnlocked).toBe(4);
     // Same layout again: the best only improves.
     const again = recordCompletion(replayed.progress, 2, run(14), LEVELS, 2);
-    expect(again.progress.completed[2]).toEqual({ bestMoves: 12, revision: 2, bestStars: 3, bestMistakes: 0 });
+    expect(again.progress.completed[2]).toEqual({ bestMoves: 12, revision: 2, bestStars: 3, bestMistakes: 0, bestTimeMs: 30_000 });
   });
 
   it('backs up corrupted data before it can be replaced', () => {
@@ -318,7 +318,7 @@ describe('star ratings', () => {
       },
     });
     const { progress, status } = readProgress(raw, LEVELS);
-    expect(status).toBe('current');
+    expect(status).toBe('migrated'); // version 3 is an older format now
     expect(progress.completed[1]).toMatchObject({ bestStars: 3, bestMistakes: 0 });
     expect(progress.completed[2].bestStars).toBeNull();
     expect(progress.completed[3].bestStars).toBeNull();
@@ -332,5 +332,57 @@ describe('star ratings', () => {
     const progress = recordCompletion(createProgress(), 1, run(5, 2, 1), LEVELS).progress;
     new ProgressStorage(LEVELS, store).save(progress);
     expect(new ProgressStorage(LEVELS, store).load()).toEqual(progress);
+  });
+});
+
+describe('best times (save version 4)', () => {
+  it('migrates version 3 saves: stars and unlocks kept, times not yet recorded', () => {
+    const v3 = JSON.stringify({
+      version: 3,
+      highestUnlocked: 4,
+      completed: {
+        1: { bestMoves: 5, revision: 1, bestStars: 3, bestMistakes: 0 },
+        2: { bestMoves: 6, revision: 2, bestStars: null, bestMistakes: null },
+        3: { bestMoves: 8, revision: 2, bestStars: 2, bestMistakes: 1 },
+      },
+    });
+    const { progress, status } = readProgress(v3, LEVELS);
+    expect(status).toBe('migrated');
+    expect(progress.highestUnlocked).toBe(4);
+    expect(progress.completed[1]).toMatchObject({ bestStars: 3, bestTimeMs: null });
+    expect(progress.completed[2]).toMatchObject({ bestStars: null, bestTimeMs: null });
+    expect(progress.completed[3]).toMatchObject({ bestStars: 2, bestMistakes: 1, bestTimeMs: null });
+  });
+
+  it('gives a migrated completion its first time on the next clear', () => {
+    const v3 = JSON.stringify({ version: 3, highestUnlocked: 2, completed: { 1: { bestMoves: 5, revision: 1, bestStars: 3, bestMistakes: 0 } } });
+    const replay = recordCompletion(parseProgress(v3, LEVELS), 1, run(5, 2, 1, 41_000), LEVELS);
+    expect(replay.progress.completed[1]).toMatchObject({ bestStars: 3, bestTimeMs: 41_000 });
+    expect(replay).toMatchObject({ newBestTime: true, newBestStars: false, previousBestTimeMs: null });
+  });
+
+  it('treats malformed times as not recorded and round-trips valid ones', () => {
+    const raw = JSON.stringify({
+      version: 4,
+      highestUnlocked: 3,
+      completed: {
+        1: { bestMoves: 5, revision: 1, bestStars: 3, bestMistakes: 0, bestTimeMs: 'fast' },
+        2: { bestMoves: 5, revision: 1, bestStars: 3, bestMistakes: 0, bestTimeMs: -5 },
+        3: { bestMoves: 5, revision: 1, bestStars: 3, bestMistakes: 0, bestTimeMs: 12_345.6 },
+      },
+    });
+    const { progress, status } = readProgress(raw, LEVELS);
+    expect(status).toBe('current');
+    expect(progress.completed[1].bestTimeMs).toBeNull();
+    expect(progress.completed[2].bestTimeMs).toBeNull();
+    expect(progress.completed[3].bestTimeMs).toBe(12_345.6);
+    expect(parseProgress(serializeProgress(progress), LEVELS)).toEqual(progress);
+  });
+
+  it('starts fresh times when a level is redesigned', () => {
+    const timed = recordCompletion(createProgress(), 1, run(5, 3, 0, 20_000), LEVELS, 1).progress;
+    const redesigned = recordCompletion(timed, 1, run(7, 3, 0, 45_000), LEVELS, 2);
+    expect(redesigned.progress.completed[1].bestTimeMs).toBe(45_000);
+    expect(redesigned.previousBestTimeMs).toBeNull();
   });
 });

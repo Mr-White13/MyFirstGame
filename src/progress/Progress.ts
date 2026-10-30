@@ -23,6 +23,12 @@ export interface LevelRecord {
   readonly bestStars: number | null;
   /** Fewest mistakes in a completed run, or null if unranked. */
   readonly bestMistakes: number | null;
+  /**
+   * Fastest completion in milliseconds of active play, or null if no timed
+   * completion exists yet (completions saved before the timer existed).
+   * Independent of bestStars: the two bests may come from different runs.
+   */
+  readonly bestTimeMs: number | null;
 }
 
 /** What one successful run achieved. */
@@ -31,6 +37,8 @@ export interface CompletionStats {
   /** 1..3: lives left at the end. */
   readonly stars: number;
   readonly mistakes: number;
+  /** Active play time of this run in milliseconds. */
+  readonly timeMs: number;
 }
 
 export interface Progress {
@@ -50,6 +58,12 @@ export interface CompletionResult {
   readonly newBestStars: boolean;
   /** The best rating after this run. */
   readonly bestStars: number;
+  /** True if this run set a faster time than before (including a first timed clear). */
+  readonly newBestTime: boolean;
+  /** Fastest time after this run. */
+  readonly bestTimeMs: number;
+  /** Fastest time before this run on the same layout, or null if there was none. */
+  readonly previousBestTimeMs: number | null;
 }
 
 export function createProgress(): Progress {
@@ -68,6 +82,13 @@ export function completedCount(progress: Progress, levelCount: number): number {
   return Object.keys(progress.completed)
     .map(Number)
     .filter((id) => id >= 1 && id <= levelCount).length;
+}
+
+/** Levels whose best rating is the full three stars. */
+export function perfectLevels(progress: Progress, levelCount: number): number {
+  let count = 0;
+  for (let id = 1; id <= levelCount; id++) if (progress.completed[id]?.bestStars === MAX_STARS) count++;
+  return count;
 }
 
 /** Sum of best ratings over the available levels (unranked levels count 0). */
@@ -90,8 +111,8 @@ export function nextLevelToPlay(progress: Progress, levelCount: number): number 
 
 /**
  * Records a finished level. Progress only ever grows: replaying an earlier
- * level never locks anything, and best results (stars, mistakes, moves) only
- * improve. Results from an older layout revision are not compared with the
+ * level never locks anything, and best results (stars, mistakes, moves, time)
+ * only improve, each on its own. Results from an older layout revision are not compared with the
  * current one: the first clear on the new layout starts fresh records.
  */
 export function recordCompletion(
@@ -110,16 +131,22 @@ export function recordCompletion(
   const bestStars = oldStars === null ? stars : Math.max(oldStars, stars);
   const oldMistakes = comparable ? previous.bestMistakes : null;
   const bestMistakes = oldMistakes === null ? run.mistakes : Math.min(oldMistakes, run.mistakes);
+  const oldTime = comparable ? previous.bestTimeMs : null;
+  const timeMs = Math.max(0, run.timeMs);
+  const bestTimeMs = oldTime === null ? timeMs : Math.min(oldTime, timeMs);
 
   const highestUnlocked = Math.max(progress.highestUnlocked, Math.min(levelId + 1, levelCount));
   return {
     progress: {
       highestUnlocked,
-      completed: { ...progress.completed, [levelId]: { bestMoves, revision, bestStars, bestMistakes } },
+      completed: { ...progress.completed, [levelId]: { bestMoves, revision, bestStars, bestMistakes, bestTimeMs } },
     },
     firstClear: previous === undefined,
     unlocked: highestUnlocked > progress.highestUnlocked ? highestUnlocked : null,
     newBestStars: oldStars === null || stars > oldStars,
     bestStars,
+    newBestTime: oldTime === null || timeMs < oldTime,
+    bestTimeMs,
+    previousBestTimeMs: oldTime,
   };
 }
