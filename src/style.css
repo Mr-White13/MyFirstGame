@@ -1,0 +1,305 @@
+:root {
+  --bg: #101522;
+  --surface: #171f30;
+  --cyan: #27ddf5;
+  --purple: #a855f7;
+  --orange: #ff9f43;
+  --green: #48f5a5;
+  --red: #ff526b;
+  --text: #f4f7fc;
+  --text-muted: #9ba8bc;
+
+  --gutter: 16px;
+  --radius: 14px;
+  --font: 'Segoe UI', Roboto, system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden; /* the game is a fixed single screen: no page scroll */
+}
+
+body {
+  background:
+    radial-gradient(120% 60% at 50% 0%, rgba(39, 221, 245, 0.07), transparent 60%),
+    radial-gradient(90% 50% at 50% 100%, rgba(168, 85, 247, 0.07), transparent 60%),
+    var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  overscroll-behavior: none;
+}
+
+#app {
+  /* dvh tracks mobile browser chrome; vh is the fallback. */
+  height: 100vh;
+  height: 100dvh;
+  max-width: 520px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  padding:
+    max(env(safe-area-inset-top), 12px) calc(var(--gutter) + env(safe-area-inset-right))
+    max(env(safe-area-inset-bottom), 16px) calc(var(--gutter) + env(safe-area-inset-left));
+  gap: 12px;
+}
+
+/* ---------- HUD ---------- */
+
+.hud {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding-top: 8px;
+}
+
+.hud__title {
+  margin: 0;
+  font-size: clamp(1.6rem, 8vw, 2.25rem);
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  /* letter-spacing adds trailing space; pull it back so the title stays centred */
+  margin-right: -0.16em;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 10px rgba(39, 221, 245, 0.25));
+}
+
+.hud__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  background: var(--surface);
+  border: 1px solid rgba(155, 168, 188, 0.12);
+  border-radius: var(--radius);
+}
+
+.stat__label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.stat__value {
+  font-size: 1.35rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.stat__value--pulse {
+  animation: pulse 260ms ease-out;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    color: var(--text);
+  }
+  40% {
+    transform: scale(1.25);
+    color: var(--green);
+  }
+  100% {
+    transform: scale(1);
+    color: var(--text);
+  }
+}
+
+/* ---------- Board ---------- */
+
+.board {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0; /* allow the flex item to shrink below the canvas size */
+  touch-action: none; /* no scroll / zoom gestures on the board */
+}
+
+/* Absolutely positioned so the canvas never feeds back into the container size. */
+.board canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+/* ---------- Buttons ---------- */
+
+.controls {
+  display: flex;
+  justify-content: center;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px; /* comfortable touch target */
+  min-width: 160px;
+  padding: 0 24px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    transform 120ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+
+.btn--outline {
+  color: var(--cyan);
+  background: rgba(39, 221, 245, 0.06);
+  border: 1.5px solid rgba(39, 221, 245, 0.55);
+}
+
+.btn--outline:hover {
+  background: rgba(39, 221, 245, 0.12);
+  box-shadow: 0 0 16px rgba(39, 221, 245, 0.2);
+}
+
+.btn--solid {
+  color: var(--bg);
+  background: var(--green);
+  border: none;
+  box-shadow: 0 0 18px rgba(72, 245, 165, 0.35);
+}
+
+.btn--solid:hover {
+  box-shadow: 0 0 24px rgba(72, 245, 165, 0.5);
+}
+
+.btn__icon {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+/* ---------- Win overlay ---------- */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--gutter);
+  background: rgba(16, 21, 34, 0.72);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
+.overlay[hidden] {
+  display: none;
+}
+
+.overlay--visible {
+  opacity: 1;
+}
+
+.overlay__card {
+  width: min(100%, 340px);
+  padding: 28px 24px 24px;
+  text-align: center;
+  background: var(--surface);
+  border: 1.5px solid rgba(72, 245, 165, 0.45);
+  border-radius: 22px;
+  box-shadow: 0 0 32px rgba(72, 245, 165, 0.15);
+  transform: translateY(12px) scale(0.96);
+  transition: transform 260ms cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+.overlay--visible .overlay__card {
+  transform: none;
+}
+
+.overlay__eyebrow {
+  margin: 0 0 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.overlay__title {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+.overlay__moves {
+  margin: 18px 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.overlay__moves-value {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.overlay__moves-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stat__value--pulse {
+    animation: none;
+  }
+  .overlay,
+  .overlay__card {
+    transition: none;
+  }
+}
