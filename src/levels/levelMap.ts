@@ -1,0 +1,91 @@
+import { arrow, DIRECTION_VECTORS } from '../core/Arrow';
+import type { ArrowData, Direction, LevelData } from '../core/types';
+
+const HEAD_MARKS: Readonly<Record<string, Direction>> = { '^': 'up', v: 'down', '<': 'left', '>': 'right' };
+const TOKEN = /^([a-zA-Z])([\^v<>])?$/;
+
+/**
+ * Builds a level from a readable text map, so each level file shows the
+ * board as it will appear in the game.
+ *
+ * - One string per row, cells separated by whitespace.
+ * - `.` is an empty cell.
+ * - A letter is a body cell of the arrow with that letter (case-sensitive).
+ * - A letter followed by `^ v < >` marks that arrow's head and direction.
+ *
+ * ```
+ * levelFromMap(1, [
+ *   '.  a  a  a>',
+ *   '.  .  .  b^',
+ *   '.  .  .  b ',
+ * ]);
+ * ```
+ *
+ * The body order (tail → head) is recovered by walking back from the head,
+ * so every arrow must be a simple, unbranched chain. The result is a plain
+ * `LevelData`; validity and solvability are still checked by `validateLevel`.
+ */
+export function levelFromMap(id: number, map: readonly string[]): LevelData {
+  const grid = map.map((row) => row.trim().split(/\s+/));
+  const rows = grid.length;
+  const cols = grid[0]?.length ?? 0;
+  if (rows === 0 || cols === 0) throw new Error(`Level ${id}: map is empty`);
+
+  const bodies = new Map<string, { row: number; col: number }[]>();
+  const heads = new Map<string, { row: number; col: number; direction: Direction }>();
+
+  grid.forEach((cells, row) => {
+    if (cells.length !== cols) throw new Error(`Level ${id}: row ${row} has ${cells.length} cells, expected ${cols}`);
+    cells.forEach((token, col) => {
+      if (token === '.') return;
+      const match = TOKEN.exec(token);
+      if (!match) throw new Error(`Level ${id}: invalid token "${token}" at ${row},${col}`);
+      const [, letter, mark] = match;
+      if (mark) {
+        if (heads.has(letter)) throw new Error(`Level ${id}: arrow "${letter}" has two heads`);
+        heads.set(letter, { row, col, direction: HEAD_MARKS[mark] });
+      }
+      const list = bodies.get(letter) ?? [];
+      list.push({ row, col });
+      bodies.set(letter, list);
+    });
+  });
+
+  const arrows: ArrowData[] = [];
+  for (const [letter, cells] of bodies) {
+    const head = heads.get(letter);
+    if (!head) throw new Error(`Level ${id}: arrow "${letter}" has no head mark`);
+    arrows.push(traceArrow(id, letter, head, cells));
+  }
+  // Stable order (by letter) keeps ids and the intro animation predictable.
+  arrows.sort((a, b) => (a.id < b.id ? -1 : 1));
+  return { id, rows, cols, arrows };
+}
+
+function traceArrow(
+  levelId: number,
+  letter: string,
+  head: { row: number; col: number; direction: Direction },
+  cells: readonly { row: number; col: number }[],
+): ArrowData {
+  const remaining = new Set(cells.map((c) => `${c.row},${c.col}`));
+  const path: [number, number][] = [[head.row, head.col]];
+  remaining.delete(`${head.row},${head.col}`);
+
+  // Walk from the head towards the tail; each step must have exactly one way on.
+  let current = { row: head.row, col: head.col };
+  while (remaining.size > 0) {
+    const next = Object.values(DIRECTION_VECTORS)
+      .map((v) => ({ row: current.row + v.dRow, col: current.col + v.dCol }))
+      .filter((c) => remaining.has(`${c.row},${c.col}`));
+    if (next.length !== 1) {
+      throw new Error(
+        `Level ${levelId}: arrow "${letter}" is ${next.length === 0 ? 'disconnected' : 'branching'} near ${current.row},${current.col}`,
+      );
+    }
+    current = next[0];
+    remaining.delete(`${current.row},${current.col}`);
+    path.push([current.row, current.col]);
+  }
+  return arrow(letter, head.direction, ...path.reverse());
+}

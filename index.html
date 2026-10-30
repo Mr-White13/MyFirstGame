@@ -12,57 +12,122 @@
     <link rel="icon" href="data:," />
   </head>
   <body>
+    <!-- Shared icons, referenced with <use href="#icon-..."> -->
+    <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+      <symbol id="icon-restart" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.34-5.66" /><path d="M4 4v5h5" /></symbol>
+      <symbol id="icon-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" /></symbol>
+      <symbol id="icon-next" viewBox="0 0 24 24"><path d="M5 12h13" /><path d="M13 6l6 6-6 6" /></symbol>
+      <symbol id="icon-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1.5" /><rect x="14" y="4" width="6" height="6" rx="1.5" />
+        <rect x="4" y="14" width="6" height="6" rx="1.5" /><rect x="14" y="14" width="6" height="6" rx="1.5" />
+      </symbol>
+      <symbol id="icon-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></symbol>
+      <symbol id="icon-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" /></symbol>
+      <symbol id="icon-star" viewBox="0 0 24 24">
+        <path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z" />
+      </symbol>
+    </svg>
+
     <div id="app">
-      <header class="hud">
-        <h1 class="hud__title">NEON ESCAPE</h1>
-        <dl class="hud__stats">
-          <div class="stat">
-            <dt class="stat__label">Level</dt>
-            <dd class="stat__value" id="hud-level">1</dd>
+      <!-- Screen 1: level selection -->
+      <section class="screen screen--levels" id="screen-levels" aria-labelledby="levels-title">
+        <header class="levels__header">
+          <h1 class="title" id="levels-title">NEON ESCAPE</h1>
+          <p class="levels__subtitle">Clear every arrow from the grid</p>
+          <div class="progress" aria-live="polite">
+            <div class="progress__text"><strong id="progress-count">0</strong> / <span id="progress-total">10</span> levels completed</div>
+            <div class="progress__bar"><div class="progress__fill" id="progress-fill"></div></div>
           </div>
-          <div class="stat stat--primary">
-            <dt class="stat__label">Moves</dt>
-            <dd class="stat__value" id="hud-moves" aria-live="polite">0</dd>
-          </div>
-          <div class="stat">
-            <dt class="stat__label">Left</dt>
-            <dd class="stat__value" id="hud-remaining">0</dd>
-          </div>
-        </dl>
-      </header>
+        </header>
+        <ol class="level-grid" id="level-grid" aria-label="Levels"></ol>
+        <footer class="levels__footer">
+          <button type="button" class="btn btn--primary" id="btn-continue">Play</button>
+        </footer>
+      </section>
 
-      <!-- Phaser mounts its canvas here; the board is sized to fit this area. -->
-      <main id="board" class="board" aria-label="Puzzle board"></main>
-
-      <footer class="controls">
-        <button type="button" class="btn btn--ghost" id="btn-restart">
-          <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M4 12a8 8 0 1 0 2.34-5.66" />
-            <path d="M4 4v5h5" />
-          </svg>
-          Restart
-        </button>
-      </footer>
-
-      <div class="overlay" id="win-overlay" role="dialog" aria-modal="true" aria-labelledby="win-title" hidden>
-        <div class="overlay__card">
-          <div class="overlay__badge" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+      <!-- Screen 2: gameplay -->
+      <section class="screen screen--game" id="screen-game" aria-label="Game">
+        <header class="hud">
+          <div class="hud__bar">
+            <button type="button" class="icon-btn" id="btn-back" aria-label="Back to levels">
+              <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
+            </button>
+            <h1 class="title title--small">NEON ESCAPE</h1>
+            <span class="hud__spacer" aria-hidden="true"></span>
           </div>
-          <p class="overlay__eyebrow" id="win-level">Level 1</p>
-          <h2 class="overlay__title" id="win-title">Level complete</h2>
-          <p class="overlay__moves">
-            <span class="overlay__moves-value" id="win-moves">0</span>
-            <span class="overlay__moves-label" id="win-moves-label">moves</span>
-          </p>
-          <p class="overlay__detail" id="win-cleared">All arrows cleared</p>
-          <button type="button" class="btn btn--solid" id="btn-play-again">
-            <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4 12a8 8 0 1 0 2.34-5.66" />
-              <path d="M4 4v5h5" />
-            </svg>
-            Play again
+          <dl class="hud__stats">
+            <div class="stat">
+              <dt class="stat__label">Level</dt>
+              <dd class="stat__value" id="hud-level">1</dd>
+            </div>
+            <div class="stat stat--primary">
+              <dt class="stat__label">Moves</dt>
+              <dd class="stat__value" id="hud-moves" aria-live="polite">0</dd>
+            </div>
+            <div class="stat">
+              <dt class="stat__label">Left</dt>
+              <dd class="stat__value" id="hud-remaining">0</dd>
+            </div>
+          </dl>
+        </header>
+
+        <!-- Phaser mounts its canvas here; the board is sized to fit this area. -->
+        <main id="board" class="board" aria-label="Puzzle board"></main>
+
+        <footer class="controls">
+          <button type="button" class="btn btn--ghost" id="btn-restart">
+            <svg class="icon" aria-hidden="true"><use href="#icon-restart" /></svg>
+            Restart
           </button>
+        </footer>
+      </section>
+
+      <!-- Screen 3: level complete / game complete -->
+      <div class="overlay" id="complete-dialog" role="dialog" aria-modal="true" aria-labelledby="complete-title" hidden>
+        <div class="card card--success">
+          <div class="badge" aria-hidden="true">
+            <svg class="badge__icon"><use href="#icon-check" id="complete-icon" /></svg>
+          </div>
+          <p class="card__eyebrow" id="complete-eyebrow">Level 1</p>
+          <h2 class="card__title" id="complete-title">Level complete</h2>
+          <p class="card__moves">
+            <span class="card__moves-value" id="complete-moves">0</span>
+            <span class="card__moves-label" id="complete-moves-label">moves</span>
+          </p>
+          <p class="card__detail" id="complete-detail"></p>
+          <p class="chip" id="complete-unlocked" hidden></p>
+          <div class="card__actions">
+            <button type="button" class="btn btn--solid" id="btn-next">
+              Next level
+              <svg class="icon" aria-hidden="true"><use href="#icon-next" /></svg>
+            </button>
+            <button type="button" class="btn btn--solid" id="btn-play-from-start" hidden>
+              <svg class="icon" aria-hidden="true"><use href="#icon-restart" /></svg>
+              Play from level 1
+            </button>
+            <div class="card__row">
+              <button type="button" class="btn btn--ghost btn--small" id="btn-replay">
+                <svg class="icon" aria-hidden="true"><use href="#icon-restart" /></svg>
+                Restart
+              </button>
+              <button type="button" class="btn btn--ghost btn--small" id="btn-levels">
+                <svg class="icon" aria-hidden="true"><use href="#icon-grid" /></svg>
+                Levels
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Leave-level confirmation -->
+      <div class="overlay" id="confirm-dialog" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-text" hidden>
+        <div class="card card--warning">
+          <h2 class="card__title card__title--warning" id="confirm-title">Leave level?</h2>
+          <p class="card__detail" id="confirm-text">Your moves on this attempt will be lost. Saved progress is kept.</p>
+          <div class="card__row">
+            <button type="button" class="btn btn--ghost btn--small" id="btn-confirm-cancel">Keep playing</button>
+            <button type="button" class="btn btn--warning btn--small" id="btn-confirm-ok">Leave</button>
+          </div>
         </div>
       </div>
     </div>

@@ -6,19 +6,34 @@ import type { ArrowData, GameSnapshot, LevelData, MoveResult } from './types';
 type Listener = (snapshot: GameSnapshot) => void;
 
 /**
- * Authoritative state for one level. Knows nothing about rendering: the scene
- * asks it to attempt moves and reacts to the returned result.
+ * Authoritative state for the level being played. Knows nothing about
+ * rendering: the scene asks it to attempt moves and reacts to the returned
+ * result. `load()` switches to another level and resets everything.
  */
 export class GameState {
-  private readonly grid: Grid;
+  private level: LevelData;
+  private grid: Grid;
   private readonly arrows = new Map<string, ArrowData>();
   private readonly listeners = new Set<Listener>();
   private moves = 0;
 
-  constructor(private readonly level: LevelData) {
+  constructor(level: LevelData) {
     validateLevel(level);
+    this.level = level;
     this.grid = new Grid(level.rows, level.cols);
     this.reset();
+  }
+
+  /** Switches to another level (validated first) and starts it fresh. */
+  load(level: LevelData): void {
+    validateLevel(level);
+    this.level = level;
+    this.grid = new Grid(level.rows, level.cols);
+    this.reset();
+  }
+
+  get levelId(): number {
+    return this.level.id;
   }
 
   get rows(): number {
