@@ -34,11 +34,14 @@ Optionally, in Chrome's menu choose **Add to Home screen** to play full-screen w
 | Command             | What it does                                          |
 | ------------------- | ----------------------------------------------------- |
 | `npm run dev`       | Start the dev server with hot reload                  |
-| `npm run typecheck` | Run the TypeScript compiler checks only (`tsc --noEmit`) |
+| `npm run typecheck` | TypeScript checks for the game and the level tools     |
 | `npm run build`     | Type-check, then create a production build in `dist/` |
 | `npm run preview`   | Serve the production build locally                    |
 | `npm test`          | Run the unit tests once (Vitest)                      |
 | `npm run test:watch` | Run the unit tests in watch mode                     |
+| `npm run levels:analyze` | Difficulty table for every level (`-- --level N` for details, `-- --json` for data) |
+| `npm run levels:validate` | Check every level: valid, solvable, readable, not a near-duplicate |
+| `npm run levels:generate` | Generate candidate levels offline (see "Level tools" below) |
 
 ## Playing as an Android phone in Chrome DevTools
 
@@ -74,11 +77,14 @@ Only level 1 is unlocked at first. Completing a level unlocks the next one. You 
 Progress is stored in `localStorage` under the key `neon-escape.progress`:
 
 ```json
-{ "version": 1, "highestUnlocked": 4, "completed": { "1": { "bestMoves": 5 }, "2": { "bestMoves": 7 } } }
+{ "version": 2, "highestUnlocked": 4, "completed": { "1": { "bestMoves": 5, "revision": 1 }, "2": { "bestMoves": 6, "revision": 2 } } }
 ```
 
 - Progress is saved the moment the last arrow leaves the board, before any dialog, so leaving early can't lose a completion.
-- Missing, corrupted or unknown-version data starts a new game. Individual bad entries are dropped and valid ones are kept.
+- Missing or corrupted data starts a new game. Individual bad entries are dropped and valid ones are kept.
+- **Nothing is silently destroyed.** Unreadable data is copied to `neon-escape.progress.backup` before it can be replaced. A save written by a *newer* game version is backed up and never overwritten.
+- **Version 1 saves are migrated.** Unlocks and completions are kept. The next save writes version 2.
+- **Level revisions.** Each record stores the `revision` of the level layout it was set on. When a level is redesigned (its `revision` goes up), the player keeps the completion and the unlock, but the old best move count isn't compared with the new layout. The next clear starts a fresh record.
 - Unlocks are repaired to match completions, so if levels are added later, players who finished the old last level get the new one unlocked.
 - If storage is unavailable (private mode, blocked or full), the game still works. Progress just isn't saved.
 
@@ -86,26 +92,43 @@ To reset your progress, run `localStorage.removeItem('neon-escape.progress')` in
 
 ## Levels
 
-| Level | Grid | Arrows | Free at start | Chain depth | Idea |
-| ----- | ---- | ------ | ------------- | ----------- | ---- |
-| 1 | 7×7 | 5  | 3 | 2  | Tutorial: two arrows, each blocked by one free arrow |
-| 2 | 7×7 | 7  | 3 | 3  | First bent arrows and a three-step chain |
-| 3 | 7×7 | 9  | 3 | 4  | One exit line crossed by two arrows that must both go first |
-| 4 | 7×7 | 11 | 3 | 4  | Three separate four-step chains winding around the board |
-| 5 | 7×7 | 13 | 2 | 5  | The original prototype board: crowded middle |
-| 6 | 8×8 | 14 | 3 | 5  | First 8×8; an arrow with two blockers in a row |
-| 7 | 8×8 | 12 | 2 | 6  | Fewer but longer arrows; one needs three others cleared |
-| 8 | 8×8 | 16 | 3 | 7  | A seven-step chain snakes across the board |
-| 9 | 9×9 | 21 | 4 | 9  | Dense 9×9 where long chains cross each other |
-| 10 | 9×9 | 20 | 1 | 10 | Finale: a single free arrow and a ten-step chain |
+Ten curated levels with a steadily rising estimated difficulty. The full analysis, including the
+original set, the redesign and an old-vs-new comparison, is in [docs/level-analysis.md](docs/level-analysis.md).
 
-*Chain depth* is the number of rounds needed if every free arrow were cleared at once each round. `analyzeLevel()` in `src/core/solver.ts` computes these numbers, and the tests check that the curve never gets shallower.
+| Level | Grid | Arrows | Free at start | Depth | Score | Category | Idea |
+| ----- | ---- | ------ | ------------- | ----- | ----- | -------- | ---- |
+| 1 | 7×7 | 5  | 3 | 2  | 14 | Very easy | Tutorial: two arrows, each blocked by one free arrow |
+| 2 | 7×7 | 6  | 3 | 3  | 23 | Easy | Straight arrows; the first small chain |
+| 3 | 7×7 | 8  | 4 | 4  | 28 | Easy–medium | First bent arrows |
+| 4 | 7×7 | 10 | 4 | 5  | 37 | Easy–medium | Long arrows blocked from several cells away |
+| 5 | 7×7 | 11 | 3 | 8  | 45 | Medium | Tight board: the visual sweep stops working |
+| 6 | 8×8 | 13 | 4 | 6  | 47 | Medium | Mostly long-range blocking |
+| 7 | 8×8 | 12 | 2 | 11 | 54 | Medium–hard | Fewer arrows than level 6 but harder: L-hooks, one free arrow per step |
+| 8 | 8×8 | 18 | 2 | 11 | 57 | Medium–hard | Interlocking L-shapes mid-chain |
+| 9 | 9×9 | 20 | 4 | 12 | 59 | Hard | Dense board with long hooks |
+| 10 | 9×9 | 23 | 1 | 15 | 63 | Hard | First major challenge: one free arrow, fifteen-step chain |
+
+### How difficulty works
+
+The rules make some things impossible. Removing an arrow only frees cells, so a level can never
+become unsolvable, any order of free arrows works, and the move count always equals the arrow
+count. The only real challenge is **finding an arrow that can escape**, again and again.
+`src/core/difficulty.ts` measures this:
+
+- **Exact metrics** come straight from the rules: arrows free at the start, blocking links,
+  long-range links, dependency depth and waves, density, turns, and ambiguous joins.
+- **Estimated metrics** come from simulating a random tapper with a fixed seed, so they are
+  deterministic. They give wrong taps per move, average choices and the free share.
+- **The score (0–100)** is a weighted heuristic over both, with categories from Very easy to
+  Very hard. It is an approximation for ordering levels and has not been validated with players.
 
 ## Project structure
 
 ```
 ├── index.html             App shell: level select and game screens, dialogs, shared SVG icons
 ├── vite.config.ts
+├── docs/level-analysis.md  Difficulty analysis of the levels (old vs new)
+├── tools/                 Level CLI (analyze, validate, generate) and its build config
 ├── tsconfig.json
 └── src/
     ├── main.ts            Entry point: creates the parts and hands them to App
@@ -121,16 +144,21 @@ To reset your progress, run `localStorage.removeItem('neon-escape.progress')` in
     │   ├── PathChecker.ts     Is the way from an arrow's head to the board edge clear?
     │   ├── GameState.ts       Current level state, moves, win detection, level switching, notifications
     │   ├── levelValidation.ts Checks arrow shapes, overlaps and solvability
-    │   └── solver.ts          Finds a clearing order (proves solvability) and measures difficulty
+    │   ├── solver.ts          Finds a clearing order (proves solvability)
+    │   ├── difficulty.ts      Difficulty metrics and the 0–100 score
+    │   └── random.ts          Seeded random numbers (reproducible analysis and generation)
     │
     ├── levels/            Level data only
     │   ├── index.ts           Registry: LEVELS in play order, LEVEL_COUNT, getLevel(id)
-    │   ├── levelMap.ts        levelFromMap(): builds LevelData from a readable text map
+    │   ├── levelMap.ts        levelFromMap() / levelToMap(): text maps ↔ LevelData
     │   └── level01.ts … level10.ts
+    │
+    ├── levelgen/          Offline level generator (developer tool, not in the game bundle)
+    │   └── generateLevel.ts   Seeded generation, refinement, layout similarity
     │
     ├── progress/          Progression, independent of rendering and game rules
     │   ├── Progress.ts        Unlock/complete rules (pure functions)
-    │   └── ProgressStorage.ts localStorage save format, validation and safe loading
+    │   └── ProgressStorage.ts localStorage save format, migration, backups and safe loading
     │
     ├── render/            Phaser drawing, no game rules
     │   ├── theme.ts           NEON ESCAPE palette and arrow proportions
@@ -182,9 +210,52 @@ Tests live next to the code they cover: `*.test.ts` in `core/`, `levels/` and `p
 
 Surfaces share one set of radii (10 / 14 / 22 px and pills), a 1 px hairline border and a faint top highlight. Buttons come in four kinds: primary (cyan), success (green), secondary (neutral with purple icon) and warning (orange). Each has a pressed scale, a hover state on pointer devices, a visible keyboard focus ring and a disabled state.
 
-## Adding a level
+## Level tools (developer only)
 
-1. Create `src/levels/level11.ts`:
+The tools are compiled with Vite into `.tools/` and run with plain Node, so they need no extra
+TypeScript runner. Nothing here is used during play.
+
+### Generating a level
+
+```bash
+npm run levels:generate -- --size 8 --min 50 --max 56 --seed 42
+```
+
+| Option | Default | Meaning |
+| ------ | ------- | ------- |
+| `--size N` or `--rows N --cols N` | 7×7 | Grid size |
+| `--min S --max S` | 40–60 | Accepted difficulty score range |
+| `--seed N` | 1 | Same seed and options give the same level |
+| `--count N` | 1 | Generate N distinct levels (seeds `seed`, `seed+1000`, …) |
+| `--arrows MIN-MAX` | scales with grid | Arrow count range |
+| `--length N` | 5 | Longest arrow, in cells |
+| `--turns N` | 2 | Most turns per arrow (0 = straight only) |
+| `--attempts N` | 300 | Attempts before giving up with a clear message |
+| `--id N` | next free | Level id in the output |
+| `--out PATH` | — | Also write the level file there (never overwrites) |
+
+The output shows the map, every metric, and a ready-to-paste level file.
+
+**How it works** (`src/levelgen/generateLevel.ts`):
+
+1. **Build in reverse solving order.** Each new arrow must have a clear exit past everything
+   already placed, so the level is solvable by construction. Its body is placed preferably
+   across other arrows' exit lines, which creates the blocking chains.
+2. **Keep it readable.** Arrows are 2 to `--length` cells long, never turn twice in a row (no U
+   folded into a 2×2 square), and never meet another arrow tail-to-tail.
+3. **Validate and score.** Every candidate goes through `validateLevel` and `analyzeDifficulty`.
+   Candidates outside the score range, or too similar to an existing level (including rotations
+   and mirror images), are rejected.
+4. **Refine the closest misses.** If no candidate fits, the closest few get a bounded series of
+   one-arrow edits, kept only when the level stays valid and readable and moves toward the range.
+5. **Fail clearly.** After the attempt budget, it stops with the closest score it reached and
+   suggestions for what to change.
+
+### Adding a level
+
+1. Generate candidates (or draw a map by hand), then review them by eye. Generated levels are
+   drafts: check that arrows read clearly and the level feels distinct.
+2. Save it as `src/levels/level11.ts`. The generator's `--out` flag writes this file for you:
 
    ```ts
    import { levelFromMap } from './levelMap';
@@ -198,16 +269,21 @@ Surfaces share one set of radii (10 / 14 / 22 px and pills), a 1 px hairline bor
    ```
 
    - `.` is an empty cell.
-   - A letter is part of the arrow with that letter. Letters are case-sensitive, so up to 52 arrows per level.
+   - A letter is part of the arrow with that letter. Letters are case-sensitive, so up to 52
+     arrows per level.
    - A letter followed by `^`, `v`, `<` or `>` marks that arrow's head and direction.
-   - Each arrow must be a single unbranched chain, and its last segment must point the way its head does.
-2. Append it to `LEVELS` in `src/levels/index.ts`.
-3. Run `npm test`. The tests check that ids are sequential and that every level is valid, solvable and not trivial. They also check that the difficulty curve doesn't get shallower.
+   - Each arrow must be a single unbranched chain, and its last segment must point the way its
+     head does.
+3. Append it to `LEVELS` in `src/levels/index.ts`.
+4. Run `npm run levels:validate` and `npm test`. The tests check ids, validity, solvability,
+   readability, near-duplicates and that estimated difficulty rises level by level.
 
-Levels can also be written directly as `LevelData` with the `arrow(id, direction, ...cells)` helper from `core/Arrow.ts`. The engine doesn't care how a level was built. No game, rendering or UI code needs to change for a new level, whatever its grid size.
+**Changing an existing level?** Pass `{ revision: N + 1 }` as the third argument of
+`levelFromMap`. Players keep their completion and unlocks, but best-move records from the old
+layout aren't compared with the new one.
 
 ## Not in this prototype
 
-Capacitor/Android packaging, level generation, sounds, hints, lives, power-ups and monetisation are intentionally left out.
+Capacitor/Android packaging, in-game level generation (the generator is an offline developer tool), sounds, hints, lives, power-ups and monetisation are intentionally left out.
 
 **About the move count:** with the current rules, every successful move removes exactly one arrow and blocked attempts aren't counted, so the final move count always equals the number of arrows. The best move count is saved as requested, but it can't vary between runs. To make scores meaningful, a future step could count blocked attempts, for example as a "perfect clear" rating.

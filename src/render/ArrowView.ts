@@ -333,6 +333,11 @@ export class ArrowView {
     this.fillHead(g, tip, v, headLength, halfWidth, color, 0);
     // A thin bright core line gives the "neon tube" look without extra glow.
     this.strokeRounded(g, shaft, cell * ARROW_STYLE.coreWidth, lighten(color, 0.5));
+    // A small dark socket marks the tail, so an arrowhead pointing straight
+    // into the next arrow's tail still reads as two separate arrows.
+    const tail = shaft[0] ?? segment[0];
+    g.fillStyle(BOARD_COLORS.well, 1);
+    g.fillCircle(tail.x, tail.y, bodyWidth * 0.2);
   }
 
   /**

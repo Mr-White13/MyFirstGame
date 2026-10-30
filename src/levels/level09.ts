@@ -1,14 +1,22 @@
 import { levelFromMap } from './levelMap';
 
-/** Level 9 — first 9×9 board: a dense grid where long chains cross each other. */
-export default levelFromMap(9, [
-  'I< I  I  .  O  O  O> L^ R',
-  'J^ K  K  K  K> .  .  L  R',
-  'J  .  T  T  T> D  P  L  R',
-  'J  E  E  E  E> D  P  L  Rv',
-  'J  M  F^ .  G  D  P  Q  Q',
-  'U  M  F  G< G  Dv Pv Qv B',
-  'U  M  F  H^ C  C  C  C> B',
-  'Uv Mv .  H  S  S  S  S> Bv',
-  'N< N  N  H  A  A  A  A  A>',
-]);
+/**
+ * Level 9 — a dense 9×9 board with long hooks (m, r, g) around a twelve-step
+ * chain that opens up again near the end.
+ * Drafted with the level generator (seed 211), reviewed for readability.
+ */
+export default levelFromMap(
+  9,
+  [
+    '.  .  .  .  a< a  .  d  .',
+    'b^ c  c> .  e  e  .  d  d>',
+    'b  .  g  .  ev .  i  .  .',
+    'f^ .  g  .  .  h  i  j  .',
+    'f  .  g  g> l  hv iv jv m',
+    'f  k^ .  .  lv m< m  m  m',
+    '.  k  n  n> .  .  .  .  o^',
+    'p^ .  q< q  r< r  r  r  o',
+    'p  .  s  s  s> t  t  t> .',
+  ],
+  { revision: 2 },
+);

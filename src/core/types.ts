@@ -19,6 +19,12 @@ export interface ArrowData {
 
 export interface LevelData {
   readonly id: number;
+  /**
+   * Content version of this level. Bump it whenever the layout changes, so
+   * saved records (such as best move counts) from an older layout are not
+   * compared with the new one. Defaults to 1.
+   */
+  readonly revision?: number;
   readonly rows: number;
   readonly cols: number;
   readonly arrows: readonly ArrowData[];

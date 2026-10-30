@@ -6,6 +6,12 @@
 export interface LevelRecord {
   /** Fewest successful moves used to clear the level. */
   readonly bestMoves: number;
+  /**
+   * Revision of the level layout that bestMoves was achieved on (see
+   * LevelData.revision). A record from an older layout still counts as
+   * completed, but its move count is not compared with the new layout.
+   */
+  readonly revision: number;
 }
 
 export interface Progress {
@@ -61,14 +67,16 @@ export function recordCompletion(
   levelId: number,
   moves: number,
   levelCount: number,
+  revision = 1,
 ): CompletionResult {
   const previous = progress.completed[levelId];
-  const bestMoves = previous ? Math.min(previous.bestMoves, moves) : moves;
+  // Only compare with a best result from the same layout; otherwise start over.
+  const bestMoves = previous && previous.revision === revision ? Math.min(previous.bestMoves, moves) : moves;
   const highestUnlocked = Math.max(progress.highestUnlocked, Math.min(levelId + 1, levelCount));
   return {
     progress: {
       highestUnlocked,
-      completed: { ...progress.completed, [levelId]: { bestMoves } },
+      completed: { ...progress.completed, [levelId]: { bestMoves, revision } },
     },
     firstClear: previous === undefined,
     unlocked: highestUnlocked > progress.highestUnlocked ? highestUnlocked : null,

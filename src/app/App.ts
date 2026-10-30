@@ -107,7 +107,8 @@ export class App {
   /** The last arrow is off the board: save immediately, before any animation or dialog. */
   handleLevelSolved(): void {
     const { state, levels, storage } = this.parts;
-    const result = recordCompletion(this.progress, state.levelId, state.snapshot().moves, levels.length);
+    const revision = levels[state.levelId - 1]?.revision ?? 1;
+    const result = recordCompletion(this.progress, state.levelId, state.snapshot().moves, levels.length, revision);
     this.progress = result.progress;
     this.lastUnlocked = result.unlocked;
     storage.save(this.progress);
