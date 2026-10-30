@@ -4,10 +4,16 @@ import { ARROW_STYLE } from '../render/theme';
 import { ArrowView } from '../render/ArrowView';
 import { BoardRenderer } from '../render/BoardRenderer';
 import { cellAtPoint, computeBoardLayout, type BoardLayout } from '../render/layout';
+import type { LevelData } from '../core/types';
 
 export interface GameSceneOptions {
-  /** Called exactly once per play-through, after the win animation has started. */
-  onLevelComplete: () => void;
+  /**
+   * Called exactly once per play-through, the moment the last arrow leaves the
+   * grid. Use it for anything that must not be lost (saving progress).
+   */
+  onLevelSolved: () => void;
+  /** Called once the board's win effect has had a moment to play: time to show the summary. */
+  onCelebrationEnd: () => void;
 }
 
 /** How far outside an arrow's body a tap still counts, in cells. */
@@ -65,10 +71,23 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  /** Resets logic, visuals and interaction state. Safe to call at any time, including mid-animation. */
+  /** Restarts the current level. Safe to call at any time, including mid-animation. */
   restartLevel(): void {
     this.state.reset();
+    this.rebuild();
+  }
+
+  /** Switches to another level, replacing every arrow and resizing the board for its grid. */
+  loadLevel(level: LevelData): void {
+    this.state.load(level);
+    this.rebuild();
+  }
+
+  /** Resets visuals and interaction state to match the (freshly reset) game state. */
+  private rebuild(): void {
     if (!this.board) return; // scene not created yet; create() will build from the fresh state
+    this.layout = this.computeLayout(); // the grid size may have changed
+    this.board.setLayout(this.layout);
     this.winTimer?.remove();
     this.winTimer = undefined;
     this.completed = false;
@@ -197,10 +216,11 @@ export class GameScene extends Phaser.Scene {
   private completeIfDone(): void {
     if (this.completed || !this.state.isWon || this.lockOwner) return;
     this.completed = true;
+    this.options.onLevelSolved();
     this.board.playWin();
     this.winTimer = this.time.delayedCall(WIN_DIALOG_DELAY, () => {
       this.winTimer = undefined;
-      this.options.onLevelComplete();
+      this.options.onCelebrationEnd();
     });
   }
 
