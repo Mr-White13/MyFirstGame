@@ -48,6 +48,8 @@ Optionally, in Chrome's menu choose **Add to Home screen** to play full-screen w
 4. In the device dropdown at the top of the page, choose an Android device such as **Pixel 7** or **Samsung Galaxy S20 Ultra**. Use **Edit…** to add more devices, or **Responsive** to drag to any size.
 5. DevTools now emulates touch input, so clicks behave like taps. Portrait is the main layout. Use the rotate button to check landscape, where the HUD moves into a side column.
 
+Good sizes to check are 360×800, 390×844 and 412×915 (use **Responsive** and type the size).
+
 ## How to play
 
 - Tap any part of an arrow, including its head. Near-misses within about half a cell still count. The arrow lights up while your finger is on it, and the move happens when you lift your finger. Slide away before lifting to cancel.
@@ -62,7 +64,7 @@ Optionally, in Chrome's menu choose **Add to Home screen** to play full-screen w
    - Completed levels show a green check.
    - The next level to play has a purple glow.
    - Locked levels are dimmed with a lock and can't be opened.
-2. **Gameplay**: the back button returns to level select. If you've made moves on an unfinished level, you're asked to confirm first. Your saved progress is never affected. **Escape** works as back on desktop.
+2. **Gameplay**: a compact HUD sits directly above the board: back, the level title and restart, then a strip with moves, a progress meter and arrows left. Restart is disabled until you have made a move. The back button returns to level select. If you've made moves on an unfinished level, you're asked to confirm first. Your saved progress is never affected. **Escape** works as back on desktop.
 3. **Level complete**: shows moves, the level number and which level was just unlocked, with **Next level**, **Restart** and **Levels**. After level 10, a **game-complete** variant congratulates you and offers **Play from level 1**.
 
 Only level 1 is unlocked at first. Completing a level unlocks the next one. You can replay any unlocked level, and replaying never locks anything again.
@@ -109,7 +111,7 @@ To reset your progress, run `localStorage.removeItem('neon-escape.progress')` in
     ├── main.ts            Entry point: creates the parts and hands them to App
     ├── app/
     │   └── App.ts         Navigation and progression: screens, level loading, saving, transition lock
-    ├── createGame.ts      Phaser bootstrap: high-DPI canvas sized to the board container
+    ├── createGame.ts      Phaser bootstrap: high-DPI canvas covering the game screen
     ├── style.css          All styling: screens, HUD, level tiles, dialogs (mobile-first, landscape variants)
     │
     ├── core/              Pure game logic, no Phaser or DOM imports
@@ -132,16 +134,19 @@ To reset your progress, run `localStorage.removeItem('neon-escape.progress')` in
     │
     ├── render/            Phaser drawing, no game rules
     │   ├── theme.ts           NEON ESCAPE palette and arrow proportions
-    │   ├── layout.ts          Responsive board geometry, grid bounds and pixel ↔ cell mapping
+    │   ├── layout.ts          Board geometry fitted into the board slot, grid bounds, pixel ↔ cell mapping
     │   ├── polyline.ts        Polyline length, slicing and point distance (animation, hit testing)
-    │   ├── BoardRenderer.ts   Rounded board container, grid lines and the win effect
-    │   └── ArrowView.ts       Draws one arrow; press state, intro, exit, blocked and hit animations
+    │   ├── BoardRenderer.ts   Board frame, recessed play area, grid; entrance and win-wave effects
+    │   ├── ArrowView.ts       Draws one arrow (rounded turns, notched head); press, intro, exit, blocked, hit
+    │   ├── FxLayer.ts         Pooled sparks and rings on one Graphics object
+    │   └── motion.ts          prefers-reduced-motion for the canvas
     │
     ├── scenes/
     │   └── GameScene.ts   Turns input into moves and move results into animations; loads levels
     │
     └── ui/                DOM views, no game rules
         ├── Screens.ts         Switches between the level select and game screens
+        ├── GameLayout.ts      Sizes the board slot so the HUD and board form one centred group
         ├── LevelSelect.ts     Level tiles and progress summary
         ├── Hud.ts             In-game stats, back and restart buttons
         ├── CompleteDialog.ts  Level-complete / game-complete dialog
@@ -157,9 +162,25 @@ Tests live next to the code they cover: `*.test.ts` in `core/`, `levels/` and `p
 - **Arrows** are chains of adjacent cells ordered tail → head. When an arrow is released, only the head's line to the edge needs to be clear, because the body follows the head through cells the arrow already owns.
 - **Solvability:** removing an arrow only ever frees cells, so repeatedly removing any clear arrow solves a level whenever a solution exists. `validateLevel()` runs this solver when a level loads and throws if the level is malformed or cannot be solved.
 - **Interaction:** `GameScene` keeps a single *lock owner*, the arrow whose animation currently blocks input. The lock is released when a leaving arrow's tail crosses the grid edge, or when a blocked bump finishes. Restart and resize clear it. Callbacks from animations cut short by a restart can never release a newer lock. Level completion is guarded so it fires exactly once per play-through.
+- **Layout:** the canvas covers the whole game screen, so arrows can fly past the board. The HUD and an empty `#board-slot` element sit on top of it. `GameLayout` sizes the slot to the largest board that fits beside the HUD (true aspect, max 620 px). `GameScene` reads the slot's rectangle and fits the board into it, so CSS layout and canvas drawing always agree. Taps on anything but a button fall through the UI to the canvas.
 - **Rendering:** arrows are drawn with Phaser `Graphics`, not image files. The "glow" is made of opaque halo rings blended with the board colour, because a shader glow was far too slow on low-end GPUs. The canvas renders at device-pixel resolution so it stays sharp on phones.
+- **Effects:** `FxLayer` draws sparks (when an arrow breaks out of the grid, or bounces off a blocker) and expanding rings. Both come from fixed pools, so no objects are created during play. The layer only redraws while an effect is alive. Leaving arrows draw a short fading energy trail. Restart, level change and resize clear every effect.
+- **Motion:** gameplay animations stay in the 150–400 ms range. The arrows' entrance is spread over at most about 280 ms, whatever their number, and never blocks input. The level-complete wave and dialog take about 0.6 s. With `prefers-reduced-motion`, particles, trails, intros and the board wave are skipped, and CSS animations and transitions are turned off. Arrows still move, because their movement shows what happened.
+- **Atmosphere** is pure CSS: a faint masked grid and six slowly drifting motes, animated with `transform`/`opacity` only (GPU-composited, no repaint).
 - **UI** (screens, counters, buttons, dialogs) is plain HTML/CSS on top of the canvas. This keeps text sharp and makes the layout easy to adapt. Hidden screens stay in the layout but are `inert`, so the canvas keeps its size, and the Phaser loop sleeps while the level select is shown.
 - **Navigation** goes through `App.navigate()`, which ignores new requests while a transition runs, so double taps can't open two levels. `GameScene.loadLevel()` rebuilds every arrow, the board size, counters and win state from scratch.
+
+## Visual design
+
+| Role | Colour | Used for |
+| ---- | ------ | -------- |
+| Primary | cyan `#27DDF5` | arrows, the next level to play, the main "Play" button, the moves counter |
+| Secondary | purple `#A855F7` | navigation accents, unlock chips, the game-complete screen |
+| Warning | orange `#FF9F43` | the arrow in the way, the "Leave level?" dialog |
+| Success | green `#48F5A5` | leaving arrows, completed levels, the level-complete dialog |
+| Error | red `#FF526B` | an arrow that can't move |
+
+Surfaces share one set of radii (10 / 14 / 22 px and pills), a 1 px hairline border and a faint top highlight. Buttons come in four kinds: primary (cyan), success (green), secondary (neutral with purple icon) and warning (orange). Each has a pressed scale, a hover state on pointer devices, a visible keyboard focus ring and a disabled state.
 
 ## Adding a level
 

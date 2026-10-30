@@ -28,15 +28,22 @@
       </symbol>
     </svg>
 
+    <div class="ambient" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+
     <div id="app">
       <!-- Screen 1: level selection -->
       <section class="screen screen--levels" id="screen-levels" aria-labelledby="levels-title">
         <header class="levels__header">
+          <p class="eyebrow">Arrow puzzle</p>
           <h1 class="title" id="levels-title">NEON ESCAPE</h1>
-          <p class="levels__subtitle">Clear every arrow from the grid</p>
           <div class="progress" aria-live="polite">
-            <div class="progress__text"><strong id="progress-count">0</strong> / <span id="progress-total">10</span> levels completed</div>
-            <div class="progress__bar"><div class="progress__fill" id="progress-fill"></div></div>
+            <div class="progress__row">
+              <span class="progress__label">Progress</span>
+              <span class="progress__count"><strong id="progress-count">0</strong> / <span id="progress-total">10</span> levels completed</span>
+            </div>
+            <div class="meter"><div class="meter__fill" id="progress-fill"></div></div>
           </div>
         </header>
         <ol class="level-grid" id="level-grid" aria-label="Levels"></ol>
@@ -45,41 +52,38 @@
         </footer>
       </section>
 
-      <!-- Screen 2: gameplay -->
+      <!-- Screen 2: gameplay. The canvas fills the whole screen (so arrows can fly
+           off past the board); the HUD and an empty board slot sit on top of it. -->
       <section class="screen screen--game" id="screen-game" aria-label="Game">
-        <header class="hud">
-          <div class="hud__bar">
-            <button type="button" class="icon-btn" id="btn-back" aria-label="Back to levels">
-              <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
-            </button>
-            <h1 class="title title--small">NEON ESCAPE</h1>
-            <span class="hud__spacer" aria-hidden="true"></span>
-          </div>
-          <dl class="hud__stats">
-            <div class="stat">
-              <dt class="stat__label">Level</dt>
-              <dd class="stat__value" id="hud-level">1</dd>
+        <div class="stage" id="stage"></div>
+        <div class="game-ui" id="game-ui">
+          <header class="hud" id="hud">
+            <div class="hud__bar">
+              <button type="button" class="icon-btn" id="btn-back" aria-label="Back to levels">
+                <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
+              </button>
+              <div class="hud__heading">
+                <span class="hud__brand">NEON ESCAPE</span>
+                <h1 class="hud__level">Level <span id="hud-level">1</span></h1>
+              </div>
+              <button type="button" class="icon-btn icon-btn--restart" id="btn-restart" aria-label="Restart level">
+                <svg class="icon" aria-hidden="true"><use href="#icon-restart" /></svg>
+              </button>
             </div>
-            <div class="stat stat--primary">
-              <dt class="stat__label">Moves</dt>
-              <dd class="stat__value" id="hud-moves" aria-live="polite">0</dd>
-            </div>
-            <div class="stat">
-              <dt class="stat__label">Left</dt>
-              <dd class="stat__value" id="hud-remaining">0</dd>
-            </div>
-          </dl>
-        </header>
-
-        <!-- Phaser mounts its canvas here; the board is sized to fit this area. -->
-        <main id="board" class="board" aria-label="Puzzle board"></main>
-
-        <footer class="controls">
-          <button type="button" class="btn btn--ghost" id="btn-restart">
-            <svg class="icon" aria-hidden="true"><use href="#icon-restart" /></svg>
-            Restart
-          </button>
-        </footer>
+            <dl class="hud__stats">
+              <div class="stat">
+                <dt class="stat__label">Moves</dt>
+                <dd class="stat__value stat__value--accent" id="hud-moves" aria-live="polite">0</dd>
+              </div>
+              <div class="hud__meter meter" aria-hidden="true"><div class="meter__fill" id="hud-progress"></div></div>
+              <div class="stat stat--end">
+                <dt class="stat__label">Left</dt>
+                <dd class="stat__value" id="hud-remaining">0</dd>
+              </div>
+            </dl>
+          </header>
+          <div class="board-slot" id="board-slot" role="img" aria-label="Puzzle board"></div>
+        </div>
       </section>
 
       <!-- Screen 3: level complete / game complete -->

@@ -5,6 +5,7 @@ import { isUnlocked, recordCompletion, type Progress } from '../progress/Progres
 import type { ProgressStorage } from '../progress/ProgressStorage';
 import type { GameScene } from '../scenes/GameScene';
 import type { CompleteDialog } from '../ui/CompleteDialog';
+import type { GameLayout } from '../ui/GameLayout';
 import type { ConfirmDialog } from '../ui/ConfirmDialog';
 import type { Hud } from '../ui/Hud';
 import type { LevelSelect } from '../ui/LevelSelect';
@@ -19,6 +20,7 @@ export interface AppParts {
   readonly screens: Screens;
   readonly levelSelect: LevelSelect;
   readonly hud: Hud;
+  readonly gameLayout: GameLayout;
   readonly completeDialog: CompleteDialog;
   readonly confirmDialog: ConfirmDialog;
 }
@@ -67,6 +69,7 @@ export class App {
     return this.navigate(async () => {
       this.parts.completeDialog.hide();
       this.parts.confirmDialog.close(false);
+      this.parts.gameLayout.setGrid(level.rows, level.cols); // size the slot before the board is fitted into it
       this.parts.scene.loadLevel(level); // replaces every arrow, counter and flag
       this.wakeGame();
       await this.parts.screens.show('game');

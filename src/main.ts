@@ -8,6 +8,7 @@ import { GameScene } from './scenes/GameScene';
 import { CompleteDialog } from './ui/CompleteDialog';
 import { ConfirmDialog } from './ui/ConfirmDialog';
 import { requireElement } from './ui/dom';
+import { GameLayout } from './ui/GameLayout';
 import { Hud } from './ui/Hud';
 import { LevelSelect } from './ui/LevelSelect';
 import { Screens } from './ui/Screens';
@@ -18,7 +19,9 @@ state.subscribe((snapshot) => hud.update(snapshot));
 
 // The scene and dialogs report back to the app, which is created right after them.
 let app: App | undefined;
+const boardSlot = requireElement('board-slot');
 const scene = new GameScene(state, {
+  boardSlot,
   onLevelSolved: () => app?.handleLevelSolved(),
   onCelebrationEnd: () => app?.handleCelebrationEnd(),
 });
@@ -29,7 +32,9 @@ const completeDialog = new CompleteDialog({
   onPlayFromStart: () => app?.playFromStart(),
 });
 
-const game = createGame(requireElement('board'), scene);
+const game = createGame(requireElement('stage'), scene);
+// Sizes the board slot; the scene re-fits the board whenever the slot changes.
+const gameLayout = new GameLayout(requireElement('game-ui'), requireElement('hud'), boardSlot, () => scene.relayout());
 
 app = new App({
   levels: LEVELS,
@@ -40,6 +45,7 @@ app = new App({
   screens: new Screens(),
   levelSelect: new LevelSelect(LEVELS),
   hud,
+  gameLayout,
   completeDialog,
   confirmDialog: new ConfirmDialog(),
 });

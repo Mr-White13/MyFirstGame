@@ -20,24 +20,25 @@ export interface Point {
   readonly y: number;
 }
 
+export interface Rect {
+  readonly x: number;
+  readonly y: number;
+  readonly width: number;
+  readonly height: number;
+}
+
 /** Board padding around the grid, in cells. Leaves room for the arrow halo at the edges. */
-const PADDING_IN_CELLS = 0.28;
+export const PADDING_IN_CELLS = 0.3;
 
 /**
- * Fits the largest square-celled board into the view, centred. The page
- * already provides side gutters, so the margin here only keeps the board's
- * outline off the canvas edge.
+ * Fits the largest square-celled board into `frame`, centred. The frame is
+ * the on-screen slot reserved for the board (see ui/GameLayout), so no extra
+ * margin is added here.
  */
-export function computeBoardLayout(viewWidth: number, viewHeight: number, rows: number, cols: number): BoardLayout {
-  const margin = Math.max(2, Math.min(viewWidth, viewHeight) * 0.015);
+export function computeBoardLayout(frame: Rect, rows: number, cols: number): BoardLayout {
   const cellSize = Math.max(
     4,
-    Math.floor(
-      Math.min(
-        (viewWidth - 2 * margin) / (cols + 2 * PADDING_IN_CELLS),
-        (viewHeight - 2 * margin) / (rows + 2 * PADDING_IN_CELLS),
-      ),
-    ),
+    Math.floor(Math.min(frame.width / (cols + 2 * PADDING_IN_CELLS), frame.height / (rows + 2 * PADDING_IN_CELLS))),
   );
   const padding = Math.round(cellSize * PADDING_IN_CELLS);
   const width = cols * cellSize + 2 * padding;
@@ -45,14 +46,25 @@ export function computeBoardLayout(viewWidth: number, viewHeight: number, rows: 
   return {
     rows,
     cols,
-    x: Math.round((viewWidth - width) / 2),
-    y: Math.round((viewHeight - height) / 2),
+    x: Math.round(frame.x + (frame.width - width) / 2),
+    y: Math.round(frame.y + (frame.height - height) / 2),
     width,
     height,
     padding,
     cellSize,
     radius: Math.round(cellSize * 0.42),
   };
+}
+
+export function sameLayout(a: BoardLayout | undefined, b: BoardLayout): boolean {
+  return (
+    a !== undefined &&
+    a.rows === b.rows &&
+    a.cols === b.cols &&
+    a.x === b.x &&
+    a.y === b.y &&
+    a.cellSize === b.cellSize
+  );
 }
 
 /** The playable grid area (inside the board padding). */
