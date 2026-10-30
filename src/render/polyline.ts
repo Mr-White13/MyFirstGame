@@ -8,6 +8,23 @@ export function polylineLength(points: readonly Point[]): number {
   return total;
 }
 
+/** Shortest distance from `p` to any segment of the polyline. */
+export function distanceToPolyline(points: readonly Point[], p: Point): number {
+  if (points.length === 1) return Math.hypot(p.x - points[0].x, p.y - points[0].y);
+  let best = Infinity;
+  for (let i = 1; i < points.length; i++) {
+    const a = points[i - 1];
+    const b = points[i];
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const lengthSq = dx * dx + dy * dy;
+    // Project p onto segment ab, clamped to the segment ends.
+    const t = lengthSq === 0 ? 0 : Math.max(0, Math.min(1, ((p.x - a.x) * dx + (p.y - a.y) * dy) / lengthSq));
+    best = Math.min(best, Math.hypot(p.x - (a.x + dx * t), p.y - (a.y + dy * t)));
+  }
+  return best;
+}
+
 /**
  * Returns the part of `points` between distances `from` and `to` measured
  * along the line, interpolating the end points. Used to animate an arrow
