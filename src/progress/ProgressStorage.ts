@@ -1,10 +1,15 @@
+import {
+  browserStorage,
+  isNonNegativeInt,
+  isNonNegativeNumber,
+  isPositiveInt,
+  SafeStore,
+  type KeyValueStore,
+  type SaveStatus,
+} from '../storage/SafeStore';
 import { createProgress, MAX_STARS, type LevelRecord, type Progress } from './Progress';
 
-/** The subset of the Web Storage API used here; lets tests pass an in-memory store. */
-export interface KeyValueStore {
-  getItem(key: string): string | null;
-  setItem(key: string, value: string): void;
-}
+export type { KeyValueStore, SaveStatus } from '../storage/SafeStore';
 
 export const STORAGE_KEY = 'neon-escape.progress';
 /** Where unreadable or newer-version save data is copied before anything could replace it. */
@@ -15,20 +20,19 @@ export const BACKUP_KEY = 'neon-escape.progress.backup';
  *  1 — { version, highestUnlocked, completed: { [id]: { bestMoves } } }
  *  2 — records also carry the level `revision` their best move count belongs to.
  *  3 — records also carry `bestStars` (1..3 or null = unranked) and `bestMistakes`.
+ *  4 — records also carry `bestTimeMs` (fastest completion, or null if none timed).
  * Older versions are migrated on load; the next save writes the current one.
  * Completions from versions 1–2 predate lives and stars: they stay completed
- * (and keep their unlocks) but are unranked until replayed.
+ * (and keep their unlocks) but are unranked until replayed. Completions from
+ * versions 1–3 predate the timer: their best time is null until replayed.
  */
-export const SAVE_VERSION = 3;
+export const SAVE_VERSION = 4;
 
 interface SaveFile {
   version: typeof SAVE_VERSION;
   highestUnlocked: number;
   completed: Record<string, LevelRecord>;
 }
-
-/** What loading found, so storage can protect data it doesn't understand. */
-export type SaveStatus = 'empty' | 'current' | 'migrated' | 'corrupt' | 'newer';
 
 export function serializeProgress(progress: Progress): string {
   const file: SaveFile = {
@@ -38,9 +42,6 @@ export function serializeProgress(progress: Progress): string {
   };
   return JSON.stringify(file);
 }
-
-const isPositiveInt = (value: unknown): value is number =>
-  typeof value === 'number' && Number.isInteger(value) && value > 0;
 
 /**
  * Turns whatever is in storage into valid progress. Never throws: missing,
@@ -63,27 +64,35 @@ export function readProgress(raw: string | null, levelCount: number): { progress
     // Written by a newer version of the game: don't guess at its meaning.
     return { progress: createProgress(), status: 'newer' };
   }
-  if (file.version !== 1 && file.version !== 2 && file.version !== 3) return { progress: createProgress(), status: 'corrupt' };
+  if (file.version !== 1 && file.version !== 2 && file.version !== 3 && file.version !== 4) {
+    return { progress: createProgress(), status: 'corrupt' };
+  }
 
   const completed: Record<number, LevelRecord> = {};
   if (typeof file.completed === 'object' && file.completed !== null) {
     for (const [key, entry] of Object.entries(file.completed as Record<string, unknown>)) {
       const id = Number(key);
       if (!isPositiveInt(id) || id > levelCount) continue;
-      const record = (entry ?? {}) as { bestMoves?: unknown; revision?: unknown; bestStars?: unknown; bestMistakes?: unknown };
+      const record = (entry ?? {}) as {
+        bestMoves?: unknown;
+        revision?: unknown;
+        bestStars?: unknown;
+        bestMistakes?: unknown;
+        bestTimeMs?: unknown;
+      };
       if (!isPositiveInt(record.bestMoves)) continue;
       // Older saves predate stars (and version 1 predates revisions). Missing or
       // malformed ratings are treated as unranked rather than guessed.
       const bestStars = isPositiveInt(record.bestStars) && record.bestStars <= MAX_STARS ? record.bestStars : null;
-      const bestMistakes =
-        bestStars !== null && typeof record.bestMistakes === 'number' && Number.isInteger(record.bestMistakes) && record.bestMistakes >= 0
-          ? record.bestMistakes
-          : null;
+      const bestMistakes = bestStars !== null && isNonNegativeInt(record.bestMistakes) ? record.bestMistakes : null;
+      // Times only exist from version 4 on; anything missing or malformed means "not timed yet".
+      const bestTimeMs = isNonNegativeNumber(record.bestTimeMs) && record.bestTimeMs > 0 ? record.bestTimeMs : null;
       completed[id] = {
         bestMoves: record.bestMoves,
         revision: isPositiveInt(record.revision) ? record.revision : 1,
         bestStars,
         bestMistakes,
+        bestTimeMs,
       };
     }
   }
@@ -102,58 +111,34 @@ export function parseProgress(raw: string | null, levelCount: number): Progress 
   return readProgress(raw, levelCount).progress;
 }
 
-/** Browser localStorage, or null where it is unavailable (privacy modes, sandboxed frames). */
-function browserStorage(): KeyValueStore | null {
-  try {
-    return typeof window !== 'undefined' ? window.localStorage : null;
-  } catch {
-    return null;
-  }
-}
-
 /**
- * Loads and saves progress. Storage failures are swallowed: the game keeps
- * working, just unsaved. Player data is never silently destroyed:
- * - unreadable data is copied to BACKUP_KEY before it can be replaced;
- * - data from a newer game version is backed up and never overwritten.
+ * Loads and saves progress. All the safety rules (failures swallowed,
+ * backups of unreadable data, newer saves never overwritten) live in SafeStore.
  */
 export class ProgressStorage {
-  private readOnly = false;
+  private readonly safe: SafeStore<Progress>;
 
-  constructor(
-    private readonly levelCount: number,
-    private readonly store: KeyValueStore | null = browserStorage(),
-  ) {}
+  constructor(levelCount: number, store: KeyValueStore | null = browserStorage()) {
+    this.safe = new SafeStore(
+      STORAGE_KEY,
+      {
+        read: (raw) => {
+          const { progress, status } = readProgress(raw, levelCount);
+          return { value: progress, status };
+        },
+        write: serializeProgress,
+        fallback: createProgress,
+      },
+      store,
+    );
+  }
 
   load(): Progress {
-    try {
-      const raw = this.store?.getItem(STORAGE_KEY) ?? null;
-      const { progress, status } = readProgress(raw, this.levelCount);
-      if ((status === 'corrupt' || status === 'newer') && raw !== null) this.backup(raw);
-      this.readOnly = status === 'newer';
-      return progress;
-    } catch {
-      return createProgress();
-    }
+    return this.safe.load();
   }
 
   /** Returns false if the data was not written (storage blocked or full, or newer save protected). */
   save(progress: Progress): boolean {
-    if (!this.store || this.readOnly) return false;
-    try {
-      this.store.setItem(STORAGE_KEY, serializeProgress(progress));
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  private backup(raw: string): void {
-    try {
-      // Keep the first backup: a later load must not replace it with a worse copy.
-      if (this.store && this.store.getItem(BACKUP_KEY) === null) this.store.setItem(BACKUP_KEY, raw);
-    } catch {
-      // Nothing more we can do without storage.
-    }
+    return this.safe.save(progress);
   }
 }

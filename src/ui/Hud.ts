@@ -1,8 +1,9 @@
+import { formatClock } from '../core/time';
 import type { GameSnapshot } from '../core/types';
 import { requireElement } from './dom';
 
 /**
- * In-game heads-up display: level title, lives (three hearts), arrows left
+ * In-game heads-up display: level title and timer, lives (three hearts), arrows left
  * with a progress meter, plus the back and restart buttons. Updates only when
  * the game state changes (never per frame); the visual easing is all CSS.
  */
@@ -13,6 +14,8 @@ export class Hud {
   private readonly progress = requireElement('hud-progress');
   private readonly backButton = requireElement<HTMLButtonElement>('btn-back');
   private readonly restartButton = requireElement<HTMLButtonElement>('btn-restart');
+  private readonly time = requireElement('hud-time');
+  private shownTime = '';
   private last?: GameSnapshot;
 
   update(snapshot: GameSnapshot): void {
@@ -27,6 +30,14 @@ export class Hud {
     this.renderHearts(snapshot.lives, sameRun && this.last !== undefined && snapshot.lives < this.last.lives);
     if (sameRun && this.last && snapshot.remaining < this.last.remaining) this.tick(this.remaining);
     this.last = snapshot;
+  }
+
+  /** Shows the level time. Writes to the DOM only when the displayed text changes (about once a second). */
+  setTime(ms: number): void {
+    const text = formatClock(ms);
+    if (text === this.shownTime) return;
+    this.shownTime = text;
+    this.time.textContent = text;
   }
 
   onBack(handler: () => void): void {

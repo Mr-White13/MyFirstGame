@@ -43,6 +43,10 @@ export class LevelSelect {
     this.continueButton.addEventListener('click', () => this.selectHandler(this.continueLevel));
   }
 
+  onBack(handler: () => void): void {
+    requireElement('btn-levels-back').addEventListener('click', handler);
+  }
+
   onSelect(handler: (levelId: number) => void): void {
     this.selectHandler = handler;
   }
