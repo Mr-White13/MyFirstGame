@@ -1,4 +1,4 @@
-import { createProgress, type LevelRecord, type Progress } from './Progress';
+import { createProgress, MAX_STARS, type LevelRecord, type Progress } from './Progress';
 
 /** The subset of the Web Storage API used here; lets tests pass an in-memory store. */
 export interface KeyValueStore {
@@ -14,9 +14,12 @@ export const BACKUP_KEY = 'neon-escape.progress.backup';
  * Save format history:
  *  1 — { version, highestUnlocked, completed: { [id]: { bestMoves } } }
  *  2 — records also carry the level `revision` their best move count belongs to.
+ *  3 — records also carry `bestStars` (1..3 or null = unranked) and `bestMistakes`.
  * Older versions are migrated on load; the next save writes the current one.
+ * Completions from versions 1–2 predate lives and stars: they stay completed
+ * (and keep their unlocks) but are unranked until replayed.
  */
-export const SAVE_VERSION = 2;
+export const SAVE_VERSION = 3;
 
 interface SaveFile {
   version: typeof SAVE_VERSION;
@@ -60,17 +63,28 @@ export function readProgress(raw: string | null, levelCount: number): { progress
     // Written by a newer version of the game: don't guess at its meaning.
     return { progress: createProgress(), status: 'newer' };
   }
-  if (file.version !== 1 && file.version !== 2) return { progress: createProgress(), status: 'corrupt' };
+  if (file.version !== 1 && file.version !== 2 && file.version !== 3) return { progress: createProgress(), status: 'corrupt' };
 
   const completed: Record<number, LevelRecord> = {};
   if (typeof file.completed === 'object' && file.completed !== null) {
     for (const [key, entry] of Object.entries(file.completed as Record<string, unknown>)) {
       const id = Number(key);
       if (!isPositiveInt(id) || id > levelCount) continue;
-      const record = (entry ?? {}) as { bestMoves?: unknown; revision?: unknown };
+      const record = (entry ?? {}) as { bestMoves?: unknown; revision?: unknown; bestStars?: unknown; bestMistakes?: unknown };
       if (!isPositiveInt(record.bestMoves)) continue;
-      // Version 1 saves predate level revisions: their records belong to revision 1.
-      completed[id] = { bestMoves: record.bestMoves, revision: isPositiveInt(record.revision) ? record.revision : 1 };
+      // Older saves predate stars (and version 1 predates revisions). Missing or
+      // malformed ratings are treated as unranked rather than guessed.
+      const bestStars = isPositiveInt(record.bestStars) && record.bestStars <= MAX_STARS ? record.bestStars : null;
+      const bestMistakes =
+        bestStars !== null && typeof record.bestMistakes === 'number' && Number.isInteger(record.bestMistakes) && record.bestMistakes >= 0
+          ? record.bestMistakes
+          : null;
+      completed[id] = {
+        bestMoves: record.bestMoves,
+        revision: isPositiveInt(record.revision) ? record.revision : 1,
+        bestStars,
+        bestMistakes,
+      };
     }
   }
 

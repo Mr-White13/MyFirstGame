@@ -39,7 +39,7 @@ Optionally, in Chrome's menu choose **Add to Home screen** to play full-screen w
 | `npm run preview`   | Serve the production build locally                    |
 | `npm test`          | Run the unit tests once (Vitest)                      |
 | `npm run test:watch` | Run the unit tests in watch mode                     |
-| `npm run levels:analyze` | Difficulty table for every level (`-- --level N` for details, `-- --json` for data) |
+| `npm run levels:analyze` | Search score and lives model for every level (`-- --level N` for details, `-- --json` for data) |
 | `npm run levels:validate` | Check every level: valid, solvable, readable, not a near-duplicate |
 | `npm run levels:generate` | Generate candidate levels offline (see "Level tools" below) |
 
@@ -56,10 +56,47 @@ Good sizes to check are 360×800, 390×844 and 412×915 (use **Responsive** and 
 ## How to play
 
 - Tap any part of an arrow, including its head. Near-misses within about half a cell still count. The arrow lights up while your finger is on it, and the move happens when you lift your finger. Slide away before lifting to cancel.
-- **Clear path:** the arrow flashes, slides along its own body and leaves the board. This counts as one move.
-- **Blocked:** the arrow turns red and slides up to the arrow in its way, which flashes orange and gets knocked. Then it springs back. Blocked attempts do not count as moves.
-- Only one arrow moves at a time. Taps made while an arrow is still crossing the board are ignored, so fast double taps can't trigger two moves.
-- Remove all arrows to complete the level: the board pulses green and a summary shows your move count. **Restart** resets the level at any time, even mid-animation.
+- **Clear path:** the arrow flashes, slides along its own body and leaves the board.
+- **Blocked:** the arrow slides up to the arrow in its way, which flashes orange and gets knocked. It costs **one life**. The tapped arrow springs back and **stays red**.
+- Remove every arrow to complete the level. **Restart** resets the level at any time, even in the middle of a chain reaction.
+
+### Lives
+
+Every level starts with **three hearts**. Only the first blocked tap on an arrow costs a life:
+
+- **Free:** successful moves, taps that are ignored (during an animation or after the level has ended), and taps you cancel by sliding away.
+- **Repeat taps:** tapping an arrow that is already red and still blocked only nudges it gently. It costs nothing, so a double tap can't cost two lives.
+- **Last life:** your last remaining heart beats slowly as a warning.
+
+When the third life is lost, the level ends: the board frame turns red and **Game Over** shows the level, how many arrows you cleared and your mistakes. **Try again** restarts the level with full lives. **Levels** goes back to level selection. A failure never changes saved progress or locks anything.
+
+### Red arrows and chain reactions
+
+A red arrow has been "activated": you tried to release it, but something was in the way. It still occupies its cells and still blocks other arrows. The difference is that it is now **waiting to leave**. As soon as its path becomes clear, it leaves on its own.
+
+Example:
+
+1. Arrow A points right, and arrow B stands in its way.
+2. You tap A. It bumps into B, you lose a life, and A turns red.
+3. You tap B, which has a clear path, and it leaves.
+4. A's path is now clear, so A leaves automatically, with a purple ring. No tap is needed and no life is lost.
+
+One removal can set off several releases: if red C was waiting for red A, C goes next, and so on. The rules are resolved instantly and deterministically. After each removal, the **first** red arrow in level order that can escape is released, then the board is checked again, until no red arrow can move. The animations then play one after another, and taps are ignored until they finish. Ordinary cyan arrows are never released automatically.
+
+### Stars
+
+Finishing a level awards one spark-shaped star per life left: **3 lives = 3 stars, 2 = 2, 1 = 1**. Losing all three fails the level. The completion dialog reveals the stars one by one and lists the run's statistics. The level select shows each level's best rating and your total.
+
+### Statistics
+
+| Counter | Meaning |
+| ------- | ------- |
+| Lives | 3 minus mistakes, never below 0 |
+| Mistakes | First taps on blocked arrows (each cost a life) |
+| Cleared by you | Arrows you removed by tapping them |
+| Chain reactions | Red arrows that left automatically |
+| Left | Arrows still on the board |
+| Moves | Kept for compatibility: equals "cleared by you". Automatic releases never count as moves. |
 
 ## Screens and progression
 
@@ -67,8 +104,10 @@ Good sizes to check are 360×800, 390×844 and 412×915 (use **Responsive** and 
    - Completed levels show a green check.
    - The next level to play has a purple glow.
    - Locked levels are dimmed with a lock and can't be opened.
-2. **Gameplay**: a compact HUD sits directly above the board: back, the level title and restart, then a strip with moves, a progress meter and arrows left. Restart is disabled until you have made a move. The back button returns to level select. If you've made moves on an unfinished level, you're asked to confirm first. Your saved progress is never affected. **Escape** works as back on desktop.
-3. **Level complete**: shows moves, the level number and which level was just unlocked, with **Next level**, **Restart** and **Levels**. After level 10, a **game-complete** variant congratulates you and offers **Play from level 1**.
+2. **Gameplay**: a compact HUD sits directly above the board: back, the level title and restart, then a strip with your three hearts, a progress meter and arrows left. Restart is disabled until you have made a move or a mistake. The back button returns to level select. If you've made moves on an unfinished level, you're asked to confirm first. Your saved progress is never affected. **Escape** works as back on desktop.
+3. **Level complete**: shows the stars earned, the run statistics, a "New best" chip when the rating improves and which level was just unlocked, with **Next level**, **Restart** and **Levels**. After level 10, a **game-complete** variant congratulates you and offers **Play from level 1**.
+
+A failed level shows **Game Over** instead (see "Lives" above).
 
 Only level 1 is unlocked at first. Completing a level unlocks the next one. You can replay any unlocked level, and replaying never locks anything again.
 
@@ -77,14 +116,17 @@ Only level 1 is unlocked at first. Completing a level unlocks the next one. You 
 Progress is stored in `localStorage` under the key `neon-escape.progress`:
 
 ```json
-{ "version": 2, "highestUnlocked": 4, "completed": { "1": { "bestMoves": 5, "revision": 1 }, "2": { "bestMoves": 6, "revision": 2 } } }
+{ "version": 3, "highestUnlocked": 4, "completed": {
+  "1": { "bestMoves": 5, "revision": 1, "bestStars": null, "bestMistakes": null },
+  "2": { "bestMoves": 6, "revision": 2, "bestStars": 2, "bestMistakes": 1 } } }
 ```
 
 - Progress is saved the moment the last arrow leaves the board, before any dialog, so leaving early can't lose a completion.
 - Missing or corrupted data starts a new game. Individual bad entries are dropped and valid ones are kept.
 - **Nothing is silently destroyed.** Unreadable data is copied to `neon-escape.progress.backup` before it can be replaced. A save written by a *newer* game version is backed up and never overwritten.
-- **Version 1 saves are migrated.** Unlocks and completions are kept. The next save writes version 2.
-- **Level revisions.** Each record stores the `revision` of the level layout it was set on. When a level is redesigned (its `revision` goes up), the player keeps the completion and the unlock, but the old best move count isn't compared with the new layout. The next clear starts a fresh record.
+- **Older saves are migrated.** Version 1 and 2 saves keep every unlock and completion. The next save writes version 3.
+- **Stars and unranked levels.** `bestStars` (1–3) and `bestMistakes` hold the best result under the lives rules. Completions from before lives existed are **unranked** (`null`): still completed and unlocked, but never credited with stars they didn't earn. The next clear gives them their first rating. Replays only ever raise the rating, and missing or malformed star values are read as unranked.
+- **Level revisions.** Each record stores the `revision` of the level layout it was set on. When a level is redesigned (its `revision` goes up), the player keeps the completion and the unlock, but the old best moves, stars and mistakes aren't compared with the new layout. The next clear starts fresh records.
 - Unlocks are repaired to match completions, so if levels are added later, players who finished the old last level get the new one unlocked.
 - If storage is unavailable (private mode, blocked or full), the game still works. Progress just isn't saved.
 
@@ -119,8 +161,13 @@ count. The only real challenge is **finding an arrow that can escape**, again an
   long-range links, dependency depth and waves, density, turns, and ambiguous joins.
 - **Estimated metrics** come from simulating a random tapper with a fixed seed, so they are
   deterministic. They give wrong taps per move, average choices and the free share.
-- **The score (0–100)** is a weighted heuristic over both, with categories from Very easy to
-  Very hard. It is an approximation for ordering levels and has not been validated with players.
+- **The search score (0–100)** is a weighted heuristic over both, with categories from Very easy
+  to Very hard. It is an approximation for ordering levels and has not been validated with players.
+- **The lives model** plays each level with two scripted strategies under the real lives,
+  red-arrow and chain rules: a random tapper, and a "near-sighted" one that only checks the next
+  cell. It reports expected mistakes, how often each finishes within 3 lives, chain clears,
+  "deceptive" arrows (next cell clear but blocked further along) and a 0–100 risk score. These
+  describe simple strategies, not real players. See section 7 of the analysis document.
 
 ## Project structure
 
@@ -142,7 +189,7 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     │   ├── Arrow.ts           Direction vectors and arrow helpers (head, step, authoring helper)
     │   ├── Grid.ts            Cell occupancy map
     │   ├── PathChecker.ts     Is the way from an arrow's head to the board edge clear?
-    │   ├── GameState.ts       Current level state, moves, win detection, level switching, notifications
+    │   ├── GameState.ts       Rules for the current level: moves, lives, red arrows, chain reactions, win/fail
     │   ├── levelValidation.ts Checks arrow shapes, overlaps and solvability
     │   ├── solver.ts          Finds a clearing order (proves solvability)
     │   ├── difficulty.ts      Difficulty metrics and the 0–100 score
@@ -170,14 +217,16 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     │   └── motion.ts          prefers-reduced-motion for the canvas
     │
     ├── scenes/
-    │   └── GameScene.ts   Turns input into moves and move results into animations; loads levels
+    │   ├── GameScene.ts   Turns input into moves and move results into animations; loads levels
+    │   └── MoveSequencer.ts Plays one action's animations in order; input lock with cancel tokens
     │
     └── ui/                DOM views, no game rules
         ├── Screens.ts         Switches between the level select and game screens
         ├── GameLayout.ts      Sizes the board slot so the HUD and board form one centred group
         ├── LevelSelect.ts     Level tiles and progress summary
-        ├── Hud.ts             In-game stats, back and restart buttons
-        ├── CompleteDialog.ts  Level-complete / game-complete dialog
+        ├── Hud.ts             In-game hearts, arrows left, back and restart buttons
+        ├── CompleteDialog.ts  Level-complete / game-complete dialog with stars and run statistics
+        ├── GameOverDialog.ts  Out-of-lives dialog
         ├── ConfirmDialog.ts   "Leave level?" confirmation
         └── dom.ts             Small DOM helpers (element lookup, overlay fade)
 ```
@@ -189,7 +238,8 @@ Tests live next to the code they cover: `*.test.ts` in `core/`, `levels/` and `p
 - **Logic is separate from presentation.** `core/` has no idea Phaser exists. `GameScene` asks `GameState.tryMove(id)` and animates the returned `MoveResult` (`cleared`, `blocked` or `ignored`).
 - **Arrows** are chains of adjacent cells ordered tail → head. When an arrow is released, only the head's line to the edge needs to be clear, because the body follows the head through cells the arrow already owns.
 - **Solvability:** removing an arrow only ever frees cells, so repeatedly removing any clear arrow solves a level whenever a solution exists. `validateLevel()` runs this solver when a level loads and throws if the level is malformed or cannot be solved.
-- **Interaction:** `GameScene` keeps a single *lock owner*, the arrow whose animation currently blocks input. The lock is released when a leaving arrow's tail crosses the grid edge, or when a blocked bump finishes. Restart and resize clear it. Callbacks from animations cut short by a restart can never release a newer lock. Level completion is guarded so it fires exactly once per play-through.
+- **Rules first, animation second:** `GameState.tryMove` resolves a whole tap synchronously, including lives, red arrows and the full chain reaction. It returns a result listing every removal in order. Visuals can never change the outcome.
+- **Interaction:** `GameScene` turns that result into animation steps, and `MoveSequencer` (Phaser-free and unit-tested) plays them one after another while holding the input lock. Taps during a sequence are dropped before they reach `GameState`, so they can't cost a life. Each exit step hands over when the arrow's tail crosses the grid edge. Win and Game Over start only after the last step. Restart, level change and resize cancel the sequence: its token is invalidated so late callbacks are ignored, and the board is re-synced from `GameState`.
 - **Layout:** the canvas covers the whole game screen, so arrows can fly past the board. The HUD and an empty `#board-slot` element sit on top of it. `GameLayout` sizes the slot to the largest board that fits beside the HUD (true aspect, max 620 px). `GameScene` reads the slot's rectangle and fits the board into it, so CSS layout and canvas drawing always agree. Taps on anything but a button fall through the UI to the canvas.
 - **Rendering:** arrows are drawn with Phaser `Graphics`, not image files. The "glow" is made of opaque halo rings blended with the board colour, because a shader glow was far too slow on low-end GPUs. The canvas renders at device-pixel resolution so it stays sharp on phones.
 - **Effects:** `FxLayer` draws sparks (when an arrow breaks out of the grid, or bounces off a blocker) and expanding rings. Both come from fixed pools, so no objects are created during play. The layer only redraws while an effect is alive. Leaving arrows draw a short fading energy trail. Restart, level change and resize clear every effect.
@@ -203,10 +253,11 @@ Tests live next to the code they cover: `*.test.ts` in `core/`, `levels/` and `p
 | Role | Colour | Used for |
 | ---- | ------ | -------- |
 | Primary | cyan `#27DDF5` | arrows, the next level to play, the main "Play" button, the moves counter |
-| Secondary | purple `#A855F7` | navigation accents, unlock chips, the game-complete screen |
+| Secondary | purple `#A855F7` | navigation accents, unlock chips, the game-complete screen, chain-reaction releases |
 | Warning | orange `#FF9F43` | the arrow in the way, the "Leave level?" dialog |
 | Success | green `#48F5A5` | leaving arrows, completed levels, the level-complete dialog |
-| Error | red `#FF526B` | an arrow that can't move |
+| Lives | pink `#FF5C8A` | hearts (a softer red than "error", so health doesn't read as "wrong") |
+| Error | red `#FF526B` | activated (red) arrows, the Game Over dialog, the board frame on failure |
 
 Surfaces share one set of radii (10 / 14 / 22 px and pills), a 1 px hairline border and a faint top highlight. Buttons come in four kinds: primary (cyan), success (green), secondary (neutral with purple icon) and warning (orange). Each has a pressed scale, a hover state on pointer devices, a visible keyboard focus ring and a disabled state.
 
@@ -286,4 +337,4 @@ layout aren't compared with the new one.
 
 Capacitor/Android packaging, in-game level generation (the generator is an offline developer tool), sounds, hints, lives, power-ups and monetisation are intentionally left out.
 
-**About the move count:** with the current rules, every successful move removes exactly one arrow and blocked attempts aren't counted, so the final move count always equals the number of arrows. The best move count is saved as requested, but it can't vary between runs. To make scores meaningful, a future step could count blocked attempts, for example as a "perfect clear" rating.
+**About scoring:** the star rating (lives left) is the measure of skill. The move counter is kept for compatibility. It counts arrows you cleared by tapping, so it equals the arrow count minus chain-reaction releases, and it isn't used for ratings.

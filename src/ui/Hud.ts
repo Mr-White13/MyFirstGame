@@ -2,13 +2,13 @@ import type { GameSnapshot } from '../core/types';
 import { requireElement } from './dom';
 
 /**
- * In-game heads-up display: level title, moves, arrows left with a progress
- * meter, plus the back and restart buttons. Updates only when the game state
- * changes (never per frame); the visual easing is all CSS.
+ * In-game heads-up display: level title, lives (three hearts), arrows left
+ * with a progress meter, plus the back and restart buttons. Updates only when
+ * the game state changes (never per frame); the visual easing is all CSS.
  */
 export class Hud {
   private readonly level = requireElement('hud-level');
-  private readonly moves = requireElement('hud-moves');
+  private readonly hearts = requireElement('hud-hearts');
   private readonly remaining = requireElement('hud-remaining');
   private readonly progress = requireElement('hud-progress');
   private readonly backButton = requireElement<HTMLButtonElement>('btn-back');
@@ -16,20 +16,16 @@ export class Hud {
   private last?: GameSnapshot;
 
   update(snapshot: GameSnapshot): void {
-    const sameLevel = this.last?.levelId === snapshot.levelId;
+    const sameRun = this.last?.levelId === snapshot.levelId;
     this.level.textContent = String(snapshot.levelId);
-    this.moves.textContent = String(snapshot.moves);
     this.remaining.textContent = String(snapshot.remaining);
     const cleared = snapshot.total === 0 ? 0 : (snapshot.total - snapshot.remaining) / snapshot.total;
     this.progress.style.transform = `scaleX(${cleared})`;
-    // Nothing to restart before the first move.
-    this.restartButton.disabled = snapshot.moves === 0;
+    // Nothing to restart before the first move or mistake.
+    this.restartButton.disabled = snapshot.moves === 0 && snapshot.mistakes === 0;
 
-    // Tick animations only for real moves, not when a level is (re)loaded.
-    if (sameLevel && this.last && snapshot.moves > this.last.moves) {
-      this.tick(this.moves);
-      this.tick(this.remaining);
-    }
+    this.renderHearts(snapshot.lives, sameRun && this.last !== undefined && snapshot.lives < this.last.lives);
+    if (sameRun && this.last && snapshot.remaining < this.last.remaining) this.tick(this.remaining);
     this.last = snapshot;
   }
 
@@ -39,6 +35,22 @@ export class Hud {
 
   onRestart(handler: () => void): void {
     this.restartButton.addEventListener('click', handler);
+  }
+
+  /** Full hearts first, lost hearts last; the heart that was just lost plays a short break animation. */
+  private renderHearts(lives: number, justLost: boolean): void {
+    const hearts = [...this.hearts.children] as SVGElement[];
+    hearts.forEach((heart, index) => {
+      const full = index < lives;
+      heart.classList.toggle('heart--lost', !full);
+      heart.classList.remove('heart--breaking');
+      if (justLost && index === lives) {
+        void heart.getBoundingClientRect(); // restart the CSS animation
+        heart.classList.add('heart--breaking');
+      }
+    });
+    this.hearts.setAttribute('aria-label', `${lives} ${lives === 1 ? 'life' : 'lives'} left`);
+    this.hearts.classList.toggle('hearts--last', lives === 1);
   }
 
   private tick(el: HTMLElement): void {

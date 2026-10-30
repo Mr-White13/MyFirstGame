@@ -7,6 +7,7 @@ import { ProgressStorage } from './progress/ProgressStorage';
 import { GameScene } from './scenes/GameScene';
 import { CompleteDialog } from './ui/CompleteDialog';
 import { ConfirmDialog } from './ui/ConfirmDialog';
+import { GameOverDialog } from './ui/GameOverDialog';
 import { requireElement } from './ui/dom';
 import { GameLayout } from './ui/GameLayout';
 import { Hud } from './ui/Hud';
@@ -24,12 +25,18 @@ const scene = new GameScene(state, {
   boardSlot,
   onLevelSolved: () => app?.handleLevelSolved(),
   onCelebrationEnd: () => app?.handleCelebrationEnd(),
+  onLevelFailed: () => app?.handleLevelFailed(),
 });
 const completeDialog = new CompleteDialog({
   onNext: () => app?.nextLevel(),
   onReplay: () => app?.restartLevel(),
   onLevels: () => void app?.showLevelSelect(),
   onPlayFromStart: () => app?.playFromStart(),
+});
+
+const gameOverDialog = new GameOverDialog({
+  onTryAgain: () => app?.restartLevel(),
+  onLevels: () => void app?.showLevelSelect(),
 });
 
 const game = createGame(requireElement('stage'), scene);
@@ -48,6 +55,7 @@ app = new App({
   gameLayout,
   completeDialog,
   confirmDialog: new ConfirmDialog(),
+  gameOverDialog,
 });
 app.start();
 

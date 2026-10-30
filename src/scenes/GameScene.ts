@@ -5,7 +5,8 @@ import { ArrowView } from '../render/ArrowView';
 import { BoardRenderer } from '../render/BoardRenderer';
 import { FxLayer } from '../render/FxLayer';
 import { cellAtPoint, computeBoardLayout, sameLayout, type BoardLayout, type Rect } from '../render/layout';
-import type { LevelData } from '../core/types';
+import type { LevelData, MoveResult } from '../core/types';
+import { MoveSequencer, type SequenceStep } from './MoveSequencer';
 
 export interface GameSceneOptions {
   /**
@@ -20,6 +21,8 @@ export interface GameSceneOptions {
   onLevelSolved: () => void;
   /** Called once the board's win effect has had a moment to play: time to show the summary. */
   onCelebrationEnd: () => void;
+  /** Called once, after the last life is lost and its feedback has played: time to show Game Over. */
+  onLevelFailed: () => void;
 }
 
 /** How far outside an arrow's body a tap still counts, in cells. */
@@ -28,6 +31,8 @@ const TAP_TOLERANCE = 0.45;
 const CANCEL_DISTANCE = 0.8;
 /** Pause between the board's win effect starting and the dialog appearing. */
 const WIN_DIALOG_DELAY = 600;
+/** Pause between the failure effect starting and the Game Over dialog. */
+const FAIL_DIALOG_DELAY = 550;
 /** The arrows' intro is spread over at most this long, whatever their number. */
 const INTRO_SPREAD_MS = 280;
 
@@ -37,9 +42,15 @@ const INTRO_SPREAD_MS = 280;
  *
  * Interaction model:
  * - Pointer down highlights an arrow; pointer up on the same arrow releases it.
- * - Only one arrow moves at a time. While an arrow is still on the grid (or a
- *   blocked bump is playing) new moves are ignored. The lock lifts as soon as
- *   the leaving arrow's tail crosses the grid edge, so quick play stays fluid.
+ * - GameState resolves the whole move at once (including any chain reaction);
+ *   the scene then plays its animations as one sequence (see MoveSequencer).
+ *   While a sequence plays, taps are ignored before they reach GameState, so
+ *   an ignored tap can never cost a life.
+ * - Each exit step hands over when the leaving arrow's tail crosses the grid
+ *   edge, so the next chain release (or the next tap) follows promptly.
+ * - Win and Game Over are triggered only after the sequence has finished.
+ * - Restart, level change and resize cancel the sequence; the board is then
+ *   re-synced from GameState, which is always the source of truth.
  */
 export class GameScene extends Phaser.Scene {
   private board!: BoardRenderer;
@@ -49,11 +60,11 @@ export class GameScene extends Phaser.Scene {
   private readonly views = new Map<string, ArrowView>();
   /** Arrows already removed from the logic but still animating out. */
   private readonly leaving = new Set<ArrowView>();
-  /** The arrow whose animation currently blocks input, if any. */
-  private lockOwner?: ArrowView;
+  private readonly sequencer = new MoveSequencer();
   private pressed?: ArrowView;
-  private completed = false;
-  private winTimer?: Phaser.Time.TimerEvent;
+  /** Set once the win or Game Over sequence has started; no more input after that. */
+  private ended = false;
+  private endTimer?: Phaser.Time.TimerEvent;
 
   constructor(
     private readonly state: GameState,
@@ -114,10 +125,10 @@ export class GameScene extends Phaser.Scene {
     if (!this.board) return; // scene not created yet; create() will build from the fresh state
     this.layout = this.computeLayout(); // the grid size may have changed
     this.board.setLayout(this.layout);
-    this.winTimer?.remove();
-    this.winTimer = undefined;
-    this.completed = false;
-    this.lockOwner = undefined;
+    this.endTimer?.remove();
+    this.endTimer = undefined;
+    this.ended = false;
+    this.sequencer.cancel();
     this.pressed = undefined;
     this.clearViews();
     this.fx.clear();
@@ -131,6 +142,7 @@ export class GameScene extends Phaser.Scene {
     const stagger = Math.min(30, INTRO_SPREAD_MS / Math.max(1, arrows.length));
     arrows.forEach((data, index) => {
       const view = new ArrowView(this, data, this.layout, this.arrowLayer, this.fx);
+      view.setActivated(this.state.isActivated(data.id));
       this.views.set(data.id, view);
       view.playIntro(60 + index * stagger);
     });
@@ -146,7 +158,7 @@ export class GameScene extends Phaser.Scene {
   // ---------------------------------------------------------------- input
 
   private handlePointerDown(pointer: Phaser.Input.Pointer): void {
-    if (this.completed) return;
+    if (this.ended || !this.state.isPlaying) return;
     this.releasePress();
     // Pressing is allowed while another arrow is still leaving; the move itself
     // is decided on release, by which time the board is usually free again.
@@ -166,7 +178,8 @@ export class GameScene extends Phaser.Scene {
     const view = this.pressed;
     if (!view) return;
     this.releasePress();
-    if (this.lockOwner || this.completed || !this.views.has(view.data.id)) return;
+    // Locked, finished or stale taps never reach GameState, so they can't cost a life.
+    if (this.sequencer.busy || this.ended || !this.state.isPlaying || !this.views.has(view.data.id)) return;
     if (view.distanceTo(pointer.x, pointer.y) > this.layout.cellSize * CANCEL_DISTANCE) return;
     this.attemptMove(view);
   }
@@ -203,55 +216,106 @@ export class GameScene extends Phaser.Scene {
 
   private attemptMove(view: ArrowView): void {
     const result = this.state.tryMove(view.data.id);
+    const steps = this.stepsFor(view, result);
+    if (steps.length === 0) return;
+    this.sequencer.run(steps, () => this.afterSequence());
+  }
+
+  /** Turns a resolved move into the animation steps that show it. */
+  private stepsFor(view: ArrowView, result: MoveResult): SequenceStep[] {
     switch (result.kind) {
-      case 'cleared':
-        this.views.delete(view.data.id);
-        this.leaving.add(view);
-        this.lockOwner = view;
-        view.playExit({
-          onLeftBoard: () => {
-            this.unlock(view);
-            this.completeIfDone();
-          },
-          onComplete: () => this.leaving.delete(view),
-        });
-        break;
+      case 'cleared': {
+        const steps: SequenceStep[] = [this.exitStep(view, false)];
+        for (const removal of result.chain) {
+          const released = this.views.get(removal.arrowId);
+          if (released) steps.push(this.exitStep(released, true));
+        }
+        return steps;
+      }
 
       case 'blocked': {
+        if (!result.lifeLost) {
+          // Already red and still blocked: a gentle nudge, nothing else.
+          return [{ run: (done) => view.playNudge(done) }];
+        }
         const blocker = this.views.get(result.blockerId);
         // Slide until the tip meets the edge of the blocker's cell: the free
         // cells ahead plus the gap between the resting tip and its cell edge.
         const cell = this.layout.cellSize;
         const travel = result.freePath.length * cell + (0.5 - ARROW_STYLE.tipOffset) * cell;
-        this.lockOwner = view;
-        view.playBlocked(travel, {
-          onImpact: () => blocker?.playHit(view.data.direction),
-          onComplete: () => this.unlock(view),
-        });
-        break;
+        return [
+          {
+            run: (done) =>
+              view.playBlocked(
+                travel,
+                { onImpact: () => blocker?.playHit(view.data.direction), onComplete: done },
+                { activate: true },
+              ),
+          },
+        ];
       }
 
       case 'ignored':
-        break;
+        return [];
     }
   }
 
-  private unlock(owner: ArrowView): void {
-    // Only the animation that took the lock may release it; a stale callback
-    // from before a restart or resize must not unlock a newer move.
-    if (this.lockOwner === owner) this.lockOwner = undefined;
+  /** An arrow leaving the board; the step hands over once its tail is off the grid. */
+  private exitStep(view: ArrowView, auto: boolean): SequenceStep {
+    return {
+      run: (done) => {
+        if (this.pressed === view) this.pressed = undefined; // it may be highlighted while waiting for its turn
+        this.views.delete(view.data.id);
+        this.leaving.add(view);
+        view.playExit({ onLeftBoard: done, onComplete: () => this.leaving.delete(view) }, { auto });
+      },
+    };
   }
 
-  /** Starts the win sequence once the logic says "won" and the last arrow is off the grid. */
-  private completeIfDone(): void {
-    if (this.completed || !this.state.isWon || this.lockOwner) return;
-    this.completed = true;
+  /** After a sequence: start the win or Game Over sequence if the move ended the level. */
+  private afterSequence(): void {
+    if (this.ended) return;
+    if (this.state.isWon) this.beginWin();
+    else if (this.state.isFailed) this.beginFailure();
+  }
+
+  private beginWin(): void {
+    this.ended = true;
+    this.releasePress();
     this.options.onLevelSolved();
     this.board.playWin();
-    this.winTimer = this.time.delayedCall(WIN_DIALOG_DELAY, () => {
-      this.winTimer = undefined;
+    this.endTimer = this.time.delayedCall(WIN_DIALOG_DELAY, () => {
+      this.endTimer = undefined;
       this.options.onCelebrationEnd();
     });
+  }
+
+  private beginFailure(): void {
+    this.ended = true;
+    this.releasePress();
+    this.board.playFailure();
+    this.endTimer = this.time.delayedCall(FAIL_DIALOG_DELAY, () => {
+      this.endTimer = undefined;
+      this.options.onLevelFailed();
+    });
+  }
+
+  /**
+   * Makes the board match GameState after animations were cut short: drops
+   * views of arrows that are already gone, recolours activated ones, and
+   * starts the end sequence if the level is over.
+   */
+  private syncViewsWithState(): void {
+    const present = new Set(this.state.getArrows().map((a) => a.id));
+    for (const [id, view] of this.views) {
+      if (!present.has(id)) {
+        view.destroy();
+        this.views.delete(id);
+      } else {
+        view.setActivated(this.state.isActivated(id));
+      }
+    }
+    this.afterSequence();
   }
 
   // ---------------------------------------------------------------- layout
@@ -269,9 +333,9 @@ export class GameScene extends Phaser.Scene {
     this.leaving.forEach((v) => v.destroy());
     this.leaving.clear();
     this.views.forEach((v) => v.setLayout(this.layout));
-    this.lockOwner = undefined;
+    this.sequencer.cancel();
     this.releasePress();
-    this.completeIfDone(); // in case the last arrow was mid-exit
+    this.syncViewsWithState(); // a chain may have been mid-way: catch the board up with the rules
   }
 
   private computeLayout(): BoardLayout {

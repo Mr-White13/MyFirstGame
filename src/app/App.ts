@@ -7,6 +7,7 @@ import type { GameScene } from '../scenes/GameScene';
 import type { CompleteDialog } from '../ui/CompleteDialog';
 import type { GameLayout } from '../ui/GameLayout';
 import type { ConfirmDialog } from '../ui/ConfirmDialog';
+import type { GameOverDialog } from '../ui/GameOverDialog';
 import type { Hud } from '../ui/Hud';
 import type { LevelSelect } from '../ui/LevelSelect';
 import type { Screens } from '../ui/Screens';
@@ -23,6 +24,7 @@ export interface AppParts {
   readonly gameLayout: GameLayout;
   readonly completeDialog: CompleteDialog;
   readonly confirmDialog: ConfirmDialog;
+  readonly gameOverDialog: GameOverDialog;
 }
 
 /**
@@ -38,6 +40,8 @@ export class App {
   private navigating = false;
   /** Level unlocked by the most recent completion, shown in the dialog. */
   private lastUnlocked: number | null = null;
+  /** Whether the most recent completion improved the level's star rating. */
+  private lastNewBest = false;
 
   constructor(private readonly parts: AppParts) {
     this.progress = parts.storage.load();
@@ -67,7 +71,7 @@ export class App {
     const level = this.parts.levels[levelId - 1];
     if (!level || !isUnlocked(this.progress, levelId)) return Promise.resolve();
     return this.navigate(async () => {
-      this.parts.completeDialog.hide();
+      this.hideEndDialogs();
       this.parts.confirmDialog.close(false);
       this.parts.gameLayout.setGrid(level.rows, level.cols); // size the slot before the board is fitted into it
       this.parts.scene.loadLevel(level); // replaces every arrow, counter and flag
@@ -80,14 +84,16 @@ export class App {
   async leaveLevel(): Promise<void> {
     if (this.navigating || this.parts.screens.active !== 'game') return;
     const { state, confirmDialog } = this.parts;
-    const inProgress = !state.isWon && state.snapshot().moves > 0;
+    const snapshot = state.snapshot();
+    // Only an unfinished attempt with something to lose needs confirming.
+    const inProgress = state.isPlaying && (snapshot.moves > 0 || snapshot.mistakes > 0);
     if (inProgress && !(await confirmDialog.ask())) return;
     await this.showLevelSelect();
   }
 
   showLevelSelect(): Promise<void> {
     return this.navigate(async () => {
-      this.parts.completeDialog.hide();
+      this.hideEndDialogs();
       this.parts.levelSelect.render(this.progress);
       await this.parts.screens.show('levels');
       this.syncGameLoop();
@@ -98,8 +104,8 @@ export class App {
   /** Restarts only the current level; saved progress is untouched. */
   restartLevel(): void {
     if (this.navigating) return;
-    this.parts.completeDialog.hide();
-    this.parts.scene.restartLevel();
+    this.hideEndDialogs();
+    this.parts.scene.restartLevel(); // full lives, no red arrows, counters at zero
   }
 
   // ------------------------------------------------------------ game events
@@ -108,9 +114,12 @@ export class App {
   handleLevelSolved(): void {
     const { state, levels, storage } = this.parts;
     const revision = levels[state.levelId - 1]?.revision ?? 1;
-    const result = recordCompletion(this.progress, state.levelId, state.snapshot().moves, levels.length, revision);
+    const snapshot = state.snapshot();
+    const run = { moves: snapshot.moves, stars: snapshot.stars, mistakes: snapshot.mistakes };
+    const result = recordCompletion(this.progress, state.levelId, run, levels.length, revision);
     this.progress = result.progress;
     this.lastUnlocked = result.unlocked;
+    this.lastNewBest = result.newBestStars;
     storage.save(this.progress);
     this.parts.levelSelect.render(this.progress);
   }
@@ -123,9 +132,28 @@ export class App {
     completeDialog.show({
       levelId: snapshot.levelId,
       levelCount: levels.length,
-      moves: snapshot.moves,
       arrows: snapshot.total,
+      stars: snapshot.stars,
+      directClears: snapshot.directClears,
+      autoClears: snapshot.autoClears,
+      mistakes: snapshot.mistakes,
+      newBest: this.lastNewBest,
       unlocked: this.lastUnlocked,
+    });
+  }
+
+  /**
+   * The last life is gone and its feedback has played: show Game Over.
+   * A failure never changes saved progress.
+   */
+  handleLevelFailed(): void {
+    if (this.parts.screens.active !== 'game') return;
+    const snapshot = this.parts.state.snapshot();
+    this.parts.gameOverDialog.show({
+      levelId: snapshot.levelId,
+      cleared: snapshot.total - snapshot.remaining,
+      total: snapshot.total,
+      mistakes: snapshot.mistakes,
     });
   }
 
@@ -144,6 +172,11 @@ export class App {
   }
 
   // ------------------------------------------------------------ internals
+
+  private hideEndDialogs(): void {
+    this.parts.completeDialog.hide();
+    this.parts.gameOverDialog.hide();
+  }
 
   private async navigate(action: () => Promise<void>): Promise<void> {
     if (this.navigating) return;
@@ -171,6 +204,6 @@ export class App {
   private handleKey(event: KeyboardEvent): void {
     if (event.key !== 'Escape') return;
     if (this.parts.confirmDialog.isOpen) this.parts.confirmDialog.close(false);
-    else if (!this.parts.completeDialog.isOpen) void this.leaveLevel();
+    else if (!this.parts.completeDialog.isOpen && !this.parts.gameOverDialog.isOpen) void this.leaveLevel();
   }
 }

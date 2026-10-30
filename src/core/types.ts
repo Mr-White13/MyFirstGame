@@ -30,12 +30,28 @@ export interface LevelData {
   readonly arrows: readonly ArrowData[];
 }
 
+/** Lives at the start of every level. */
+export const STARTING_LIVES = 3;
+
+/** One arrow leaving the board: the one the player tapped, or one released by a chain reaction. */
+export interface Removal {
+  readonly arrowId: string;
+  /** Board cells the head passes through on its way out (may be empty). */
+  readonly exitPath: readonly Cell[];
+}
+
 export type MoveResult =
   | {
       readonly kind: 'cleared';
       readonly arrowId: string;
-      /** Board cells the head passes through on its way out (may be empty). */
       readonly exitPath: readonly Cell[];
+      /**
+       * Activated (red) arrows released automatically because of this move, in
+       * the order they left. Already applied to the state; listed for animation.
+       */
+      readonly chain: readonly Removal[];
+      /** True if this move (with its chain) emptied the board. */
+      readonly won: boolean;
     }
   | {
       readonly kind: 'blocked';
@@ -43,13 +59,43 @@ export type MoveResult =
       readonly blockerId: string;
       /** Free cells in front of the head before the blocker. */
       readonly freePath: readonly Cell[];
+      /**
+       * True the first time this arrow is tapped while blocked: it costs a life
+       * and the arrow becomes activated (red). False for a repeat tap on an
+       * arrow that is already red, which changes nothing.
+       */
+      readonly lifeLost: boolean;
+      /** True if this tap used up the last life. */
+      readonly failed: boolean;
     }
-  | { readonly kind: 'ignored'; readonly reason: 'unknown-arrow' | 'game-over' };
+  | { readonly kind: 'ignored'; readonly reason: 'unknown-arrow' | 'level-over' };
 
+export type LevelStatus = 'playing' | 'won' | 'failed';
+
+/**
+ * Counters for the current attempt.
+ *
+ * - `moves`: successful player taps (kept for compatibility; equals `directClears`).
+ * - `directClears`: arrows the player removed by tapping them.
+ * - `autoClears`: activated arrows released automatically by chain reactions.
+ * - `mistakes`: taps on a blocked arrow that cost a life (repeat taps on a red arrow don't count).
+ * - `lives`: lives left (`STARTING_LIVES - mistakes`, never below 0).
+ * - `remaining` / `total`: arrows still on the board / at the start.
+ * - `activated`: red arrows currently on the board.
+ */
 export interface GameSnapshot {
   readonly levelId: number;
+  readonly status: LevelStatus;
   readonly moves: number;
+  readonly directClears: number;
+  readonly autoClears: number;
+  readonly mistakes: number;
+  readonly lives: number;
   readonly remaining: number;
   readonly total: number;
+  readonly activated: number;
+  /** True once every arrow is gone (status 'won'). Kept for compatibility. */
   readonly won: boolean;
+  /** Stars earned, 1..3, once won (lives left at the end); 0 otherwise. */
+  readonly stars: number;
 }
