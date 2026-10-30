@@ -1,3 +1,4 @@
+import Phaser from 'phaser';
 import type { Cell } from '../core/types';
 
 /** Pixel geometry of the board inside the canvas. All values are in game (device) pixels. */
@@ -19,21 +20,26 @@ export interface Point {
   readonly y: number;
 }
 
-/** Fits the largest square-celled board into the view, centred, with a small margin. */
+/** Board padding around the grid, in cells. Leaves room for the arrow halo at the edges. */
+const PADDING_IN_CELLS = 0.28;
+
+/**
+ * Fits the largest square-celled board into the view, centred. The page
+ * already provides side gutters, so the margin here only keeps the board's
+ * outline off the canvas edge.
+ */
 export function computeBoardLayout(viewWidth: number, viewHeight: number, rows: number, cols: number): BoardLayout {
-  const margin = Math.min(viewWidth, viewHeight) * 0.035;
-  // Padding is proportional to the cell so arrow glow never touches the container edge.
-  const paddingInCells = 0.35;
+  const margin = Math.max(2, Math.min(viewWidth, viewHeight) * 0.015);
   const cellSize = Math.max(
     4,
     Math.floor(
       Math.min(
-        (viewWidth - 2 * margin) / (cols + 2 * paddingInCells),
-        (viewHeight - 2 * margin) / (rows + 2 * paddingInCells),
+        (viewWidth - 2 * margin) / (cols + 2 * PADDING_IN_CELLS),
+        (viewHeight - 2 * margin) / (rows + 2 * PADDING_IN_CELLS),
       ),
     ),
   );
-  const padding = Math.round(cellSize * paddingInCells);
+  const padding = Math.round(cellSize * PADDING_IN_CELLS);
   const width = cols * cellSize + 2 * padding;
   const height = rows * cellSize + 2 * padding;
   return {
@@ -45,8 +51,18 @@ export function computeBoardLayout(viewWidth: number, viewHeight: number, rows: 
     height,
     padding,
     cellSize,
-    radius: Math.round(cellSize * 0.4),
+    radius: Math.round(cellSize * 0.42),
   };
+}
+
+/** The playable grid area (inside the board padding). */
+export function gridBounds(layout: BoardLayout): Phaser.Geom.Rectangle {
+  return new Phaser.Geom.Rectangle(
+    layout.x + layout.padding,
+    layout.y + layout.padding,
+    layout.cols * layout.cellSize,
+    layout.rows * layout.cellSize,
+  );
 }
 
 export function cellCenter(layout: BoardLayout, cell: Cell): Point {

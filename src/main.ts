@@ -9,7 +9,7 @@ const state = new GameState(level1);
 const hud = new Hud();
 
 const scene = new GameScene(state, {
-  onLevelComplete: () => hud.showWin(state.snapshot().moves),
+  onLevelComplete: () => hud.showWin(state.snapshot()),
 });
 
 state.subscribe((snapshot) => hud.update(snapshot));

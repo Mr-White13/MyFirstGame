@@ -20,7 +20,14 @@ npm run dev
 
 Vite prints a local URL (default http://localhost:5173). Open it in Chrome.
 
-Because the dev server runs with `host: true`, it also prints a **Network** URL. Open that on a phone connected to the same Wi-Fi to play on a real device.
+### Playing on a real phone
+
+1. Connect the phone and the computer to the same Wi-Fi network.
+2. Run `npm run dev`. Because the dev server runs with `host: true`, Vite also prints a **Network** URL such as `http://192.168.1.23:5173/`.
+3. Open that URL in Chrome on the phone.
+4. If the page doesn't load, allow Node.js through the computer's firewall for private networks. On Windows, a prompt usually appears the first time.
+
+Optionally, in Chrome's menu choose **Add to Home screen** to play full-screen without the address bar.
 
 ### Scripts
 
@@ -37,15 +44,15 @@ Because the dev server runs with `host: true`, it also prints a **Network** URL.
 2. Open DevTools: `F12` or `Ctrl+Shift+I` (`Cmd+Option+I` on macOS).
 3. Click the **Toggle device toolbar** icon (phone/tablet) or press `Ctrl+Shift+M` (`Cmd+Shift+M` on macOS).
 4. In the device dropdown at the top of the page, choose an Android device such as **Pixel 7** or **Samsung Galaxy S20 Ultra**. Use **Edit…** to add more devices, or **Responsive** to drag to any size.
-5. Keep the orientation in portrait. DevTools now emulates touch input, so clicks behave like taps.
-6. Reload the page (`F5`) after switching devices so the game picks up the device's pixel ratio.
+5. DevTools now emulates touch input, so clicks behave like taps. Portrait is the main layout. Use the rotate button to check landscape, where the HUD moves into a side column.
 
 ## How to play
 
-- Tap or click any part of an arrow.
-- **Clear path:** the arrow slides along its own body and leaves the board. This counts as one move.
-- **Blocked:** the arrow bumps forward and flashes red, and the arrow in its way flashes orange. Blocked attempts do not count as moves.
-- Remove all arrows to complete the level. **Restart** resets the level at any time.
+- Tap any part of an arrow, including its head. Near-misses within about half a cell still count. The arrow lights up while your finger is on it, and the move happens when you lift your finger. Slide away before lifting to cancel.
+- **Clear path:** the arrow flashes, slides along its own body and leaves the board. This counts as one move.
+- **Blocked:** the arrow turns red and slides up to the arrow in its way, which flashes orange and gets knocked. Then it springs back. Blocked attempts do not count as moves.
+- Only one arrow moves at a time. Taps made while an arrow is still crossing the board are ignored, so fast double taps can't trigger two moves.
+- Remove all arrows to complete the level: the board pulses green and a summary shows your move count. **Restart** resets the level at any time, even mid-animation.
 
 ## Project structure
 
@@ -56,7 +63,7 @@ Because the dev server runs with `host: true`, it also prints a **Network** URL.
 └── src/
     ├── main.ts            Entry point: wires game state, HUD and the Phaser game together
     ├── createGame.ts      Phaser bootstrap: high-DPI canvas sized to the board container
-    ├── style.css          Layout and HUD styling (mobile-first, portrait)
+    ├── style.css          Layout and HUD styling (mobile-first portrait, landscape side column)
     │
     ├── core/              Pure game logic, no Phaser or DOM imports
     │   ├── types.ts           Direction, Cell, ArrowData, LevelData, MoveResult, GameSnapshot
@@ -72,10 +79,10 @@ Because the dev server runs with `host: true`, it also prints a **Network** URL.
     │
     ├── render/            Phaser drawing, no game rules
     │   ├── theme.ts           NEON ESCAPE palette and arrow proportions
-    │   ├── layout.ts          Responsive board geometry and pixel ↔ cell mapping
-    │   ├── polyline.ts        Polyline length and slicing (used for the exit animation)
-    │   ├── BoardRenderer.ts   Rounded board container and grid lines
-    │   └── ArrowView.ts       Draws one arrow and runs its intro, exit and blocked animations
+    │   ├── layout.ts          Responsive board geometry, grid bounds and pixel ↔ cell mapping
+    │   ├── polyline.ts        Polyline length, slicing and point distance (animation, hit testing)
+    │   ├── BoardRenderer.ts   Rounded board container, grid lines and the win effect
+    │   └── ArrowView.ts       Draws one arrow; press state, intro, exit, blocked and hit animations
     │
     ├── scenes/
     │   └── GameScene.ts   Turns input into moves and move results into animations
@@ -89,6 +96,7 @@ Because the dev server runs with `host: true`, it also prints a **Network** URL.
 - **Logic is separate from presentation.** `core/` has no idea Phaser exists. `GameScene` asks `GameState.tryMove(id)` and animates the returned `MoveResult` (`cleared`, `blocked` or `ignored`).
 - **Arrows** are chains of adjacent cells ordered tail → head. When an arrow is released, only the head's line to the edge needs to be clear, because the body follows the head through cells the arrow already owns.
 - **Solvability:** removing an arrow only ever frees cells, so repeatedly removing any clear arrow solves a level whenever a solution exists. `validateLevel()` runs this solver when a level loads and throws if the level is malformed or cannot be solved.
+- **Interaction:** `GameScene` keeps a single *lock owner*, the arrow whose animation currently blocks input. The lock is released when a leaving arrow's tail crosses the grid edge, or when a blocked bump finishes. Restart and resize clear it. Callbacks from animations cut short by a restart can never release a newer lock. Level completion is guarded so it fires exactly once per play-through.
 - **Rendering:** arrows are drawn with Phaser `Graphics`, not image files. The "glow" is made of opaque halo rings blended with the board colour, because a shader glow was far too slow on low-end GPUs. The canvas renders at device-pixel resolution so it stays sharp on phones.
 - **UI** (title, counters, buttons, win dialog) is plain HTML/CSS on top of the canvas. This keeps text sharp and makes the layout easy to adapt.
 
