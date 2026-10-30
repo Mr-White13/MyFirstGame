@@ -5,16 +5,21 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tools",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "levels:build": "vite build --config tools/vite.config.ts",
+    "levels:analyze": "npm run levels:build --silent && node .tools/levels.mjs analyze",
+    "levels:validate": "npm run levels:build --silent && node .tools/levels.mjs validate",
+    "levels:generate": "npm run levels:build --silent && node .tools/levels.mjs generate"
   },
   "dependencies": {
     "phaser": "^3.90.0"
   },
   "devDependencies": {
+    "@types/node": "^22.20.5",
     "typescript": "^7.0.2",
     "vite": "^8.3.5",
     "vitest": "^5.0.5"

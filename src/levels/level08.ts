@@ -1,13 +1,21 @@
 import { levelFromMap } from './levelMap';
 
-/** Level 8 — a seven-step chain snakes from the bottom right to the top left. */
-export default levelFromMap(8, [
-  '.  .  e  .  o  o  o> p^',
-  '.  i  e  f< f  .  .  p',
-  'i< i  ev .  .  g^ .  m',
-  '.  d  d  d> c  g  q^ m',
-  'j^ .  .  l^ c  g  q  mv',
-  'j  .  .  l  c  n  n> a',
-  'j  .  k  l  cv .  .  a',
-  'j  k< k  b  b  b  b> av',
-]);
+/**
+ * Level 8 — only two arrows can move at the start; two interlocking L-shapes
+ * (e and h) sit in the middle of an eleven-step chain.
+ * Drafted with the level generator (seed 210), reviewed for readability.
+ */
+export default levelFromMap(
+  8,
+  [
+    '.  c  .  a< a  .  .  b^',
+    '.  cv d  d> .  e  .  b',
+    'f  g  e< e  e  e  h  .',
+    'fv gv .  .  h< h  h  j',
+    'k  k  .  i^ .  .  .  jv',
+    'kv .  l^ i  m< m  n< n',
+    '.  .  l  o< o  o  .  r',
+    'p  p  p  p> q  q> .  rv',
+  ],
+  { revision: 2 },
+);

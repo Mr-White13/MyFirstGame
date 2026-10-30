@@ -7,17 +7,28 @@ export interface KeyValueStore {
 }
 
 export const STORAGE_KEY = 'neon-escape.progress';
-/** Bump when the saved shape changes; older or unknown versions start fresh. */
-export const SAVE_VERSION = 1;
+/** Where unreadable or newer-version save data is copied before anything could replace it. */
+export const BACKUP_KEY = 'neon-escape.progress.backup';
 
-interface SaveFileV1 {
+/**
+ * Save format history:
+ *  1 — { version, highestUnlocked, completed: { [id]: { bestMoves } } }
+ *  2 — records also carry the level `revision` their best move count belongs to.
+ * Older versions are migrated on load; the next save writes the current one.
+ */
+export const SAVE_VERSION = 2;
+
+interface SaveFile {
   version: typeof SAVE_VERSION;
   highestUnlocked: number;
   completed: Record<string, LevelRecord>;
 }
 
+/** What loading found, so storage can protect data it doesn't understand. */
+export type SaveStatus = 'empty' | 'current' | 'migrated' | 'corrupt' | 'newer';
+
 export function serializeProgress(progress: Progress): string {
-  const file: SaveFileV1 = {
+  const file: SaveFile = {
     version: SAVE_VERSION,
     highestUnlocked: progress.highestUnlocked,
     completed: { ...progress.completed },
@@ -30,28 +41,36 @@ const isPositiveInt = (value: unknown): value is number =>
 
 /**
  * Turns whatever is in storage into valid progress. Never throws: missing,
- * malformed or outdated data falls back to a new game, and individual bad
+ * malformed or unknown data falls back to a new game, and individual bad
  * entries are dropped while valid ones are kept.
  */
-export function parseProgress(raw: string | null, levelCount: number): Progress {
-  if (raw === null) return createProgress();
+export function readProgress(raw: string | null, levelCount: number): { progress: Progress; status: SaveStatus } {
+  if (raw === null) return { progress: createProgress(), status: 'empty' };
   let data: unknown;
   try {
     data = JSON.parse(raw);
   } catch {
-    return createProgress();
+    return { progress: createProgress(), status: 'corrupt' };
   }
-  if (typeof data !== 'object' || data === null) return createProgress();
-  const file = data as Partial<Record<keyof SaveFileV1, unknown>>;
-  if (file.version !== SAVE_VERSION) return createProgress();
+  if (typeof data !== 'object' || data === null || Array.isArray(data)) {
+    return { progress: createProgress(), status: 'corrupt' };
+  }
+  const file = data as Partial<Record<keyof SaveFile, unknown>>;
+  if (typeof file.version === 'number' && file.version > SAVE_VERSION) {
+    // Written by a newer version of the game: don't guess at its meaning.
+    return { progress: createProgress(), status: 'newer' };
+  }
+  if (file.version !== 1 && file.version !== 2) return { progress: createProgress(), status: 'corrupt' };
 
   const completed: Record<number, LevelRecord> = {};
   if (typeof file.completed === 'object' && file.completed !== null) {
-    for (const [key, record] of Object.entries(file.completed as Record<string, unknown>)) {
+    for (const [key, entry] of Object.entries(file.completed as Record<string, unknown>)) {
       const id = Number(key);
       if (!isPositiveInt(id) || id > levelCount) continue;
-      const bestMoves = (record as { bestMoves?: unknown } | null)?.bestMoves;
-      if (isPositiveInt(bestMoves)) completed[id] = { bestMoves };
+      const record = (entry ?? {}) as { bestMoves?: unknown; revision?: unknown };
+      if (!isPositiveInt(record.bestMoves)) continue;
+      // Version 1 saves predate level revisions: their records belong to revision 1.
+      completed[id] = { bestMoves: record.bestMoves, revision: isPositiveInt(record.revision) ? record.revision : 1 };
     }
   }
 
@@ -61,7 +80,12 @@ export function parseProgress(raw: string | null, levelCount: number): Progress 
   const saved = isPositiveInt(file.highestUnlocked) ? file.highestUnlocked : 1;
   const highestUnlocked = Math.min(levelCount, Math.max(1, saved, fromCompletions));
 
-  return { highestUnlocked, completed };
+  return { progress: { highestUnlocked, completed }, status: file.version === SAVE_VERSION ? 'current' : 'migrated' };
+}
+
+/** Convenience wrapper when only the progress is needed. */
+export function parseProgress(raw: string | null, levelCount: number): Progress {
+  return readProgress(raw, levelCount).progress;
 }
 
 /** Browser localStorage, or null where it is unavailable (privacy modes, sandboxed frames). */
@@ -73,8 +97,15 @@ function browserStorage(): KeyValueStore | null {
   }
 }
 
-/** Loads and saves progress. Storage failures are swallowed: the game keeps working, just unsaved. */
+/**
+ * Loads and saves progress. Storage failures are swallowed: the game keeps
+ * working, just unsaved. Player data is never silently destroyed:
+ * - unreadable data is copied to BACKUP_KEY before it can be replaced;
+ * - data from a newer game version is backed up and never overwritten.
+ */
 export class ProgressStorage {
+  private readOnly = false;
+
   constructor(
     private readonly levelCount: number,
     private readonly store: KeyValueStore | null = browserStorage(),
@@ -82,20 +113,33 @@ export class ProgressStorage {
 
   load(): Progress {
     try {
-      return parseProgress(this.store?.getItem(STORAGE_KEY) ?? null, this.levelCount);
+      const raw = this.store?.getItem(STORAGE_KEY) ?? null;
+      const { progress, status } = readProgress(raw, this.levelCount);
+      if ((status === 'corrupt' || status === 'newer') && raw !== null) this.backup(raw);
+      this.readOnly = status === 'newer';
+      return progress;
     } catch {
       return createProgress();
     }
   }
 
-  /** Returns false if the data could not be written (e.g. storage full or blocked). */
+  /** Returns false if the data was not written (storage blocked or full, or newer save protected). */
   save(progress: Progress): boolean {
-    if (!this.store) return false;
+    if (!this.store || this.readOnly) return false;
     try {
       this.store.setItem(STORAGE_KEY, serializeProgress(progress));
       return true;
     } catch {
       return false;
+    }
+  }
+
+  private backup(raw: string): void {
+    try {
+      // Keep the first backup: a later load must not replace it with a worse copy.
+      if (this.store && this.store.getItem(BACKUP_KEY) === null) this.store.setItem(BACKUP_KEY, raw);
+    } catch {
+      // Nothing more we can do without storage.
     }
   }
 }

@@ -8,7 +8,15 @@ import {
   recordCompletion,
   type Progress,
 } from './Progress';
-import { parseProgress, ProgressStorage, serializeProgress, STORAGE_KEY, type KeyValueStore } from './ProgressStorage';
+import {
+  BACKUP_KEY,
+  parseProgress,
+  ProgressStorage,
+  readProgress,
+  serializeProgress,
+  STORAGE_KEY,
+  type KeyValueStore,
+} from './ProgressStorage';
 
 const LEVELS = 10;
 
@@ -96,7 +104,7 @@ describe('save data', () => {
     ['a number', '42'],
     ['an array', '[1,2,3]'],
     ['no version', '{"highestUnlocked":5,"completed":{}}'],
-    ['an unknown version', '{"version":99,"highestUnlocked":5,"completed":{}}'],
+    ['a newer version', '{"version":99,"highestUnlocked":5,"completed":{}}'],
   ])('falls back to a new game when data is %s', (_label, raw) => {
     expect(parseProgress(raw, LEVELS)).toEqual(createProgress());
   });
@@ -114,7 +122,7 @@ describe('save data', () => {
         99: { bestMoves: 4 },
       },
     });
-    expect(parseProgress(raw, LEVELS)).toEqual({ highestUnlocked: 2, completed: { 1: { bestMoves: 5 } } });
+    expect(parseProgress(raw, LEVELS)).toEqual({ highestUnlocked: 2, completed: { 1: { bestMoves: 5, revision: 1 } } });
   });
 
   it('clamps an out-of-range unlock to the available levels', () => {
@@ -166,5 +174,63 @@ describe('ProgressStorage', () => {
     const storage = new ProgressStorage(LEVELS, null);
     expect(storage.load()).toEqual(createProgress());
     expect(storage.save(createProgress())).toBe(false);
+  });
+});
+
+describe('save migration and protection', () => {
+  const v1 = JSON.stringify({ version: 1, highestUnlocked: 4, completed: { 1: { bestMoves: 5 }, 2: { bestMoves: 7 }, 3: { bestMoves: 9 } } });
+
+  it('migrates version 1 saves without losing unlocks or completions', () => {
+    const { progress, status } = readProgress(v1, LEVELS);
+    expect(status).toBe('migrated');
+    expect(progress.highestUnlocked).toBe(4);
+    expect(progress.completed).toEqual({
+      1: { bestMoves: 5, revision: 1 },
+      2: { bestMoves: 7, revision: 1 },
+      3: { bestMoves: 9, revision: 1 },
+    });
+  });
+
+  it('rewrites a migrated save in the current format on the next save', () => {
+    const store = new MemoryStore();
+    store.setItem(STORAGE_KEY, v1);
+    const storage = new ProgressStorage(LEVELS, store);
+    storage.save(storage.load());
+    expect(readProgress(store.getItem(STORAGE_KEY), LEVELS).status).toBe('current');
+  });
+
+  it('keeps a completion from an older layout but starts a fresh best for the new one', () => {
+    const old = readProgress(v1, LEVELS).progress;
+    const replayed = recordCompletion(old, 2, 12, LEVELS, 2);
+    expect(replayed.progress.completed[2]).toEqual({ bestMoves: 12, revision: 2 });
+    expect(replayed.firstClear).toBe(false);
+    expect(replayed.progress.highestUnlocked).toBe(4);
+    // Same layout again: the best only improves.
+    const again = recordCompletion(replayed.progress, 2, 14, LEVELS, 2);
+    expect(again.progress.completed[2]).toEqual({ bestMoves: 12, revision: 2 });
+  });
+
+  it('backs up corrupted data before it can be replaced', () => {
+    const store = new MemoryStore();
+    store.setItem(STORAGE_KEY, '{broken');
+    const storage = new ProgressStorage(LEVELS, store);
+    expect(storage.load()).toEqual(createProgress());
+    expect(store.getItem(BACKUP_KEY)).toBe('{broken');
+    expect(storage.save(completeUpTo(1))).toBe(true);
+    // A second bad load keeps the first backup.
+    store.setItem(STORAGE_KEY, 'also broken');
+    new ProgressStorage(LEVELS, store).load();
+    expect(store.getItem(BACKUP_KEY)).toBe('{broken');
+  });
+
+  it('never overwrites a save written by a newer version of the game', () => {
+    const store = new MemoryStore();
+    const future = JSON.stringify({ version: 99, somethingNew: true });
+    store.setItem(STORAGE_KEY, future);
+    const storage = new ProgressStorage(LEVELS, store);
+    expect(storage.load()).toEqual(createProgress());
+    expect(storage.save(completeUpTo(3))).toBe(false);
+    expect(store.getItem(STORAGE_KEY)).toBe(future);
+    expect(store.getItem(BACKUP_KEY)).toBe(future);
   });
 });

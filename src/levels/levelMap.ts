@@ -21,11 +21,13 @@ const TOKEN = /^([a-zA-Z])([\^v<>])?$/;
  * ]);
  * ```
  *
+ * Pass `{ revision }` when a level's layout is redesigned (see LevelData.revision).
+ *
  * The body order (tail → head) is recovered by walking back from the head,
  * so every arrow must be a simple, unbranched chain. The result is a plain
  * `LevelData`; validity and solvability are still checked by `validateLevel`.
  */
-export function levelFromMap(id: number, map: readonly string[]): LevelData {
+export function levelFromMap(id: number, map: readonly string[], options: { revision?: number } = {}): LevelData {
   const grid = map.map((row) => row.trim().split(/\s+/));
   const rows = grid.length;
   const cols = grid[0]?.length ?? 0;
@@ -59,7 +61,26 @@ export function levelFromMap(id: number, map: readonly string[]): LevelData {
   }
   // Stable order (by letter) keeps ids and the intro animation predictable.
   arrows.sort((a, b) => (a.id < b.id ? -1 : 1));
-  return { id, rows, cols, arrows };
+  return options.revision === undefined ? { id, rows, cols, arrows } : { id, revision: options.revision, rows, cols, arrows };
+}
+
+const MARK_FOR: Readonly<Record<Direction, string>> = { up: '^', down: 'v', left: '<', right: '>' };
+
+/**
+ * The inverse of `levelFromMap`: renders a level as map rows, ready to paste
+ * into a level file. Arrows are relabelled a, b, c… (then A, B, C…) in their
+ * current order.
+ */
+export function levelToMap(level: LevelData): string[] {
+  const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  if (level.arrows.length > letters.length) throw new Error(`Level ${level.id}: too many arrows for a text map`);
+  const grid: string[][] = Array.from({ length: level.rows }, () => Array.from({ length: level.cols }, () => '.'));
+  level.arrows.forEach((a, i) => {
+    a.cells.forEach((c, k) => {
+      grid[c.row][c.col] = letters[i] + (k === a.cells.length - 1 ? MARK_FOR[a.direction] : '');
+    });
+  });
+  return grid.map((row) => row.map((token) => token.padEnd(2)).join(' ').trimEnd());
 }
 
 function traceArrow(
