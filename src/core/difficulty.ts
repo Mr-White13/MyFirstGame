@@ -1,8 +1,9 @@
 import { cellKey, directionBetween, headOf, step } from './Arrow';
+import { GameState } from './GameState';
 import { Grid } from './Grid';
 import { checkExitPath } from './PathChecker';
 import { createRandom } from './random';
-import type { ArrowData, Cell, LevelData } from './types';
+import { STARTING_LIVES, type ArrowData, type Cell, type LevelData } from './types';
 
 /*
  * Difficulty analysis.
@@ -17,6 +18,14 @@ import type { ArrowData, Cell, LevelData } from './types';
  * uses a fixed seed, so results are deterministic, but they describe a naive
  * player, not a human one. The final score is a weighted heuristic on top of
  * both and has not been validated against real players.
+ *
+ * Two models are reported side by side:
+ * - the "search" model (the original 0–100 `score`), which describes how
+ *   hard it is to find escapable arrows, independent of lives;
+ * - the "lives" model (`lives`), added with the three-life rules: it plays
+ *   the level with simple simulated strategies under the real GameState rules
+ *   (mistakes, red arrows, chain reactions) and reports how often each would
+ *   finish within three lives.
  */
 
 export interface ExactMetrics {
@@ -59,6 +68,34 @@ export interface EstimatedMetrics {
   readonly wrongTapsPerMove: number;
 }
 
+/** Results of one simulated strategy under the lives rules. */
+export interface StrategyResult {
+  /** Average blocked taps (mistakes) needed to clear the whole board. */
+  readonly expectedMistakes: number;
+  /** Share of play-throughs that finish with at least one life left (0..1). */
+  readonly winRate: number;
+  /** Average arrows cleared by chain reactions per play-through. */
+  readonly averageChainClears: number;
+}
+
+export interface LivesModel {
+  /** Taps a random arrow that isn't red. Knows nothing about the board. */
+  readonly random: StrategyResult;
+  /**
+   * Only taps arrows whose very next cell is empty or off the board (picks
+   * randomly among those). Catches adjacent blockers, misses distant ones.
+   */
+  readonly nearSighted: StrategyResult;
+  /** Arrows that look free at a glance (next cell clear) but are blocked further along. */
+  readonly deceptiveArrows: number;
+  /**
+   * 0..100 heuristic: how likely simple strategies are to run out of lives
+   * (60% near-sighted failure rate + 40% random failure rate). Not a
+   * measurement of human failure rates.
+   */
+  readonly riskScore: number;
+}
+
 export interface ScoreComponent {
   readonly name: string;
   /** 0..1 after normalisation. */
@@ -79,9 +116,11 @@ export interface DifficultyReport {
   readonly exact: ExactMetrics;
   readonly estimated: EstimatedMetrics;
   readonly components: readonly ScoreComponent[];
-  /** 0..100, deterministic. A heuristic, not a measurement of human difficulty. */
+  /** Search model: 0..100, deterministic. A heuristic, not a measurement of human difficulty. */
   readonly score: number;
   readonly category: DifficultyCategory;
+  /** Lives model: simulated play under the three-life rules (null when skipped). */
+  readonly lives: LivesModel | null;
 }
 
 /** Lower bounds (inclusive) of each category, from hardest to easiest. */
@@ -102,7 +141,15 @@ export function categoryFor(score: number): DifficultyCategory {
 const SIMULATIONS = 200;
 const SIMULATION_SEED = 0x5eed;
 
-export function analyzeDifficulty(level: LevelData): DifficultyReport {
+export interface AnalyzeOptions {
+  /**
+   * Also run the lives model (default true). The generator skips it: it only
+   * steers by the search score and calls this hundreds of times.
+   */
+  readonly lives?: boolean;
+}
+
+export function analyzeDifficulty(level: LevelData, options: AnalyzeOptions = {}): DifficultyReport {
   const exact = exactMetrics(level);
   const estimated = simulateRandomPlayer(level);
 
@@ -124,7 +171,66 @@ export function analyzeDifficulty(level: LevelData): DifficultyReport {
   const total = components.reduce((sum, c) => sum + c.weight, 0);
   const score = Math.round((100 * components.reduce((sum, c) => sum + c.value * c.weight, 0)) / total);
 
-  return { exact, estimated, components, score, category: categoryFor(score) };
+  return { exact, estimated, components, score, category: categoryFor(score), lives: options.lives === false ? null : livesModel(level) };
+}
+
+const LIVES_SIMULATIONS = 200;
+const LIVES_SEED = 0x11fe;
+
+type Strategy = (state: GameState, level: LevelData, random: () => number) => string;
+
+/** Uniformly random among arrows that are not red (re-tapping a red arrow is pointless). */
+const randomStrategy: Strategy = (state, _level, random) => {
+  const options = state.getArrows().filter((a) => !state.isActivated(a.id));
+  return options[Math.floor(random() * options.length)].id;
+};
+
+/** Prefers arrows whose next cell looks clear; falls back to random. */
+const nearSightedStrategy: Strategy = (state, level, random) => {
+  const options = state.getArrows().filter((a) => !state.isActivated(a.id));
+  const looksFree = options.filter((a) => {
+    const next = step(headOf(a), a.direction);
+    const inside = next.row >= 0 && next.row < level.rows && next.col >= 0 && next.col < level.cols;
+    return !inside || state.arrowIdAt(next.row, next.col) === undefined;
+  });
+  const pool = looksFree.length > 0 ? looksFree : options;
+  return pool[Math.floor(random() * pool.length)].id;
+};
+
+function simulateStrategy(level: LevelData, strategy: Strategy, seed: number): StrategyResult {
+  const random = createRandom(seed);
+  let mistakes = 0;
+  let wins = 0;
+  let chainClears = 0;
+  for (let run = 0; run < LIVES_SIMULATIONS; run++) {
+    // Unlimited lives so every mistake is counted; a run "wins" if it needed fewer than 3.
+    const state = new GameState(level, { validate: false, startingLives: Number.MAX_SAFE_INTEGER });
+    while (state.isPlaying) state.tryMove(strategy(state, level, random));
+    const snapshot = state.snapshot();
+    mistakes += snapshot.mistakes;
+    chainClears += snapshot.autoClears;
+    if (snapshot.mistakes < STARTING_LIVES) wins++;
+  }
+  return {
+    expectedMistakes: mistakes / LIVES_SIMULATIONS,
+    winRate: wins / LIVES_SIMULATIONS,
+    averageChainClears: chainClears / LIVES_SIMULATIONS,
+  };
+}
+
+function livesModel(level: LevelData): LivesModel {
+  const random = simulateStrategy(level, randomStrategy, LIVES_SEED);
+  const nearSighted = simulateStrategy(level, nearSightedStrategy, LIVES_SEED + 1);
+
+  const grid = placeAll(level);
+  const deceptiveArrows = level.arrows.filter((a) => {
+    const next = step(headOf(a), a.direction);
+    const nextFree = !grid.inBounds(next) || grid.occupantAt(next) === undefined;
+    return nextFree && !checkExitPath(grid, a).clear;
+  }).length;
+
+  const riskScore = Math.round(100 * (0.6 * (1 - nearSighted.winRate) + 0.4 * (1 - random.winRate)));
+  return { random, nearSighted, deceptiveArrows, riskScore };
 }
 
 /** x / (x + half): 0 at 0, 0.5 at `half`, approaching 1. */

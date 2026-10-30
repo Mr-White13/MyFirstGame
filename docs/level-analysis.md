@@ -252,3 +252,62 @@ The first prints the summary table. The second shows one level in detail: its ma
 metric, and the score breakdown. The third prints all the data as JSON. The fourth checks
 validity, solvability, ambiguous joins and near-duplicates, and exits with code 1 if any level
 has a problem.
+
+---
+
+## 7. Lives model (added with three lives, red arrows and chain reactions)
+
+Step 6 changed the rules. A blocked tap now costs one of three lives and turns the arrow red,
+and red arrows leave automatically once their path clears. Section 1 still holds for *moves*:
+no move can make the board unsolvable. But mistakes now cost something, so a level can be
+**failed**. The search model above is unchanged. A second model sits beside it:
+
+`analyzeDifficulty(level).lives` plays the level 200 times per strategy, using the real
+`GameState` rules and a fixed seed. Lives are uncapped in the simulation, so every mistake is
+counted. A run "finishes within 3 lives" if it needed at most two mistakes.
+
+| Strategy | Behaviour |
+| --- | --- |
+| Random tapper | Taps a random arrow that isn't red. Knows nothing about the board. |
+| Near-sighted tapper | Only taps arrows whose very next cell is empty or off the board, picking randomly among them; otherwise it guesses. It catches adjacent blockers and misses distant ones. |
+
+| Metric | Meaning |
+| --- | --- |
+| Expected mistakes | Average blocked taps needed to clear the board. |
+| Finishes within 3 lives | Share of runs with at most two mistakes. |
+| Chain clears | Average arrows cleared by chain reactions per run. For the random tapper this equals its mistakes: every red arrow eventually leaves on its own. |
+| Deceptive arrows | Arrows whose next cell is clear but which are blocked further along. These catch players who only glance ahead. |
+| Risk score | 0–100 = 100 × (0.6 × near-sighted failure rate + 0.4 × random failure rate). |
+
+These are simple scripted strategies. A careful player who follows each arrow's whole line
+makes **no** mistakes on any level, so real players will do far better than either strategy.
+
+### Current levels
+
+| Level | Search score | Random: mistakes | Random: finishes | Near-sighted: mistakes | Near-sighted: finishes | Chain clears (random) | Deceptive arrows | Risk |
+|---|---|---|---|---|---|---|---|---|
+| 1 | 14 | 1.0 | 100% | 0.5 | 100% | 1.0 | 1 | 0 |
+| 2 | 23 | 2.2 | 57% | 0.3 | 100% | 2.2 | 0 | 17 |
+| 3 | 28 | 2.6 | 47% | 1.4 | 100% | 2.6 | 1 | 21 |
+| 4 | 37 | 3.8 | 14% | 2.3 | 63% | 3.8 | 3 | 57 |
+| 5 | 45 | 5.9 | 1% | 1.9 | 79% | 5.9 | 2 | 53 |
+| 6 | 47 | 6.9 | 0% | 5.2 | 2% | 6.9 | 6 | 99 |
+| 7 | 54 | 8.5 | 0% | 5.0 | 0% | 8.5 | 4 | 100 |
+| 8 | 57 | 13.3 | 0% | 6.4 | 0% | 13.3 | 7 | 100 |
+| 9 | 59 | 13.4 | 0% | 7.3 | 0% | 13.4 | 7 | 100 |
+| 10 | 63 | 18.1 | 0% | 8.0 | 0% | 18.1 | 8 | 100 |
+
+### What this means
+
+- **Levels 1–3 are forgiving.** Even a player who only glances one cell ahead finishes them
+  every time.
+- **Levels 4–5 start punishing glancing.** They have three and two deceptive arrows.
+- **Levels 6–10 can't be finished by guessing.** With six to eight deceptive arrows each,
+  neither simple strategy finishes within three lives. The player has to trace every arrow's
+  whole line before tapping. The levels are fair (they need no mistakes at all), but the step
+  from level 5 to level 6 is now steep for players who guess.
+- **These levels were designed before lives existed** and were deliberately not changed in this
+  step. If playtesting confirms the jump, the simplest fixes are to reduce the deceptive arrows
+  in levels 6–7, or to move a forgiving level between 5 and 6.
+- **The generator** still targets the search score. Its refinement calls skip the lives model,
+  for speed. Check new levels with `npm run levels:analyze -- --level N`, which shows both models.

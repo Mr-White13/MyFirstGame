@@ -86,3 +86,40 @@ describe('readability helpers', () => {
     expect(countAmbiguousJoins(headToTail)).toBe(0);
   });
 });
+
+describe('lives model', () => {
+  it('is deterministic and reports rates within 0..1', () => {
+    const a = analyzeDifficulty(LEVELS[5]).lives!;
+    const b = analyzeDifficulty(LEVELS[5]).lives!;
+    expect(a).toEqual(b);
+    for (const s of [a.random, a.nearSighted]) {
+      expect(s.winRate).toBeGreaterThanOrEqual(0);
+      expect(s.winRate).toBeLessThanOrEqual(1);
+      expect(s.expectedMistakes).toBeGreaterThanOrEqual(0);
+    }
+    expect(a.riskScore).toBeGreaterThanOrEqual(0);
+    expect(a.riskScore).toBeLessThanOrEqual(100);
+  });
+
+  it('lets even simple strategies finish the tutorial, and rates the finale far riskier', () => {
+    const first = analyzeDifficulty(LEVELS[0]).lives!;
+    const last = analyzeDifficulty(LEVELS[9]).lives!;
+    expect(first.nearSighted.winRate).toBe(1);
+    expect(last.riskScore).toBeGreaterThan(first.riskScore);
+  });
+
+  it('counts arrows that look free but are blocked further along', () => {
+    // c's next cell is empty, but a sits two cells ahead: one deceptive arrow.
+    expect(analyzeDifficulty(chain).lives!.deceptiveArrows).toBe(1);
+  });
+
+  it('chain reactions show up in the simulation', () => {
+    expect(analyzeDifficulty(LEVELS[9]).lives!.random.averageChainClears).toBeGreaterThan(0);
+  });
+
+  it('can be skipped (the generator only needs the search score)', () => {
+    const fast = analyzeDifficulty(LEVELS[3], { lives: false });
+    expect(fast.lives).toBeNull();
+    expect(fast.score).toBe(analyzeDifficulty(LEVELS[3]).score);
+  });
+});

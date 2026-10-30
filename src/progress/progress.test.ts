@@ -6,6 +6,7 @@ import {
   isUnlocked,
   nextLevelToPlay,
   recordCompletion,
+  totalStars,
   type Progress,
 } from './Progress';
 import {
@@ -23,8 +24,13 @@ const LEVELS = 10;
 /** Completes levels 1..n in order with the given move count. */
 function completeUpTo(n: number, moves = 5): Progress {
   let progress = createProgress();
-  for (let id = 1; id <= n; id++) progress = recordCompletion(progress, id, moves, LEVELS).progress;
+  for (let id = 1; id <= n; id++) progress = recordCompletion(progress, id, run(moves), LEVELS).progress;
   return progress;
+}
+
+/** A run with the given move count; stars and mistakes default to a flawless clear. */
+function run(moves: number, stars = 3, mistakes = 0) {
+  return { moves, stars, mistakes };
 }
 
 class MemoryStore implements KeyValueStore {
@@ -47,7 +53,7 @@ describe('progression rules', () => {
   });
 
   it('completing a level unlocks the next one', () => {
-    const result = recordCompletion(createProgress(), 1, 5, LEVELS);
+    const result = recordCompletion(createProgress(), 1, run(5), LEVELS);
     expect(result.firstClear).toBe(true);
     expect(result.unlocked).toBe(2);
     expect(isCompleted(result.progress, 1)).toBe(true);
@@ -57,7 +63,7 @@ describe('progression rules', () => {
 
   it('replaying an earlier level keeps later levels unlocked', () => {
     const before = completeUpTo(4);
-    const result = recordCompletion(before, 1, 9, LEVELS);
+    const result = recordCompletion(before, 1, run(9), LEVELS);
     expect(result.progress.highestUnlocked).toBe(5);
     expect(result.unlocked).toBeNull();
     expect(result.firstClear).toBe(false);
@@ -65,9 +71,9 @@ describe('progression rules', () => {
   });
 
   it('keeps the best (lowest) move count', () => {
-    let progress = recordCompletion(createProgress(), 1, 8, LEVELS).progress;
-    progress = recordCompletion(progress, 1, 6, LEVELS).progress;
-    progress = recordCompletion(progress, 1, 7, LEVELS).progress;
+    let progress = recordCompletion(createProgress(), 1, run(8), LEVELS).progress;
+    progress = recordCompletion(progress, 1, run(6), LEVELS).progress;
+    progress = recordCompletion(progress, 1, run(7), LEVELS).progress;
     expect(progress.completed[1].bestMoves).toBe(6);
   });
 
@@ -86,7 +92,7 @@ describe('progression rules', () => {
 
   it('never mutates the previous progress object', () => {
     const before = createProgress();
-    recordCompletion(before, 1, 5, LEVELS);
+    recordCompletion(before, 1, run(5), LEVELS);
     expect(before).toEqual(createProgress());
   });
 });
@@ -122,7 +128,7 @@ describe('save data', () => {
         99: { bestMoves: 4 },
       },
     });
-    expect(parseProgress(raw, LEVELS)).toEqual({ highestUnlocked: 2, completed: { 1: { bestMoves: 5, revision: 1 } } });
+    expect(parseProgress(raw, LEVELS)).toEqual({ highestUnlocked: 2, completed: { 1: { bestMoves: 5, revision: 1, bestStars: null, bestMistakes: null } } });
   });
 
   it('clamps an out-of-range unlock to the available levels', () => {
@@ -185,9 +191,9 @@ describe('save migration and protection', () => {
     expect(status).toBe('migrated');
     expect(progress.highestUnlocked).toBe(4);
     expect(progress.completed).toEqual({
-      1: { bestMoves: 5, revision: 1 },
-      2: { bestMoves: 7, revision: 1 },
-      3: { bestMoves: 9, revision: 1 },
+      1: { bestMoves: 5, revision: 1, bestStars: null, bestMistakes: null },
+      2: { bestMoves: 7, revision: 1, bestStars: null, bestMistakes: null },
+      3: { bestMoves: 9, revision: 1, bestStars: null, bestMistakes: null },
     });
   });
 
@@ -201,13 +207,13 @@ describe('save migration and protection', () => {
 
   it('keeps a completion from an older layout but starts a fresh best for the new one', () => {
     const old = readProgress(v1, LEVELS).progress;
-    const replayed = recordCompletion(old, 2, 12, LEVELS, 2);
-    expect(replayed.progress.completed[2]).toEqual({ bestMoves: 12, revision: 2 });
+    const replayed = recordCompletion(old, 2, run(12), LEVELS, 2);
+    expect(replayed.progress.completed[2]).toEqual({ bestMoves: 12, revision: 2, bestStars: 3, bestMistakes: 0 });
     expect(replayed.firstClear).toBe(false);
     expect(replayed.progress.highestUnlocked).toBe(4);
     // Same layout again: the best only improves.
-    const again = recordCompletion(replayed.progress, 2, 14, LEVELS, 2);
-    expect(again.progress.completed[2]).toEqual({ bestMoves: 12, revision: 2 });
+    const again = recordCompletion(replayed.progress, 2, run(14), LEVELS, 2);
+    expect(again.progress.completed[2]).toEqual({ bestMoves: 12, revision: 2, bestStars: 3, bestMistakes: 0 });
   });
 
   it('backs up corrupted data before it can be replaced', () => {
@@ -232,5 +238,99 @@ describe('save migration and protection', () => {
     expect(storage.save(completeUpTo(3))).toBe(false);
     expect(store.getItem(STORAGE_KEY)).toBe(future);
     expect(store.getItem(BACKUP_KEY)).toBe(future);
+  });
+});
+
+describe('star ratings', () => {
+  it('saves the stars of a run and reports a new best', () => {
+    const result = recordCompletion(createProgress(), 1, run(5, 2, 1), LEVELS);
+    expect(result.progress.completed[1]).toMatchObject({ bestStars: 2, bestMistakes: 1 });
+    expect(result.newBestStars).toBe(true);
+    expect(result.bestStars).toBe(2);
+  });
+
+  it('never lowers a best rating or relocks anything on replay', () => {
+    let progress = recordCompletion(createProgress(), 1, run(5, 3, 0), LEVELS).progress;
+    progress = recordCompletion(progress, 2, run(6, 3, 0), LEVELS).progress;
+    const worse = recordCompletion(progress, 1, run(5, 1, 2), LEVELS);
+    expect(worse.progress.completed[1]).toMatchObject({ bestStars: 3, bestMistakes: 0 });
+    expect(worse.newBestStars).toBe(false);
+    expect(worse.progress.highestUnlocked).toBe(3);
+  });
+
+  it('improves a rating when a replay is better', () => {
+    let progress = recordCompletion(createProgress(), 1, run(5, 1, 2), LEVELS).progress;
+    const better = recordCompletion(progress, 1, run(5, 3, 0), LEVELS);
+    progress = better.progress;
+    expect(progress.completed[1]).toMatchObject({ bestStars: 3, bestMistakes: 0 });
+    expect(better.newBestStars).toBe(true);
+  });
+
+  it('counts stars over rated levels only', () => {
+    const v2 = JSON.stringify({ version: 2, highestUnlocked: 3, completed: { 1: { bestMoves: 5, revision: 1 } } });
+    let progress = parseProgress(v2, LEVELS); // level 1 completed but unranked
+    progress = recordCompletion(progress, 2, run(6, 2, 1), LEVELS).progress;
+    expect(totalStars(progress, LEVELS)).toBe(2);
+  });
+
+  it('migrates version 2 saves: unlocks and completions kept, ratings unranked', () => {
+    const v2 = JSON.stringify({
+      version: 2,
+      highestUnlocked: 5,
+      completed: { 1: { bestMoves: 5, revision: 1 }, 2: { bestMoves: 6, revision: 2 }, 4: { bestMoves: 10, revision: 2 } },
+    });
+    const { progress, status } = readProgress(v2, LEVELS);
+    expect(status).toBe('migrated');
+    expect(progress.highestUnlocked).toBe(5);
+    expect(Object.keys(progress.completed).map(Number)).toEqual([1, 2, 4]);
+    for (const record of Object.values(progress.completed)) {
+      expect(record.bestStars).toBeNull();
+      expect(record.bestMistakes).toBeNull();
+    }
+  });
+
+  it('gives an unranked completion its first rating on the next clear, keeping it completed', () => {
+    const v2 = JSON.stringify({ version: 2, highestUnlocked: 2, completed: { 1: { bestMoves: 5, revision: 1 } } });
+    const old = parseProgress(v2, LEVELS);
+    expect(isCompleted(old, 1)).toBe(true);
+    const replay = recordCompletion(old, 1, run(5, 1, 2), LEVELS, 1);
+    expect(replay.firstClear).toBe(false);
+    expect(replay.newBestStars).toBe(true);
+    expect(replay.progress.completed[1]).toMatchObject({ bestStars: 1, bestMistakes: 2 });
+  });
+
+  it('starts fresh ratings when the level layout revision changes', () => {
+    const rated = recordCompletion(createProgress(), 1, run(5, 3, 0), LEVELS, 1).progress;
+    const redesigned = recordCompletion(rated, 1, run(7, 2, 1), LEVELS, 2);
+    expect(redesigned.progress.completed[1]).toMatchObject({ bestStars: 2, bestMistakes: 1, revision: 2 });
+  });
+
+  it('treats missing or malformed star values as unranked', () => {
+    const raw = JSON.stringify({
+      version: 3,
+      highestUnlocked: 6,
+      completed: {
+        1: { bestMoves: 5, revision: 1, bestStars: 3, bestMistakes: 0 },
+        2: { bestMoves: 5, revision: 1, bestStars: 7, bestMistakes: 0 },
+        3: { bestMoves: 5, revision: 1, bestStars: 'three', bestMistakes: 0 },
+        4: { bestMoves: 5, revision: 1, bestStars: 2, bestMistakes: -1 },
+        5: { bestMoves: 5, revision: 1 },
+      },
+    });
+    const { progress, status } = readProgress(raw, LEVELS);
+    expect(status).toBe('current');
+    expect(progress.completed[1]).toMatchObject({ bestStars: 3, bestMistakes: 0 });
+    expect(progress.completed[2].bestStars).toBeNull();
+    expect(progress.completed[3].bestStars).toBeNull();
+    expect(progress.completed[4]).toMatchObject({ bestStars: 2, bestMistakes: null });
+    expect(progress.completed[5].bestStars).toBeNull();
+    expect(progress.highestUnlocked).toBe(6);
+  });
+
+  it('round-trips ratings through storage', () => {
+    const store = new MemoryStore();
+    const progress = recordCompletion(createProgress(), 1, run(5, 2, 1), LEVELS).progress;
+    new ProgressStorage(LEVELS, store).save(progress);
+    expect(new ProgressStorage(LEVELS, store).load()).toEqual(progress);
   });
 });

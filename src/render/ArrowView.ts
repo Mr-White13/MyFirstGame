@@ -45,6 +45,8 @@ export class ArrowView {
   private bodyLength = 0;
   private offset = 0;
   private color: number = COLORS.cyan;
+  /** Resting colour: cyan normally, red once the arrow is activated (tapped while blocked). */
+  private baseColor: number = COLORS.cyan;
   private pressed = false;
   /** Length of the energy trail drawn behind the tail while leaving. */
   private trail = 0;
@@ -90,6 +92,18 @@ export class ArrowView {
     this.redraw();
   }
 
+  /**
+   * Activated arrows stay red until they leave the board, so the player can
+   * see which arrows are waiting to be released by a chain reaction.
+   */
+  setActivated(activated: boolean): void {
+    this.baseColor = activated ? COLORS.red : COLORS.cyan;
+    if (!this.flashTimer && !this.motion) {
+      this.color = this.baseColor;
+      this.redraw();
+    }
+  }
+
   /** Fade/slide-in used when the level (re)starts. Input is never blocked by it. */
   playIntro(delay: number): void {
     if (reducedMotion()) return;
@@ -98,8 +112,12 @@ export class ArrowView {
     this.scene.tweens.add({ targets: this.graphics, alpha: 1, y: 0, delay, duration: 220, ease: 'Cubic.easeOut' });
   }
 
-  /** Slides the arrow along its body and off the board, then destroys it. */
-  playExit(callbacks: ExitCallbacks): void {
+  /**
+   * Slides the arrow along its body and off the board, then destroys it.
+   * `auto` marks a release by a chain reaction: it launches from red with a
+   * purple ring instead of the cyan-to-green flash of a tapped arrow.
+   */
+  playExit(callbacks: ExitCallbacks, options: { auto?: boolean } = {}): void {
     this.stopAnimations();
     this.resetPose();
     this.pressed = false;
@@ -116,7 +134,13 @@ export class ArrowView {
     let headOut = false;
 
     const tip = this.restPath[this.restPath.length - 1];
-    this.fx.ring(tip.x, tip.y, COLORS.green, cell, 0.12, 0.5, 240);
+    if (options.auto) {
+      this.fx.ring(tip.x, tip.y, COLORS.purple, cell, 0.15, 0.75, 320);
+      this.fx.burst(tip.x, tip.y, v.dCol, v.dRow, COLORS.purple, cell, 5, 1.4);
+    } else {
+      this.fx.ring(tip.x, tip.y, COLORS.green, cell, 0.12, 0.5, 240);
+    }
+    const launchColor = options.auto ? COLORS.red : COLORS.green;
 
     this.motion = this.scene.tweens.addCounter({
       from: 0,
@@ -127,7 +151,7 @@ export class ArrowView {
         this.offset = tween.getValue() ?? 0;
         // A short white-green flash at launch, settling into success green.
         const flash = Math.max(0, 1 - tween.elapsed / 140);
-        this.color = lighten(COLORS.green, 0.6 * flash);
+        this.color = flash > 0 ? mixColors(COLORS.green, lighten(launchColor, 0.4), flash) : COLORS.green;
         this.trail = decorate ? Math.min(this.offset, cell * ARROW_STYLE.trailLength) : 0;
 
         // Sparks where the head breaks through the edge of the grid.
@@ -166,7 +190,7 @@ export class ArrowView {
    * Feedback for an invalid move: turn red, slide forward until the tip
    * touches the blocking arrow, then spring back. `travel` is in pixels.
    */
-  playBlocked(travel: number, callbacks: BlockedCallbacks): void {
+  playBlocked(travel: number, callbacks: BlockedCallbacks, options: { activate?: boolean } = {}): void {
     this.stopAnimations();
     this.resetPose();
     this.pressed = false;
@@ -185,7 +209,13 @@ export class ArrowView {
         onComplete: () => {
           this.motion = undefined;
           this.setOffset(0);
-          this.flash(COLORS.red, 140);
+          if (options.activate) {
+            // From now on the arrow rests in red; a red ring marks the moment it was activated.
+            this.baseColor = COLORS.red;
+            const head = this.restPath[this.restPath.length - 1];
+            this.fx.ring(head.x, head.y, COLORS.red, cell, 0.2, 0.7, 300);
+          }
+          this.flash(lighten(COLORS.red, 0.35), 140);
           callbacks.onComplete();
         },
       });
@@ -204,6 +234,31 @@ export class ArrowView {
         this.fx.ring(tip.x, tip.y, COLORS.orange, cell, 0.08, 0.35, 220);
         callbacks.onImpact();
         back();
+      },
+    });
+  }
+
+  /**
+   * Gentle feedback for tapping an arrow that is already red and still
+   * blocked: a short nudge, no impact, no penalty.
+   */
+  playNudge(onComplete: () => void): void {
+    this.stopAnimations();
+    this.resetPose();
+    const distance = this.layout.cellSize * 0.1;
+    this.color = lighten(this.baseColor, 0.3);
+    this.motion = this.scene.tweens.addCounter({
+      from: 0,
+      to: distance,
+      duration: 70,
+      ease: 'Quad.easeOut',
+      yoyo: true,
+      onUpdate: (tween) => this.setOffset(tween.getValue() ?? 0),
+      onComplete: () => {
+        this.motion = undefined;
+        this.color = this.baseColor;
+        this.setOffset(0);
+        onComplete();
       },
     });
   }
@@ -242,7 +297,7 @@ export class ArrowView {
   private resetPose(): void {
     this.offset = 0;
     this.trail = 0;
-    this.color = COLORS.cyan;
+    this.color = this.baseColor;
     this.graphics.setAlpha(1).setPosition(0, 0);
   }
 
@@ -252,7 +307,7 @@ export class ArrowView {
     this.redraw();
     this.flashTimer = this.scene.time.delayedCall(duration, () => {
       this.flashTimer = undefined;
-      this.color = COLORS.cyan;
+      this.color = this.baseColor;
       this.redraw();
     });
   }

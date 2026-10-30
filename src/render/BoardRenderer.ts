@@ -19,6 +19,8 @@ export class BoardRenderer {
   private readonly pulse: Phaser.GameObjects.Graphics;
   private layout?: BoardLayout;
   private won = false;
+  /** Set when the level is lost: the frame turns red. */
+  private failed = false;
   /** 0..1 progress of the win wave travelling outwards from the centre; 1 = finished. */
   private wave = 1;
   private waveTween?: Phaser.Tweens.Tween;
@@ -85,9 +87,36 @@ export class BoardRenderer {
     });
   }
 
-  /** Back to the normal look, cancelling any running win effect. */
+  /** Out of lives: the frame turns red and one red ring contracts inwards. */
+  playFailure(): void {
+    const l = this.layout;
+    if (!l) return;
+    this.failed = true;
+    this.stopEffects();
+    this.draw();
+    if (reducedMotion()) return;
+    this.pulse
+      .clear()
+      .lineStyle(Math.max(2, l.cellSize * 0.06), COLORS.red, 1)
+      .strokeRoundedRect(-l.width / 2, -l.height / 2, l.width, l.height, l.radius)
+      .setPosition(l.x + l.width / 2, l.y + l.height / 2)
+      .setScale(1.05)
+      .setAlpha(0.9)
+      .setVisible(true);
+    this.scene.tweens.add({
+      targets: this.pulse,
+      scale: 1,
+      alpha: 0,
+      duration: 450,
+      ease: 'Cubic.easeOut',
+      onComplete: () => this.pulse.setVisible(false),
+    });
+  }
+
+  /** Back to the normal look, cancelling any running win or failure effect. */
   reset(): void {
     this.won = false;
+    this.failed = false;
     this.stopEffects();
     this.draw();
   }
@@ -117,12 +146,13 @@ export class BoardRenderer {
     const x0 = -l.width / 2;
     const y0 = -l.height / 2;
     const stroke = Math.max(1, l.cellSize * 0.025);
-    const accent = this.won ? COLORS.green : COLORS.cyan;
+    const accent = this.won ? COLORS.green : this.failed ? COLORS.red : COLORS.cyan;
+    const lit = this.won || this.failed;
 
     // Soft light around the frame: two wide, faint, opaque rings (no shader, no blur).
-    g.lineStyle(stroke * 10, mixColors(COLORS.background, accent, this.won ? 0.08 : 0.035), 1);
+    g.lineStyle(stroke * 10, mixColors(COLORS.background, accent, lit ? 0.08 : 0.035), 1);
     g.strokeRoundedRect(x0, y0, l.width, l.height, l.radius);
-    g.lineStyle(stroke * 5, mixColors(COLORS.background, accent, this.won ? 0.16 : 0.07), 1);
+    g.lineStyle(stroke * 5, mixColors(COLORS.background, accent, lit ? 0.16 : 0.07), 1);
     g.strokeRoundedRect(x0, y0, l.width, l.height, l.radius);
 
     // Frame, then the slightly darker play area recessed inside it.
@@ -134,7 +164,7 @@ export class BoardRenderer {
     g.fillStyle(mixColors(BOARD_COLORS.well, COLORS.green, greenWash), 1);
     g.fillRoundedRect(x0 + inset, y0 + inset, l.width - 2 * inset, l.height - 2 * inset, wellRadius);
     // Hairline outline in the accent colour: cyan normally, green once solved.
-    g.lineStyle(stroke, accent, this.won ? 0.7 : 0.2);
+    g.lineStyle(stroke, accent, lit ? 0.7 : 0.2);
     g.strokeRoundedRect(x0, y0, l.width, l.height, l.radius);
 
     // Interior grid lines only; the well's edge frames the outside.

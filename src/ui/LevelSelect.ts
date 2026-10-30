@@ -1,5 +1,13 @@
 import type { LevelData } from '../core/types';
-import { completedCount, isCompleted, isUnlocked, nextLevelToPlay, type Progress } from '../progress/Progress';
+import {
+  completedCount,
+  isCompleted,
+  isUnlocked,
+  MAX_STARS,
+  nextLevelToPlay,
+  totalStars,
+  type Progress,
+} from '../progress/Progress';
 import { requireElement } from './dom';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -20,6 +28,8 @@ export class LevelSelect {
   private readonly count = requireElement('progress-count');
   private readonly total = requireElement('progress-total');
   private readonly fill = requireElement('progress-fill');
+  private readonly stars = requireElement('progress-stars');
+  private readonly starsTotal = requireElement('progress-stars-total');
   private readonly continueButton = requireElement<HTMLButtonElement>('btn-continue');
   private selectHandler: (levelId: number) => void = () => {};
   private continueLevel = 1;
@@ -43,6 +53,8 @@ export class LevelSelect {
     this.count.textContent = String(done);
     this.total.textContent = String(levelCount);
     this.fill.style.width = `${(done / levelCount) * 100}%`;
+    this.stars.textContent = String(totalStars(progress, levelCount));
+    this.starsTotal.textContent = String(levelCount * MAX_STARS);
 
     this.continueLevel = nextLevelToPlay(progress, levelCount);
     const allDone = done === levelCount;
@@ -62,6 +74,16 @@ export class LevelSelect {
     (tile && !tile.disabled ? tile : this.continueButton).focus({ preventScroll: true });
   }
 
+  private starRow(earned: number): HTMLSpanElement {
+    const row = document.createElement('span');
+    row.className = 'level-tile__stars';
+    for (let i = 0; i < MAX_STARS; i++) {
+      const star = icon('spark', i < earned ? 'star-mini star-mini--earned' : 'star-mini');
+      row.append(star);
+    }
+    return row;
+  }
+
   private tile(level: LevelData, progress: Progress): HTMLLIElement {
     const unlocked = isUnlocked(progress, level.id);
     const completed = isCompleted(progress, level.id);
@@ -75,15 +97,25 @@ export class LevelSelect {
     button.classList.toggle('level-tile--completed', completed);
     button.classList.toggle('level-tile--current', current);
     button.disabled = !unlocked;
-    const state = !unlocked ? 'locked' : completed ? 'completed' : 'not completed yet';
+    const bestStars = progress.completed[level.id]?.bestStars ?? null;
+    const state = !unlocked
+      ? 'locked'
+      : !completed
+        ? 'not completed yet'
+        : bestStars === null
+          ? 'completed, not yet rated'
+          : `completed with ${bestStars} of ${MAX_STARS} stars`;
     button.setAttribute('aria-label', `Level ${level.id}, ${level.rows} by ${level.cols}, ${state}`);
 
     const number = document.createElement('span');
     number.className = 'level-tile__number';
     number.textContent = String(level.id);
-    const meta = document.createElement('span');
-    meta.className = 'level-tile__meta';
-    meta.textContent = `${level.rows}×${level.cols}`;
+    // Rated levels show their best stars; the rest show the grid size.
+    const meta = completed && bestStars !== null ? this.starRow(bestStars) : document.createElement('span');
+    if (!(completed && bestStars !== null)) {
+      meta.className = 'level-tile__meta';
+      meta.textContent = `${level.rows}×${level.cols}`;
+    }
     button.append(number, meta);
     if (!unlocked) button.append(icon('lock', 'level-tile__mark'));
     else if (completed) button.append(icon('check', 'level-tile__mark'));

@@ -69,6 +69,8 @@ export type GenerateResult =
 const DIRECTIONS: readonly Direction[] = ['up', 'down', 'left', 'right'];
 const LETTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const CANDIDATES_PER_ARROW = 100;
+/** The generator steers by the search score only; the lives simulation would just slow it down. */
+const SEARCH_ONLY = { lives: false } as const;
 /** How many of the closest constructive candidates get refined. */
 const REFINE_CANDIDATES = 4;
 
@@ -109,7 +111,7 @@ export function generateLevel(options: GenerateOptions): GenerateResult {
       continue;
     }
 
-    const report = analyzeDifficulty(level);
+    const report = analyzeDifficulty(level, SEARCH_ONLY);
     const gap = gapOf(report.score);
     if (gap === 0) return { ok: true, level, report, attempt };
     if (!closest || gap < closest.gap) closest = { score: report.score, gap };
@@ -127,7 +129,7 @@ export function generateLevel(options: GenerateOptions): GenerateResult {
     for (let i = 0; i < steps && gapOf(report.score) > 0; i++) {
       const edited = mutate(level, random, options, range);
       if (!edited || !isPlayable(edited) || !isNovel(edited)) continue;
-      const editedReport = analyzeDifficulty(edited);
+      const editedReport = analyzeDifficulty(edited, SEARCH_ONLY);
       // Accept equal scores too, so the search can drift across plateaus.
       if (gapOf(editedReport.score) <= gapOf(report.score)) {
         level = edited;

@@ -79,10 +79,18 @@ function summaryRow(level: LevelData, r: DifficultyReport): (string | number)[] 
     fixed(r.estimated.wrongTapsPerMove),
     r.score,
     r.category,
+    r.lives ? pct(r.lives.random.winRate) : '–',
+    r.lives ? pct(r.lives.nearSighted.winRate) : '–',
+    r.lives ? fixed(r.lives.random.averageChainClears) : '–',
+    r.lives ? r.lives.deceptiveArrows : '–',
+    r.lives ? r.lives.riskScore : '–',
   ];
 }
 
-const SUMMARY_HEADERS = ['#', 'grid', 'arrows', 'free', 'blocked', 'depth', 'links', 'far', 'wrong/move', 'score', 'category'];
+const SUMMARY_HEADERS = [
+  '#', 'grid', 'arrows', 'free', 'blocked', 'depth', 'links', 'far', 'wrong/move', 'score', 'category',
+  'win rand', 'win near', 'chain', 'decoys', 'risk',
+];
 
 function details(level: LevelData, r: DifficultyReport): string {
   const e = r.exact;
@@ -101,8 +109,17 @@ function details(level: LevelData, r: DifficultyReport): string {
     'Estimated (random-tapping player, fixed seed)',
     `  average choices ${fixed(s.averageChoices)}, average free share ${pct(s.averageFreeShare)}, bottleneck ${pct(s.bottleneckShare)}`,
     `  wrong taps per move ${fixed(s.wrongTapsPerMove)}`,
-    'Score components',
+    'Score components (search model)',
     ...r.components.map((c) => `  ${c.name.padEnd(13)} ${fixed(c.value)} × ${c.weight}`),
+    ...(r.lives
+      ? [
+          'Lives model (simulated strategies, 3 lives, fixed seed)',
+          `  random tapper:  expected mistakes ${fixed(r.lives.random.expectedMistakes)}, finishes ${pct(r.lives.random.winRate)}, chain clears ${fixed(r.lives.random.averageChainClears)}`,
+          `  near-sighted:   expected mistakes ${fixed(r.lives.nearSighted.expectedMistakes)}, finishes ${pct(r.lives.nearSighted.winRate)}, chain clears ${fixed(r.lives.nearSighted.averageChainClears)}`,
+          `  deceptive arrows (next cell clear, still blocked): ${r.lives.deceptiveArrows}`,
+          `  risk score ${r.lives.riskScore} / 100`,
+        ]
+      : []),
   ].join('\n');
 }
 
@@ -120,8 +137,10 @@ function analyze(args: Args): void {
   }
   const rows = LEVELS.map((l) => summaryRow(l, analyzeDifficulty(l)));
   console.log(table(SUMMARY_HEADERS, rows));
-  console.log('\nlinks = blocking relations; far = blockers 3+ cells away; wrong/move = blocked taps per move by a random tapper.');
-  console.log('Scores are a heuristic estimate, not a measurement of human difficulty.');
+  console.log('\nSearch model: links = blocking relations; far = blockers 3+ cells away; wrong/move = blocked taps per move by a random tapper; score/category = 0–100 search score.');
+  console.log('Lives model: win rand / win near = share of simulated runs finishing within 3 lives (random / near-sighted tapper);');
+  console.log('  chain = arrows cleared by chain reactions per random run; decoys = arrows that look free but are blocked; risk = 0–100 failure risk.');
+  console.log('All figures are heuristic estimates from simulated strategies, not measurements of human players.');
 }
 
 function validate(): void {
