@@ -3,10 +3,16 @@ import type { GameState } from '../core/GameState';
 import { ARROW_STYLE } from '../render/theme';
 import { ArrowView } from '../render/ArrowView';
 import { BoardRenderer } from '../render/BoardRenderer';
-import { cellAtPoint, computeBoardLayout, type BoardLayout } from '../render/layout';
+import { FxLayer } from '../render/FxLayer';
+import { cellAtPoint, computeBoardLayout, sameLayout, type BoardLayout, type Rect } from '../render/layout';
 import type { LevelData } from '../core/types';
 
 export interface GameSceneOptions {
+  /**
+   * The DOM element that reserves the board's place in the page layout. The
+   * canvas covers the whole game screen; the board is fitted into this slot.
+   */
+  boardSlot: HTMLElement;
   /**
    * Called exactly once per play-through, the moment the last arrow leaves the
    * grid. Use it for anything that must not be lost (saving progress).
@@ -21,7 +27,9 @@ const TAP_TOLERANCE = 0.45;
 /** Sliding a held finger this far (in cells) from the arrow cancels the tap. */
 const CANCEL_DISTANCE = 0.8;
 /** Pause between the board's win effect starting and the dialog appearing. */
-const WIN_DIALOG_DELAY = 550;
+const WIN_DIALOG_DELAY = 600;
+/** The arrows' intro is spread over at most this long, whatever their number. */
+const INTRO_SPREAD_MS = 280;
 
 /**
  * Glue between input, game logic and rendering. All rules live in GameState;
@@ -35,6 +43,7 @@ const WIN_DIALOG_DELAY = 550;
  */
 export class GameScene extends Phaser.Scene {
   private board!: BoardRenderer;
+  private fx!: FxLayer;
   private arrowLayer!: Phaser.GameObjects.Container;
   private layout!: BoardLayout;
   private readonly views = new Map<string, ArrowView>();
@@ -58,6 +67,8 @@ export class GameScene extends Phaser.Scene {
     this.board = new BoardRenderer(this);
     this.board.setLayout(this.layout);
     this.arrowLayer = this.add.container(0, 0).setDepth(1);
+    this.fx = new FxLayer(this, 3);
+    this.board.playEntrance();
     this.buildArrows();
 
     this.input.on(Phaser.Input.Events.POINTER_DOWN, this.handlePointerDown, this);
@@ -69,6 +80,21 @@ export class GameScene extends Phaser.Scene {
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.scale.off(Phaser.Scale.Events.RESIZE, this.handleResize, this);
     });
+  }
+
+  update(_time: number, delta: number): void {
+    this.fx.update(delta);
+  }
+
+  /**
+   * Re-fits the board to its slot. Called when the page layout around the
+   * board changes; does nothing if the board would end up in the same place.
+   */
+  relayout(): void {
+    if (!this.board) return;
+    const next = this.computeLayout();
+    if (sameLayout(this.layout, next)) return;
+    this.applyLayout(next);
   }
 
   /** Restarts the current level. Safe to call at any time, including mid-animation. */
@@ -94,15 +120,19 @@ export class GameScene extends Phaser.Scene {
     this.lockOwner = undefined;
     this.pressed = undefined;
     this.clearViews();
+    this.fx.clear();
     this.board.reset();
+    this.board.playEntrance();
     this.buildArrows();
   }
 
   private buildArrows(): void {
-    this.state.getArrows().forEach((data, index) => {
-      const view = new ArrowView(this, data, this.layout, this.arrowLayer);
+    const arrows = this.state.getArrows();
+    const stagger = Math.min(30, INTRO_SPREAD_MS / Math.max(1, arrows.length));
+    arrows.forEach((data, index) => {
+      const view = new ArrowView(this, data, this.layout, this.arrowLayer, this.fx);
       this.views.set(data.id, view);
-      view.playIntro(index * 30);
+      view.playIntro(60 + index * stagger);
     });
   }
 
@@ -227,8 +257,13 @@ export class GameScene extends Phaser.Scene {
   // ---------------------------------------------------------------- layout
 
   private handleResize(): void {
-    this.layout = this.computeLayout();
+    this.relayout();
+  }
+
+  private applyLayout(layout: BoardLayout): void {
+    this.layout = layout;
     this.board.setLayout(this.layout);
+    this.fx.clear();
     // Pixel paths of arrows mid-exit are stale now; they are already gone
     // logically, so just drop them. Resting arrows re-fit and cancel any bump.
     this.leaving.forEach((v) => v.destroy());
@@ -240,6 +275,22 @@ export class GameScene extends Phaser.Scene {
   }
 
   private computeLayout(): BoardLayout {
-    return computeBoardLayout(this.scale.width, this.scale.height, this.state.rows, this.state.cols);
+    return computeBoardLayout(this.boardFrame(), this.state.rows, this.state.cols);
+  }
+
+  /** The board slot's rectangle in canvas (device) pixels; the whole canvas if the slot isn't laid out. */
+  private boardFrame(): Rect {
+    const canvas = this.game.canvas.getBoundingClientRect();
+    const slot = this.options.boardSlot.getBoundingClientRect();
+    if (canvas.width === 0 || slot.width === 0 || slot.height === 0) {
+      return { x: 0, y: 0, width: this.scale.width, height: this.scale.height };
+    }
+    const ratio = this.scale.width / canvas.width;
+    return {
+      x: (slot.left - canvas.left) * ratio,
+      y: (slot.top - canvas.top) * ratio,
+      width: slot.width * ratio,
+      height: slot.height * ratio,
+    };
   }
 }

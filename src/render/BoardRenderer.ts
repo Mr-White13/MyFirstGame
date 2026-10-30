@@ -1,17 +1,27 @@
 import Phaser from 'phaser';
 import type { BoardLayout } from './layout';
-import { COLORS, mixColors } from './theme';
+import { reducedMotion } from './motion';
+import { BOARD_COLORS, COLORS, mixColors } from './theme';
 
-/** Draws the static board (rounded container plus subtle grid) and its win effect. */
+const WIN_WAVE_MS = 650;
+
+/**
+ * Draws the board: a frame with a soft outer light, a recessed play area,
+ * faint grid lines and cell dots. Also plays the board's entrance and the
+ * level-complete wave.
+ *
+ * The graphics are drawn around the board's centre and positioned there, so
+ * the entrance can scale the whole board without redrawing it.
+ */
 export class BoardRenderer {
   private readonly graphics: Phaser.GameObjects.Graphics;
-  /** Outline that expands and fades on level complete; drawn around its own centre so it can scale. */
+  /** Outline that expands and fades on level complete. */
   private readonly pulse: Phaser.GameObjects.Graphics;
   private layout?: BoardLayout;
   private won = false;
-  /** 0..1 strength of the green tint washing over the board on completion. */
-  private glow = 0;
-  private glowTween?: Phaser.Tweens.Tween;
+  /** 0..1 progress of the win wave travelling outwards from the centre; 1 = finished. */
+  private wave = 1;
+  private waveTween?: Phaser.Tweens.Tween;
 
   constructor(private readonly scene: Phaser.Scene) {
     this.graphics = scene.add.graphics().setDepth(0);
@@ -20,24 +30,39 @@ export class BoardRenderer {
 
   setLayout(layout: BoardLayout): void {
     this.layout = layout;
-    this.stopPulse();
+    this.stopEffects();
+    this.graphics.setScale(1).setAlpha(1);
     this.draw();
   }
 
-  /** Celebrates the cleared board: green outline, a soft wash of colour and two expanding rings. */
+  /** Quick fade and settle when a level starts; never blocks input. */
+  playEntrance(): void {
+    if (reducedMotion()) return;
+    this.scene.tweens.killTweensOf(this.graphics);
+    this.graphics.setAlpha(0).setScale(0.97);
+    this.scene.tweens.add({ targets: this.graphics, alpha: 1, scale: 1, duration: 260, ease: 'Cubic.easeOut' });
+  }
+
+  /** Celebrates the cleared board: a green wave across the cells, green frame and one expanding ring. */
   playWin(): void {
     const l = this.layout;
     if (!l) return;
     this.won = true;
-    this.stopPulse();
+    this.stopEffects();
 
-    this.glowTween = this.scene.tweens.addCounter({
-      from: 1,
-      to: 0.35,
-      duration: 700,
-      ease: 'Quad.easeOut',
+    if (reducedMotion()) {
+      this.wave = 1;
+      this.draw();
+      return;
+    }
+
+    this.waveTween = this.scene.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: WIN_WAVE_MS,
+      ease: 'Sine.easeOut',
       onUpdate: (tween) => {
-        this.glow = tween.getValue() ?? 0;
+        this.wave = tween.getValue() ?? 1;
         this.draw();
       },
     });
@@ -48,16 +73,14 @@ export class BoardRenderer {
       .strokeRoundedRect(-l.width / 2, -l.height / 2, l.width, l.height, l.radius)
       .setPosition(l.x + l.width / 2, l.y + l.height / 2)
       .setScale(1)
-      .setAlpha(0.9)
+      .setAlpha(0.85)
       .setVisible(true);
     this.scene.tweens.add({
       targets: this.pulse,
-      scale: 1.07,
+      scale: 1.06,
       alpha: 0,
-      duration: 650,
+      duration: 600,
       ease: 'Cubic.easeOut',
-      repeat: 1,
-      repeatDelay: 80,
       onComplete: () => this.pulse.setVisible(false),
     });
   }
@@ -65,20 +88,20 @@ export class BoardRenderer {
   /** Back to the normal look, cancelling any running win effect. */
   reset(): void {
     this.won = false;
-    this.glow = 0;
-    this.stopPulse();
+    this.stopEffects();
     this.draw();
   }
 
   destroy(): void {
-    this.stopPulse();
+    this.stopEffects();
     this.graphics.destroy();
     this.pulse.destroy();
   }
 
-  private stopPulse(): void {
-    this.glowTween?.remove();
-    this.glowTween = undefined;
+  private stopEffects(): void {
+    this.waveTween?.remove();
+    this.waveTween = undefined;
+    this.wave = 1;
     this.scene.tweens.killTweensOf(this.pulse);
     this.pulse.setVisible(false);
   }
@@ -87,33 +110,62 @@ export class BoardRenderer {
     const l = this.layout;
     if (!l) return;
     const g = this.graphics.clear();
+    const cx = l.x + l.width / 2;
+    const cy = l.y + l.height / 2;
+    g.setPosition(cx, cy);
+    // Local coordinates: the board's top-left corner relative to its centre.
+    const x0 = -l.width / 2;
+    const y0 = -l.height / 2;
     const stroke = Math.max(1, l.cellSize * 0.025);
-    const wonGlow = this.won ? Math.max(this.glow, 0.35) : 0;
+    const accent = this.won ? COLORS.green : COLORS.cyan;
 
-    // Outer halo ring hugging the container: a cheap, subtle frame glow.
-    const frame = this.won ? COLORS.green : COLORS.cyan;
-    g.lineStyle(stroke * 4, mixColors(COLORS.background, frame, this.won ? 0.22 : 0.07), 1);
-    g.strokeRoundedRect(l.x, l.y, l.width, l.height, l.radius);
+    // Soft light around the frame: two wide, faint, opaque rings (no shader, no blur).
+    g.lineStyle(stroke * 10, mixColors(COLORS.background, accent, this.won ? 0.08 : 0.035), 1);
+    g.strokeRoundedRect(x0, y0, l.width, l.height, l.radius);
+    g.lineStyle(stroke * 5, mixColors(COLORS.background, accent, this.won ? 0.16 : 0.07), 1);
+    g.strokeRoundedRect(x0, y0, l.width, l.height, l.radius);
 
-    g.fillStyle(mixColors(COLORS.surface, COLORS.green, 0.12 * wonGlow), 1);
-    g.fillRoundedRect(l.x, l.y, l.width, l.height, l.radius);
-    g.lineStyle(stroke, frame, this.won ? 0.75 : 0.22);
-    g.strokeRoundedRect(l.x, l.y, l.width, l.height, l.radius);
+    // Frame, then the slightly darker play area recessed inside it.
+    g.fillStyle(COLORS.surface, 1);
+    g.fillRoundedRect(x0, y0, l.width, l.height, l.radius);
+    const inset = l.padding * 0.45;
+    const wellRadius = Math.max(2, l.radius - inset);
+    const greenWash = this.won ? 0.07 * (1 - this.wave * 0.5) : 0;
+    g.fillStyle(mixColors(BOARD_COLORS.well, COLORS.green, greenWash), 1);
+    g.fillRoundedRect(x0 + inset, y0 + inset, l.width - 2 * inset, l.height - 2 * inset, wellRadius);
+    // Hairline outline in the accent colour: cyan normally, green once solved.
+    g.lineStyle(stroke, accent, this.won ? 0.7 : 0.2);
+    g.strokeRoundedRect(x0, y0, l.width, l.height, l.radius);
 
-    // Interior grid lines only; the container outline frames the outer edge.
-    const left = l.x + l.padding;
-    const top = l.y + l.padding;
+    // Interior grid lines only; the well's edge frames the outside.
+    const left = x0 + l.padding;
+    const top = y0 + l.padding;
     const right = left + l.cols * l.cellSize;
     const bottom = top + l.rows * l.cellSize;
-    g.lineStyle(Math.max(1, stroke * 0.6), COLORS.textSecondary, 0.07);
+    g.lineStyle(Math.max(1, stroke * 0.6), COLORS.textSecondary, 0.06);
     for (let c = 1; c < l.cols; c++) g.lineBetween(left + c * l.cellSize, top, left + c * l.cellSize, bottom);
     for (let r = 1; r < l.rows; r++) g.lineBetween(left, top + r * l.cellSize, right, top + r * l.cellSize);
 
-    // Small dots at cell centres help the eye read rows and columns.
-    g.fillStyle(this.won ? COLORS.green : COLORS.textSecondary, this.won ? 0.25 : 0.14);
+    // Cell-centre dots. During the win wave, dots light up green as the wave front passes.
+    const maxDistance = Math.hypot(l.cols / 2, l.rows / 2);
+    const front = this.wave * (maxDistance + 1.5);
+    const dot = l.cellSize * 0.035;
     for (let r = 0; r < l.rows; r++) {
       for (let c = 0; c < l.cols; c++) {
-        g.fillCircle(left + (c + 0.5) * l.cellSize, top + (r + 0.5) * l.cellSize, l.cellSize * 0.035);
+        const x = left + (c + 0.5) * l.cellSize;
+        const y = top + (r + 0.5) * l.cellSize;
+        let alpha = 0.14;
+        let size = dot;
+        let color: number = COLORS.textSecondary;
+        if (this.won) {
+          const d = Math.hypot(c + 0.5 - l.cols / 2, r + 0.5 - l.rows / 2);
+          const band = 1 - Math.min(1, Math.abs(front - d) / 1.5); // 1 at the wave front
+          color = COLORS.green;
+          alpha = 0.22 + 0.6 * band * (1 - this.wave * 0.4);
+          size = dot * (1 + 1.6 * band);
+        }
+        g.fillStyle(color, alpha);
+        g.fillCircle(x, y, size);
       }
     }
   }
