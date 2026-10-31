@@ -377,7 +377,6 @@
    "daily-title": "<h2 class=\"card__title card__title--small\" id=\"daily-title\">Daily rewards</>",
    "btn-daily-close": "<button aria-label=\"Close\" class=\"icon-btn icon-btn--small\" id=\"btn-daily-close\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-close\"></></> </>",
    "daily-streak": "<strong id=\"daily-streak\">0</>",
-   "daily-streak-label": "<span id=\"daily-streak-label\">-day streak</>",
    "daily-balance": "<strong id=\"daily-balance\">130</>",
    "daily-grid": [
     "<ol aria-label=\"7-day reward cycle\" class=\"daily-grid\" id=\"daily-grid\">",
@@ -441,7 +440,6 @@
    "daily-title": "<h2 class=\"card__title card__title--small\" id=\"daily-title\">Daily rewards</>",
    "btn-daily-close": "<button aria-label=\"Close\" class=\"icon-btn icon-btn--small\" id=\"btn-daily-close\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-close\"></></> </>",
    "daily-streak": "<strong id=\"daily-streak\">1</>",
-   "daily-streak-label": "<span id=\"daily-streak-label\">-day streak</>",
    "daily-balance": "<strong id=\"daily-balance\">130</>",
    "daily-grid": [
     "<ol aria-label=\"7-day reward cycle\" class=\"daily-grid\" id=\"daily-grid\">",
@@ -505,7 +503,6 @@
    "daily-title": "<h2 class=\"card__title card__title--small\" id=\"daily-title\">Daily rewards</>",
    "btn-daily-close": "<button aria-label=\"Close\" class=\"icon-btn icon-btn--small\" id=\"btn-daily-close\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-close\"></></> </>",
    "daily-streak": "<strong id=\"daily-streak\">4</>",
-   "daily-streak-label": "<span id=\"daily-streak-label\">-day streak</>",
    "daily-balance": "<strong id=\"daily-balance\">130</>",
    "daily-grid": [
     "<ol aria-label=\"7-day reward cycle\" class=\"daily-grid\" id=\"daily-grid\">",
@@ -571,7 +568,6 @@
    "daily-title": "<h2 class=\"card__title card__title--small\" id=\"daily-title\">Daily rewards</>",
    "btn-daily-close": "<button aria-label=\"Close\" class=\"icon-btn icon-btn--small\" id=\"btn-daily-close\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-close\"></></> </>",
    "daily-streak": "<strong id=\"daily-streak\">4</>",
-   "daily-streak-label": "<span id=\"daily-streak-label\">-day streak</>",
    "daily-balance": "<strong id=\"daily-balance\">130</>",
    "daily-grid": [
     "<ol aria-label=\"7-day reward cycle\" class=\"daily-grid\" id=\"daily-grid\">",
@@ -635,7 +631,6 @@
    "daily-title": "<h2 class=\"card__title card__title--small\" id=\"daily-title\">Daily rewards</>",
    "btn-daily-close": "<button aria-label=\"Close\" class=\"icon-btn icon-btn--small\" id=\"btn-daily-close\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-close\"></></> </>",
    "daily-streak": "<strong id=\"daily-streak\">2</>",
-   "daily-streak-label": "<span id=\"daily-streak-label\">-day streak</>",
    "daily-balance": "<strong id=\"daily-balance\">130</>",
    "daily-grid": [
     "<ol aria-label=\"7-day reward cycle\" class=\"daily-grid\" id=\"daily-grid\">",
@@ -699,7 +694,6 @@
    "daily-title": "<h2 class=\"card__title card__title--small\" id=\"daily-title\">Daily rewards</>",
    "btn-daily-close": "<button aria-label=\"Close\" class=\"icon-btn icon-btn--small\" id=\"btn-daily-close\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-close\"></></> </>",
    "daily-streak": "<strong id=\"daily-streak\">7</>",
-   "daily-streak-label": "<span id=\"daily-streak-label\">-day streak</>",
    "daily-balance": "<strong id=\"daily-balance\">130</>",
    "daily-grid": [
     "<ol aria-label=\"7-day reward cycle\" class=\"daily-grid\" id=\"daily-grid\">",
@@ -763,7 +757,6 @@
    "daily-title": "<h2 class=\"card__title card__title--small\" id=\"daily-title\">Daily rewards</>",
    "btn-daily-close": "<button aria-label=\"Close\" class=\"icon-btn icon-btn--small\" id=\"btn-daily-close\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-close\"></></> </>",
    "daily-streak": "<strong id=\"daily-streak\">7</>",
-   "daily-streak-label": "<span id=\"daily-streak-label\">-day streak</>",
    "daily-balance": "<strong id=\"daily-balance\">130</>",
    "daily-grid": [
     "<ol aria-label=\"7-day reward cycle\" class=\"daily-grid\" id=\"daily-grid\">",
