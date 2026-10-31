@@ -6,6 +6,7 @@ import { cellCenter, gridBounds, type BoardLayout, type Point } from './layout';
 import { decorationScale, reducedMotion } from './motion';
 import { distanceToPolyline, MeasuredPolyline, type MutablePoint } from './polyline';
 import { arrowColor, lighten, mixColors, palette } from './theme';
+import { unitCircle } from './unitCircle';
 
 export interface ExitCallbacks {
   /** The tail has crossed the grid edge: the board is free again. */
@@ -30,8 +31,7 @@ const MAX_CORNER_STEPS = 24;
 
 /** Unit-circle points for the triangle-fan discs (caps, sockets): enough for a smooth edge at arrow sizes. */
 const DISC_STEPS = 14;
-const DISC_COS = Array.from({ length: DISC_STEPS + 1 }, (_, i) => Math.cos((i / DISC_STEPS) * Math.PI * 2));
-const DISC_SIN = Array.from({ length: DISC_STEPS + 1 }, (_, i) => Math.sin((i / DISC_STEPS) * Math.PI * 2));
+const { cos: DISC_COS, sin: DISC_SIN } = unitCircle(DISC_STEPS);
 
 /**
  * Visual representation of one arrow. Holds no game rules: the scene tells
