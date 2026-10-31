@@ -63,6 +63,10 @@
   --font-display: 'Segoe UI Variable Display', 'Segoe UI', Roboto, system-ui, -apple-system, 'Helvetica Neue', Arial,
     sans-serif;
 
+  /* Daily League: Energy Arrows and Energy Points. */
+  --energy: #ffd23f;
+  --energy-rgb: 255 210 63;
+
   color-scheme: dark;
 }
 
@@ -102,6 +106,8 @@
   --line-strong: rgb(var(--muted-rgb) / 0.34);
   --highlight: inset 0 1px 0 rgba(255, 255, 255, 0.7);
   --shadow: 0 8px 22px rgb(var(--shadow-rgb) / 0.12);
+  --energy: #a86f00;
+  --energy-rgb: 168 111 0;
   color-scheme: light;
 }
 
@@ -572,6 +578,7 @@ body.is-navigating #app {
   /* Sized by src/ui/GameLayout.ts; the board is drawn into this rectangle on the canvas. */
   width: 0;
   height: 0;
+  position: relative; /* anchors the reset-zoom control (.view-reset) */
 }
 
 .hud {
@@ -580,9 +587,6 @@ body.is-navigating #app {
   gap: 6px;
   width: min(100%, 620px);
   align-self: start;
-}
-
-.hud {
   position: relative; /* anchors the theme popover */
 }
 
@@ -3165,16 +3169,6 @@ body.is-navigating #app {
 
 /* ---------- Daily League ---------- */
 
-:root {
-  --energy: #ffd23f;
-  --energy-rgb: 255 210 63;
-}
-
-:root[data-theme='light'] {
-  --energy: #a86f00;
-  --energy-rgb: 168 111 0;
-}
-
 /* HUD strip during a challenge */
 .hud__league {
   display: flex;
@@ -3763,10 +3757,6 @@ body.is-navigating #app {
 }
 
 /* Reset zoom: a small control in the board's corner, only while zoomed. */
-.board-slot {
-  position: relative;
-}
-
 .view-reset {
   position: absolute;
   right: 8px;
