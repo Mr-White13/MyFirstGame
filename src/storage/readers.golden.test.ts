@@ -8,6 +8,7 @@ import { readRecap, RECAP_KEY, RECAP_VERSION } from '../recap/insights';
 import { readRewards, REWARDS_KEY, REWARDS_VERSION, serializeRewards } from '../rewards/Rewards';
 import { readSettings, serializeSettings, SETTINGS_KEY, SETTINGS_VERSION } from '../settings/Settings';
 import { SPLASH_SESSION_KEY } from '../branding/StudioSplash';
+import { DIAGNOSTICS_KEY } from '../ui/diagnosticsKey';
 import { golden, plain } from '../testing/golden';
 import type { SaveStatus } from './SafeStore';
 
@@ -222,7 +223,7 @@ describe('saved-data readers', () => {
 describe('storage keys and versions', () => {
   it('are unchanged (renaming a key or bumping a version without a migration loses player data)', () => {
     const actual = {
-      keys: { progress: STORAGE_KEY, progressBackup: BACKUP_KEY, settings: SETTINGS_KEY, profile: PROFILE_KEY, stats: STATS_KEY, rewards: REWARDS_KEY, league: LEAGUE_KEY, dailyLog: DAILY_LOG_KEY, recap: RECAP_KEY, splash: SPLASH_SESSION_KEY },
+      keys: { progress: STORAGE_KEY, progressBackup: BACKUP_KEY, settings: SETTINGS_KEY, profile: PROFILE_KEY, stats: STATS_KEY, rewards: REWARDS_KEY, league: LEAGUE_KEY, dailyLog: DAILY_LOG_KEY, recap: RECAP_KEY, splash: SPLASH_SESSION_KEY, diagnostics: DIAGNOSTICS_KEY },
       versions: Object.fromEntries(Object.entries(READERS).map(([name, r]) => [name, r.version])),
     };
     expect(actual).toEqual({
@@ -237,6 +238,7 @@ describe('storage keys and versions', () => {
         dailyLog: 'neon-escape.daily-stats',
         recap: 'neon-escape.recap',
         splash: 'neon-escape.splash-shown',
+        diagnostics: 'neon-escape.debug',
       },
       versions: { progress: 4, settings: 1, profile: 1, stats: 1, rewards: 1, league: 1, dailyLog: 1, recap: 1 },
     });

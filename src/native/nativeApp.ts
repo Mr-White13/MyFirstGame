@@ -2,6 +2,7 @@ import { App as CapacitorApp } from '@capacitor/app';
 import { Capacitor, registerPlugin } from '@capacitor/core';
 import { Haptics as CapacitorHaptics } from '@capacitor/haptics';
 import type { HapticEffect, HapticsBackend, HapticTestResult } from '../haptics/Haptics';
+import { DIAGNOSTICS_KEY } from '../ui/diagnosticsKey';
 
 /**
  * The few places where the installed Android app (Capacitor) differs from
@@ -30,7 +31,7 @@ const NeonHaptics = registerPlugin<NeonHapticsPlugin>('NeonHaptics');
  */
 function debugOn(): boolean {
   try {
-    return import.meta.env.DEV || localStorage.getItem('neon-escape.debug') === '1';
+    return import.meta.env.DEV || localStorage.getItem(DIAGNOSTICS_KEY) === '1';
   } catch {
     return import.meta.env.DEV;
   }
