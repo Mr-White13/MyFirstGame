@@ -29,7 +29,10 @@ export function browserStorage(): KeyValueStore | null {
  * for every kind of saved data:
  * - storage failures are swallowed: the game keeps working, just unsaved;
  * - unreadable data is copied to `<key>.backup` before it can be replaced;
- * - data written by a newer game version is backed up and never overwritten.
+ * - data written by a newer game version is backed up and never overwritten;
+ * - a record that could not be read at all (storage or reader failure) is
+ *   never overwritten either: the game runs on defaults, unsaved, until a
+ *   later load reads it.
  */
 export class SafeStore<T> {
   private readOnly = false;
@@ -52,6 +55,8 @@ export class SafeStore<T> {
       this.readOnly = status === 'newer';
       return value;
     } catch {
+      // Whatever is stored is unknown: saving the fallback could replace real data.
+      this.readOnly = true;
       return this.codec.fallback();
     }
   }
