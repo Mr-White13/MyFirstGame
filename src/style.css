@@ -3939,9 +3939,12 @@ body.is-navigating #app {
 /* ---------- Mr. White Games startup splash (src/branding/StudioSplash.ts) ---------- */
 
 /* Always on the studio's dark background, whatever the theme: it continues the
-   Android launch colour (#101522) without a flash. Timing comes from
-   DEFAULT_SPLASH_TIMING in StudioSplash.ts (set as custom properties; the
-   fallbacks below are the same values, used before the script runs). */
+   Android launch colour (#101522) without a flash. The reveal starts at first
+   paint (index.html adds data-splash="play"); StudioSplash.ts runs the rest of
+   the timeline from that same moment. Only opacity and transform animate, so
+   the compositor keeps it smooth while the game boots on the main thread.
+   Durations come from DEFAULT_SPLASH_TIMING (custom properties set by the
+   script; the fallbacks below are the same values, used until it runs). */
 .studio-splash {
   position: fixed;
   inset: 0;
@@ -3950,12 +3953,11 @@ body.is-navigating #app {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 18px;
+  gap: 20px;
   background: #101522;
   color: #f4f7fb;
-  transition:
-    opacity var(--splash-fade, 700ms) ease-in-out,
-    transform var(--splash-fade, 700ms) ease-in;
+  will-change: opacity;
+  transition: opacity var(--splash-fade, 600ms) ease-in-out;
 }
 
 .studio-splash[hidden],
@@ -3963,28 +3965,37 @@ body.is-navigating #app {
   display: none;
 }
 
+/* Fading out: the next screen is already appearing underneath. Taps are still
+   caught here (no pointer-events: none), so a skip tap never lands on it. */
 .studio-splash--leaving {
   opacity: 0;
-  transform: scale(1.02);
-  pointer-events: none;
 }
 
 .studio-splash--skipped {
   transition-duration: var(--splash-skip-fade, 250ms);
 }
 
-/* Reveal: the M and W draw in over most of the reveal, then the glow breathes once during the hold. */
+.studio-splash__logo {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 104px;
+  height: 104px;
+}
+
 .studio-splash__mark {
+  position: relative;
   width: 104px;
   height: 104px;
   overflow: visible;
-  /* Inherited by the mark's M and W strokes: they draw in from start to end. */
-  stroke-dasharray: 1 1;
-  stroke-dashoffset: 1;
-  filter: drop-shadow(0 0 10px rgb(39 221 245 / 0.35));
-  animation:
-    studio-draw calc(var(--splash-reveal, 1300ms) * 0.8) cubic-bezier(0.45, 0, 0.2, 1) 150ms forwards,
-    studio-glow 1600ms ease-in-out var(--splash-reveal, 1300ms) 1;
+}
+
+/* A soft halo behind the mark (an opacity-only layer: no animated filters). */
+.studio-splash__glow {
+  position: absolute;
+  inset: -60px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(39 221 245 / 0.3) 0%, rgb(39 221 245 / 0.08) 45%, transparent 70%);
 }
 
 .studio-splash__name {
@@ -3993,8 +4004,33 @@ body.is-navigating #app {
   font-weight: 800;
   letter-spacing: 0.42em;
   margin-right: -0.42em; /* keeps the tracked text optically centred */
+  opacity: 0.9;
+}
+
+/* Before the reveal starts, nothing but the dark background shows. */
+.studio-splash__logo,
+.studio-splash__glow,
+.studio-splash__name {
   opacity: 0;
-  animation: studio-name 650ms ease-out calc(var(--splash-reveal, 1300ms) * 0.5) forwards;
+  will-change: opacity, transform;
+}
+
+:root[data-splash='play'] .studio-splash__logo,
+.studio-splash--play .studio-splash__logo {
+  animation: splash-logo-in calc(var(--splash-reveal, 1100ms) * 0.6) cubic-bezier(0.16, 0.84, 0.3, 1) both;
+}
+
+:root[data-splash='play'] .studio-splash__glow,
+.studio-splash--play .studio-splash__glow {
+  animation:
+    splash-glow-in calc(var(--splash-reveal, 1100ms) * 0.8) ease-out calc(var(--splash-reveal, 1100ms) * 0.2) both,
+    splash-glow-breathe 2s ease-in-out var(--splash-reveal, 1100ms) infinite alternate;
+}
+
+/* The name is fully in view at 85 % of the reveal (NAME_IN_FRACTION in StudioSplash.ts). */
+:root[data-splash='play'] .studio-splash__name,
+.studio-splash--play .studio-splash__name {
+  animation: splash-name-in calc(var(--splash-reveal, 1100ms) * 0.45) cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--splash-reveal, 1100ms) * 0.4) both;
 }
 
 .studio-splash__hint {
@@ -4011,42 +4047,66 @@ body.is-navigating #app {
   opacity: 1;
 }
 
-@keyframes studio-draw {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes studio-glow {
-  50% {
-    filter: drop-shadow(0 0 16px rgb(39 221 245 / 0.55));
-  }
-}
-
-@keyframes studio-name {
+@keyframes splash-logo-in {
   from {
     opacity: 0;
-    letter-spacing: 0.6em;
+    transform: translateY(6px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes splash-glow-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes splash-glow-breathe {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.6;
+  }
+}
+
+@keyframes splash-name-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
   }
   to {
     opacity: 0.9;
-    letter-spacing: 0.42em;
+    transform: none;
   }
 }
 
-/* Reduced motion: the finished mark and name at once; no drawing, tracking, glow, scale or fade. */
+/* Reduced motion: the finished logo at once; no movement, no breathing, no fade. */
 :root[data-motion='reduce'] .studio-splash {
   transition: none;
+}
+
+:root[data-motion='reduce'] .studio-splash__logo,
+:root[data-motion='reduce'] .studio-splash__glow,
+:root[data-motion='reduce'] .studio-splash__name {
+  animation: none;
   transform: none;
 }
 
-:root[data-motion='reduce'] .studio-splash__mark {
-  animation: none;
-  stroke-dashoffset: 0;
+:root[data-motion='reduce'] .studio-splash__logo,
+:root[data-motion='reduce'] .studio-splash__glow {
+  opacity: 1;
 }
 
 :root[data-motion='reduce'] .studio-splash__name {
-  animation: none;
   opacity: 0.9;
 }
 

@@ -1,7 +1,7 @@
 import './style.css';
 import { App } from './app/App';
 import { runIntro } from './app/Intro';
-import { sessionStore, StudioSplash } from './branding/StudioSplash';
+import { firstPaintStart, sessionStore, StudioSplash } from './branding/StudioSplash';
 import { Feedback, type FeedbackEvent } from './app/Feedback';
 import { AudioManager } from './audio/AudioManager';
 import { GameState } from './core/GameState';
@@ -195,7 +195,11 @@ const recapDialog = new RecapDialog();
 const recapStorage = new RecapStorage();
 app.beginIntro(() => recapDialog.close('skip'));
 void runIntro({
-  splash: new StudioSplash(document.getElementById('studio-splash'), { reducedMotion: appearance.current.reducedMotion, session: sessionStore() }),
+  splash: new StudioSplash(document.getElementById('studio-splash'), {
+    reducedMotion: appearance.current.reducedMotion,
+    session: sessionStore(),
+    startedAt: firstPaintStart(), // the reveal began at first paint (index.html)
+  }),
   recap: recapDialog,
   recapEnabled: () => settings.current.showRecap,
   nextInsight: () => {

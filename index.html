@@ -32,10 +32,16 @@
         root.setAttribute('data-motion', reduce ? 'reduce' : 'full');
         root.setAttribute('data-effects', effects);
         // The studio splash plays once per cold launch: a reload in the same
-        // session (or WebView) skips it. Must agree with src/branding/StudioSplash.ts.
+        // session (or WebView) skips it. Otherwise its reveal starts now, at
+        // first paint, and the start time is recorded so the script's timeline
+        // lines up with it however long the game takes to load.
+        // Must agree with src/branding/StudioSplash.ts.
+        var shown = false;
         try {
-          if (sessionStorage.getItem('neon-escape.splash-shown') === '1') root.setAttribute('data-splash', 'skip');
+          shown = sessionStorage.getItem('neon-escape.splash-shown') === '1';
         } catch (e) {}
+        root.setAttribute('data-splash', shown ? 'skip' : 'play');
+        if (!shown) window.__neonSplashStart = performance.now();
         var colors = { dark: '#101522', light: '#e9eef6', colorful: '#130f26' };
         document.getElementById('theme-color').setAttribute('content', colors[theme]);
       })();
@@ -96,7 +102,10 @@
 
     <!-- Mr. White Games startup splash: shown at first paint, removed by src/branding/StudioSplash.ts. -->
     <div class="studio-splash" id="studio-splash" role="img" aria-label="Mr. White Games">
-      <svg class="studio-splash__mark" aria-hidden="true"><use href="#mw-mark" /></svg>
+      <span class="studio-splash__logo" aria-hidden="true">
+        <span class="studio-splash__glow"></span>
+        <svg class="studio-splash__mark"><use href="#mw-mark" /></svg>
+      </span>
       <span class="studio-splash__name" aria-hidden="true">MR. WHITE GAMES</span>
       <span class="studio-splash__hint" aria-hidden="true">Tap to skip</span>
     </div>
