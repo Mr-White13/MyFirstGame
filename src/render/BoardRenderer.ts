@@ -2,12 +2,12 @@ import Phaser from 'phaser';
 import type { BoardLayout } from './layout';
 import { decorationScale, reducedMotion } from './motion';
 import { palette } from './theme';
+import { unitCircle } from './unitCircle';
 
 const WIN_WAVE_MS = 650;
 
 /** Unit octagon: a dot of a few pixels looks round, and costs 8 triangles instead of fillCircle's 100. */
-const OCT_COS = Array.from({ length: 9 }, (_, i) => Math.cos((i / 8) * Math.PI * 2));
-const OCT_SIN = Array.from({ length: 9 }, (_, i) => Math.sin((i / 8) * Math.PI * 2));
+const { cos: OCT_COS, sin: OCT_SIN } = unitCircle(8);
 
 function dot8(g: Phaser.GameObjects.Graphics, x: number, y: number, r: number): void {
   for (let i = 0; i < 8; i++) g.fillTriangle(x, y, x + OCT_COS[i] * r, y + OCT_SIN[i] * r, x + OCT_COS[i + 1] * r, y + OCT_SIN[i + 1] * r);

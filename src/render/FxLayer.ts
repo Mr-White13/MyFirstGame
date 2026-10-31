@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { decorationScale } from './motion';
+import { unitCircle } from './unitCircle';
 
 interface Particle {
   active: boolean;
@@ -31,12 +32,10 @@ const MAX_RINGS = 8;
 const DRAG_PER_SECOND = 0.04;
 /** Sparks are tiny: an octagon fan reads as round (Graphics.fillCircle would build 100 segments each frame). */
 const SPARK_STEPS = 8;
-const UNIT_COS = Array.from({ length: SPARK_STEPS + 1 }, (_, i) => Math.cos((i / SPARK_STEPS) * Math.PI * 2));
-const UNIT_SIN = Array.from({ length: SPARK_STEPS + 1 }, (_, i) => Math.sin((i / SPARK_STEPS) * Math.PI * 2));
+const { cos: UNIT_COS, sin: UNIT_SIN } = unitCircle(SPARK_STEPS);
 /** Rings: a 32-sided polyline into a reused point buffer. */
 const RING_STEPS = 32;
-const RING_COS = Array.from({ length: RING_STEPS + 1 }, (_, i) => Math.cos((i / RING_STEPS) * Math.PI * 2));
-const RING_SIN = Array.from({ length: RING_STEPS + 1 }, (_, i) => Math.sin((i / RING_STEPS) * Math.PI * 2));
+const { cos: RING_COS, sin: RING_SIN } = unitCircle(RING_STEPS);
 
 /**
  * Short-lived sparks and rings drawn on a single Graphics object.
