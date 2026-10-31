@@ -3,9 +3,9 @@ import { DIRECTION_VECTORS } from '../core/Arrow';
 import type { ArrowData, Direction } from '../core/types';
 import type { FxLayer } from './FxLayer';
 import { cellCenter, gridBounds, type BoardLayout, type Point } from './layout';
-import { reducedMotion } from './motion';
+import { decorationScale, reducedMotion } from './motion';
 import { distanceToPolyline, polylineLength, slicePolyline } from './polyline';
-import { ARROW_STYLE, BOARD_COLORS, COLORS, lighten, mixColors } from './theme';
+import { ARROW_STYLE, arrowColor, lighten, mixColors, palette } from './theme';
 
 export interface ExitCallbacks {
   /** The tail has crossed the grid edge: the board is free again. */
@@ -44,9 +44,9 @@ export class ArrowView {
   private path: Point[] = [];
   private bodyLength = 0;
   private offset = 0;
-  private color: number = COLORS.cyan;
-  /** Resting colour: cyan normally, red once the arrow is activated (tapped while blocked). */
-  private baseColor: number = COLORS.cyan;
+  private color: number;
+  /** Set once the arrow is activated (tapped while blocked): it rests in red, drawn as a dashed tube. */
+  private activated = false;
   private pressed = false;
   /** Length of the energy trail drawn behind the tail while leaving. */
   private trail = 0;
@@ -60,7 +60,10 @@ export class ArrowView {
     layout: BoardLayout,
     parent: Phaser.GameObjects.Container,
     private readonly fx: FxLayer,
+    /** Position in level order; picks the arrow's colour in multi-colour themes. */
+    private readonly colorIndex = 0,
   ) {
+    this.color = this.baseColor;
     this.graphics = scene.add.graphics();
     parent.add(this.graphics);
     this.layout = layout;
@@ -97,11 +100,20 @@ export class ArrowView {
    * see which arrows are waiting to be released by a chain reaction.
    */
   setActivated(activated: boolean): void {
-    this.baseColor = activated ? COLORS.red : COLORS.cyan;
+    this.activated = activated;
     if (!this.flashTimer && !this.motion) {
       this.color = this.baseColor;
       this.redraw();
     }
+  }
+
+  /**
+   * Picks up the active theme's colours. A running animation keeps its
+   * effect colours and settles into the new resting colour when it ends.
+   */
+  refreshTheme(): void {
+    if (!this.flashTimer && !this.motion) this.color = this.baseColor;
+    this.redraw();
   }
 
   /** Fade/slide-in used when the level (re)starts. Input is never blocked by it. */
@@ -129,18 +141,19 @@ export class ArrowView {
     const duration = Phaser.Math.Clamp((distance / (cell * 26)) * 1000, 300, 520);
     const grid = gridBounds(this.layout);
     const v = DIRECTION_VECTORS[this.data.direction];
-    const decorate = !reducedMotion();
+    const decoration = decorationScale();
+    const p = palette();
     let leftAtProgress: number | null = null;
     let headOut = false;
 
     const tip = this.restPath[this.restPath.length - 1];
     if (options.auto) {
-      this.fx.ring(tip.x, tip.y, COLORS.purple, cell, 0.15, 0.75, 320);
-      this.fx.burst(tip.x, tip.y, v.dCol, v.dRow, COLORS.purple, cell, 5, 1.4);
+      this.fx.ring(tip.x, tip.y, p.chain, cell, 0.15, 0.75, 320);
+      this.fx.burst(tip.x, tip.y, v.dCol, v.dRow, p.chain, cell, 5, 1.4);
     } else {
-      this.fx.ring(tip.x, tip.y, COLORS.green, cell, 0.12, 0.5, 240);
+      this.fx.ring(tip.x, tip.y, p.success, cell, 0.12, 0.5, 240);
     }
-    const launchColor = options.auto ? COLORS.red : COLORS.green;
+    const launchColor = options.auto ? p.error : p.success;
 
     this.motion = this.scene.tweens.addCounter({
       from: 0,
@@ -151,8 +164,8 @@ export class ArrowView {
         this.offset = tween.getValue() ?? 0;
         // A short white-green flash at launch, settling into success green.
         const flash = Math.max(0, 1 - tween.elapsed / 140);
-        this.color = flash > 0 ? mixColors(COLORS.green, lighten(launchColor, 0.4), flash) : COLORS.green;
-        this.trail = decorate ? Math.min(this.offset, cell * ARROW_STYLE.trailLength) : 0;
+        this.color = flash > 0 ? mixColors(p.success, lighten(launchColor, 0.4), flash) : p.success;
+        this.trail = Math.min(this.offset, cell * ARROW_STYLE.trailLength * decoration);
 
         // Sparks where the head breaks through the edge of the grid.
         if (!headOut) {
@@ -160,8 +173,8 @@ export class ArrowView {
           if (!Phaser.Geom.Rectangle.Contains(grid, head.x, head.y)) {
             headOut = true;
             const edge = clampToRect(head, grid);
-            this.fx.burst(edge.x, edge.y, v.dCol, v.dRow, COLORS.green, cell, 9);
-            this.fx.ring(edge.x, edge.y, COLORS.green, cell, 0.1, 0.6, 300);
+            this.fx.burst(edge.x, edge.y, v.dCol, v.dRow, p.success, cell, 9);
+            this.fx.ring(edge.x, edge.y, p.success, cell, 0.1, 0.6, 300);
           }
         }
 
@@ -194,7 +207,7 @@ export class ArrowView {
     this.stopAnimations();
     this.resetPose();
     this.pressed = false;
-    this.color = COLORS.red;
+    this.color = palette().error;
 
     const cell = this.layout.cellSize;
     const v = DIRECTION_VECTORS[this.data.direction];
@@ -211,11 +224,11 @@ export class ArrowView {
           this.setOffset(0);
           if (options.activate) {
             // From now on the arrow rests in red; a red ring marks the moment it was activated.
-            this.baseColor = COLORS.red;
+            this.activated = true;
             const head = this.restPath[this.restPath.length - 1];
-            this.fx.ring(head.x, head.y, COLORS.red, cell, 0.2, 0.7, 300);
+            this.fx.ring(head.x, head.y, palette().error, cell, 0.2, 0.7, 300);
           }
-          this.flash(lighten(COLORS.red, 0.35), 140);
+          this.flash(lighten(palette().error, 0.35), 140);
           callbacks.onComplete();
         },
       });
@@ -230,8 +243,8 @@ export class ArrowView {
       onComplete: () => {
         // Small orange sparks bouncing back off the blocker at the point of contact.
         const tip = this.pointAt(this.offset + this.bodyLength);
-        this.fx.burst(tip.x, tip.y, -v.dCol, -v.dRow, COLORS.orange, cell, 5, 1.1);
-        this.fx.ring(tip.x, tip.y, COLORS.orange, cell, 0.08, 0.35, 220);
+        this.fx.burst(tip.x, tip.y, -v.dCol, -v.dRow, palette().warning, cell, 5, 1.1);
+        this.fx.ring(tip.x, tip.y, palette().warning, cell, 0.08, 0.35, 220);
         callbacks.onImpact();
         back();
       },
@@ -267,7 +280,7 @@ export class ArrowView {
   playHit(direction: Direction): void {
     this.scene.tweens.killTweensOf(this.graphics);
     this.resetPose();
-    this.flash(COLORS.orange, 380);
+    this.flash(palette().warning, 380);
     const v = DIRECTION_VECTORS[direction];
     const knock = this.layout.cellSize * 0.07;
     this.scene.tweens.add({
@@ -291,6 +304,12 @@ export class ArrowView {
     this.motion?.remove();
     this.motion = undefined;
     this.scene.tweens.killTweensOf(this.graphics);
+  }
+
+  /** Resting colour: the theme's arrow colour, or the error colour once activated. */
+  private get baseColor(): number {
+    const p = palette();
+    return this.activated ? p.error : arrowColor(p, this.colorIndex);
   }
 
   /** Back to the resting look: no offset, no tint, fully visible. */
@@ -346,6 +365,7 @@ export class ArrowView {
 
   private redraw(): void {
     const g = this.graphics.clear();
+    const p = palette();
     const cell = this.layout.cellSize;
     const segment = slicePolyline(this.path, this.offset, this.offset + this.bodyLength);
     if (segment.length < 2) return;
@@ -378,7 +398,7 @@ export class ArrowView {
     // would double up where segments and joints overlap, and a shader glow is
     // too expensive on phones, so this fakes it at no cost.
     for (const [extra, strength] of ARROW_STYLE.halo) {
-      const haloColor = mixColors(BOARD_COLORS.well, color, Math.min(1, strength * haloBoost));
+      const haloColor = mixColors(p.well, color, Math.min(1, strength * haloBoost * p.glow));
       const grow = cell * extra;
       this.strokeRounded(g, shaft, bodyWidth + grow, haloColor);
       this.fillHead(g, tip, v, headLength + grow * 0.7, halfWidth + grow * 0.55, haloColor, grow * 0.45);
@@ -387,12 +407,28 @@ export class ArrowView {
     this.strokeRounded(g, shaft, bodyWidth, color);
     this.fillHead(g, tip, v, headLength, halfWidth, color, 0);
     // A thin bright core line gives the "neon tube" look without extra glow.
-    this.strokeRounded(g, shaft, cell * ARROW_STYLE.coreWidth, lighten(color, 0.5));
+    this.strokeRounded(g, shaft, cell * ARROW_STYLE.coreWidth, lighten(color, p.core));
+    // Activated arrows are cut into a dashed tube, so they differ from the
+    // others by shape as well as by colour (colour-blind players, any theme).
+    if (this.activated && this.color === this.baseColor) this.cutDashes(g, shaft, bodyWidth, mixColors(p.well, color, 0.2));
     // A small dark socket marks the tail, so an arrowhead pointing straight
     // into the next arrow's tail still reads as two separate arrows.
     const tail = shaft[0] ?? segment[0];
-    g.fillStyle(BOARD_COLORS.well, 1);
+    g.fillStyle(p.well, 1);
     g.fillCircle(tail.x, tail.y, bodyWidth * 0.2);
+  }
+
+  /** Short gaps across the body at regular spacing along it. */
+  private cutDashes(g: Phaser.GameObjects.Graphics, shaft: readonly Point[], bodyWidth: number, color: number): void {
+    const cell = this.layout.cellSize;
+    const gap = cell * ARROW_STYLE.activatedGap;
+    const spacing = cell * ARROW_STYLE.activatedSpacing;
+    const length = polylineLength(shaft);
+    g.lineStyle(bodyWidth * 1.08, color, 1);
+    for (let d = spacing * 0.6; d + gap < length; d += spacing) {
+      const piece = slicePolyline(shaft, d, d + gap);
+      for (let k = 1; k < piece.length; k++) g.lineBetween(piece[k - 1].x, piece[k - 1].y, piece[k].x, piece[k].y);
+    }
   }
 
   /**

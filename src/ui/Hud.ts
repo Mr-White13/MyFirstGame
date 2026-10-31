@@ -15,6 +15,7 @@ export class Hud {
   private readonly backButton = requireElement<HTMLButtonElement>('btn-back');
   private readonly restartButton = requireElement<HTMLButtonElement>('btn-restart');
   private readonly time = requireElement('hud-time');
+  private readonly timer = requireElement('hud-timer');
   private shownTime = '';
   private last?: GameSnapshot;
 
@@ -38,6 +39,14 @@ export class Hud {
     if (text === this.shownTime) return;
     this.shownTime = text;
     this.time.textContent = text;
+  }
+
+  /**
+   * Shows or hides the clock. Hiding is only visual: the attempt is still
+   * timed, and the completion dialog still shows the time.
+   */
+  setTimerVisible(visible: boolean): void {
+    this.timer.hidden = !visible;
   }
 
   onBack(handler: () => void): void {

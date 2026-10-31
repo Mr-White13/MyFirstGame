@@ -6,6 +6,7 @@ import { BoardRenderer } from '../render/BoardRenderer';
 import { FxLayer } from '../render/FxLayer';
 import { cellAtPoint, computeBoardLayout, sameLayout, type BoardLayout, type Rect } from '../render/layout';
 import type { LevelData, MoveResult } from '../core/types';
+import type { FeedbackEvent } from '../app/Feedback';
 import { MoveSequencer, type SequenceStep } from './MoveSequencer';
 
 export interface GameSceneOptions {
@@ -28,6 +29,8 @@ export interface GameSceneOptions {
   onLevelLost: () => void;
   /** Called once, after the last life is lost and its feedback has played: time to show Game Over. */
   onLevelFailed: () => void;
+  /** Sound and haptic cues for what the player sees: releases, collisions, chain reactions. */
+  onFeedback?: (event: FeedbackEvent) => void;
 }
 
 /** How far outside an arrow's body a tap still counts, in cells. */
@@ -113,6 +116,17 @@ export class GameScene extends Phaser.Scene {
     this.applyLayout(next);
   }
 
+  /**
+   * Redraws the board and every arrow in the active theme. Nothing is rebuilt:
+   * arrows, animations, input and game state carry on untouched.
+   */
+  refreshTheme(): void {
+    if (!this.board) return;
+    this.board.refreshTheme();
+    this.views.forEach((v) => v.refreshTheme());
+    this.leaving.forEach((v) => v.refreshTheme());
+  }
+
   /** Restarts the current level. Safe to call at any time, including mid-animation. */
   restartLevel(): void {
     this.state.reset();
@@ -146,7 +160,7 @@ export class GameScene extends Phaser.Scene {
     const arrows = this.state.getArrows();
     const stagger = Math.min(30, INTRO_SPREAD_MS / Math.max(1, arrows.length));
     arrows.forEach((data, index) => {
-      const view = new ArrowView(this, data, this.layout, this.arrowLayer, this.fx);
+      const view = new ArrowView(this, data, this.layout, this.arrowLayer, this.fx, index);
       view.setActivated(this.state.isActivated(data.id));
       this.views.set(data.id, view);
       view.playIntro(60 + index * stagger);
@@ -230,18 +244,25 @@ export class GameScene extends Phaser.Scene {
   private stepsFor(view: ArrowView, result: MoveResult): SequenceStep[] {
     switch (result.kind) {
       case 'cleared': {
-        const steps: SequenceStep[] = [this.exitStep(view, false)];
-        for (const removal of result.chain) {
+        const steps: SequenceStep[] = [this.exitStep(view, false, { type: 'release' })];
+        result.chain.forEach((removal, index) => {
           const released = this.views.get(removal.arrowId);
-          if (released) steps.push(this.exitStep(released, true));
-        }
+          if (released) steps.push(this.exitStep(released, true, { type: 'chain', index }));
+        });
         return steps;
       }
 
       case 'blocked': {
         if (!result.lifeLost) {
           // Already red and still blocked: a gentle nudge, nothing else.
-          return [{ run: (done) => view.playNudge(done) }];
+          return [
+            {
+              run: (done) => {
+                this.options.onFeedback?.({ type: 'blocked', lifeLost: false });
+                view.playNudge(done);
+              },
+            },
+          ];
         }
         const blocker = this.views.get(result.blockerId);
         // Slide until the tip meets the edge of the blocker's cell: the free
@@ -253,7 +274,13 @@ export class GameScene extends Phaser.Scene {
             run: (done) =>
               view.playBlocked(
                 travel,
-                { onImpact: () => blocker?.playHit(view.data.direction), onComplete: done },
+                {
+                  onImpact: () => {
+                    blocker?.playHit(view.data.direction);
+                    this.options.onFeedback?.({ type: 'blocked', lifeLost: true });
+                  },
+                  onComplete: done,
+                },
                 { activate: true },
               ),
           },
@@ -266,9 +293,10 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** An arrow leaving the board; the step hands over once its tail is off the grid. */
-  private exitStep(view: ArrowView, auto: boolean): SequenceStep {
+  private exitStep(view: ArrowView, auto: boolean, feedback: FeedbackEvent): SequenceStep {
     return {
       run: (done) => {
+        this.options.onFeedback?.(feedback);
         if (this.pressed === view) this.pressed = undefined; // it may be highlighted while waiting for its turn
         this.views.delete(view.data.id);
         this.leaving.add(view);

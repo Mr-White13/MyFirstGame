@@ -1,15 +1,40 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark" data-motion="full" data-effects="normal">
   <head>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
     />
-    <meta name="theme-color" content="#101522" />
+    <meta name="theme-color" content="#101522" id="theme-color" />
     <meta name="format-detection" content="telephone=no" />
     <title>NEON ESCAPE</title>
     <link rel="icon" href="data:," />
+    <script>
+      // Applies the saved theme, motion and effects settings before the first
+      // paint, so the page never flashes in the wrong theme while the game
+      // loads. Must agree with resolveAppearance() in src/settings/Appearance.ts.
+      (function () {
+        var root = document.documentElement;
+        var s = {};
+        try {
+          var parsed = JSON.parse(localStorage.getItem('neon-escape.settings') || '{}');
+          if (parsed && parsed.version === 1) s = parsed;
+        } catch (e) {}
+        var mq = function (q) {
+          try { return window.matchMedia(q).matches; } catch (e) { return false; }
+        };
+        var theme = ['dark', 'light', 'colorful', 'system'].indexOf(s.theme) >= 0 ? s.theme : 'dark';
+        if (theme === 'system') theme = mq('(prefers-color-scheme: light)') ? 'light' : 'dark';
+        var reduce = s.motion === 'reduce' || (s.motion !== 'full' && mq('(prefers-reduced-motion: reduce)'));
+        var effects = ['off', 'low', 'normal'].indexOf(s.effects) >= 0 ? s.effects : 'normal';
+        root.setAttribute('data-theme', theme);
+        root.setAttribute('data-motion', reduce ? 'reduce' : 'full');
+        root.setAttribute('data-effects', effects);
+        var colors = { dark: '#101522', light: '#e9eef6', colorful: '#130f26' };
+        document.getElementById('theme-color').setAttribute('content', colors[theme]);
+      })();
+    </script>
   </head>
   <body>
     <!-- Shared icons, referenced with <use href="#icon-..."> -->
@@ -42,6 +67,11 @@
       <symbol id="icon-spark" viewBox="0 0 24 24">
         <path d="M12 2.5l2.4 7.1 7.1 2.4-7.1 2.4-2.4 7.1-2.4-7.1-7.1-2.4 7.1-2.4z" />
       </symbol>
+      <symbol id="icon-palette" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17c1.2 0 1.8-.9 1.4-1.9-.5-1.2.2-2.4 1.6-2.4h1.6a3.9 3.9 0 0 0 3.9-3.9c0-4.9-3.8-8.8-8.5-8.8z" /><circle cx="7.8" cy="11" r="1.1" /><circle cx="10.5" cy="7.4" r="1.1" /><circle cx="15" cy="7.6" r="1.1" /></symbol>
+      <symbol id="icon-sound" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" /><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.2 6.5a8 8 0 0 1 0 11" /></symbol>
+      <symbol id="icon-vibrate" viewBox="0 0 24 24"><rect x="8" y="4" width="8" height="16" rx="2" /><path d="M4.5 9v6M19.5 9v6M2 10.5v3M22 10.5v3" /></symbol>
+      <symbol id="icon-gamepad" viewBox="0 0 24 24"><path d="M7 8h10a4 4 0 0 1 4 4.4l-.5 3.4a2.4 2.4 0 0 1-4.1 1.3L14.7 15H9.3l-1.7 2.1a2.4 2.4 0 0 1-4.1-1.3L3 12.4A4 4 0 0 1 7 8z" /><path d="M8 10.5v3M6.5 12h3" /><circle cx="16" cy="11.3" r=".6" /><circle cx="17.3" cy="13" r=".6" /></symbol>
+      <symbol id="icon-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" /><path d="M12 11v5.2" /><path d="M12 7.8v.1" /></symbol>
       <symbol id="icon-star" viewBox="0 0 24 24">
         <path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z" />
       </symbol>
@@ -55,7 +85,7 @@
       <!-- Home: the start screen -->
       <section class="screen screen--home" id="screen-home" aria-labelledby="home-title">
         <header class="topbar">
-          <button type="button" class="icon-btn" id="btn-home-settings" aria-label="Settings (coming soon)">
+          <button type="button" class="icon-btn" id="btn-home-settings" aria-label="Settings">
             <svg class="icon" aria-hidden="true"><use href="#icon-settings" /></svg>
           </button>
           <span class="topbar__spacer" aria-hidden="true"></span>
@@ -99,8 +129,8 @@
           <button type="button" class="nav-tile nav-tile--soon" id="btn-home-events" aria-label="Events (coming soon)">
             <svg class="icon" aria-hidden="true"><use href="#icon-bolt" /></svg><span>Events</span><em class="soon">Soon</em>
           </button>
-          <button type="button" class="nav-tile nav-tile--soon" id="btn-home-settings-tile" aria-label="Settings (coming soon)">
-            <svg class="icon" aria-hidden="true"><use href="#icon-settings" /></svg><span>Settings</span><em class="soon">Soon</em>
+          <button type="button" class="nav-tile" id="btn-home-settings-tile">
+            <svg class="icon" aria-hidden="true"><use href="#icon-settings" /></svg><span>Settings</span>
           </button>
         </nav>
 
@@ -151,7 +181,7 @@
               </button>
               <div class="hud__heading">
                 <h1 class="hud__level">Level <span id="hud-level">1</span></h1>
-                <span class="hud__timer" role="timer" aria-label="Level time">
+                <span class="hud__timer" id="hud-timer" role="timer" aria-label="Level time">
                   <svg class="icon" aria-hidden="true"><use href="#icon-clock" /></svg><span id="hud-time">00:00</span>
                 </span>
               </div>
@@ -233,6 +263,157 @@
           <section class="profile__card surface" aria-labelledby="profile-records-title">
             <h2 class="card-heading" id="profile-records-title">Personal records</h2>
             <ol class="records" id="profile-records"></ol>
+          </section>
+        </div>
+      </section>
+
+      <!-- Settings -->
+      <section class="screen screen--settings" id="screen-settings" aria-labelledby="settings-title">
+        <header class="topbar">
+          <button type="button" class="icon-btn" id="btn-settings-back" aria-label="Back">
+            <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
+          </button>
+          <h1 class="topbar__title" id="settings-title">Settings</h1>
+          <span class="topbar__spacer" aria-hidden="true"></span>
+        </header>
+
+        <div class="settings__scroll">
+          <section class="settings-group surface" aria-labelledby="settings-appearance">
+            <h2 class="settings-group__title" id="settings-appearance">
+              <svg class="icon" aria-hidden="true"><use href="#icon-palette" /></svg>Appearance
+            </h2>
+            <div class="setting setting--stack" role="radiogroup" aria-labelledby="label-theme">
+              <span class="setting__label" id="label-theme">Theme</span>
+              <div class="theme-picker">
+                <label class="theme-option theme-option--dark">
+                  <input type="radio" name="theme" value="dark" />
+                  <span class="theme-option__swatch" aria-hidden="true"><i></i><i></i><i></i></span>
+                  <span class="theme-option__name">Dark Neon</span>
+                </label>
+                <label class="theme-option theme-option--light">
+                  <input type="radio" name="theme" value="light" />
+                  <span class="theme-option__swatch" aria-hidden="true"><i></i><i></i><i></i></span>
+                  <span class="theme-option__name">Light</span>
+                </label>
+                <label class="theme-option theme-option--colorful">
+                  <input type="radio" name="theme" value="colorful" />
+                  <span class="theme-option__swatch" aria-hidden="true"><i></i><i></i><i></i></span>
+                  <span class="theme-option__name">Colorful</span>
+                </label>
+                <label class="theme-option theme-option--system">
+                  <input type="radio" name="theme" value="system" />
+                  <span class="theme-option__swatch" aria-hidden="true"><i></i><i></i><i></i></span>
+                  <span class="theme-option__name">System</span>
+                </label>
+              </div>
+              <p class="setting__hint" id="theme-hint"></p>
+            </div>
+
+            <div class="setting setting--stack" role="radiogroup" aria-labelledby="label-motion" aria-describedby="motion-hint">
+              <span class="setting__label" id="label-motion">Reduced motion</span>
+              <div class="segmented">
+                <label><input type="radio" name="motion" value="auto" /><span>Auto</span></label>
+                <label><input type="radio" name="motion" value="reduce" /><span>On</span></label>
+                <label><input type="radio" name="motion" value="full" /><span>Off</span></label>
+              </div>
+              <p class="setting__hint" id="motion-hint"></p>
+            </div>
+
+            <div class="setting setting--stack" role="radiogroup" aria-labelledby="label-effects" aria-describedby="effects-hint">
+              <span class="setting__label" id="label-effects">Visual effects</span>
+              <div class="segmented">
+                <label><input type="radio" name="effects" value="off" /><span>Off</span></label>
+                <label><input type="radio" name="effects" value="low" /><span>Low</span></label>
+                <label><input type="radio" name="effects" value="normal" /><span>Normal</span></label>
+              </div>
+              <p class="setting__hint" id="effects-hint">Sparks, energy trails and background motes. Collision feedback always stays.</p>
+            </div>
+          </section>
+
+          <section class="settings-group surface" aria-labelledby="settings-audio">
+            <h2 class="settings-group__title" id="settings-audio">
+              <svg class="icon" aria-hidden="true"><use href="#icon-sound" /></svg>Audio
+            </h2>
+            <label class="setting setting--switch">
+              <span class="setting__text">
+                <span class="setting__label">Sound</span>
+                <span class="setting__hint">Master switch for music and effects</span>
+              </span>
+              <input type="checkbox" class="switch" role="switch" id="set-sound" />
+            </label>
+            <label class="setting setting--switch">
+              <span class="setting__text"><span class="setting__label">Music</span></span>
+              <input type="checkbox" class="switch" role="switch" id="set-music" />
+            </label>
+            <div class="setting setting--slider">
+              <label class="setting__label" for="set-music-volume">Music volume</label>
+              <input type="range" class="slider" id="set-music-volume" min="0" max="100" step="5" />
+              <output class="slider__value" id="set-music-volume-value" for="set-music-volume">35%</output>
+            </div>
+            <label class="setting setting--switch">
+              <span class="setting__text"><span class="setting__label">Sound effects</span></span>
+              <input type="checkbox" class="switch" role="switch" id="set-sfx" />
+            </label>
+            <div class="setting setting--slider">
+              <label class="setting__label" for="set-sfx-volume">Effects volume</label>
+              <input type="range" class="slider" id="set-sfx-volume" min="0" max="100" step="5" />
+              <output class="slider__value" id="set-sfx-volume-value" for="set-sfx-volume">70%</output>
+            </div>
+            <p class="setting__note" id="audio-note" hidden></p>
+          </section>
+
+          <section class="settings-group surface" aria-labelledby="settings-feedback">
+            <h2 class="settings-group__title" id="settings-feedback">
+              <svg class="icon" aria-hidden="true"><use href="#icon-vibrate" /></svg>Feedback
+            </h2>
+            <label class="setting setting--switch">
+              <span class="setting__text">
+                <span class="setting__label">Vibration</span>
+                <span class="setting__hint" id="haptics-hint">Short pulses on releases, collisions and wins</span>
+              </span>
+              <input type="checkbox" class="switch" role="switch" id="set-haptics" aria-describedby="haptics-hint" />
+            </label>
+          </section>
+
+          <section class="settings-group surface" aria-labelledby="settings-gameplay">
+            <h2 class="settings-group__title" id="settings-gameplay">
+              <svg class="icon" aria-hidden="true"><use href="#icon-gamepad" /></svg>Gameplay
+            </h2>
+            <label class="setting setting--switch">
+              <span class="setting__text">
+                <span class="setting__label">Show gameplay timer</span>
+                <span class="setting__hint">Times are always recorded and shown when you finish</span>
+              </span>
+              <input type="checkbox" class="switch" role="switch" id="set-timer" />
+            </label>
+            <label class="setting setting--switch">
+              <span class="setting__text">
+                <span class="setting__label">Confirm restart</span>
+                <span class="setting__hint">Ask before restarting a level you've started</span>
+              </span>
+              <input type="checkbox" class="switch" role="switch" id="set-confirm-restart" />
+            </label>
+          </section>
+
+          <section class="settings-group surface" aria-labelledby="settings-about">
+            <h2 class="settings-group__title" id="settings-about">
+              <svg class="icon" aria-hidden="true"><use href="#icon-info" /></svg>Information
+            </h2>
+            <dl class="about">
+              <div><dt>Version</dt><dd id="settings-version">–</dd></div>
+              <div>
+                <dt>Credits</dt>
+                <dd>Game design, code, art, sound effects and music are original to NEON ESCAPE. Sounds and music are synthesised in code. Built with Phaser 3, TypeScript and Vite.</dd>
+              </div>
+              <div>
+                <dt>Privacy</dt>
+                <dd>No account, ads or tracking. Your profile, progress, statistics and settings are stored only in this browser and never leave the device.</dd>
+              </div>
+            </dl>
+            <button type="button" class="btn btn--ghost btn--small btn--reset" id="btn-reset-settings">
+              <svg class="icon" aria-hidden="true"><use href="#icon-restart" /></svg>
+              Reset settings
+            </button>
           </section>
         </div>
       </section>

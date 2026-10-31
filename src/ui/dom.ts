@@ -1,10 +1,13 @@
+import { reducedMotion } from '../render/motion';
+
 export function requireElement<T extends HTMLElement>(id: string): T {
   const el = document.getElementById(id);
   if (!el) throw new Error(`Missing #${id} in index.html`);
   return el as T;
 }
 
-export const prefersReducedMotion = (): boolean => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+/** The resolved reduced-motion preference (player setting, or the device's when set to Auto). */
+export const prefersReducedMotion = (): boolean => reducedMotion();
 
 /** Must match the landscape media query in style.css. */
 export const LANDSCAPE_QUERY = '(orientation: landscape) and (max-height: 520px)';
