@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import type { GameState } from '../core/GameState';
 import type { ArrowData, LevelData } from '../core/types';
 import { withAvatar, withCountry, withNickname, type PlayerProfile, type ProfileStorage } from '../profile/Profile';
-import { addPlayTime, type AttemptOutcome, type PlayerStats, type StatsStorage } from '../profile/Stats';
+import type { AttemptOutcome, PlayerStats, StatsStorage } from '../profile/Stats';
 import { completedCount, isCompleted, type Progress } from '../progress/Progress';
 import { canPlayLevel, isTestPlay } from '../progress/testUnlock';
 import { ENERGY_PER_CHALLENGE, MAX_DAILY_POINTS, type DailyChallenge } from '../league/challenges';
@@ -12,7 +12,7 @@ import { LEAGUE_UNLOCK_LEVEL, type LeagueService } from '../league/LeagueService
 import type { LeagueScreen } from '../ui/LeagueScreen';
 import { noticeKind, noticeText, type LeagueResultDialog } from '../ui/LeagueResultDialog';
 import type { ProgressStorage } from '../progress/ProgressStorage';
-import { addDayPlayTime, recordDayAttempt, type DailyLog, type DailyLogStorage } from '../recap/DailyLog';
+import type { DailyLogStorage } from '../recap/DailyLog';
 import type { RecapRecords } from '../recap/insights';
 import type { GameScene } from '../scenes/GameScene';
 import type { CompleteDialog } from '../ui/CompleteDialog';
@@ -36,7 +36,8 @@ import type { AchievementsScreen } from '../ui/AchievementsScreen';
 import type { DailyDialog } from '../ui/DailyDialog';
 import type { Screens } from '../ui/Screens';
 import type { Toast } from '../ui/Toast';
-import { applyAttempt, AttemptTracker, type AttemptSummary } from './AttemptTracker';
+import { AttemptTracker, type AttemptSummary } from './AttemptTracker';
+import { RecordsKeeper } from './RecordsKeeper';
 import { hasProgress, restartNeedsConfirm } from './confirmPolicy';
 import type { FeedbackEvent } from './Feedback';
 import { NavigationHistory, type ScreenName } from './Navigation';
@@ -92,10 +93,8 @@ const CLOCK_REFRESH_MS = 250;
  * Every attempt runs through the AttemptTracker, which ends it exactly once.
  */
 export class App {
-  private progress: Progress;
+  private readonly records: RecordsKeeper;
   private profile: PlayerProfile;
-  private stats: PlayerStats;
-  private dailyLog: DailyLog;
   private navigating = false;
   /** The startup splash / recap covering Home: Back answers it and league notices wait for it. */
   private intro: { back: () => void } | null = null;
@@ -124,10 +123,10 @@ export class App {
   } | null = null;
 
   constructor(private readonly parts: AppParts) {
-    this.progress = parts.storage.load();
+    // Loaded in this order: progress, profile, statistics, daily log.
+    const progress = parts.storage.load();
     this.profile = parts.profileStorage.load();
-    this.stats = parts.statsStorage.load();
-    this.dailyLog = parts.dailyLogStorage.load();
+    this.records = new RecordsKeeper(parts, progress, parts.statsStorage.load(), parts.dailyLogStorage.load());
   }
 
   /** Wires up the UI callbacks and shows the Home screen. */
@@ -160,7 +159,7 @@ export class App {
     this.settleLeague();
 
     // Pins the first tracked day, so later summaries know which days are complete.
-    this.parts.dailyLogStorage.save(this.dailyLog);
+    this.records.saveDailyLog();
 
     this.renderAll();
     // The game loop only needs to run while its screen is visible; sleeping saves
@@ -208,7 +207,7 @@ export class App {
 
   /** True once Level 10 is completed. Before that no competition exists and no points can be earned. */
   get leagueUnlocked(): boolean {
-    return isCompleted(this.progress, LEAGUE_UNLOCK_LEVEL);
+    return isCompleted(this.records.progress, LEAGUE_UNLOCK_LEVEL);
   }
 
   /**
@@ -275,7 +274,7 @@ export class App {
   /** Starts a level from scratch. Locked or unknown levels are ignored. */
   openLevel(levelId: number): Promise<void> {
     const level = this.parts.levels[levelId - 1];
-    if (!level || !canPlayLevel(this.progress, levelId, this.parts.levels.length)) return Promise.resolve();
+    if (!level || !canPlayLevel(this.records.progress, levelId, this.parts.levels.length)) return Promise.resolve();
     return this.navigate(async () => {
       this.endAttempt('abandoned'); // a previous attempt still open counts as abandoned
       this.hideEndDialogs();
@@ -363,13 +362,7 @@ export class App {
       this.parts.feedback({ type: 'complete' });
       return;
     }
-    const { records, completion } = applyAttempt({ progress: this.progress, stats: this.stats }, summary, this.parts.levels.length);
-    this.progress = records.progress;
-    this.stats = records.stats;
-    this.parts.storage.save(this.progress);
-    this.parts.statsStorage.save(this.stats);
-    this.logAttempt(summary);
-    this.parts.rewards.afterAttempt(this.parts.dayClock.today, summary.longestChain);
+    const completion = this.records.record(summary);
     this.lastCompletion = completion && {
       unlocked: completion.unlocked,
       newBestStars: completion.newBestStars,
@@ -512,22 +505,22 @@ export class App {
   /** The player's own saved records, as the recap reads them. */
   get recapRecords(): RecapRecords {
     return {
-      progress: this.progress,
+      progress: this.records.progress,
       levels: this.parts.levels,
-      stats: this.stats,
+      stats: this.records.stats,
       daily: this.parts.rewards.current.daily,
-      log: this.dailyLog,
+      log: this.records.dailyLog,
       today: this.parts.dayClock.refresh(),
     };
   }
 
   /** Read-only views for debugging and tests. */
   get currentProgress(): Progress {
-    return this.progress;
+    return this.records.progress;
   }
 
   get currentStats(): PlayerStats {
-    return this.stats;
+    return this.records.stats;
   }
 
   get timer() {
@@ -569,24 +562,15 @@ export class App {
 
   private recordEnded(summary: AttemptSummary | null): void {
     if (!summary || this.attemptIsChallenge || this.attemptIsTestPlay) return; // challenges keep their own records; test plays none
-    const { records } = applyAttempt({ progress: this.progress, stats: this.stats }, summary, this.parts.levels.length);
-    this.stats = records.stats; // a failed or abandoned attempt never changes progress
-    this.parts.statsStorage.save(this.stats);
-    this.logAttempt(summary);
-    this.parts.rewards.afterAttempt(this.parts.dayClock.today, summary.longestChain);
-  }
-
-  /** Splits the same attempt the lifetime statistics just counted by the day it ended on. */
-  private logAttempt(summary: AttemptSummary): void {
-    this.dailyLog = recordDayAttempt(this.dailyLog, this.parts.dayClock.refresh(), summary);
-    this.parts.dailyLogStorage.save(this.dailyLog);
+    this.records.record(summary);
   }
 
   private renderAll(): void {
-    this.parts.home.render(this.profile, this.progress);
-    this.parts.levelSelect.render(this.progress);
-    this.parts.profileScreen.render(this.profile, this.progress, this.stats);
-    this.parts.recordsScreen.render(this.progress);
+    const { progress, stats } = this.records;
+    this.parts.home.render(this.profile, progress);
+    this.parts.levelSelect.render(progress);
+    this.parts.profileScreen.render(this.profile, progress, stats);
+    this.parts.recordsScreen.render(progress);
     this.renderRewards();
     this.renderLeague();
   }
@@ -613,7 +597,7 @@ export class App {
   private beginAttempt(): void {
     const level = this.parts.state;
     this.attemptIsChallenge = this.challenge !== null;
-    this.attemptIsTestPlay = !this.challenge && isTestPlay(this.progress, level.levelId);
+    this.attemptIsTestPlay = !this.challenge && isTestPlay(this.records.progress, level.levelId);
     this.attemptStartCollected = this.challenge ? collectedIn(this.parts.league.current, this.challenge) : 0;
     this.lastChallenge = null;
     this.attempt.begin(level.levelId, this.parts.levels[level.levelId - 1]?.revision ?? 1);
@@ -650,7 +634,7 @@ export class App {
     const unlocked = this.leagueUnlocked;
     const live = state.current?.date === today ? state.current : null;
     const todayPoints = unlocked ? points(live) : 0;
-    const levelsDone = Math.min(LEAGUE_UNLOCK_LEVEL, completedCount(this.progress, LEAGUE_UNLOCK_LEVEL));
+    const levelsDone = Math.min(LEAGUE_UNLOCK_LEVEL, completedCount(this.records.progress, LEAGUE_UNLOCK_LEVEL));
     home.renderLeague({ unlocked, levelsDone, unlockAt: LEAGUE_UNLOCK_LEVEL, tier: state.tier, today: todayPoints, maxToday: MAX_DAILY_POINTS });
     leagueScreen.render({
       unlocked,
@@ -781,10 +765,7 @@ export class App {
       this.attempt.timer.pause('hidden');
       const played = this.attempt.checkpoint();
       if (played > 0 && !this.attemptIsChallenge && !this.attemptIsTestPlay) {
-        this.stats = addPlayTime(this.stats, played);
-        this.parts.statsStorage.save(this.stats);
-        this.dailyLog = addDayPlayTime(this.dailyLog, this.parts.dayClock.refresh(), played);
-        this.parts.dailyLogStorage.save(this.dailyLog);
+        this.records.addPlayTime(played);
       }
     } else {
       this.attempt.timer.resume('hidden');
