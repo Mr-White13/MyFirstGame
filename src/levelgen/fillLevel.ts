@@ -1,7 +1,8 @@
-import { cellKey, directionBetween, DIRECTION_VECTORS, step } from '../core/Arrow';
+import { cellKey, directionBetween, step } from '../core/Arrow';
 import { analyzeDifficulty, countAmbiguousJoins, type DifficultyReport } from '../core/difficulty';
 import { createRandom, mixSeed, randomInt, type Random } from '../core/random';
-import { findSolution } from '../core/solver';
+import { exitRay } from '../core/PathChecker';
+import { clearInWaves, findSolution } from '../core/solver';
 import type { ArrowData, Cell, Direction, LevelData } from '../core/types';
 import { levelFromMap, levelToMap } from '../levels/levelMap';
 import { isPlayable, isSelfTouching, layoutSimilarity, relabel, type GenerateResult } from './generateLevel';
@@ -375,21 +376,13 @@ function orientations(path: Path, rows: number, cols: number): ArrowData[] {
   for (const cells of [path, [...path].reverse()]) {
     const direction = directionBetween(cells[cells.length - 2], cells[cells.length - 1])!;
     const own = new Set(cells.map(cellKey));
-    let ok = true;
-    for (let c = step(cells[cells.length - 1], direction); c.row >= 0 && c.row < rows && c.col >= 0 && c.col < cols; c = step(c, direction)) {
-      if (own.has(cellKey(c))) ok = false;
-    }
-    if (ok) out.push({ id: '', direction, cells });
+    if (!exitRay(cells[cells.length - 1], direction, rows, cols).some((c) => own.has(cellKey(c)))) out.push({ id: '', direction, cells });
   }
   return out;
 }
 
 function exitLength(arrow: ArrowData, rows: number, cols: number): number {
-  const head = arrow.cells[arrow.cells.length - 1];
-  const v = DIRECTION_VECTORS[arrow.direction];
-  let n = 0;
-  for (let r = head.row + v.dRow, c = head.col + v.dCol; r >= 0 && r < rows && c >= 0 && c < cols; r += v.dRow, c += v.dCol) n++;
-  return n;
+  return exitRay(arrow.cells[arrow.cells.length - 1], arrow.direction, rows, cols).length;
 }
 
 /** Usually the orientation pointing deeper into the board (longer exit line), sometimes the other. */
@@ -417,33 +410,13 @@ function flipRandom(level: LevelData, random: Random): LevelData | null {
   return { ...level, arrows };
 }
 
-/** Ids of arrows still on the board when greedy solving gets stuck (empty if solvable). */
+/**
+ * Ids of arrows that can never leave (in level order; empty if solvable).
+ * Removing an arrow only frees cells, so this set is the same whatever order
+ * the free arrows are cleared in.
+ */
 function stuckArrows(rows: number, cols: number, arrows: readonly ArrowData[]): string[] {
-  const level = { id: 0, rows, cols, arrows };
-  if (findSolution(level) !== null) return [];
-  // Replay the greedy solver to find what is left.
-  const remaining = new Map(arrows.map((a) => [a.id, a]));
-  const owner = new Map<string, string>();
-  for (const a of arrows) for (const c of a.cells) owner.set(cellKey(c), a.id);
-  for (let progress = true; progress; ) {
-    progress = false;
-    for (const a of remaining.values()) {
-      const head = a.cells[a.cells.length - 1];
-      let clear = true;
-      for (let c = step(head, a.direction); c.row >= 0 && c.row < rows && c.col >= 0 && c.col < cols; c = step(c, a.direction)) {
-        const id = owner.get(cellKey(c));
-        if (id !== undefined && id !== a.id && remaining.has(id)) {
-          clear = false;
-          break;
-        }
-      }
-      if (clear) {
-        remaining.delete(a.id);
-        progress = true;
-      }
-    }
-  }
-  return [...remaining.keys()];
+  return clearInWaves({ id: 0, rows, cols, arrows }).stuck.map((a) => a.id);
 }
 
 /** Ids of arrows involved in a head-to-head or tail-to-tail join (they read as one arrow). */

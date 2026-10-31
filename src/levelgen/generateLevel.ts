@@ -1,6 +1,7 @@
 import { arrow as makeArrow, cellKey, DIRECTION_VECTORS, step } from '../core/Arrow';
 import { analyzeDifficulty, countAmbiguousJoins, type DifficultyReport } from '../core/difficulty';
 import { validateLevel } from '../core/levelValidation';
+import { exitRay } from '../core/PathChecker';
 import { createRandom, mixSeed, randomInt, type Random } from '../core/random';
 import type { ArrowData, Cell, Direction, LevelData } from '../core/types';
 import { arrowLabel, MAX_MAP_ARROWS } from '../levels/levelMap';
@@ -395,9 +396,7 @@ function headFirstArrow(
   const head: Cell = { row: randomInt(random, 0, rows - 1), col: randomInt(random, 0, cols - 1) };
   if (occupied.has(cellKey(head))) return null;
   const direction = DIRECTIONS[randomInt(random, 0, 3)];
-  for (let c = step(head, direction); c.row >= 0 && c.row < rows && c.col >= 0 && c.col < cols; c = step(c, direction)) {
-    if (occupied.has(cellKey(c))) return null;
-  }
+  if (exitRay(head, direction, rows, cols).some((c) => occupied.has(cellKey(c)))) return null;
   const length = randomInt(random, 2, maxLength);
   // Walk backwards: the first step behind the head must continue the head's direction.
   const back: Cell[] = [head];
@@ -423,9 +422,7 @@ function headFirstArrow(
   if (back.length < 2) return null;
   const cells = back.reverse();
   // The body must not lie on its own exit line.
-  for (let c = step(head, direction); c.row >= 0 && c.row < rows && c.col >= 0 && c.col < cols; c = step(c, direction)) {
-    if (own.has(cellKey(c))) return null;
-  }
+  if (exitRay(head, direction, rows, cols).some((c) => own.has(cellKey(c)))) return null;
   return makeArrow(id, direction, ...cells.map((c) => [c.row, c.col] as [number, number]));
 }
 
@@ -440,12 +437,7 @@ function turnOf(direction: Direction, clockwise: boolean): Direction {
 }
 
 function rayCells(arrow: ArrowData, rows: number, cols: number): Cell[] {
-  const cells: Cell[] = [];
-  const head = arrow.cells[arrow.cells.length - 1];
-  for (let c = step(head, arrow.direction); c.row >= 0 && c.row < rows && c.col >= 0 && c.col < cols; c = step(c, arrow.direction)) {
-    cells.push(c);
-  }
-  return cells;
+  return exitRay(arrow.cells[arrow.cells.length - 1], arrow.direction, rows, cols);
 }
 
 /** The exit line must avoid every placed arrow (they are cleared later) and the arrow's own body. */
