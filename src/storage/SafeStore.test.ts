@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { SafeStore, type Codec, type KeyValueStore, type SaveStatus } from './SafeStore';
 
 /**
- * Characterization of the shared save layer, including the behaviour the
- * audit flags as risky (B5: a failed read is not protected). These tests
- * describe what SafeStore does today; a deliberate fix must change them.
+ * The shared save layer: every status, backups, read-only protection and
+ * storage failures. A record that could not be read is never overwritten
+ * (B5: a failed read used to let the next save replace it).
  */
 
 /** In-memory storage that logs every call and can be told to fail. */
@@ -110,19 +110,36 @@ describe('SafeStore.load', () => {
     expect(safe.save({ n: 1 })).toBe(false);
   });
 
-  it('a throwing read gives the fallback and (B5) does NOT protect the record: the next save overwrites it', () => {
+  it('a throwing read gives the fallback and protects the record: saves are refused (B5)', () => {
     const store = new ScriptedStore({ k: 'v2:42' });
     store.failGet = (key) => key === KEY;
     const safe = make(store);
     expect(safe.load()).toEqual({ n: 99 });
     expect(store.data.has('k.backup')).toBe(false);
-    expect(safe.save({ n: 99 })).toBe(true);
-    expect(store.data.get(KEY)).toBe('v2:99'); // the real record (42) is gone
+    store.calls.length = 0;
+    expect(safe.save({ n: 99 })).toBe(false);
+    expect(store.calls).toEqual([]);
+    expect(store.data.get(KEY)).toBe('v2:42'); // the real record is kept
   });
 
-  it('a codec that throws gives the fallback', () => {
+  it('after a failed read, a later load that succeeds makes it writable again', () => {
+    const store = new ScriptedStore({ k: 'v2:42' });
+    store.failGet = () => true;
+    const safe = make(store);
+    safe.load();
+    store.failGet = null;
+    expect(safe.load()).toEqual({ n: 42 });
+    expect(safe.save({ n: 43 })).toBe(true);
+    expect(store.data.get(KEY)).toBe('v2:43');
+  });
+
+  it('a codec that throws gives the fallback and protects the record', () => {
     const throwing: Codec<{ n: number }> = { ...codec, read: () => { throw new Error('bug'); } };
-    expect(make(new ScriptedStore({ k: 'v2:1' }), throwing).load()).toEqual({ n: 99 });
+    const store = new ScriptedStore({ k: 'v2:1' });
+    const safe = make(store, throwing);
+    expect(safe.load()).toEqual({ n: 99 });
+    expect(safe.save({ n: 5 })).toBe(false);
+    expect(store.data.get(KEY)).toBe('v2:1');
   });
 
   it('a failing backup is swallowed and the value still returned', () => {
