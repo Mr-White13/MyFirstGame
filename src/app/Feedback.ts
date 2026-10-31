@@ -98,7 +98,7 @@ export class Feedback {
         return;
       case 'promoted':
         this.sound.play('promoted');
-        this.haptics.play('complete');
+        this.haptics.play('promoted');
         return;
     }
   }

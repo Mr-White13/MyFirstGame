@@ -2,21 +2,22 @@ import { describe, expect, it } from 'vitest';
 import { validateLevel } from '../core/levelValidation';
 import { analyzeDifficulty } from '../core/difficulty';
 import { analyzeLevel, findSolution } from '../core/solver';
-import { layoutSimilarity } from '../levelgen/generateLevel';
+import { isSelfTouching, layoutSimilarity } from '../levelgen/generateLevel';
 import { getLevel, LEVEL_COUNT, LEVELS } from './index';
-import { levelFromMap, levelToMap } from './levelMap';
+import { arrowLabel, levelFromMap, levelToMap } from './levelMap';
 
 describe('level registry', () => {
-  it('has 10 levels with ids 1..10 in order', () => {
-    expect(LEVEL_COUNT).toBe(10);
-    expect(LEVELS.map((l) => l.id)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  it('has 30 levels with ids 1..30 in order', () => {
+    expect(LEVEL_COUNT).toBe(30);
+    expect(LEVELS.map((l) => l.id)).toEqual(Array.from({ length: 30 }, (_, i) => i + 1));
   });
 
   it('looks levels up by id', () => {
     expect(getLevel(1)).toBe(LEVELS[0]);
     expect(getLevel(10)).toBe(LEVELS[9]);
+    expect(getLevel(30)).toBe(LEVELS[29]);
     expect(getLevel(0)).toBeUndefined();
-    expect(getLevel(11)).toBeUndefined();
+    expect(getLevel(31)).toBeUndefined();
   });
 
   it('uses the planned grid sizes', () => {
@@ -24,6 +25,10 @@ describe('level registry', () => {
       '7x7', '7x7', '7x7', '7x7', '7x7',
       '8x8', '8x8', '8x8',
       '9x9', '9x9',
+      '10x10', '10x10', '10x10', '10x10', '10x10',
+      '11x11', '11x11', '12x12', '12x12', '12x12',
+      '13x13', '13x13', '14x14', '14x14', '15x15',
+      '15x15', '15x15', '16x16', '16x16', '16x16',
     ]);
   });
 });
@@ -60,7 +65,9 @@ describe('difficulty curve', () => {
 
   // Scores are a heuristic (see core/difficulty.ts); these checks keep the
   // curated order consistent with it, not a claim about human difficulty.
-  const reports = LEVELS.map((l) => analyzeDifficulty(l));
+  const allReports = LEVELS.map((l) => analyzeDifficulty(l));
+  /** The hand-designed levels 1–10 (their curve is checked strictly). */
+  const reports = allReports.slice(0, 10);
 
   it('rises in estimated difficulty every level', () => {
     for (let i = 1; i < reports.length; i++) {
@@ -81,7 +88,7 @@ describe('difficulty curve', () => {
   });
 
   it('has no arrows that read as one (tail-to-tail joins)', () => {
-    expect(reports.map((r) => r.exact.ambiguousJoins)).toEqual(LEVELS.map(() => 0));
+    expect(allReports.map((r) => r.exact.ambiguousJoins)).toEqual(LEVELS.map(() => 0));
   });
 
   it('has no two levels that are near-duplicates', () => {
@@ -93,13 +100,52 @@ describe('difficulty curve', () => {
   });
 
   it('marks redesigned layouts with a new revision', () => {
-    expect(LEVELS.map((l) => l.revision ?? 1)).toEqual([1, 2, 2, 2, 2, 2, 2, 2, 2, 2]);
+    expect(LEVELS.map((l) => l.revision ?? 1)).toEqual([1, 2, 2, 2, 2, 2, 2, 2, 2, 2, ...Array(20).fill(1)]);
   });
 
   it('does not simply add arrows every level', () => {
     const counts = stats.map((s) => s.arrows);
     const alwaysGrowing = counts.every((n, i) => i === 0 || n > counts[i - 1]);
     expect(alwaysGrowing).toBe(false);
+  });
+});
+
+describe('levels 11–30', () => {
+  const later = LEVELS.slice(10);
+  const reports = later.map((l) => analyzeDifficulty(l, { lives: false }));
+  const mean = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length;
+  const band = (from: number) => reports.slice(from - 11, from - 6);
+
+  it('stay readable: no arrow runs alongside itself, and boards stay at most 16×16', () => {
+    for (const level of later) {
+      expect(level.rows).toBeLessThanOrEqual(16);
+      for (const a of level.arrows) expect(isSelfTouching(a.cells), `level ${level.id} arrow ${a.id}`).toBe(false);
+    }
+  });
+
+  it('use longer arrows and more bends than the curated levels', () => {
+    const longest = (ls: typeof LEVELS) => Math.max(...ls.flatMap((l) => l.arrows.map((a) => a.cells.length)));
+    expect(longest(later)).toBeGreaterThan(longest(LEVELS.slice(0, 10)));
+    const bends = (cells: readonly { row: number; col: number }[]) =>
+      cells.slice(2).filter((c, i) => c.row - cells[i + 1].row !== cells[i + 1].row - cells[i].row || c.col - cells[i + 1].col !== cells[i + 1].col - cells[i].col).length;
+    expect(later.some((l) => l.arrows.some((a) => bends(a.cells) >= 3))).toBe(true);
+  });
+
+  it('get harder band by band (11–15, 16–20, 21–25, 26–30), without simply adding arrows', () => {
+    const means = [11, 16, 21, 26].map((from) => mean(band(from).map((r) => r.score)));
+    for (let i = 1; i < means.length; i++) expect(means[i]).toBeGreaterThan(means[i - 1]);
+    expect(mean(band(26).map((r) => r.score))).toBeGreaterThan(mean([...band(11), ...band(16)].map((r) => r.score)));
+    for (const r of reports) expect(r.score).toBeGreaterThanOrEqual(55);
+  });
+
+  it('keep the opening a search: few arrows are free at the start', () => {
+    for (const r of reports) expect(r.exact.initialFree / r.exact.arrows).toBeLessThanOrEqual(0.3);
+  });
+
+  it('each need a long chain of moves (depth), deeper in the later bands', () => {
+    const depth = (from: number) => mean(band(from).map((r) => r.exact.depth));
+    expect(depth(26)).toBeGreaterThan(depth(11));
+    for (const r of reports) expect(r.exact.depth).toBeGreaterThanOrEqual(10);
   });
 });
 
@@ -132,6 +178,16 @@ describe('levelFromMap', () => {
       );
       expect(again.arrows).toHaveLength(level.arrows.length);
     }
+  });
+
+  it('supports more than 52 arrows with letter+digit labels', () => {
+    const many = levelFromMap(99, [Array.from({ length: 60 }, (_, i) => `${arrowLabel(i)}v`).join(' '), Array.from({ length: 60 }, () => '.').join(' ')]);
+    expect(many.arrows).toHaveLength(60);
+    expect(arrowLabel(51)).toBe('Z');
+    expect(arrowLabel(52)).toBe('a0');
+    expect(arrowLabel(53)).toBe('b0');
+    expect(levelFromMap(99, levelToMap(many)).arrows).toHaveLength(60);
+    expect(() => levelFromMap(1, ['a1 a1>'])).not.toThrow();
   });
 
   it('keeps the revision option', () => {

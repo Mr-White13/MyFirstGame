@@ -1,5 +1,6 @@
 package dev.neonescape.prototype;
 
+import android.os.Bundle;
 import android.view.Window;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -17,6 +18,13 @@ import com.getcapacitor.BridgeActivity;
  * clear of cutouts with CSS safe-area insets.
  */
 public class MainActivity extends BridgeActivity {
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        // Local plugins must be registered before the bridge starts.
+        registerPlugin(NeonHapticsPlugin.class);
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {

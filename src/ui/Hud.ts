@@ -29,6 +29,7 @@ export class Hud {
   private readonly leagueName = requireElement('hud-league-name');
   private readonly points = requireElement('hud-points');
   private challenge: ChallengeHud | null = null;
+  private readonly resetViewButton = requireElement<HTMLButtonElement>('btn-reset-view');
   private readonly hearts = requireElement('hud-hearts');
   private readonly remaining = requireElement('hud-remaining');
   private readonly progress = requireElement('hud-progress');
@@ -93,6 +94,15 @@ export class Hud {
    */
   setTimerVisible(visible: boolean): void {
     this.timer.hidden = !visible;
+  }
+
+  /** The Reset zoom control on the board: shown only while the board is zoomed in. */
+  setZoomed(zoomed: boolean): void {
+    this.resetViewButton.hidden = !zoomed;
+  }
+
+  onResetView(handler: () => void): void {
+    this.resetViewButton.addEventListener('click', handler);
   }
 
   onBack(handler: () => void): void {

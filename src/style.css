@@ -3807,3 +3807,53 @@ body.is-navigating #app {
 :root[data-motion='reduce'] .league-card__meter .meter__fill {
   transition: none;
 }
+
+/* Vibration test (Settings > Feedback) */
+.setting--test {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.setting--test .btn {
+  align-self: flex-start;
+}
+
+.setting--test .btn .icon {
+  color: var(--purple);
+}
+
+/* Reset zoom: a small control in the board's corner, only while zoomed. */
+.board-slot {
+  position: relative;
+}
+
+.view-reset {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  pointer-events: auto;
+  background: rgb(var(--surface-rgb) / 0.92);
+}
+
+.view-reset[hidden] {
+  display: none;
+}
+
+/* Developer diagnostics overlay (Settings: tap Version five times). */
+.diagnostics {
+  position: fixed;
+  left: 6px;
+  bottom: calc(env(safe-area-inset-bottom) + 6px);
+  z-index: 50;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font: 600 11px/1.3 ui-monospace, monospace;
+  color: #b8ffcf;
+  background: rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+}
+
+.diagnostics[hidden] {
+  display: none;
+}

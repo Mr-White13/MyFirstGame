@@ -3,6 +3,7 @@ import { analyzeDifficulty, countAmbiguousJoins, type DifficultyReport } from '.
 import { validateLevel } from '../core/levelValidation';
 import { createRandom, mixSeed, randomInt, type Random } from '../core/random';
 import type { ArrowData, Cell, Direction, LevelData } from '../core/types';
+import { arrowLabel, MAX_MAP_ARROWS } from '../levels/levelMap';
 
 /*
  * Offline level generator (developer tool, never used during play).
@@ -48,6 +49,19 @@ export interface GenerateOptions {
   readonly similarityLimit?: number;
   /** Local-edit steps per refined candidate (0 disables refinement). */
   readonly refineSteps?: number;
+  /** Chance (0..1) of turning at each eligible step: higher gives more winding arrows (default 0.35). */
+  readonly turnChance?: number;
+  /**
+   * Upper bound on difficulty analyses (the expensive part), across attempts
+   * and refinement. Keeps large grids from running for minutes. Deterministic,
+   * unlike a time limit. Default 1200.
+   */
+  readonly workBudget?: number;
+  /**
+   * Most arrows that may be free at the start. Larger boards naturally have
+   * many easy first moves; capping this keeps their opening a real search.
+   */
+  readonly maxInitialFree?: number;
 }
 
 export type GenerateResult =
@@ -67,8 +81,8 @@ export type GenerateResult =
     };
 
 const DIRECTIONS: readonly Direction[] = ['up', 'down', 'left', 'right'];
-const LETTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-const CANDIDATES_PER_ARROW = 100;
+/** Candidate arrows tried per placement: more on larger boards, where most random walks don't fit. */
+const candidatesFor = (rows: number, cols: number) => Math.max(100, Math.round((rows * cols) / 2));
 /** The generator steers by the search score only; the lives simulation would just slow it down. */
 const SEARCH_ONLY = { lives: false } as const;
 /** How many of the closest constructive candidates get refined. */
@@ -76,7 +90,7 @@ const REFINE_CANDIDATES = 4;
 
 export function defaultArrowRange(rows: number, cols: number): { min: number; max: number } {
   const cells = rows * cols;
-  return { min: Math.round(cells / 6), max: Math.min(LETTERS.length, Math.round(cells / 3.6)) };
+  return { min: Math.round(cells / 6), max: Math.min(MAX_MAP_ARROWS, Math.round(cells / 3.6)) };
 }
 
 export function generateLevel(options: GenerateOptions): GenerateResult {
@@ -84,18 +98,22 @@ export function generateLevel(options: GenerateOptions): GenerateResult {
   const range = options.arrows ?? defaultArrowRange(options.rows, options.cols);
   if (options.rows < 3 || options.cols < 3) return failure('grid must be at least 3×3', 0, null);
   if (options.minScore > options.maxScore) return failure('minScore is greater than maxScore', 0, null);
-  if (range.min > range.max || range.max > LETTERS.length) return failure('invalid arrow count range', 0, null);
+  if (range.min > range.max || range.max > MAX_MAP_ARROWS) return failure('invalid arrow count range', 0, null);
+  let work = options.workBudget ?? 1200;
 
   let closest: { score: number; gap: number } | null = null;
   let rejectedInvalid = 0;
   let rejectedSimilar = 0;
-  const gapOf = (score: number) =>
+  const scoreGap = (score: number) =>
     score < options.minScore ? options.minScore - score : score > options.maxScore ? score - options.maxScore : 0;
+  // Too many free arrows at the start counts as distance from the target too, so refinement can fix it.
+  const freeGap = (report: DifficultyReport) => Math.max(0, report.exact.initialFree - (options.maxInitialFree ?? Infinity)) * 2;
+  const gapFor = (report: DifficultyReport) => scoreGap(report.score) + freeGap(report);
   const nearMisses: { level: LevelData; report: DifficultyReport; attempt: number; gap: number }[] = [];
   const isNovel = (level: LevelData) =>
     !options.avoid?.some((other) => layoutSimilarity(level, other) > (options.similarityLimit ?? 0.6));
 
-  for (let attempt = 0; attempt < attempts; attempt++) {
+  for (let attempt = 0; attempt < attempts && work > 0; attempt++) {
     const random = createRandom(mixSeed(options.seed, attempt));
     const level = buildCandidate(random, options, range);
     if (!level) continue;
@@ -112,7 +130,8 @@ export function generateLevel(options: GenerateOptions): GenerateResult {
     }
 
     const report = analyzeDifficulty(level, SEARCH_ONLY);
-    const gap = gapOf(report.score);
+    work--;
+    const gap = gapFor(report);
     if (gap === 0) return { ok: true, level, report, attempt };
     if (!closest || gap < closest.gap) closest = { score: report.score, gap };
     nearMisses.push({ level, report, attempt, gap });
@@ -126,18 +145,19 @@ export function generateLevel(options: GenerateOptions): GenerateResult {
     const random = createRandom(mixSeed(options.seed, miss.attempt, 0x7e1));
     let level = miss.level;
     let report = miss.report;
-    for (let i = 0; i < steps && gapOf(report.score) > 0; i++) {
+    for (let i = 0; i < steps && gapFor(report) > 0 && work > 0; i++) {
       const edited = mutate(level, random, options, range);
       if (!edited || !isPlayable(edited) || !isNovel(edited)) continue;
       const editedReport = analyzeDifficulty(edited, SEARCH_ONLY);
+      work--;
       // Accept equal scores too, so the search can drift across plateaus.
-      if (gapOf(editedReport.score) <= gapOf(report.score)) {
+      if (gapFor(editedReport) <= gapFor(report)) {
         level = edited;
         report = editedReport;
       }
     }
-    if (gapOf(report.score) === 0) return { ok: true, level, report, attempt: miss.attempt };
-    if (!closest || gapOf(report.score) < closest.gap) closest = { score: report.score, gap: gapOf(report.score) };
+    if (gapFor(report) === 0) return { ok: true, level, report, attempt: miss.attempt };
+    if (!closest || gapFor(report) < closest.gap) closest = { score: report.score, gap: gapFor(report) };
   }
 
   const details = [
@@ -159,14 +179,29 @@ function failure(reason: string, attempts: number, closestScore: number | null):
 
 // ---------------------------------------------------------------- refinement
 
-/** Valid, solvable and free of arrows that read as one. */
+/** Valid, solvable and readable: no arrows that read as one, none that touch themselves. */
 function isPlayable(level: LevelData): boolean {
   try {
     validateLevel(level);
   } catch {
     return false;
   }
-  return countAmbiguousJoins(level) === 0;
+  return countAmbiguousJoins(level) === 0 && level.arrows.every((a) => !isSelfTouching(a.cells));
+}
+
+/**
+ * True if two cells of an arrow that are not next to each other along its
+ * path are side by side on the board. Such an arrow folds against itself
+ * (a tight U or a spiral) and reads as a blob instead of a path. Wide U
+ * shapes and winding paths with space between their parts are fine.
+ */
+export function isSelfTouching(cells: readonly Cell[]): boolean {
+  for (let i = 0; i < cells.length; i++) {
+    for (let j = i + 2; j < cells.length; j++) {
+      if (Math.abs(cells[i].row - cells[j].row) + Math.abs(cells[i].col - cells[j].col) === 1) return true;
+    }
+  }
+  return false;
 }
 
 /** One random local edit: replace, add or remove a single arrow. Returns null if the edit didn't fit. */
@@ -191,7 +226,7 @@ function mutate(
     // A crowded board rejects most random walks, so give each edit a few tries.
     let fresh: ArrowData | null = null;
     for (let tries = 0; tries < 25 && !fresh; tries++) {
-      fresh = randomArrow(random, level.rows, level.cols, maxLength, maxTurns, occupied, "#new");
+      fresh = randomArrow(random, level.rows, level.cols, maxLength, maxTurns, occupied, '#new', options.turnChance);
     }
     if (!fresh) return null;
     arrows = [...arrows, fresh];
@@ -222,8 +257,14 @@ function buildCandidate(
 
   while (placed.length < target) {
     let best: { arrow: ArrowData; blocked: Set<number>; value: number } | null = null;
-    for (let i = 0; i < CANDIDATES_PER_ARROW; i++) {
-      const candidate = randomArrow(random, rows, cols, maxLength, maxTurns, occupied, `#${placed.length}`);
+    const tries = candidatesFor(rows, cols);
+    for (let i = 0; i < tries; i++) {
+      // Half the candidates grow backwards from a head whose exit is already clear,
+      // which keeps finding room on crowded boards where random walks rarely fit.
+      const candidate =
+        i % 2 === 0
+          ? randomArrow(random, rows, cols, maxLength, maxTurns, occupied, `#${placed.length}`, options.turnChance)
+          : headFirstArrow(random, rows, cols, maxLength, maxTurns, occupied, `#${placed.length}`, options.turnChance);
       if (!candidate || !exitIsClear(candidate, rows, cols, occupied)) continue;
       if (countAmbiguousJoins({ id: 0, rows, cols, arrows: [...placed, candidate] }) > 0) continue;
 
@@ -260,7 +301,7 @@ function buildCandidate(
   return relabel({ id: options.id ?? 0, rows, cols, arrows: placed });
 }
 
-/** Gives arrows ids a, b, c… in reading order (by head position) so maps stay easy to read. */
+/** Gives arrows ids a, b, c… (then a0, b0…) in reading order (by head position) so maps stay easy to read. */
 function relabel(level: LevelData): LevelData {
   const ordered = [...level.arrows].sort((a, b) => {
     const ha = a.cells[a.cells.length - 1];
@@ -268,12 +309,15 @@ function relabel(level: LevelData): LevelData {
     return ha.row - hb.row || ha.col - hb.col;
   });
   const arrows = ordered.map((a, i) =>
-    makeArrow(LETTERS[i], a.direction, ...a.cells.map((c) => [c.row, c.col] as [number, number])),
+    makeArrow(arrowLabel(i), a.direction, ...a.cells.map((c) => [c.row, c.col] as [number, number])),
   );
   return { ...level, arrows };
 }
 
-/** A random self-avoiding walk of 2..maxLength cells with at most maxTurns turns, on free cells. */
+/**
+ * A random self-avoiding walk of 2..maxLength cells with at most maxTurns
+ * turns, on free cells, that never runs alongside itself (see isSelfTouching).
+ */
 function randomArrow(
   random: Random,
   rows: number,
@@ -283,6 +327,7 @@ function randomArrow(
   occupied: ReadonlySet<string>,
   /** Must be unique among the arrows it is checked against (e.g. for ambiguous joins). */
   id: string,
+  turnChance = 0.35,
 ): ArrowData | null {
   const length = randomInt(random, 2, maxLength);
   let cell: Cell = { row: randomInt(random, 0, rows - 1), col: randomInt(random, 0, cols - 1) };
@@ -297,7 +342,7 @@ function randomArrow(
     // Turn on roughly every third step, if turns are still allowed. Never twice
     // in a row: that folds the arrow into a U packed into a 2×2 square, which
     // reads as a blob rather than an arrow.
-    if (cells.length > 1 && turns < maxTurns && !justTurned && random() < 0.35) {
+    if (cells.length > 1 && turns < maxTurns && !justTurned && random() < turnChance) {
       direction = turnOf(direction, random() < 0.5);
       turns++;
       justTurned = true;
@@ -309,12 +354,70 @@ function randomArrow(
     if (next.row < 0 || next.row >= rows || next.col < 0 || next.col >= cols || occupied.has(key) || own.has(key)) {
       return null;
     }
+    // Running alongside an earlier part of itself (not the cell it came from).
+    if (cells.slice(0, -1).some((c) => Math.abs(c.row - next.row) + Math.abs(c.col - next.col) === 1)) return null;
     cells.push(next);
     own.add(key);
     cell = next;
   }
   // The head points the way the last segment travels (required by validation).
   return makeArrow(id, direction, ...cells.map((c) => [c.row, c.col] as [number, number]));
+}
+
+/**
+ * Like randomArrow, but built from the head backwards: a free cell and a
+ * direction whose exit line is clear of every placed arrow, then a body
+ * grown behind it. Same shape rules (turn spacing, no self-touching).
+ */
+function headFirstArrow(
+  random: Random,
+  rows: number,
+  cols: number,
+  maxLength: number,
+  maxTurns: number,
+  occupied: ReadonlySet<string>,
+  id: string,
+  turnChance = 0.35,
+): ArrowData | null {
+  const head: Cell = { row: randomInt(random, 0, rows - 1), col: randomInt(random, 0, cols - 1) };
+  if (occupied.has(cellKey(head))) return null;
+  const direction = DIRECTIONS[randomInt(random, 0, 3)];
+  for (let c = step(head, direction); c.row >= 0 && c.row < rows && c.col >= 0 && c.col < cols; c = step(c, direction)) {
+    if (occupied.has(cellKey(c))) return null;
+  }
+  const length = randomInt(random, 2, maxLength);
+  // Walk backwards: the first step behind the head must continue the head's direction.
+  const back: Cell[] = [head];
+  const own = new Set([cellKey(head)]);
+  let travel = direction; // direction of travel along the body (tail → head)
+  let turns = 0;
+  let justTurned = true; // the segment into the head must be straight
+  while (back.length < length) {
+    if (back.length > 1 && turns < maxTurns && !justTurned && random() < turnChance) {
+      travel = turnOf(travel, random() < 0.5);
+      turns++;
+      justTurned = true;
+    } else {
+      justTurned = false;
+    }
+    const prev = step(back[back.length - 1], opposite(travel));
+    const key = cellKey(prev);
+    if (prev.row < 0 || prev.row >= rows || prev.col < 0 || prev.col >= cols || occupied.has(key) || own.has(key)) break;
+    if (back.slice(0, -1).some((c) => Math.abs(c.row - prev.row) + Math.abs(c.col - prev.col) === 1)) break;
+    back.push(prev);
+    own.add(key);
+  }
+  if (back.length < 2) return null;
+  const cells = back.reverse();
+  // The body must not lie on its own exit line.
+  for (let c = step(head, direction); c.row >= 0 && c.row < rows && c.col >= 0 && c.col < cols; c = step(c, direction)) {
+    if (own.has(cellKey(c))) return null;
+  }
+  return makeArrow(id, direction, ...cells.map((c) => [c.row, c.col] as [number, number]));
+}
+
+function opposite(direction: Direction): Direction {
+  return ({ up: 'down', down: 'up', left: 'right', right: 'left' } as const)[direction];
 }
 
 function turnOf(direction: Direction, clockwise: boolean): Direction {

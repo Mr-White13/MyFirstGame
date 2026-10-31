@@ -99,7 +99,7 @@ export const ACHIEVEMENTS: readonly AchievementDefinition[] = [
   {
     id: 'puzzle-veteran',
     title: 'Puzzle Veteran',
-    description: 'Complete all 10 levels.',
+    description: 'Complete 10 different levels.',
     category: 'gameplay',
     icon: 'icon-trophy',
     reward: 60,

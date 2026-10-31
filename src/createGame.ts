@@ -29,7 +29,8 @@ export function createGame(parent: HTMLElement, scene: Phaser.Scene): Phaser.Gam
       zoom: 1 / ratio,
       autoRound: false,
     },
-    input: { activePointers: 1 }, // a single touch: no accidental multi-finger moves
+    // Two touches: one for arrows, a second for pinch-zoom. Two-finger gestures never move arrows (render/gestures.ts).
+    input: { activePointers: 2 },
     // Sound is handled by src/audio/AudioManager (synthesised, one shared context).
     audio: { noAudio: true },
   });

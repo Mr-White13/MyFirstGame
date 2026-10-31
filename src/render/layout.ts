@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import type { Cell } from '../core/types';
+import { arrowStyleFor, type ArrowStyle } from './arrowStyle';
 
 /** Pixel geometry of the board inside the canvas. All values are in game (device) pixels. */
 export interface BoardLayout {
@@ -13,6 +14,10 @@ export interface BoardLayout {
   readonly padding: number;
   readonly cellSize: number;
   readonly radius: number;
+  /** Arrow proportions for this board size and screen (see arrowStyle.ts). */
+  readonly style: ArrowStyle;
+  /** Canvas pixels per CSS pixel (device pixel ratio), for on-screen minimum sizes. */
+  readonly pxPerCss: number;
 }
 
 export interface Point {
@@ -35,7 +40,7 @@ export const PADDING_IN_CELLS = 0.3;
  * the on-screen slot reserved for the board (see ui/GameLayout), so no extra
  * margin is added here.
  */
-export function computeBoardLayout(frame: Rect, rows: number, cols: number): BoardLayout {
+export function computeBoardLayout(frame: Rect, rows: number, cols: number, pxPerCss = 1): BoardLayout {
   const cellSize = Math.max(
     4,
     Math.floor(Math.min(frame.width / (cols + 2 * PADDING_IN_CELLS), frame.height / (rows + 2 * PADDING_IN_CELLS))),
@@ -53,6 +58,8 @@ export function computeBoardLayout(frame: Rect, rows: number, cols: number): Boa
     padding,
     cellSize,
     radius: Math.round(cellSize * 0.42),
+    style: arrowStyleFor(rows, cols, cellSize, pxPerCss),
+    pxPerCss,
   };
 }
 

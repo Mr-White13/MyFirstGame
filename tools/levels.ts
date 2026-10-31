@@ -13,9 +13,17 @@
  *   --arrows MIN-MAX               arrow count range (default scales with the grid)
  *   --length N                     longest arrow in cells (default 5)
  *   --turns N                      most turns per arrow (default 2)
+ *   --bend P                       chance of turning at each step, 0..1 (default 0.35)
+ *   --budget N                     most difficulty analyses per level (default 1200; bounds run time)
  *   --attempts N                   attempts per level before giving up (default 300)
  *   --id N                         level id for the output (default next free id)
  *   --out PATH                     also write the first level to a .ts file (never overwrites)
+ *
+ *   npm run levels:plan -- [--plan tools/level-plan.json] [--force]
+ *     generates every level listed in a plan file, in order, each avoiding
+ *     near-duplicates of all levels before it, and writes src/levels/levelNN.ts.
+ *     Existing files are kept unless --force. Each entry may list several seeds:
+ *     the first that produces an acceptable level wins (reproducible).
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -211,6 +219,8 @@ function generate(args: Args): void {
       arrows,
       maxLength: num(args, 'length', 5),
       maxTurns: num(args, 'turns', 2),
+      turnChance: num(args, 'bend', 0.35),
+      workBudget: num(args, 'budget', 1200),
       attempts: num(args, 'attempts', 300),
       avoid: [...LEVELS, ...produced],
     });
@@ -231,6 +241,70 @@ function generate(args: Args): void {
   }
 }
 
+interface PlanEntry {
+  readonly id: number;
+  readonly size: number;
+  readonly arrows: readonly [number, number];
+  readonly length: number;
+  readonly turns: number;
+  readonly bend?: number;
+  readonly score: readonly [number, number];
+  readonly seeds: readonly number[];
+  /** Most arrows free at the start (optional). */
+  readonly maxFree?: number;
+  readonly note?: string;
+}
+
+/** Generates a series of permanent levels from a plan file (offline; review the output before shipping). */
+function plan(args: Args): void {
+  const file = path.resolve(typeof args.plan === 'string' ? args.plan : 'tools/level-plan.json');
+  const entries = JSON.parse(fs.readFileSync(file, 'utf8')) as PlanEntry[];
+  const force = args.force === true;
+  const known: LevelData[] = [...LEVELS];
+  for (const entry of entries) {
+    const target = path.resolve('src/levels', `level${String(entry.id).padStart(2, '0')}.ts`);
+    const existing = LEVELS.find((l) => l.id === entry.id);
+    if (existing && !force) {
+      console.log(`Level ${entry.id}: already in the game, skipped`);
+      continue;
+    }
+    const started = Date.now();
+    let made: { level: LevelData; report: DifficultyReport; seed: number; attempt: number } | null = null;
+    for (const seed of entry.seeds) {
+      const result = generateLevel({
+        rows: entry.size,
+        cols: entry.size,
+        minScore: entry.score[0],
+        maxScore: entry.score[1],
+        seed,
+        id: entry.id,
+        arrows: { min: entry.arrows[0], max: entry.arrows[1] },
+        maxLength: entry.length,
+        maxTurns: entry.turns,
+        turnChance: entry.bend ?? 0.35,
+        attempts: 120,
+        workBudget: 900,
+        avoid: known.filter((l) => l.id !== entry.id),
+        maxInitialFree: entry.maxFree,
+      });
+      if (result.ok) {
+        made = { level: result.level, report: result.report, seed, attempt: result.attempt };
+        break;
+      }
+      console.log(`Level ${entry.id}: seed ${seed} failed (${result.reason.split('(')[0].trim()})`);
+    }
+    if (!made) fail(`Level ${entry.id}: no seed produced a level; adjust the plan`);
+    const { level, report, seed, attempt } = made;
+    known.push(level);
+    const note = `generated from tools/level-plan.json (seed ${seed}, attempt ${attempt}), score ${report.score} (${report.category}).`;
+    if (fs.existsSync(target) && !force) fail(`${target} already exists; use --force to replace it`);
+    fs.writeFileSync(target, levelFile(level, note));
+    console.log(
+      `Level ${entry.id}: ${entry.size}×${entry.size}, ${level.arrows.length} arrows, score ${report.score}, depth ${report.exact.depth}, free at start ${report.exact.initialFree} (${((Date.now() - started) / 1000).toFixed(1)} s) → ${path.relative(process.cwd(), target)}`,
+    );
+  }
+}
+
 const [command, ...rest] = process.argv.slice(2);
 const args = parseArgs(rest);
 switch (command) {
@@ -243,7 +317,10 @@ switch (command) {
   case 'generate':
     generate(args);
     break;
+  case 'plan':
+    plan(args);
+    break;
   default:
-    console.log('Usage: levels <analyze|validate|generate> [options]   (see tools/levels.ts for options)');
+    console.log('Usage: levels <analyze|validate|generate|plan> [options]   (see tools/levels.ts for options)');
     process.exit(command ? 1 : 0);
 }

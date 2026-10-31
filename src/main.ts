@@ -10,6 +10,7 @@ import { DayClock } from './daily/dayKey';
 import { Rewards } from './rewards/Rewards';
 import { AchievementsScreen } from './ui/AchievementsScreen';
 import { DailyDialog } from './ui/DailyDialog';
+import { Diagnostics } from './ui/Diagnostics';
 import { LeagueService } from './league/LeagueService';
 import { LeagueScreen } from './ui/LeagueScreen';
 import { LeagueResultDialog } from './ui/LeagueResultDialog';
@@ -68,7 +69,12 @@ const scene = new GameScene(state, {
   onLevelLost: () => app?.handleLevelLost(),
   onLevelFailed: () => app?.handleLevelFailed(),
   onFeedback: emit,
+  onViewChange: (zoomed, zoomable) => {
+    hud.setZoomed(zoomed);
+    if (zoomable) app?.zoomHint();
+  },
 });
+hud.onResetView(() => scene.resetView());
 const completeDialog = new CompleteDialog({
   onNext: () => app?.nextLevel(),
   onReplay: () => app?.restartLevel(),
@@ -101,6 +107,15 @@ const settingsScreen = new SettingsScreen(
     onBack: () => void app?.goBack(),
     onChange: (patch) => settings.update(patch),
     onPreviewSfx: () => audio.play('release'),
+    onToggleDiagnostics: () => (diagnostics.toggle() ? 'diagnostics on' : 'diagnostics off'),
+    onTestVibration: async () => {
+      const result = await haptics.test();
+      if (result.status === 'unsupported') return "This device can't vibrate.";
+      if (result.status === 'failed') return "The vibration couldn't be started. Check that the app may vibrate.";
+      return isNativeApp()
+        ? "Sent. Felt nothing? Check Android Settings → Sound & vibration → Vibration & haptics (media vibration, battery saver, Do not disturb)."
+        : 'Sent. Browsers on computers usually have no vibration motor.';
+    },
     onReset: () => void app?.resetSettings(),
   },
   { vibration: haptics.supported, audio: typeof AudioContext !== 'undefined' },
@@ -158,6 +173,12 @@ app = new App({
   achievementsScreen,
 });
 app.start();
+
+// Hidden performance overlay for real devices (Settings: tap Version 5 times).
+const diagnostics = new Diagnostics(game, () => {
+  const zoom = (scene as unknown as { viewport?: { zoom: number } }).viewport?.zoom ?? 1;
+  return `${state.getArrows().length} arrows · ${state.rows}×${state.cols} · zoom ${zoom.toFixed(2)}× · haptics ${haptics.kind}`;
+});
 
 // Apply settings now and whenever they (or the device's theme / motion preference) change.
 // Nothing is rebuilt: the board just redraws, so a level in progress carries on.
