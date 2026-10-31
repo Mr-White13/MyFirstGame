@@ -2,8 +2,8 @@ import { Grid } from './Grid';
 import { validateLevel } from './levelValidation';
 import { checkExitPath } from './PathChecker';
 import {
-  BONUS_MAX,
-  BONUS_MIN,
+  BONUS_CLEARS,
+  BONUS_COOLDOWN,
   STARTING_LIVES,
   STREAK_TAPS,
   STREAK_WINDOW_MS,
@@ -47,19 +47,22 @@ export interface GameStateOptions {
  *   released automatically, one at a time in level-data order, repeating
  *   until no activated arrow can escape. These releases cost nothing and do
  *   not count as player moves.
- * - Streak bonus: STREAK_TAPS successful taps in a row, each at most
- *   STREAK_WINDOW_MS after the previous one, earn a bonus on the last of them.
- *   After that tap (and its red chain), the normal arrows that can escape
- *   right now are counted; if at least BONUS_MIN are, the first BONUS_MAX of
- *   them in level-data order leave automatically (never a blocked arrow,
- *   never the last arrow on the board), then any red arrows this freed are
- *   released by the usual chain rule. With fewer than BONUS_MIN removable
- *   arrows there is no bonus. Either way the streak starts again from zero,
- *   so a single tap can never trigger a bonus. A blocked tap (even on an
- *   arrow that is already red), a pause longer than the window, a restart or
- *   a new level reset the streak. Bonus clears cost nothing and are not
- *   player moves. No randomness: the same taps at the same times always give
- *   the same result.
+ * - Streak bonus: when the last STREAK_TAPS successful manual taps all fall
+ *   within a rolling STREAK_WINDOW_MS (no blocked tap between them) and the
+ *   cooldown is over, a bonus fires after the tap that completes them (and
+ *   its red chain): the first BONUS_CLEARS normal arrows, in level-data
+ *   order, that can escape right now leave automatically, then any red arrows
+ *   this freed are released by the usual chain rule. It never takes a blocked
+ *   arrow or the last arrow on the board; with fewer than BONUS_CLEARS
+ *   removable arrows it is skipped (the streak stays, so a later tap may
+ *   still earn it). After a bonus the streak starts from zero and
+ *   BONUS_COOLDOWN further successful manual clears are needed before the
+ *   next one can fire. Only the player's own successful taps count: chain
+ *   and bonus clears never do. A blocked tap (even on an arrow that is
+ *   already red) resets the streak; a restart, a new level or running out of
+ *   lives resets the streak and the cooldown. Bonus clears cost nothing and
+ *   are not player moves. No randomness: the same taps at the same times
+ *   always give the same result.
  * - The level is won when the board is empty and lost when lives reach 0.
  */
 export class GameState {
@@ -78,8 +81,10 @@ export class GameState {
   private directClears = 0;
   private autoClears = 0;
   private cascadeClears = 0;
-  private streak = 0;
-  private streakAt: number | null = null;
+  /** Clock times of the recent successful manual taps (at most STREAK_TAPS, oldest first). */
+  private tapTimes: number[] = [];
+  /** Successful manual clears still needed before another bonus can fire. */
+  private cooldown = 0;
   private readonly clock: () => number;
   private longestChain = 0;
   private mistakes = 0;
@@ -163,8 +168,8 @@ export class GameState {
     this.directClears = 0;
     this.autoClears = 0;
     this.cascadeClears = 0;
-    this.streak = 0;
-    this.streakAt = null;
+    this.tapTimes = [];
+    this.cooldown = 0;
     this.longestChain = 0;
     this.mistakes = 0;
     this.emit();
@@ -179,7 +184,7 @@ export class GameState {
     const check = checkExitPath(this.grid, arrow);
     if (!check.clear) {
       const blocked = { kind: 'blocked' as const, arrowId, blockerId: check.blockerId!, freePath: check.path };
-      const hadStreak = this.streak > 0;
+      const hadStreak = this.tapTimes.length > 0;
       this.resetStreak(); // any blocked tap breaks the streak
       if (this.activated.has(arrowId)) {
         if (hadStreak) this.emit();
@@ -187,6 +192,7 @@ export class GameState {
       }
       this.activated.add(arrowId);
       this.mistakes++;
+      if (this.lives === 0) this.cooldown = 0; // the attempt is over: nothing carries on
       if (this.lives === 0) this.status = 'failed';
       this.emit();
       return { ...blocked, lifeLost: true, failed: this.status === 'failed' };
@@ -195,15 +201,19 @@ export class GameState {
     this.remove(arrow);
     this.removeListeners.forEach((l) => l(arrow, false));
     this.directClears++;
-    // The streak continues only if this tap came soon enough after the last one.
-    const continues = this.streakAt !== null && at - this.streakAt <= STREAK_WINDOW_MS;
-    this.streak = continues ? this.streak + 1 : 1;
-    this.streakAt = at;
+    // Rolling window: keep the taps of the last STREAK_WINDOW_MS, at most STREAK_TAPS of them.
+    this.tapTimes = this.tapTimes.filter((t) => at - t <= STREAK_WINDOW_MS);
+    this.tapTimes.push(at);
+    if (this.tapTimes.length > STREAK_TAPS) this.tapTimes.shift();
+    if (this.cooldown > 0) this.cooldown--;
     const chain = this.resolveChain();
     let cascade: Removal[] = [];
-    if (this.streak >= STREAK_TAPS) {
+    if (this.tapTimes.length >= STREAK_TAPS && this.cooldown === 0) {
       cascade = this.resolveBonus();
-      this.resetStreak(); // one bonus per streak; the next needs STREAK_TAPS new taps
+      if (cascade.length > 0) {
+        this.resetStreak(); // the next bonus needs a new streak...
+        this.cooldown = BONUS_COOLDOWN; // ...and BONUS_COOLDOWN more clears of the player's own
+      }
     }
     const cascadeChain = cascade.length > 0 ? this.resolveChain() : [];
     this.autoClears += chain.length + cascadeChain.length;
@@ -223,8 +233,9 @@ export class GameState {
       directClears: this.directClears,
       autoClears: this.autoClears,
       cascadeClears: this.cascadeClears,
-      streak: this.streak,
-      streakAt: this.streakAt,
+      streak: this.tapTimes.length,
+      streakAt: this.tapTimes.at(-1) ?? null,
+      bonusCooldown: this.cooldown,
       longestChain: this.longestChain,
       mistakes: this.mistakes,
       lives: this.lives,
@@ -287,17 +298,15 @@ export class GameState {
   }
 
   /**
-   * The streak bonus: the normal arrows that can escape right now, in
-   * level-data order. With fewer than BONUS_MIN of them (keeping one arrow
-   * on the board for the player) nothing happens; otherwise up to BONUS_MAX
-   * leave. Removing an arrow only frees cells, so each one is still
-   * removable when its turn comes.
+   * The streak bonus: the first BONUS_CLEARS normal arrows, in level-data
+   * order, that can escape right now. Skipped (empty) when fewer are
+   * available, keeping one arrow on the board for the player. Removing an
+   * arrow only frees cells, so each one is still removable when its turn comes.
    */
   private resolveBonus(): Removal[] {
     const removable = this.level.arrows.filter((a) => this.arrows.has(a.id) && !this.activated.has(a.id) && checkExitPath(this.grid, a).clear);
-    const count = Math.min(BONUS_MAX, removable.length, this.arrows.size - 1);
-    if (count < BONUS_MIN) return [];
-    return removable.slice(0, count).map((arrow) => {
+    if (removable.length < BONUS_CLEARS || this.arrows.size - 1 < BONUS_CLEARS) return [];
+    return removable.slice(0, BONUS_CLEARS).map((arrow) => {
       const check = checkExitPath(this.grid, arrow);
       this.remove(arrow);
       this.removeListeners.forEach((l) => l(arrow, true));
@@ -306,8 +315,7 @@ export class GameState {
   }
 
   private resetStreak(): void {
-    this.streak = 0;
-    this.streakAt = null;
+    this.tapTimes = [];
   }
 
   private emit(): void {

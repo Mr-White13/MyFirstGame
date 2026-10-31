@@ -218,15 +218,15 @@ describe('rapid taps', () => {
   });
 
   it('quick taps still earn the streak bonus, and bonus arrows can no longer be tapped', () => {
-    const h = new TapHarness(new GameState(level));
-    h.tap('a', 0);
-    h.tap('b', 300);
-    h.tap('c', 600);
-    const bonus = h.results[2];
-    expect(bonus.kind === 'cleared' && bonus.cascade.map((r) => r.arrowId)).toEqual(['d', 'e']); // the arrows removable right then; f is still behind d
-    h.tap('d', 700); // already cleared by the bonus, still animating: ignored, no penalty
-    expect(h.results).toHaveLength(3);
-    expect(h.state.isWon).toBe(false);
+    // Eight free arrows in a column, z behind them.
+    const column = levelFromMap(3, ['a> .', 'b> .', 'c> .', 'd> .', 'e> .', 'f> .', 'g> .', 'h> .', 'z^ .']);
+    const h = new TapHarness(new GameState(column));
+    ['a', 'b', 'c', 'd', 'e'].forEach((id, i) => h.tap(id, i * 300)); // 5 taps within 4 s
+    const bonus = h.results[4];
+    expect(bonus.kind === 'cleared' && bonus.cascade.map((r) => r.arrowId)).toEqual(['f', 'g']);
+    h.tap('f', 1300); // already cleared by the bonus, still animating: ignored, no penalty
+    expect(h.results).toHaveLength(5);
+    expect(h.state.snapshot()).toMatchObject({ mistakes: 0, cascadeClears: 2, remaining: 2 });
   });
 
   it('restart mid-animation drops every pending animation; new taps start clean', () => {
@@ -285,6 +285,87 @@ describe('restarting during a chain reaction', () => {
 
     newPending[0]();
     expect(ended).toBe(1);
+    expect(sequencer.busy).toBe(false);
+  });
+});
+
+describe('streak bonus exits: together, staggered', () => {
+  /** A manual timer: scheduled starts run when the test advances time. */
+  function timer() {
+    let now = 0;
+    const queue: { at: number; start: () => void }[] = [];
+    return {
+      schedule: (start: () => void, ms: number) => void queue.push({ at: now + ms, start }),
+      advance(ms: number) {
+        now += ms;
+        for (const item of queue.filter((q) => q.at <= now).sort((a, b) => a.at - b.at)) {
+          queue.splice(queue.indexOf(item), 1);
+          item.start();
+        }
+      },
+    };
+  }
+
+  it('starts every bonus arrow a short stagger apart, each with its own exit, and waits for all', () => {
+    const log: string[] = [];
+    const t = timer();
+    const sequencer = new MoveSequencer();
+    const exits = ['d', 'e', 'f'].map((id) => manualStep(log, id));
+    const tapped = manualStep(log, 'tap');
+    sequencer.run([tapped.step, sequencer.together(exits.map((e) => e.step), 90, t.schedule), manualStep(log, 'red').step], () => log.push('done'));
+    tapped.finish();
+    expect(log).toEqual(['start tap', 'start d']); // the first bonus arrow leaves at once
+    t.advance(90);
+    expect(log).toEqual(['start tap', 'start d', 'start e']); // not waiting for d to leave
+    t.advance(90);
+    expect(log).toContain('start f');
+    exits[2].finish();
+    exits[0].finish();
+    expect(log).not.toContain('start red'); // e is still on its way out
+    exits[1].finish();
+    expect(log.at(-1)).toBe('start red'); // red arrows freed by the bonus come after it
+  });
+
+  it('a bonus with a single arrow plays as a plain exit; an empty one is a no-op', () => {
+    const log: string[] = [];
+    const t = timer();
+    const sequencer = new MoveSequencer();
+    const only = manualStep(log, 'only');
+    sequencer.run([sequencer.together([only.step], 90, t.schedule)], () => log.push('done'));
+    only.finish();
+    sequencer.run([sequencer.together([], 90, t.schedule)], () => log.push('empty done'));
+    expect(log).toEqual(['start only', 'done', 'empty done']);
+  });
+
+  it('restart during a staggered bonus: arrows not yet started never start, late callbacks do nothing', () => {
+    const log: string[] = [];
+    const t = timer();
+    const sequencer = new MoveSequencer();
+    const exits = ['d', 'e', 'f'].map((id) => manualStep(log, id));
+    let finished = 0;
+    sequencer.run([sequencer.together(exits.map((e) => e.step), 90, t.schedule)], () => finished++);
+    sequencer.cancel(); // restart while d is leaving
+    t.advance(500);
+    exits[0].finish();
+    expect(log).toEqual(['start d']);
+    expect(finished).toBe(0);
+    expect(sequencer.busy).toBe(false);
+  });
+
+  it('overlaps naturally with a manual exit started meanwhile', () => {
+    const log: string[] = [];
+    const t = timer();
+    const sequencer = new MoveSequencer();
+    const owners = new StepOwners<string>();
+    const pending = new Map<string, () => void>();
+    const exit = (id: string) => owners.step(id, (done) => (log.push(`exit ${id}`), pending.set(id, done)));
+    sequencer.run([exit('a'), sequencer.together([exit('d'), exit('e')], 90, t.schedule)]);
+    pending.get('a')!();
+    sequencer.run([exit('x')]); // the player taps another arrow while the bonus is flying
+    t.advance(90);
+    expect(log).toEqual(['exit a', 'exit d', 'exit x', 'exit e']);
+    expect(sequencer.running).toBe(2);
+    for (const id of ['d', 'x', 'e']) pending.get(id)!();
     expect(sequencer.busy).toBe(false);
   });
 });

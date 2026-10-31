@@ -60,6 +60,38 @@ export class MoveSequencer {
     next(0);
   }
 
+  /**
+   * One step made of several that start `staggerMs` apart (the first at
+   * once) and play side by side; it is done when all of them are. Used for a
+   * streak bonus, whose arrows fly off together instead of one by one.
+   * Children not yet started when the sequencer is cancelled never start.
+   */
+  together(steps: readonly SequenceStep[], staggerMs: number, schedule: (start: () => void, ms: number) => void): SequenceStep {
+    return {
+      run: (done) => {
+        const generation = this.generation;
+        let remaining = steps.length;
+        if (remaining === 0) {
+          done();
+          return;
+        }
+        steps.forEach((step, index) => {
+          const start = () => {
+            if (generation !== this.generation) return; // cancelled before its turn
+            let called = false;
+            step.run(() => {
+              if (called) return;
+              called = true;
+              if (--remaining === 0) done();
+            });
+          };
+          if (index === 0) start();
+          else schedule(start, index * staggerMs);
+        });
+      },
+    };
+  }
+
   /** Abandons every running sequence. */
   cancel(): void {
     this.generation++;

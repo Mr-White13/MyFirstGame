@@ -1,5 +1,5 @@
 import { formatClock } from '../core/time';
-import { BONUS_MAX, STREAK_TAPS, STREAK_WINDOW_MS, type GameSnapshot } from '../core/types';
+import { BONUS_CLEARS, STREAK_TAPS, STREAK_WINDOW_MS, type GameSnapshot } from '../core/types';
 import { requireElement } from './dom';
 
 /**
@@ -134,16 +134,17 @@ export class Hud {
   }
 
   /**
-   * Streak progress: one pip per successful tap in the current streak. The
-   * pips drain over STREAK_WINDOW_MS (CSS) and go out when the window has
-   * passed, which is when the next tap would start a new streak. When a bonus
-   * fires, the pips flash and "+N" floats up beside them.
+   * Streak progress: one pip per successful tap in the rolling window. The
+   * pips drain over STREAK_WINDOW_MS (CSS) and go out once the window has
+   * passed since the last tap. While the bonus is cooling down the pips are
+   * dimmed. When a bonus fires, the pips flash and "+N" floats up.
    */
   private renderStreak(snapshot: GameSnapshot, previous: GameSnapshot | undefined): void {
     clearTimeout(this.streakTimer);
     const pips = [...this.momentum.children] as HTMLElement[];
     const light = (count: number) => pips.forEach((pip, index) => pip.classList.toggle('momentum__pip--on', index < count));
     light(snapshot.streak);
+    this.momentum.classList.toggle('momentum--cooldown', snapshot.bonusCooldown > 0);
     this.momentum.classList.remove('momentum--timing');
     if (snapshot.streak > 0) {
       void this.momentum.offsetWidth; // restart the drain animation
@@ -165,7 +166,9 @@ export class Hud {
       'aria-label',
       earned > 0
         ? `Streak bonus: ${earned} arrows cleared`
-        : `Streak: ${snapshot.streak} of ${STREAK_TAPS} quick taps (up to ${BONUS_MAX} bonus clears)`,
+        : snapshot.bonusCooldown > 0
+          ? `Streak bonus recharging: ${snapshot.bonusCooldown} more clears`
+          : `Streak: ${snapshot.streak} of ${STREAK_TAPS} taps within ${STREAK_WINDOW_MS / 1000} s (bonus clears ${BONUS_CLEARS})`,
     );
   }
 
