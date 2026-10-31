@@ -1,5 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { expect } from 'vitest';
+import { readFileSync } from 'node:fs';
 
 /*
  * TEST ONLY (never import from production code). A tiny fake DOM, built from
@@ -478,22 +477,3 @@ export function snapshotIds(ids: readonly string[], rowIds: readonly string[] = 
   return Object.fromEntries(ids.map((id) => [id, rowIds.includes(id) ? rows(byId(id)) : inline(byId(id))]));
 }
 
-// ------------------------------------------------------------- golden files
-
-/**
- * Compares `actual` with a committed golden JSON file next to the test (or with
- * one `section` of it). Run with UPDATE_GOLDEN=1 to (re)write it from the
- * current code: only when the change is intended, and review the diff.
- */
-export function expectGolden(url: URL, actual: unknown, section?: string): void {
-  const update = (globalThis as { process?: { env: Record<string, string | undefined> } }).process?.env.UPDATE_GOLDEN;
-  const stored: Record<string, unknown> | undefined = existsSync(url) ? JSON.parse(readFileSync(url, 'utf8')) : undefined;
-  if (update) {
-    const next = section === undefined ? actual : { ...stored, [section]: actual };
-    writeFileSync(url, `${JSON.stringify(next, null, 1)}
-`);
-    return;
-  }
-  if (stored === undefined) throw new Error(`Missing golden file ${url.pathname}; run with UPDATE_GOLDEN=1 to create it`);
-  expect(actual).toEqual(section === undefined ? stored : stored[section]);
-}

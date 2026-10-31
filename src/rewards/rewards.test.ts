@@ -8,25 +8,11 @@ import { createStats, STATS_KEY, StatsStorage, type PlayerStats } from '../profi
 import { createProgress, recordCompletion, type Progress } from '../progress/Progress';
 import { STORAGE_KEY as PROGRESS_KEY, ProgressStorage } from '../progress/ProgressStorage';
 import { SETTINGS_KEY, SettingsStore } from '../settings/Settings';
-import type { KeyValueStore } from '../storage/SafeStore';
 import { achievementViews, ACHIEVEMENTS, newlyUnlocked, SPEED_RUN_MS, type AchievementContext } from './Achievements';
 import { findChain } from './chainFeasibility';
 import { readRewards, REWARDS_KEY, REWARDS_VERSION, Rewards, serializeRewards, createRewards } from './Rewards';
 import { createWallet, earn, MAX_TRANSACTION, readWallet, spend, type Wallet, type WalletResult } from './Wallet';
-
-class MemoryStore implements KeyValueStore {
-  readonly data = new Map<string, string>();
-  writes: string[] = [];
-  failWrites = false;
-  getItem(key: string): string | null {
-    return this.data.get(key) ?? null;
-  }
-  setItem(key: string, value: string): void {
-    if (this.failWrites) throw new Error('QuotaExceededError');
-    this.writes.push(key);
-    this.data.set(key, value);
-  }
-}
+import { MemoryStore } from '../testing/memoryStore';
 
 const DAY = '2026-10-31';
 

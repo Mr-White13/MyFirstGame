@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import type { KeyValueStore } from '../storage/SafeStore';
 import { AVATARS, avatarSvg, DEFAULT_AVATAR, isAvatarId } from './avatars';
 import { allCountries, countryName, flagEmoji, isCountryCode, searchCountries } from './countries';
 import {
@@ -16,16 +15,7 @@ import {
   withNickname,
 } from './Profile';
 import { addPlayTime, createStats, readStats, recordAttempt, STATS_KEY, StatsStorage } from './Stats';
-
-class MemoryStore implements KeyValueStore {
-  readonly data = new Map<string, string>();
-  getItem(key: string): string | null {
-    return this.data.get(key) ?? null;
-  }
-  setItem(key: string, value: string): void {
-    this.data.set(key, value);
-  }
-}
+import { MemoryStore } from '../testing/memoryStore';
 
 describe('nickname', () => {
   it('defaults to "Player"', () => {

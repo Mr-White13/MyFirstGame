@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { byId, expectGolden, installDom, serialize, snapshotIds, uninstallDom, type FakeDocument } from './fakeDom.test-helper';
+import { expectGolden } from '../testing/golden';
+import { byId, installDom, serialize, snapshotIds, uninstallDom, type FakeDocument } from './fakeDom.test-helper';
 import { LevelSelect } from './LevelSelect';
 import { LEVELS, PROGRESS } from './uiFixtures.test-helper';
 

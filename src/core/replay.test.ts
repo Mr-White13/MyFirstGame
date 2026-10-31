@@ -5,6 +5,7 @@ import { createProgress } from '../progress/Progress';
 import { createStats } from '../profile/Stats';
 import { createDailyLog, recordDayAttempt } from '../recap/DailyLog';
 import { golden, plain } from '../testing/golden';
+import { firstFreeArrow } from '../testing/play';
 import { headOf, step } from './Arrow';
 import { GameState } from './GameState';
 import { createRandom, randomInt } from './random';
@@ -30,17 +31,6 @@ type Script = (state: GameState, level: LevelData, n: number) => Tap | null;
 /** Lives for the scripts that must reach the end however many mistakes they make. */
 const MANY_LIVES = 999;
 
-/** The first normal arrow in level order whose way out is clear. */
-function firstFree(state: GameState): string | undefined {
-  return state.getArrows().find((a) => {
-    if (state.isActivated(a.id)) return false;
-    for (let c = step(headOf(a), a.direction); c.row >= 0 && c.col >= 0 && c.row < state.rows && c.col < state.cols; c = step(c, a.direction)) {
-      if (state.arrowIdAt(c.row, c.col) !== undefined) return false;
-    }
-    return true;
-  })?.id;
-}
-
 const SCRIPTS: Record<string, { lives?: number; script: (level: LevelData) => Script }> = {
   /** The solver's order, 1.1 s apart: never fast enough for a streak bonus. */
   'solution-slow': {
@@ -63,14 +53,14 @@ const SCRIPTS: Record<string, { lives?: number; script: (level: LevelData) => Sc
   /** First free arrow in level order, 100 ms apart: bonuses and cooldowns. */
   'greedy-fast': {
     script: () => (state, _l, n) => {
-      const id = state.isPlaying ? firstFree(state) : undefined;
+      const id = state.isPlaying ? firstFreeArrow(state) : undefined;
       return id ? { id, at: n * 100 } : null;
     },
   },
   /** Bursts of four quick taps, then a pause that empties the window. */
   'greedy-bursts': {
     script: () => (state, _l, n) => {
-      const id = state.isPlaying ? firstFree(state) : undefined;
+      const id = state.isPlaying ? firstFreeArrow(state) : undefined;
       return id ? { id, at: Math.floor(n / 4) * 5000 + (n % 4) * 50 } : null;
     },
   },

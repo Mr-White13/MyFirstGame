@@ -2,7 +2,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createLeague, type LeagueState } from '../league/League';
 import { createProfile, type PlayerProfile } from '../profile/Profile';
 import type { PlayerStats } from '../profile/Stats';
-import { byId, expectGolden, installDom, leafIds, serialize, uninstallDom } from './fakeDom.test-helper';
+import { expectGolden } from '../testing/golden';
+import { byId, installDom, leafIds, serialize, uninstallDom } from './fakeDom.test-helper';
 import { ProfileScreen, type ProfileActions } from './ProfileScreen';
 import { LEVELS, PROGRESS } from './uiFixtures.test-helper';
 

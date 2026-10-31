@@ -4,7 +4,8 @@ import type { LeagueNotice } from '../league/League';
 import { CompleteDialog, type ChallengeCompletion, type CompletionSummary } from './CompleteDialog';
 import { ConfirmDialog, LEAVE_LEVEL, RESET_SETTINGS, RESTART_LEVEL } from './ConfirmDialog';
 import { DailyDialog } from './DailyDialog';
-import { byId, expectGolden, flushFrames, installDom, leafIds, serialize, uninstallDom, type FakeDocument } from './fakeDom.test-helper';
+import { expectGolden } from '../testing/golden';
+import { byId, flushFrames, installDom, leafIds, serialize, uninstallDom, type FakeDocument } from './fakeDom.test-helper';
 import { GameOverDialog } from './GameOverDialog';
 import { LeagueResultDialog } from './LeagueResultDialog';
 

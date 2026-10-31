@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { STREAK_WINDOW_MS, type GameSnapshot } from '../core/types';
-import { byId, expectGolden, FakeText, installDom, snapshotIds, uninstallDom } from './fakeDom.test-helper';
+import { expectGolden } from '../testing/golden';
+import { byId, FakeText, installDom, snapshotIds, uninstallDom } from './fakeDom.test-helper';
 import { Hud, type ChallengeHud } from './Hud';
 
 // Characterization: the HUD DOM exactly as rendered today, including its reliance on the

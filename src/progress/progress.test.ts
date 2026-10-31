@@ -18,6 +18,7 @@ import {
   STORAGE_KEY,
   type KeyValueStore,
 } from './ProgressStorage';
+import { MemoryStore } from '../testing/memoryStore';
 
 const LEVELS = 10;
 
@@ -31,16 +32,6 @@ function completeUpTo(n: number, moves = 5): Progress {
 /** A run with the given move count; stars, mistakes and time default to a flawless 30-second clear. */
 function run(moves: number, stars = 3, mistakes = 0, timeMs = 30_000) {
   return { moves, stars, mistakes, timeMs };
-}
-
-class MemoryStore implements KeyValueStore {
-  readonly data = new Map<string, string>();
-  getItem(key: string): string | null {
-    return this.data.get(key) ?? null;
-  }
-  setItem(key: string, value: string): void {
-    this.data.set(key, value);
-  }
 }
 
 describe('progression rules', () => {

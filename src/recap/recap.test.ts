@@ -4,7 +4,6 @@ import { addDays } from '../daily/dayKey';
 import { LEVELS } from '../levels';
 import { createStats, type AttemptStats, type PlayerStats } from '../profile/Stats';
 import { createProgress, recordCompletion, type Progress } from '../progress/Progress';
-import type { KeyValueStore } from '../storage/SafeStore';
 import {
   addDayPlayTime,
   createDailyLog,
@@ -17,16 +16,7 @@ import {
   type DailyLog,
 } from './DailyLog';
 import { availableInsights, INSIGHT_IDS, insightFor, pickInsight, RECAP_KEY, RecapStorage, type RecapRecords } from './insights';
-
-class MemoryStore implements KeyValueStore {
-  readonly data = new Map<string, string>();
-  getItem(key: string): string | null {
-    return this.data.get(key) ?? null;
-  }
-  setItem(key: string, value: string): void {
-    this.data.set(key, value);
-  }
-}
+import { MemoryStore } from '../testing/memoryStore';
 
 const TODAY = '2026-10-31';
 const won = (mistakes = 0, timeMs = 30_000): AttemptStats => ({ outcome: 'won', directClears: 8, autoClears: 2, mistakes, uncountedTimeMs: timeMs });

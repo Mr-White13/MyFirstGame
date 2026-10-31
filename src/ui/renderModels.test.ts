@@ -1,7 +1,7 @@
 import { describe, it } from 'vitest';
 import { chapterCount, chapterSummary, chapterTiles, currentChapter, queryRecords, recordsSummary, searchLevelIds } from '../progress/chapters';
 import { completedCount, nextLevelToPlay, perfectLevels, totalStars } from '../progress/Progress';
-import { expectGolden } from './fakeDom.test-helper';
+import { expectGolden } from '../testing/golden';
 import { LEVEL_COUNT, LEVELS, PROGRESS } from './uiFixtures.test-helper';
 
 // Characterization: the pure data behind Level Select, Records and Profile, for every chapter.

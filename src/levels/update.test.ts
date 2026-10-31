@@ -9,18 +9,8 @@ import { isUnlocked, nextLevelToPlay, recordCompletion, totalStars } from '../pr
 import { ProgressStorage, STORAGE_KEY } from '../progress/ProgressStorage';
 import { ACHIEVEMENTS } from '../rewards/Achievements';
 import { SETTINGS_KEY, SettingsStore } from '../settings/Settings';
-import type { KeyValueStore } from '../storage/SafeStore';
 import { LEVELS } from './index';
-
-class MemoryStore implements KeyValueStore {
-  readonly data = new Map<string, string>();
-  getItem(key: string): string | null {
-    return this.data.get(key) ?? null;
-  }
-  setItem(key: string, value: string): void {
-    this.data.set(key, value);
-  }
-}
+import { MemoryStore } from '../testing/memoryStore';
 
 /** A version-4 progress save as written by the 10-level game: all ten levels done. */
 function tenLevelSave(): string {
