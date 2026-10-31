@@ -1,0 +1,2704 @@
+{
+ "days": [
+  {
+   "day": "2026-10-19",
+   "status": "unchanged",
+   "notice": null,
+   "pool": 4,
+   "results": "a:awarded d:awarded e:awarded k:awarded done:true b:awarded d:awarded f:awarded l:awarded done:true f:awarded t:awarded u:awarded l:awarded done:true",
+   "lastHistory": null,
+   "historyLength": 0,
+   "saved": {
+    "version": 1,
+    "tier": 1,
+    "highestTier": 1,
+    "inactiveStreak": 0,
+    "lastDay": "2026-10-19",
+    "current": {
+     "date": "2026-10-19",
+     "startTier": 1,
+     "collected": [
+      "2026-10-19:1:L14/a",
+      "2026-10-19:1:L14/d",
+      "2026-10-19:1:L14/e",
+      "2026-10-19:1:L14/k",
+      "2026-10-19:2:L16/b",
+      "2026-10-19:2:L16/d",
+      "2026-10-19:2:L16/f",
+      "2026-10-19:2:L16/l",
+      "2026-10-19:3:L17/f",
+      "2026-10-19:3:L17/t",
+      "2026-10-19:3:L17/u",
+      "2026-10-19:3:L17/l"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 4
+    },
+    "lifetime": {
+     "points": 12,
+     "promotions": 0,
+     "relegations": 0,
+     "challengesCompleted": 3
+    },
+    "milestones": [],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-10-20",
+   "status": "settled",
+   "notice": {
+    "fromTier": 1,
+    "toTier": 2,
+    "daysSettled": 1,
+    "promotions": 1,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-10-19",
+     "points": 12,
+     "outcome": "promoted"
+    }
+   },
+   "pool": 5,
+   "results": "d:awarded f:awarded g:awarded r:awarded done:true e:awarded l:awarded s:awarded t:awarded done:true d:awarded k:awarded h:awarded v:awarded done:true",
+   "lastHistory": {
+    "date": "2026-10-19",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 1,
+    "endTier": 2,
+    "outcome": "promoted"
+   },
+   "historyLength": 1,
+   "saved": {
+    "version": 1,
+    "tier": 2,
+    "highestTier": 2,
+    "inactiveStreak": 0,
+    "lastDay": "2026-10-20",
+    "current": {
+     "date": "2026-10-20",
+     "startTier": 2,
+     "collected": [
+      "2026-10-20:1:L9/d",
+      "2026-10-20:1:L9/f",
+      "2026-10-20:1:L9/g",
+      "2026-10-20:1:L9/r",
+      "2026-10-20:2:L12/e",
+      "2026-10-20:2:L12/l",
+      "2026-10-20:2:L12/s",
+      "2026-10-20:2:L12/t",
+      "2026-10-20:3:L15/d",
+      "2026-10-20:3:L15/k",
+      "2026-10-20:3:L15/h",
+      "2026-10-20:3:L15/v"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 24,
+     "promotions": 1,
+     "relegations": 0,
+     "challengesCompleted": 6
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-10-21",
+   "status": "settled",
+   "notice": {
+    "fromTier": 2,
+    "toTier": 3,
+    "daysSettled": 1,
+    "promotions": 1,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-10-20",
+     "points": 12,
+     "outcome": "promoted"
+    }
+   },
+   "pool": 5,
+   "results": "g:awarded m:awarded i:awarded n:awarded done:true d:awarded g:awarded m:awarded c:awarded done:true",
+   "lastHistory": {
+    "date": "2026-10-20",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 2,
+    "endTier": 3,
+    "outcome": "promoted"
+   },
+   "historyLength": 2,
+   "saved": {
+    "version": 1,
+    "tier": 3,
+    "highestTier": 3,
+    "inactiveStreak": 0,
+    "lastDay": "2026-10-21",
+    "current": {
+     "date": "2026-10-21",
+     "startTier": 3,
+     "collected": [
+      "2026-10-21:1:L10/g",
+      "2026-10-21:1:L10/m",
+      "2026-10-21:1:L10/i",
+      "2026-10-21:1:L10/n",
+      "2026-10-21:2:L11/d",
+      "2026-10-21:2:L11/g",
+      "2026-10-21:2:L11/m",
+      "2026-10-21:2:L11/c"
+     ],
+     "completed": [
+      1,
+      2
+     ],
+     "sweepRewarded": false,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 32,
+     "promotions": 2,
+     "relegations": 0,
+     "challengesCompleted": 8
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-10-22",
+   "status": "settled",
+   "notice": {
+    "fromTier": 3,
+    "toTier": 3,
+    "daysSettled": 1,
+    "promotions": 0,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-10-21",
+     "points": 8,
+     "outcome": "retained"
+    }
+   },
+   "pool": 5,
+   "results": "g:awarded b:awarded k:awarded",
+   "lastHistory": {
+    "date": "2026-10-21",
+    "days": 1,
+    "points": 8,
+    "challenges": 2,
+    "startTier": 3,
+    "endTier": 3,
+    "outcome": "retained"
+   },
+   "historyLength": 3,
+   "saved": {
+    "version": 1,
+    "tier": 3,
+    "highestTier": 3,
+    "inactiveStreak": 0,
+    "lastDay": "2026-10-22",
+    "current": {
+     "date": "2026-10-22",
+     "startTier": 3,
+     "collected": [
+      "2026-10-22:1:L7/g",
+      "2026-10-22:1:L7/b",
+      "2026-10-22:1:L7/k"
+     ],
+     "completed": [],
+     "sweepRewarded": false,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 35,
+     "promotions": 2,
+     "relegations": 0,
+     "challengesCompleted": 8
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-10-23",
+   "status": "settled",
+   "notice": {
+    "fromTier": 3,
+    "toTier": 2,
+    "daysSettled": 1,
+    "promotions": 0,
+    "relegations": 1,
+    "lastPlayed": {
+     "date": "2026-10-22",
+     "points": 3,
+     "outcome": "relegated"
+    }
+   },
+   "pool": 5,
+   "results": "l:awarded",
+   "lastHistory": {
+    "date": "2026-10-22",
+    "days": 1,
+    "points": 3,
+    "challenges": 0,
+    "startTier": 3,
+    "endTier": 2,
+    "outcome": "relegated"
+   },
+   "historyLength": 4,
+   "saved": {
+    "version": 1,
+    "tier": 2,
+    "highestTier": 3,
+    "inactiveStreak": 0,
+    "lastDay": "2026-10-23",
+    "current": {
+     "date": "2026-10-23",
+     "startTier": 2,
+     "collected": [
+      "2026-10-23:1:L6/l"
+     ],
+     "completed": [],
+     "sweepRewarded": false,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 36,
+     "promotions": 2,
+     "relegations": 1,
+     "challengesCompleted": 8
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-10-24",
+   "status": "settled",
+   "notice": {
+    "fromTier": 2,
+    "toTier": 1,
+    "daysSettled": 1,
+    "promotions": 0,
+    "relegations": 1,
+    "lastPlayed": {
+     "date": "2026-10-23",
+     "points": 1,
+     "outcome": "relegated"
+    }
+   },
+   "pool": 5,
+   "results": "b:awarded j:awarded c:awarded l:awarded done:true c:awarded g:awarded e:awarded o:awarded done:true f:awarded o:awarded r:awarded A:awarded done:true",
+   "lastHistory": {
+    "date": "2026-10-23",
+    "days": 1,
+    "points": 1,
+    "challenges": 0,
+    "startTier": 2,
+    "endTier": 1,
+    "outcome": "relegated"
+   },
+   "historyLength": 5,
+   "saved": {
+    "version": 1,
+    "tier": 1,
+    "highestTier": 3,
+    "inactiveStreak": 0,
+    "lastDay": "2026-10-24",
+    "current": {
+     "date": "2026-10-24",
+     "startTier": 1,
+     "collected": [
+      "2026-10-24:1:L5/b",
+      "2026-10-24:1:L5/j",
+      "2026-10-24:1:L5/c",
+      "2026-10-24:1:L5/l",
+      "2026-10-24:2:L9/c",
+      "2026-10-24:2:L9/g",
+      "2026-10-24:2:L9/e",
+      "2026-10-24:2:L9/o",
+      "2026-10-24:3:L16/f",
+      "2026-10-24:3:L16/o",
+      "2026-10-24:3:L16/r",
+      "2026-10-24:3:L16/A"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 48,
+     "promotions": 2,
+     "relegations": 2,
+     "challengesCompleted": 11
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-10-25",
+   "status": "settled",
+   "notice": {
+    "fromTier": 1,
+    "toTier": 2,
+    "daysSettled": 1,
+    "promotions": 1,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-10-24",
+     "points": 12,
+     "outcome": "promoted"
+    }
+   },
+   "pool": 5,
+   "results": "e:awarded f:awarded h:awarded l:awarded done:true",
+   "lastHistory": {
+    "date": "2026-10-24",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 1,
+    "endTier": 2,
+    "outcome": "promoted"
+   },
+   "historyLength": 6,
+   "saved": {
+    "version": 1,
+    "tier": 2,
+    "highestTier": 3,
+    "inactiveStreak": 0,
+    "lastDay": "2026-10-25",
+    "current": {
+     "date": "2026-10-25",
+     "startTier": 2,
+     "collected": [
+      "2026-10-25:1:L4/e",
+      "2026-10-25:1:L4/f",
+      "2026-10-25:1:L4/h",
+      "2026-10-25:1:L4/l"
+     ],
+     "completed": [
+      1
+     ],
+     "sweepRewarded": false,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 52,
+     "promotions": 3,
+     "relegations": 2,
+     "challengesCompleted": 12
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-10-26",
+   "status": "settled",
+   "notice": {
+    "fromTier": 2,
+    "toTier": 2,
+    "daysSettled": 1,
+    "promotions": 0,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-10-25",
+     "points": 4,
+     "outcome": "retained"
+    }
+   },
+   "pool": 5,
+   "results": "g:awarded m:awarded h:awarded i:awarded done:true g:awarded d:awarded e:awarded k:awarded done:true E:awarded b:awarded t:awarded x:awarded done:true",
+   "lastHistory": {
+    "date": "2026-10-25",
+    "days": 1,
+    "points": 4,
+    "challenges": 1,
+    "startTier": 2,
+    "endTier": 2,
+    "outcome": "retained"
+   },
+   "historyLength": 7,
+   "saved": {
+    "version": 1,
+    "tier": 2,
+    "highestTier": 3,
+    "inactiveStreak": 0,
+    "lastDay": "2026-10-26",
+    "current": {
+     "date": "2026-10-26",
+     "startTier": 2,
+     "collected": [
+      "2026-10-26:1:L5/g",
+      "2026-10-26:1:L5/m",
+      "2026-10-26:1:L5/h",
+      "2026-10-26:1:L5/i",
+      "2026-10-26:2:L10/g",
+      "2026-10-26:2:L10/d",
+      "2026-10-26:2:L10/e",
+      "2026-10-26:2:L10/k",
+      "2026-10-26:3:L21/E",
+      "2026-10-26:3:L21/b",
+      "2026-10-26:3:L21/t",
+      "2026-10-26:3:L21/x"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 64,
+     "promotions": 3,
+     "relegations": 2,
+     "challengesCompleted": 15
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-10-27",
+   "status": "settled",
+   "notice": {
+    "fromTier": 2,
+    "toTier": 3,
+    "daysSettled": 1,
+    "promotions": 1,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-10-26",
+     "points": 12,
+     "outcome": "promoted"
+    }
+   },
+   "pool": 5,
+   "results": "e:awarded j:awarded b:awarded i:awarded done:true n:awarded d:awarded k:awarded j:awarded done:true g:awarded l:awarded f:awarded o:awarded done:true",
+   "lastHistory": {
+    "date": "2026-10-26",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 2,
+    "endTier": 3,
+    "outcome": "promoted"
+   },
+   "historyLength": 8,
+   "saved": {
+    "version": 1,
+    "tier": 3,
+    "highestTier": 3,
+    "inactiveStreak": 0,
+    "lastDay": "2026-10-27",
+    "current": {
+     "date": "2026-10-27",
+     "startTier": 3,
+     "collected": [
+      "2026-10-27:1:L6/e",
+      "2026-10-27:1:L6/j",
+      "2026-10-27:1:L6/b",
+      "2026-10-27:1:L6/i",
+      "2026-10-27:2:L7/n",
+      "2026-10-27:2:L7/d",
+      "2026-10-27:2:L7/k",
+      "2026-10-27:2:L7/j",
+      "2026-10-27:3:L8/g",
+      "2026-10-27:3:L8/l",
+      "2026-10-27:3:L8/f",
+      "2026-10-27:3:L8/o"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 76,
+     "promotions": 4,
+     "relegations": 2,
+     "challengesCompleted": 18
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-10-28",
+   "status": "settled",
+   "notice": {
+    "fromTier": 3,
+    "toTier": 4,
+    "daysSettled": 1,
+    "promotions": 1,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-10-27",
+     "points": 12,
+     "outcome": "promoted"
+    }
+   },
+   "pool": 5,
+   "results": "c:awarded g:awarded h:awarded s:awarded done:true w:awarded s:awarded x:awarded h:awarded done:true j:awarded r:awarded s:awarded z:awarded done:true",
+   "lastHistory": {
+    "date": "2026-10-27",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 3,
+    "endTier": 4,
+    "outcome": "promoted"
+   },
+   "historyLength": 9,
+   "saved": {
+    "version": 1,
+    "tier": 4,
+    "highestTier": 4,
+    "inactiveStreak": 0,
+    "lastDay": "2026-10-28",
+    "current": {
+     "date": "2026-10-28",
+     "startTier": 4,
+     "collected": [
+      "2026-10-28:1:L9/c",
+      "2026-10-28:1:L9/g",
+      "2026-10-28:1:L9/h",
+      "2026-10-28:1:L9/s",
+      "2026-10-28:2:L14/w",
+      "2026-10-28:2:L14/s",
+      "2026-10-28:2:L14/x",
+      "2026-10-28:2:L14/h",
+      "2026-10-28:3:L16/j",
+      "2026-10-28:3:L16/r",
+      "2026-10-28:3:L16/s",
+      "2026-10-28:3:L16/z"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 88,
+     "promotions": 5,
+     "relegations": 2,
+     "challengesCompleted": 21
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-10-29",
+   "status": "settled",
+   "notice": {
+    "fromTier": 4,
+    "toTier": 5,
+    "daysSettled": 1,
+    "promotions": 1,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-10-28",
+     "points": 12,
+     "outcome": "promoted"
+    }
+   },
+   "pool": 5,
+   "results": "j:awarded d:awarded",
+   "lastHistory": {
+    "date": "2026-10-28",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 4,
+    "endTier": 5,
+    "outcome": "promoted"
+   },
+   "historyLength": 10,
+   "saved": {
+    "version": 1,
+    "tier": 5,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-10-29",
+    "current": {
+     "date": "2026-10-29",
+     "startTier": 5,
+     "collected": [
+      "2026-10-29:1:L4/j",
+      "2026-10-29:1:L4/d"
+     ],
+     "completed": [],
+     "sweepRewarded": false,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 90,
+     "promotions": 6,
+     "relegations": 2,
+     "challengesCompleted": 21
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-02",
+   "status": "settled",
+   "notice": {
+    "fromTier": 5,
+    "toTier": 2,
+    "daysSettled": 4,
+    "promotions": 0,
+    "relegations": 3,
+    "lastPlayed": {
+     "date": "2026-10-29",
+     "points": 2,
+     "outcome": "relegated"
+    }
+   },
+   "pool": 5,
+   "results": "b:awarded m:awarded j:awarded i:awarded done:true e:awarded o:awarded u:awarded p:awarded done:true",
+   "lastHistory": {
+    "date": "2026-10-30",
+    "days": 3,
+    "points": 0,
+    "challenges": 0,
+    "startTier": 4,
+    "endTier": 2,
+    "outcome": "inactive"
+   },
+   "historyLength": 12,
+   "saved": {
+    "version": 1,
+    "tier": 2,
+    "highestTier": 5,
+    "inactiveStreak": 3,
+    "lastDay": "2026-11-02",
+    "current": {
+     "date": "2026-11-02",
+     "startTier": 2,
+     "collected": [
+      "2026-11-02:1:L5/b",
+      "2026-11-02:1:L5/m",
+      "2026-11-02:1:L5/j",
+      "2026-11-02:1:L5/i",
+      "2026-11-02:2:L11/e",
+      "2026-11-02:2:L11/o",
+      "2026-11-02:2:L11/u",
+      "2026-11-02:2:L11/p"
+     ],
+     "completed": [
+      1,
+      2
+     ],
+     "sweepRewarded": false,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 98,
+     "promotions": 6,
+     "relegations": 5,
+     "challengesCompleted": 23
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-03",
+   "status": "settled",
+   "notice": {
+    "fromTier": 2,
+    "toTier": 2,
+    "daysSettled": 1,
+    "promotions": 0,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-11-02",
+     "points": 8,
+     "outcome": "retained"
+    }
+   },
+   "pool": 5,
+   "results": "a:awarded d:awarded f:awarded h:awarded done:true s:awarded w:awarded m:awarded j:awarded done:true b:awarded y:awarded e:awarded k:awarded done:true",
+   "lastHistory": {
+    "date": "2026-11-02",
+    "days": 1,
+    "points": 8,
+    "challenges": 2,
+    "startTier": 2,
+    "endTier": 2,
+    "outcome": "retained"
+   },
+   "historyLength": 13,
+   "saved": {
+    "version": 1,
+    "tier": 2,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-11-03",
+    "current": {
+     "date": "2026-11-03",
+     "startTier": 2,
+     "collected": [
+      "2026-11-03:1:L4/a",
+      "2026-11-03:1:L4/d",
+      "2026-11-03:1:L4/f",
+      "2026-11-03:1:L4/h",
+      "2026-11-03:2:L11/s",
+      "2026-11-03:2:L11/w",
+      "2026-11-03:2:L11/m",
+      "2026-11-03:2:L11/j",
+      "2026-11-03:3:L20/b",
+      "2026-11-03:3:L20/y",
+      "2026-11-03:3:L20/e",
+      "2026-11-03:3:L20/k"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 110,
+     "promotions": 6,
+     "relegations": 5,
+     "challengesCompleted": 26
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-04",
+   "status": "settled",
+   "notice": {
+    "fromTier": 2,
+    "toTier": 3,
+    "daysSettled": 1,
+    "promotions": 1,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-11-03",
+     "points": 12,
+     "outcome": "promoted"
+    }
+   },
+   "pool": 5,
+   "results": "c:awarded n:awarded m:awarded h:awarded done:true c:awarded g:awarded d:awarded r:awarded done:true r:awarded e:awarded z:awarded n:awarded done:true",
+   "lastHistory": {
+    "date": "2026-11-03",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 2,
+    "endTier": 3,
+    "outcome": "promoted"
+   },
+   "historyLength": 14,
+   "saved": {
+    "version": 1,
+    "tier": 3,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-11-04",
+    "current": {
+     "date": "2026-11-04",
+     "startTier": 3,
+     "collected": [
+      "2026-11-04:1:L6/c",
+      "2026-11-04:1:L6/n",
+      "2026-11-04:1:L6/m",
+      "2026-11-04:1:L6/h",
+      "2026-11-04:2:L12/c",
+      "2026-11-04:2:L12/g",
+      "2026-11-04:2:L12/d",
+      "2026-11-04:2:L12/r",
+      "2026-11-04:3:L21/r",
+      "2026-11-04:3:L21/e",
+      "2026-11-04:3:L21/z",
+      "2026-11-04:3:L21/n"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 122,
+     "promotions": 7,
+     "relegations": 5,
+     "challengesCompleted": 29
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-05",
+   "status": "settled",
+   "notice": {
+    "fromTier": 3,
+    "toTier": 4,
+    "daysSettled": 1,
+    "promotions": 1,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-11-04",
+     "points": 12,
+     "outcome": "promoted"
+    }
+   },
+   "pool": 5,
+   "results": "c:awarded q:awarded e:awarded o:awarded done:true s:awarded q:awarded f:awarded i:awarded done:true b:awarded a:awarded m:awarded q:awarded done:true",
+   "lastHistory": {
+    "date": "2026-11-04",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 3,
+    "endTier": 4,
+    "outcome": "promoted"
+   },
+   "historyLength": 15,
+   "saved": {
+    "version": 1,
+    "tier": 4,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-11-05",
+    "current": {
+     "date": "2026-11-05",
+     "startTier": 4,
+     "collected": [
+      "2026-11-05:1:L8/c",
+      "2026-11-05:1:L8/q",
+      "2026-11-05:1:L8/e",
+      "2026-11-05:1:L8/o",
+      "2026-11-05:2:L10/s",
+      "2026-11-05:2:L10/q",
+      "2026-11-05:2:L10/f",
+      "2026-11-05:2:L10/i",
+      "2026-11-05:3:L12/b",
+      "2026-11-05:3:L12/a",
+      "2026-11-05:3:L12/m",
+      "2026-11-05:3:L12/q"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 134,
+     "promotions": 8,
+     "relegations": 5,
+     "challengesCompleted": 32
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-06",
+   "status": "settled",
+   "notice": {
+    "fromTier": 4,
+    "toTier": 5,
+    "daysSettled": 1,
+    "promotions": 1,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-11-05",
+     "points": 12,
+     "outcome": "promoted"
+    }
+   },
+   "pool": 5,
+   "results": "a:awarded k:awarded o:awarded l:awarded done:true p:awarded t:awarded j:awarded o:awarded done:true g:awarded o:awarded u:awarded f:awarded done:true",
+   "lastHistory": {
+    "date": "2026-11-05",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 4,
+    "endTier": 5,
+    "outcome": "promoted"
+   },
+   "historyLength": 16,
+   "saved": {
+    "version": 1,
+    "tier": 5,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-11-06",
+    "current": {
+     "date": "2026-11-06",
+     "startTier": 5,
+     "collected": [
+      "2026-11-06:1:L7/a",
+      "2026-11-06:1:L7/k",
+      "2026-11-06:1:L7/o",
+      "2026-11-06:1:L7/l",
+      "2026-11-06:2:L12/p",
+      "2026-11-06:2:L12/t",
+      "2026-11-06:2:L12/j",
+      "2026-11-06:2:L12/o",
+      "2026-11-06:3:L13/g",
+      "2026-11-06:3:L13/o",
+      "2026-11-06:3:L13/u",
+      "2026-11-06:3:L13/f"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 146,
+     "promotions": 9,
+     "relegations": 5,
+     "challengesCompleted": 35
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-07",
+   "status": "settled",
+   "notice": {
+    "fromTier": 5,
+    "toTier": 5,
+    "daysSettled": 1,
+    "promotions": 0,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-11-06",
+     "points": 12,
+     "outcome": "retained"
+    }
+   },
+   "pool": 5,
+   "results": "j:awarded c:awarded n:awarded m:awarded done:true r:awarded q:awarded f:awarded p:awarded done:true a:awarded d:awarded j:awarded q:awarded done:true",
+   "lastHistory": {
+    "date": "2026-11-06",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 5,
+    "endTier": 5,
+    "outcome": "retained"
+   },
+   "historyLength": 17,
+   "saved": {
+    "version": 1,
+    "tier": 5,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-11-07",
+    "current": {
+     "date": "2026-11-07",
+     "startTier": 5,
+     "collected": [
+      "2026-11-07:1:L6/j",
+      "2026-11-07:1:L6/c",
+      "2026-11-07:1:L6/n",
+      "2026-11-07:1:L6/m",
+      "2026-11-07:2:L8/r",
+      "2026-11-07:2:L8/q",
+      "2026-11-07:2:L8/f",
+      "2026-11-07:2:L8/p",
+      "2026-11-07:3:L9/a",
+      "2026-11-07:3:L9/d",
+      "2026-11-07:3:L9/j",
+      "2026-11-07:3:L9/q"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 158,
+     "promotions": 9,
+     "relegations": 5,
+     "challengesCompleted": 38
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-08",
+   "status": "settled",
+   "notice": {
+    "fromTier": 5,
+    "toTier": 5,
+    "daysSettled": 1,
+    "promotions": 0,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-11-07",
+     "points": 12,
+     "outcome": "retained"
+    }
+   },
+   "pool": 5,
+   "results": "a:awarded d:awarded k:awarded n:awarded done:true",
+   "lastHistory": {
+    "date": "2026-11-07",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 5,
+    "endTier": 5,
+    "outcome": "retained"
+   },
+   "historyLength": 18,
+   "saved": {
+    "version": 1,
+    "tier": 5,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-11-08",
+    "current": {
+     "date": "2026-11-08",
+     "startTier": 5,
+     "collected": [
+      "2026-11-08:1:L6/a",
+      "2026-11-08:1:L6/d",
+      "2026-11-08:1:L6/k",
+      "2026-11-08:1:L6/n"
+     ],
+     "completed": [
+      1
+     ],
+     "sweepRewarded": false,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 162,
+     "promotions": 9,
+     "relegations": 5,
+     "challengesCompleted": 39
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-09",
+   "status": "settled",
+   "notice": {
+    "fromTier": 5,
+    "toTier": 4,
+    "daysSettled": 1,
+    "promotions": 0,
+    "relegations": 1,
+    "lastPlayed": {
+     "date": "2026-11-08",
+     "points": 4,
+     "outcome": "relegated"
+    }
+   },
+   "pool": 5,
+   "results": "b:awarded a:awarded g:awarded",
+   "lastHistory": {
+    "date": "2026-11-08",
+    "days": 1,
+    "points": 4,
+    "challenges": 1,
+    "startTier": 5,
+    "endTier": 4,
+    "outcome": "relegated"
+   },
+   "historyLength": 19,
+   "saved": {
+    "version": 1,
+    "tier": 4,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-11-09",
+    "current": {
+     "date": "2026-11-09",
+     "startTier": 4,
+     "collected": [
+      "2026-11-09:1:L4/b",
+      "2026-11-09:1:L4/a",
+      "2026-11-09:1:L4/g"
+     ],
+     "completed": [],
+     "sweepRewarded": false,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 165,
+     "promotions": 9,
+     "relegations": 6,
+     "challengesCompleted": 39
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-10",
+   "status": "settled",
+   "notice": {
+    "fromTier": 4,
+    "toTier": 3,
+    "daysSettled": 1,
+    "promotions": 0,
+    "relegations": 1,
+    "lastPlayed": {
+     "date": "2026-11-09",
+     "points": 3,
+     "outcome": "relegated"
+    }
+   },
+   "pool": 5,
+   "results": "b:awarded f:awarded j:awarded s:awarded done:true b:awarded c:awarded f:awarded j:awarded done:true b:awarded f:awarded B:awarded s:awarded done:true",
+   "lastHistory": {
+    "date": "2026-11-09",
+    "days": 1,
+    "points": 3,
+    "challenges": 0,
+    "startTier": 4,
+    "endTier": 3,
+    "outcome": "relegated"
+   },
+   "historyLength": 20,
+   "saved": {
+    "version": 1,
+    "tier": 3,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-11-10",
+    "current": {
+     "date": "2026-11-10",
+     "startTier": 3,
+     "collected": [
+      "2026-11-10:1:L9/b",
+      "2026-11-10:1:L9/f",
+      "2026-11-10:1:L9/j",
+      "2026-11-10:1:L9/s",
+      "2026-11-10:2:L12/b",
+      "2026-11-10:2:L12/c",
+      "2026-11-10:2:L12/f",
+      "2026-11-10:2:L12/j",
+      "2026-11-10:3:L20/b",
+      "2026-11-10:3:L20/f",
+      "2026-11-10:3:L20/B",
+      "2026-11-10:3:L20/s"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 177,
+     "promotions": 9,
+     "relegations": 7,
+     "challengesCompleted": 42
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-11",
+   "status": "settled",
+   "notice": {
+    "fromTier": 3,
+    "toTier": 4,
+    "daysSettled": 1,
+    "promotions": 1,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-11-10",
+     "points": 12,
+     "outcome": "promoted"
+    }
+   },
+   "pool": 5,
+   "results": "j:awarded l:awarded c:awarded i:awarded done:true a:awarded l:awarded k:awarded j:awarded done:true a:awarded i:awarded x:awarded g:awarded done:true",
+   "lastHistory": {
+    "date": "2026-11-10",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 3,
+    "endTier": 4,
+    "outcome": "promoted"
+   },
+   "historyLength": 21,
+   "saved": {
+    "version": 1,
+    "tier": 4,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-11-11",
+    "current": {
+     "date": "2026-11-11",
+     "startTier": 4,
+     "collected": [
+      "2026-11-11:1:L6/j",
+      "2026-11-11:1:L6/l",
+      "2026-11-11:1:L6/c",
+      "2026-11-11:1:L6/i",
+      "2026-11-11:2:L11/a",
+      "2026-11-11:2:L11/l",
+      "2026-11-11:2:L11/k",
+      "2026-11-11:2:L11/j",
+      "2026-11-11:3:L14/a",
+      "2026-11-11:3:L14/i",
+      "2026-11-11:3:L14/x",
+      "2026-11-11:3:L14/g"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 189,
+     "promotions": 10,
+     "relegations": 7,
+     "challengesCompleted": 45
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-12",
+   "status": "settled",
+   "notice": {
+    "fromTier": 4,
+    "toTier": 5,
+    "daysSettled": 1,
+    "promotions": 1,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-11-11",
+     "points": 12,
+     "outcome": "promoted"
+    }
+   },
+   "pool": 5,
+   "results": "i:awarded a:awarded d:awarded f:awarded done:true r:awarded d:awarded f:awarded m:awarded done:true D:awarded A:awarded s:awarded l:awarded done:true",
+   "lastHistory": {
+    "date": "2026-11-11",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 4,
+    "endTier": 5,
+    "outcome": "promoted"
+   },
+   "historyLength": 22,
+   "saved": {
+    "version": 1,
+    "tier": 5,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-11-12",
+    "current": {
+     "date": "2026-11-12",
+     "startTier": 5,
+     "collected": [
+      "2026-11-12:1:L7/i",
+      "2026-11-12:1:L7/a",
+      "2026-11-12:1:L7/d",
+      "2026-11-12:1:L7/f",
+      "2026-11-12:2:L10/r",
+      "2026-11-12:2:L10/d",
+      "2026-11-12:2:L10/f",
+      "2026-11-12:2:L10/m",
+      "2026-11-12:3:L21/D",
+      "2026-11-12:3:L21/A",
+      "2026-11-12:3:L21/s",
+      "2026-11-12:3:L21/l"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 201,
+     "promotions": 11,
+     "relegations": 7,
+     "challengesCompleted": 48
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-13",
+   "status": "settled",
+   "notice": {
+    "fromTier": 5,
+    "toTier": 5,
+    "daysSettled": 1,
+    "promotions": 0,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-11-12",
+     "points": 12,
+     "outcome": "retained"
+    }
+   },
+   "pool": 5,
+   "results": "l:awarded r:awarded e:awarded i:awarded done:true d:awarded f:awarded y:awarded x:awarded done:true A:awarded s:awarded m:awarded k:awarded done:true",
+   "lastHistory": {
+    "date": "2026-11-12",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 5,
+    "endTier": 5,
+    "outcome": "retained"
+   },
+   "historyLength": 23,
+   "saved": {
+    "version": 1,
+    "tier": 5,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-11-13",
+    "current": {
+     "date": "2026-11-13",
+     "startTier": 5,
+     "collected": [
+      "2026-11-13:1:L8/l",
+      "2026-11-13:1:L8/r",
+      "2026-11-13:1:L8/e",
+      "2026-11-13:1:L8/i",
+      "2026-11-13:2:L15/d",
+      "2026-11-13:2:L15/f",
+      "2026-11-13:2:L15/y",
+      "2026-11-13:2:L15/x",
+      "2026-11-13:3:L20/A",
+      "2026-11-13:3:L20/s",
+      "2026-11-13:3:L20/m",
+      "2026-11-13:3:L20/k"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 213,
+     "promotions": 11,
+     "relegations": 7,
+     "challengesCompleted": 51
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-14",
+   "status": "settled",
+   "notice": {
+    "fromTier": 5,
+    "toTier": 5,
+    "daysSettled": 1,
+    "promotions": 0,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-11-13",
+     "points": 12,
+     "outcome": "retained"
+    }
+   },
+   "pool": 5,
+   "results": "b:awarded h:awarded q:awarded l:awarded done:true a:awarded n:awarded g:awarded u:awarded done:true G:awarded d:awarded q:awarded E:awarded done:true",
+   "lastHistory": {
+    "date": "2026-11-13",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 5,
+    "endTier": 5,
+    "outcome": "retained"
+   },
+   "historyLength": 24,
+   "saved": {
+    "version": 1,
+    "tier": 5,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-11-14",
+    "current": {
+     "date": "2026-11-14",
+     "startTier": 5,
+     "collected": [
+      "2026-11-14:1:L11/b",
+      "2026-11-14:1:L11/h",
+      "2026-11-14:1:L11/q",
+      "2026-11-14:1:L11/l",
+      "2026-11-14:2:L13/a",
+      "2026-11-14:2:L13/n",
+      "2026-11-14:2:L13/g",
+      "2026-11-14:2:L13/u",
+      "2026-11-14:3:L17/G",
+      "2026-11-14:3:L17/d",
+      "2026-11-14:3:L17/q",
+      "2026-11-14:3:L17/E"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 225,
+     "promotions": 11,
+     "relegations": 7,
+     "challengesCompleted": 54
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-15",
+   "status": "settled",
+   "notice": {
+    "fromTier": 5,
+    "toTier": 5,
+    "daysSettled": 1,
+    "promotions": 0,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-11-14",
+     "points": 12,
+     "outcome": "retained"
+    }
+   },
+   "pool": 5,
+   "results": "a:awarded j:awarded f:awarded h:awarded done:true l:awarded k:awarded p:awarded t:awarded done:true w:awarded C:awarded A:awarded s:awarded done:true",
+   "lastHistory": {
+    "date": "2026-11-14",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 5,
+    "endTier": 5,
+    "outcome": "retained"
+   },
+   "historyLength": 25,
+   "saved": {
+    "version": 1,
+    "tier": 5,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-11-15",
+    "current": {
+     "date": "2026-11-15",
+     "startTier": 5,
+     "collected": [
+      "2026-11-15:1:L4/a",
+      "2026-11-15:1:L4/j",
+      "2026-11-15:1:L4/f",
+      "2026-11-15:1:L4/h",
+      "2026-11-15:2:L12/l",
+      "2026-11-15:2:L12/k",
+      "2026-11-15:2:L12/p",
+      "2026-11-15:2:L12/t",
+      "2026-11-15:3:L17/w",
+      "2026-11-15:3:L17/C",
+      "2026-11-15:3:L17/A",
+      "2026-11-15:3:L17/s"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 237,
+     "promotions": 11,
+     "relegations": 7,
+     "challengesCompleted": 57
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-16",
+   "status": "settled",
+   "notice": {
+    "fromTier": 5,
+    "toTier": 5,
+    "daysSettled": 1,
+    "promotions": 0,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-11-15",
+     "points": 12,
+     "outcome": "retained"
+    }
+   },
+   "pool": 5,
+   "results": "c:awarded d:awarded i:awarded l:awarded done:true e:awarded u:awarded w:awarded t:awarded done:true D:awarded E:awarded a:awarded y:awarded done:true",
+   "lastHistory": {
+    "date": "2026-11-15",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 5,
+    "endTier": 5,
+    "outcome": "retained"
+   },
+   "historyLength": 26,
+   "saved": {
+    "version": 1,
+    "tier": 5,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-11-16",
+    "current": {
+     "date": "2026-11-16",
+     "startTier": 5,
+     "collected": [
+      "2026-11-16:1:L4/c",
+      "2026-11-16:1:L4/d",
+      "2026-11-16:1:L4/i",
+      "2026-11-16:1:L4/l",
+      "2026-11-16:2:L11/e",
+      "2026-11-16:2:L11/u",
+      "2026-11-16:2:L11/w",
+      "2026-11-16:2:L11/t",
+      "2026-11-16:3:L18/D",
+      "2026-11-16:3:L18/E",
+      "2026-11-16:3:L18/a",
+      "2026-11-16:3:L18/y"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 249,
+     "promotions": 11,
+     "relegations": 7,
+     "challengesCompleted": 60
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-17",
+   "status": "settled",
+   "notice": {
+    "fromTier": 5,
+    "toTier": 5,
+    "daysSettled": 1,
+    "promotions": 0,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-11-16",
+     "points": 12,
+     "outcome": "retained"
+    }
+   },
+   "pool": 5,
+   "results": "b:awarded a:awarded",
+   "lastHistory": {
+    "date": "2026-11-16",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 5,
+    "endTier": 5,
+    "outcome": "retained"
+   },
+   "historyLength": 27,
+   "saved": {
+    "version": 1,
+    "tier": 5,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-11-17",
+    "current": {
+     "date": "2026-11-17",
+     "startTier": 5,
+     "collected": [
+      "2026-11-17:1:L5/b",
+      "2026-11-17:1:L5/a"
+     ],
+     "completed": [],
+     "sweepRewarded": false,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 251,
+     "promotions": 11,
+     "relegations": 7,
+     "challengesCompleted": 60
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-22",
+   "status": "settled",
+   "notice": {
+    "fromTier": 5,
+    "toTier": 1,
+    "daysSettled": 5,
+    "promotions": 0,
+    "relegations": 4,
+    "lastPlayed": {
+     "date": "2026-11-17",
+     "points": 2,
+     "outcome": "relegated"
+    }
+   },
+   "pool": 5,
+   "results": "b:awarded g:awarded r:awarded q:awarded",
+   "lastHistory": {
+    "date": "2026-11-18",
+    "days": 4,
+    "points": 0,
+    "challenges": 0,
+    "startTier": 4,
+    "endTier": 1,
+    "outcome": "inactive"
+   },
+   "historyLength": 29,
+   "saved": {
+    "version": 1,
+    "tier": 1,
+    "highestTier": 5,
+    "inactiveStreak": 4,
+    "lastDay": "2026-11-22",
+    "current": {
+     "date": "2026-11-22",
+     "startTier": 1,
+     "collected": [
+      "2026-11-22:1:L8/b",
+      "2026-11-22:1:L8/g",
+      "2026-11-22:1:L8/r",
+      "2026-11-22:1:L8/q"
+     ],
+     "completed": [],
+     "sweepRewarded": false,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 255,
+     "promotions": 11,
+     "relegations": 11,
+     "challengesCompleted": 60
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-23",
+   "status": "settled",
+   "notice": {
+    "fromTier": 1,
+    "toTier": 1,
+    "daysSettled": 1,
+    "promotions": 0,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-11-22",
+     "points": 4,
+     "outcome": "retained"
+    }
+   },
+   "pool": 5,
+   "results": "b:awarded j:awarded f:awarded h:awarded done:true f:awarded h:awarded l:awarded n:awarded done:true j:awarded m:awarded i:awarded n:awarded done:true",
+   "lastHistory": {
+    "date": "2026-11-22",
+    "days": 1,
+    "points": 4,
+    "challenges": 0,
+    "startTier": 1,
+    "endTier": 1,
+    "outcome": "retained"
+   },
+   "historyLength": 30,
+   "saved": {
+    "version": 1,
+    "tier": 1,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-11-23",
+    "current": {
+     "date": "2026-11-23",
+     "startTier": 1,
+     "collected": [
+      "2026-11-23:1:L4/b",
+      "2026-11-23:1:L4/j",
+      "2026-11-23:1:L4/f",
+      "2026-11-23:1:L4/h",
+      "2026-11-23:2:L9/f",
+      "2026-11-23:2:L9/h",
+      "2026-11-23:2:L9/l",
+      "2026-11-23:2:L9/n",
+      "2026-11-23:3:L10/j",
+      "2026-11-23:3:L10/m",
+      "2026-11-23:3:L10/i",
+      "2026-11-23:3:L10/n"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 267,
+     "promotions": 11,
+     "relegations": 11,
+     "challengesCompleted": 63
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-24",
+   "status": "settled",
+   "notice": {
+    "fromTier": 1,
+    "toTier": 2,
+    "daysSettled": 1,
+    "promotions": 1,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-11-23",
+     "points": 12,
+     "outcome": "promoted"
+    }
+   },
+   "pool": 5,
+   "results": "b:awarded d:awarded i:awarded l:awarded done:true j:awarded e:awarded h:awarded i:awarded done:true",
+   "lastHistory": {
+    "date": "2026-11-23",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 1,
+    "endTier": 2,
+    "outcome": "promoted"
+   },
+   "historyLength": 30,
+   "saved": {
+    "version": 1,
+    "tier": 2,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-11-24",
+    "current": {
+     "date": "2026-11-24",
+     "startTier": 2,
+     "collected": [
+      "2026-11-24:1:L4/b",
+      "2026-11-24:1:L4/d",
+      "2026-11-24:1:L4/i",
+      "2026-11-24:1:L4/l",
+      "2026-11-24:2:L8/j",
+      "2026-11-24:2:L8/e",
+      "2026-11-24:2:L8/h",
+      "2026-11-24:2:L8/i"
+     ],
+     "completed": [
+      1,
+      2
+     ],
+     "sweepRewarded": false,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 275,
+     "promotions": 12,
+     "relegations": 11,
+     "challengesCompleted": 65
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-25",
+   "status": "settled",
+   "notice": {
+    "fromTier": 2,
+    "toTier": 2,
+    "daysSettled": 1,
+    "promotions": 0,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-11-24",
+     "points": 8,
+     "outcome": "retained"
+    }
+   },
+   "pool": 5,
+   "results": "b:awarded j:awarded g:awarded f:awarded done:true",
+   "lastHistory": {
+    "date": "2026-11-24",
+    "days": 1,
+    "points": 8,
+    "challenges": 2,
+    "startTier": 2,
+    "endTier": 2,
+    "outcome": "retained"
+   },
+   "historyLength": 30,
+   "saved": {
+    "version": 1,
+    "tier": 2,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-11-25",
+    "current": {
+     "date": "2026-11-25",
+     "startTier": 2,
+     "collected": [
+      "2026-11-25:1:L4/b",
+      "2026-11-25:1:L4/j",
+      "2026-11-25:1:L4/g",
+      "2026-11-25:1:L4/f"
+     ],
+     "completed": [
+      1
+     ],
+     "sweepRewarded": false,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 279,
+     "promotions": 12,
+     "relegations": 11,
+     "challengesCompleted": 66
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-26",
+   "status": "settled",
+   "notice": {
+    "fromTier": 2,
+    "toTier": 2,
+    "daysSettled": 1,
+    "promotions": 0,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-11-25",
+     "points": 4,
+     "outcome": "retained"
+    }
+   },
+   "pool": 5,
+   "results": "c:awarded j:awarded g:awarded k:awarded done:true n:awarded b:awarded e:awarded m:awarded done:true c:awarded p:awarded q:awarded A:awarded done:true",
+   "lastHistory": {
+    "date": "2026-11-25",
+    "days": 1,
+    "points": 4,
+    "challenges": 1,
+    "startTier": 2,
+    "endTier": 2,
+    "outcome": "retained"
+   },
+   "historyLength": 30,
+   "saved": {
+    "version": 1,
+    "tier": 2,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-11-26",
+    "current": {
+     "date": "2026-11-26",
+     "startTier": 2,
+     "collected": [
+      "2026-11-26:1:L4/c",
+      "2026-11-26:1:L4/j",
+      "2026-11-26:1:L4/g",
+      "2026-11-26:1:L4/k",
+      "2026-11-26:2:L7/n",
+      "2026-11-26:2:L7/b",
+      "2026-11-26:2:L7/e",
+      "2026-11-26:2:L7/m",
+      "2026-11-26:3:L20/c",
+      "2026-11-26:3:L20/p",
+      "2026-11-26:3:L20/q",
+      "2026-11-26:3:L20/A"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 291,
+     "promotions": 12,
+     "relegations": 11,
+     "challengesCompleted": 69
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-27",
+   "status": "settled",
+   "notice": {
+    "fromTier": 2,
+    "toTier": 3,
+    "daysSettled": 1,
+    "promotions": 1,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-11-26",
+     "points": 12,
+     "outcome": "promoted"
+    }
+   },
+   "pool": 5,
+   "results": "a:awarded c:awarded f:awarded i:awarded done:true m:awarded j:awarded f:awarded h:awarded done:true l:awarded o:awarded s:awarded v:awarded done:true",
+   "lastHistory": {
+    "date": "2026-11-26",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 2,
+    "endTier": 3,
+    "outcome": "promoted"
+   },
+   "historyLength": 30,
+   "saved": {
+    "version": 1,
+    "tier": 3,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-11-27",
+    "current": {
+     "date": "2026-11-27",
+     "startTier": 3,
+     "collected": [
+      "2026-11-27:1:L4/a",
+      "2026-11-27:1:L4/c",
+      "2026-11-27:1:L4/f",
+      "2026-11-27:1:L4/i",
+      "2026-11-27:2:L5/m",
+      "2026-11-27:2:L5/j",
+      "2026-11-27:2:L5/f",
+      "2026-11-27:2:L5/h",
+      "2026-11-27:3:L14/l",
+      "2026-11-27:3:L14/o",
+      "2026-11-27:3:L14/s",
+      "2026-11-27:3:L14/v"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 303,
+     "promotions": 13,
+     "relegations": 11,
+     "challengesCompleted": 72
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-28",
+   "status": "settled",
+   "notice": {
+    "fromTier": 3,
+    "toTier": 4,
+    "daysSettled": 1,
+    "promotions": 1,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-11-27",
+     "points": 12,
+     "outcome": "promoted"
+    }
+   },
+   "pool": 5,
+   "results": "d:awarded f:awarded h:awarded l:awarded done:true j:awarded h:awarded v:awarded u:awarded done:true j:awarded r:awarded u:awarded y:awarded done:true",
+   "lastHistory": {
+    "date": "2026-11-27",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 3,
+    "endTier": 4,
+    "outcome": "promoted"
+   },
+   "historyLength": 30,
+   "saved": {
+    "version": 1,
+    "tier": 4,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-11-28",
+    "current": {
+     "date": "2026-11-28",
+     "startTier": 4,
+     "collected": [
+      "2026-11-28:1:L4/d",
+      "2026-11-28:1:L4/f",
+      "2026-11-28:1:L4/h",
+      "2026-11-28:1:L4/l",
+      "2026-11-28:2:L15/j",
+      "2026-11-28:2:L15/h",
+      "2026-11-28:2:L15/v",
+      "2026-11-28:2:L15/u",
+      "2026-11-28:3:L17/j",
+      "2026-11-28:3:L17/r",
+      "2026-11-28:3:L17/u",
+      "2026-11-28:3:L17/y"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 315,
+     "promotions": 14,
+     "relegations": 11,
+     "challengesCompleted": 75
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-29",
+   "status": "settled",
+   "notice": {
+    "fromTier": 4,
+    "toTier": 5,
+    "daysSettled": 1,
+    "promotions": 1,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-11-28",
+     "points": 12,
+     "outcome": "promoted"
+    }
+   },
+   "pool": 5,
+   "results": "j:awarded l:awarded c:awarded m:awarded done:true c:awarded l:awarded j:awarded i:awarded done:true c:awarded e:awarded j:awarded n:awarded done:true",
+   "lastHistory": {
+    "date": "2026-11-28",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 4,
+    "endTier": 5,
+    "outcome": "promoted"
+   },
+   "historyLength": 30,
+   "saved": {
+    "version": 1,
+    "tier": 5,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-11-29",
+    "current": {
+     "date": "2026-11-29",
+     "startTier": 5,
+     "collected": [
+      "2026-11-29:1:L6/j",
+      "2026-11-29:1:L6/l",
+      "2026-11-29:1:L6/c",
+      "2026-11-29:1:L6/m",
+      "2026-11-29:2:L8/c",
+      "2026-11-29:2:L8/l",
+      "2026-11-29:2:L8/j",
+      "2026-11-29:2:L8/i",
+      "2026-11-29:3:L16/c",
+      "2026-11-29:3:L16/e",
+      "2026-11-29:3:L16/j",
+      "2026-11-29:3:L16/n"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 327,
+     "promotions": 15,
+     "relegations": 11,
+     "challengesCompleted": 78
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-11-30",
+   "status": "settled",
+   "notice": {
+    "fromTier": 5,
+    "toTier": 5,
+    "daysSettled": 1,
+    "promotions": 0,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-11-29",
+     "points": 12,
+     "outcome": "retained"
+    }
+   },
+   "pool": 5,
+   "results": "c:awarded j:awarded e:awarded",
+   "lastHistory": {
+    "date": "2026-11-29",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 5,
+    "endTier": 5,
+    "outcome": "retained"
+   },
+   "historyLength": 30,
+   "saved": {
+    "version": 1,
+    "tier": 5,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-11-30",
+    "current": {
+     "date": "2026-11-30",
+     "startTier": 5,
+     "collected": [
+      "2026-11-30:1:L4/c",
+      "2026-11-30:1:L4/j",
+      "2026-11-30:1:L4/e"
+     ],
+     "completed": [],
+     "sweepRewarded": false,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 330,
+     "promotions": 15,
+     "relegations": 11,
+     "challengesCompleted": 78
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-12-01",
+   "status": "settled",
+   "notice": {
+    "fromTier": 5,
+    "toTier": 4,
+    "daysSettled": 1,
+    "promotions": 0,
+    "relegations": 1,
+    "lastPlayed": {
+     "date": "2026-11-30",
+     "points": 3,
+     "outcome": "relegated"
+    }
+   },
+   "pool": 5,
+   "results": "c:awarded e:awarded h:awarded l:awarded done:true n:awarded s:awarded u:awarded t:awarded done:true D:awarded E:awarded e:awarded o:awarded done:true",
+   "lastHistory": {
+    "date": "2026-11-30",
+    "days": 1,
+    "points": 3,
+    "challenges": 0,
+    "startTier": 5,
+    "endTier": 4,
+    "outcome": "relegated"
+   },
+   "historyLength": 30,
+   "saved": {
+    "version": 1,
+    "tier": 4,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-12-01",
+    "current": {
+     "date": "2026-12-01",
+     "startTier": 4,
+     "collected": [
+      "2026-12-01:1:L4/c",
+      "2026-12-01:1:L4/e",
+      "2026-12-01:1:L4/h",
+      "2026-12-01:1:L4/l",
+      "2026-12-01:2:L14/n",
+      "2026-12-01:2:L14/s",
+      "2026-12-01:2:L14/u",
+      "2026-12-01:2:L14/t",
+      "2026-12-01:3:L18/D",
+      "2026-12-01:3:L18/E",
+      "2026-12-01:3:L18/e",
+      "2026-12-01:3:L18/o"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 342,
+     "promotions": 15,
+     "relegations": 12,
+     "challengesCompleted": 81
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-12-02",
+   "status": "settled",
+   "notice": {
+    "fromTier": 4,
+    "toTier": 5,
+    "daysSettled": 1,
+    "promotions": 1,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-12-01",
+     "points": 12,
+     "outcome": "promoted"
+    }
+   },
+   "pool": 5,
+   "results": "b:awarded j:awarded g:awarded f:awarded done:true r:awarded o:awarded j:awarded b:awarded done:true z:awarded e:awarded r:awarded y:awarded done:true",
+   "lastHistory": {
+    "date": "2026-12-01",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 4,
+    "endTier": 5,
+    "outcome": "promoted"
+   },
+   "historyLength": 30,
+   "saved": {
+    "version": 1,
+    "tier": 5,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-12-02",
+    "current": {
+     "date": "2026-12-02",
+     "startTier": 5,
+     "collected": [
+      "2026-12-02:1:L4/b",
+      "2026-12-02:1:L4/j",
+      "2026-12-02:1:L4/g",
+      "2026-12-02:1:L4/f",
+      "2026-12-02:2:L10/r",
+      "2026-12-02:2:L10/o",
+      "2026-12-02:2:L10/j",
+      "2026-12-02:2:L10/b",
+      "2026-12-02:3:L15/z",
+      "2026-12-02:3:L15/e",
+      "2026-12-02:3:L15/r",
+      "2026-12-02:3:L15/y"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 5
+    },
+    "lifetime": {
+     "points": 354,
+     "promotions": 16,
+     "relegations": 12,
+     "challengesCompleted": 84
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  }
+ ],
+ "granted": [
+  "daily:league-sweep:2026-10-19=15",
+  "league:first-promotion=25",
+  "league:highest:gold=30",
+  "daily:league-sweep:2026-10-20=15",
+  "league:highest:platinum=40",
+  "daily:league-sweep:2026-10-24=15",
+  "daily:league-sweep:2026-10-26=15",
+  "daily:league-sweep:2026-10-27=15",
+  "league:highest:diamond=50",
+  "daily:league-sweep:2026-10-28=15",
+  "league:highest:neon-elite=75",
+  "daily:league-sweep:2026-11-03=15",
+  "daily:league-sweep:2026-11-04=15",
+  "daily:league-sweep:2026-11-05=15",
+  "daily:league-sweep:2026-11-06=15",
+  "daily:league-sweep:2026-11-07=15",
+  "daily:league-sweep:2026-11-10=15",
+  "daily:league-sweep:2026-11-11=15",
+  "daily:league-sweep:2026-11-12=15",
+  "daily:league-sweep:2026-11-13=15",
+  "daily:league-sweep:2026-11-14=15",
+  "daily:league-sweep:2026-11-15=15",
+  "daily:league-sweep:2026-11-16=15",
+  "daily:league-sweep:2026-11-23=15",
+  "daily:league-sweep:2026-11-26=15",
+  "daily:league-sweep:2026-11-27=15",
+  "daily:league-sweep:2026-11-28=15",
+  "daily:league-sweep:2026-11-29=15",
+  "daily:league-sweep:2026-12-01=15",
+  "daily:league-sweep:2026-12-02=15"
+ ]
+}
