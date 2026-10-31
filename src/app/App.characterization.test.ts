@@ -827,18 +827,27 @@ describe('intro (runIntro wired as in main.ts)', () => {
 });
 
 describe('Level Select focus', () => {
-  it('B2: Level Select always focuses state.levelId (the last loaded level), not the next level to play', async () => {
-    // B2 (known bug, recorded as is): showMenuScreen('levels') calls focusLevel(state.levelId).
+  it('Level Select focuses the next level to play in a fresh session (B2), then the level opened last', async () => {
     const h = createHarness({ progress: progressThrough(2) });
     h.app.start();
     await h.app.showLevelSelect();
-    expect(h.calls('levelSelect.focusLevel')).toEqual([[1]]); // fresh start: GameState's first level
+    expect(h.calls('levelSelect.focusLevel')).toEqual([[3]]); // Levels 1–2 done: Level 3 is next
     await h.app.openLevel(7); // a test play, far ahead of the player's Level 3
     await h.app.goBack();
     await h.app.showHome();
     h.clear();
     await h.app.showLevelSelect();
     expect(h.effects()).toEqual([...MENU_TRANSITION, 'screens.show levels', 'loop.sleep', 'levelSelect.focusLevel 7']);
+  });
+
+  it('a Daily League challenge is not a level opened from Level Select: focus stays on the next level to play', async () => {
+    const h = createHarness({ progress: progressThrough(10), challenges: [CHALLENGE] });
+    h.app.start();
+    await h.app.openChallenge(1); // reuses Level 3's layout
+    await h.app.showHome();
+    h.clear();
+    await h.app.showLevelSelect();
+    expect(h.calls('levelSelect.focusLevel')).toEqual([[11]]); // Levels 1–10 done: Level 11 is next
   });
 });
 

@@ -3,7 +3,7 @@ import type { GameState } from '../core/GameState';
 import type { LevelData } from '../core/types';
 import { withAvatar, withCountry, withNickname, type PlayerProfile, type ProfileStorage } from '../profile/Profile';
 import type { AttemptOutcome, PlayerStats, StatsStorage } from '../profile/Stats';
-import { isCompleted, type Progress } from '../progress/Progress';
+import { isCompleted, nextLevelToPlay, type Progress } from '../progress/Progress';
 import { canPlayLevel, isTestPlay } from '../progress/testUnlock';
 import { ENERGY_PER_CHALLENGE, MAX_DAILY_POINTS, type DailyChallenge } from '../league/challenges';
 import { collectedIn, points } from '../league/League';
@@ -107,6 +107,8 @@ export class App {
   /** True while the app is hidden or in the background (browser tab or Android app). */
   private background = false;
   private zoomHintShown = false;
+  /** The regular level opened most recently this session (challenges don't count), or null before the first. */
+  private lastLevelOpened: number | null = null;
   /** The Daily League challenge being played, or null for a regular level. */
   private challenge: DailyChallenge | null = null;
   /** True while the open attempt is a challenge: it never touches level progress or statistics. */
@@ -291,6 +293,7 @@ export class App {
       this.parts.confirmDialog.close(false);
       this.parts.gameLayout.setGrid(level.rows, level.cols); // size the slot before the board is fitted into it
       this.challenge = null;
+      this.lastLevelOpened = levelId;
       this.parts.scene.loadLevel(level); // replaces every arrow, counter and flag
       this.beginAttempt();
       this.parts.hud.setTime(0);
@@ -554,7 +557,8 @@ export class App {
       await this.parts.screens.show(screen);
       this.syncGameLoop();
       queueMicrotask(() => this.leagueController.showNotice());
-      if (screen === 'levels') this.parts.levelSelect.focusLevel(this.parts.state.levelId);
+      // The level the player came from, or (before any this session) the next one to play.
+      if (screen === 'levels') this.parts.levelSelect.focusLevel(this.lastLevelOpened ?? nextLevelToPlay(this.records.progress, this.parts.levels.length));
     });
   }
 
