@@ -17,7 +17,9 @@ export type SoundId =
   | 'gameOver'
   | 'unlock'
   | 'claim'
-  | 'achievement';
+  | 'achievement'
+  | 'energy'
+  | 'promoted';
 
 export interface SoundOptions {
   /** Chain position or star number: raises the pitch step by step. */
@@ -161,6 +163,20 @@ export function playSound(ctx: BaseAudioContext, out: AudioNode, id: SoundId, t:
       [698.46, 880, 1046.5].forEach((freq) => playTone(ctx, out, { type: 'triangle', freq, start: t + 0.16, duration: 0.5, gain: 0.07, cutoff: 3000 }));
       return 0.66;
     }
+
+    case 'energy':
+      // A bright electric "zap" for an Energy Arrow collected.
+      playTone(ctx, out, { type: 'triangle', freq: 1318.5, to: 2093, start: t, duration: 0.12, gain: 0.09, cutoff: 4200 });
+      playTone(ctx, out, { freq: 2637, start: t + 0.04, duration: 0.18, gain: 0.03 });
+      return 0.22;
+
+    case 'promoted': {
+      // A rising fanfare, a little longer than an achievement.
+      [523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((freq, i) =>
+        playTone(ctx, out, { type: 'triangle', freq, start: t + i * 0.08, duration: 0.5, gain: 0.08, cutoff: 3600 }),
+      );
+      return 0.9;
+    }
   }
 }
 
@@ -178,4 +194,6 @@ export const SOUND_GAP_MS: Readonly<Record<SoundId, number>> = {
   unlock: 400,
   claim: 400,
   achievement: 700,
+  energy: 60,
+  promoted: 1000,
 };

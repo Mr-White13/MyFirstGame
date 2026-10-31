@@ -13,7 +13,7 @@ import {
   type AchievementView,
   type UnlockedAchievements,
 } from './Achievements';
-import { createWallet, earn, readWallet, type Wallet } from './Wallet';
+import { createWallet, earn, readWallet, type Transaction, type Wallet } from './Wallet';
 
 /**
  * Daily check-in, wallet and achievements in **one** saved record, so a
@@ -87,6 +87,7 @@ export class Rewards {
   private readonly safe: SafeStore<RewardsRecord>;
   private record: RewardsRecord;
   private readonly listeners = new Set<(record: RewardsRecord) => void>();
+  private lastSaveOk = true;
   private readonly unlockListeners = new Set<(unlocked: readonly AchievementDefinition[]) => void>();
 
   constructor(
@@ -135,6 +136,19 @@ export class Rewards {
     return { reward: claimed.reward, unlocked };
   }
 
+  /**
+   * Credits a transaction owed by another record (league milestones). Returns
+   * true once it is in the saved wallet: applied now, or already applied before
+   * (the id is known). Invalid transactions also return true, so they are dropped
+   * rather than retried forever.
+   */
+  grant(today: DayKey, tx: Transaction): boolean {
+    const paid = earn(this.record.wallet, tx);
+    if (!paid.ok) return paid.reason !== 'insufficient';
+    this.commit({ ...this.record, wallet: paid.wallet }, today);
+    return this.lastSaveOk;
+  }
+
   /** After an attempt ends (and App has saved progress and stats): note its chain and check achievements. */
   afterAttempt(today: DayKey, longestChain: number): readonly AchievementDefinition[] {
     const bestChain = Math.max(this.record.bestChain, Math.max(0, Math.floor(longestChain) || 0));
@@ -179,7 +193,7 @@ export class Rewards {
     const final: RewardsRecord = unlocked.length ? { ...next, wallet, achievements } : next;
     if (final === this.record) return [];
     this.record = final;
-    this.safe.save(final);
+    this.lastSaveOk = this.safe.save(final);
     this.listeners.forEach((l) => l(final));
     if (unlocked.length) this.unlockListeners.forEach((l) => l(unlocked));
     return unlocked;

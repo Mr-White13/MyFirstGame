@@ -1150,6 +1150,10 @@ body.is-navigating #app {
   grid-template-columns: repeat(2, 1fr);
 }
 
+.run-stats[hidden] {
+  display: none;
+}
+
 .run-stats div {
   padding: 8px 4px 7px;
   border-radius: var(--r-sm);
@@ -3218,4 +3222,588 @@ body.is-navigating #app {
   .daily-card__btn {
     padding: 0 10px;
   }
+}
+
+/* ---------- Daily League ---------- */
+
+:root {
+  --energy: #ffd23f;
+  --energy-rgb: 255 210 63;
+}
+
+:root[data-theme='light'] {
+  --energy: #a86f00;
+  --energy-rgb: 168 111 0;
+}
+
+/* HUD strip during a challenge */
+.hud__league {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 7px 12px;
+  border-radius: var(--r-md);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: rgb(var(--energy-rgb) / 0.08);
+  border: 1px solid rgb(var(--energy-rgb) / 0.35);
+}
+
+.hud__league[hidden] {
+  display: none;
+}
+
+.hud__energy {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.hud__energy .icon {
+  width: 16px;
+  height: 16px;
+  color: var(--energy);
+}
+
+.hud__energy strong.is-ticking {
+  display: inline-block;
+  animation: tick 260ms var(--ease-out);
+}
+
+.hud__league strong {
+  color: var(--text);
+}
+
+/* Home league card */
+.league-card {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 12px;
+  row-gap: 8px;
+  align-items: center;
+  width: 100%;
+  padding: 12px 16px 12px 12px;
+  font: inherit;
+  text-align: left;
+  color: var(--text);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 120ms var(--ease-out), border-color 160ms ease;
+}
+
+.league-card:active {
+  transform: scale(0.98);
+}
+
+.league-card:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.league-card__badge {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+}
+
+.league-card__badge .icon {
+  width: 22px;
+  height: 22px;
+  color: var(--text-muted);
+}
+
+.league-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.league-card__name {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.league-card__status {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.league-card__meter .meter__fill {
+  display: block;
+  transform: none;
+  width: 0;
+  background: linear-gradient(90deg, var(--energy), var(--orange));
+  transition: width 500ms var(--ease-out);
+}
+
+.league-card--locked {
+  border-style: dashed;
+}
+
+.league-card--locked .league-card__meter .meter__fill {
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+}
+
+@media (hover: hover) {
+  .league-card:hover {
+    border-color: rgb(var(--energy-rgb) / 0.55);
+  }
+}
+
+/* League screen */
+.screen--league {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 12px;
+  padding:
+    max(env(safe-area-inset-top), 14px) calc(var(--gutter) + env(safe-area-inset-right))
+    0 calc(var(--gutter) + env(safe-area-inset-left));
+}
+
+.screen--league .topbar {
+  max-width: 480px;
+  justify-self: center;
+}
+
+.league__scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  max-width: 480px;
+  justify-self: center;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 2px 2px max(env(safe-area-inset-bottom), 24px);
+  scrollbar-width: none;
+}
+
+.league__heading {
+  margin: 4px 0 8px 4px;
+}
+
+.league-hero {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 18px;
+  background:
+    radial-gradient(120% 100% at 0% 50%, rgb(var(--energy-rgb) / 0.1), transparent 60%),
+    rgb(var(--surface-rgb) / 0.9);
+}
+
+.league-hero__badge {
+  flex: none;
+  width: 72px;
+  height: 72px;
+}
+
+.league-hero__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.league-hero__name {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.league-hero__points {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.league-hero__points .icon {
+  width: 16px;
+  height: 16px;
+  color: var(--energy);
+}
+
+.league-hero__points strong {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.league-progress,
+.league-rules,
+.league-history,
+.league-locked {
+  padding: 16px;
+}
+
+.league-progress[hidden],
+.league-locked[hidden] {
+  display: none;
+}
+
+/* 0..12 scale with the two personal targets marked on it. */
+.league-meter {
+  position: relative;
+  height: 12px;
+  margin: 6px 0 10px;
+  border-radius: var(--r-pill);
+  background: rgb(var(--muted-rgb) / 0.14);
+}
+
+.league-meter__fill {
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--energy), var(--orange));
+  transition: width 500ms var(--ease-out);
+}
+
+.league-meter__fill.is-promoting {
+  background: linear-gradient(90deg, var(--energy), var(--green));
+}
+
+.league-meter__mark {
+  position: absolute;
+  top: -5px;
+  bottom: -5px;
+  width: 3px;
+  margin-left: -1.5px;
+  border-radius: 2px;
+}
+
+.league-meter__mark[hidden] {
+  display: none;
+}
+
+.league-meter__mark--up {
+  background: var(--green);
+}
+
+.league-meter__mark--down {
+  background: var(--text-muted);
+  opacity: 0.7;
+}
+
+.league-progress__targets {
+  margin: 0 0 10px;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+.league-progress__counts {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.league-progress__counts strong {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.league-progress .setting__note {
+  margin: 12px 0 0;
+}
+
+.league-locked {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  border-style: dashed;
+}
+
+.league-locked__icon {
+  width: 26px;
+  height: 26px;
+  color: var(--text-muted);
+}
+
+.league-locked__title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.league-locked__text {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.league-locked .meter {
+  width: 100%;
+}
+
+.league-locked .meter__fill {
+  transform: none;
+  width: 0;
+}
+
+.league-locked__count {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Challenge cards */
+.challenge-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.challenge {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 12px 12px 14px;
+  border-radius: var(--r-md);
+  background: rgb(var(--surface-rgb) / 0.86);
+  border: 1px solid var(--line);
+  box-shadow: var(--highlight);
+}
+
+.challenge__number {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--energy);
+  background: rgb(var(--energy-rgb) / 0.1);
+  border: 1.5px solid rgb(var(--energy-rgb) / 0.5);
+}
+
+.challenge__check {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: var(--green);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.challenge--done .challenge__number {
+  background: rgb(var(--green-rgb) / 0.1);
+  border-color: rgb(var(--green-rgb) / 0.5);
+}
+
+.challenge__title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.challenge__meta {
+  margin: 2px 0 6px;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.challenge__pips {
+  display: inline-flex;
+  gap: 4px;
+}
+
+/* Collected Energy Arrows: solid gold; missing ones: outline only (shape differs, not just colour). */
+.challenge__pip {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: rgb(var(--muted-rgb) / 0.55);
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+
+.challenge__pip.is-collected {
+  fill: var(--energy);
+  stroke: var(--energy);
+}
+
+.challenge__play {
+  min-width: 92px;
+}
+
+.challenge--locked {
+  opacity: 0.6;
+}
+
+/* Rules and targets */
+.league-rules__list {
+  margin: 0 0 14px;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.league-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.league-table th,
+.league-table td {
+  padding: 7px 6px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+
+.league-table thead th {
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.league-table td {
+  color: var(--text-muted);
+}
+
+.league-table tr.is-current th,
+.league-table tr.is-current td {
+  color: var(--text);
+  font-weight: 800;
+  background: rgb(var(--energy-rgb) / 0.08);
+}
+
+.league-table tr.is-current th::before {
+  content: '▶ ';
+  color: var(--energy);
+}
+
+/* History */
+.league-history__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.history {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 9px 2px;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.8rem;
+}
+
+.history:last-child {
+  border-bottom: none;
+}
+
+.history__date {
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.history__result {
+  font-weight: 700;
+}
+
+.history--promoted .history__result {
+  color: var(--green);
+}
+
+.history--promoted .history__result::before {
+  content: '▲ ';
+}
+
+.history--relegated .history__result::before,
+.history--inactive .history__result::before {
+  content: '▼ ';
+  color: var(--text-muted);
+}
+
+.history--retained .history__result::before {
+  content: '● ';
+  color: var(--text-muted);
+}
+
+.history__points {
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+.league-history__empty {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* League result dialog */
+.card--league {
+  --card-accent: var(--energy);
+}
+
+.league-result__badge {
+  display: grid;
+  place-items: center;
+  margin: -4px auto 12px;
+  width: 84px;
+  height: 84px;
+}
+
+.overlay--visible[data-kind='promoted'] .league-result__badge {
+  animation: league-rise 600ms var(--ease-spring) both;
+}
+
+@keyframes league-rise {
+  0% { transform: translateY(14px) scale(0.6); opacity: 0; }
+  70% { transform: translateY(-4px) scale(1.08); opacity: 1; }
+  100% { transform: none; }
+}
+
+.overlay[data-kind='promoted'] .card--league {
+  --card-accent: var(--green);
+  background: radial-gradient(120% 60% at 50% 0%, rgb(var(--green-rgb) / 0.1), transparent 70%), var(--surface);
+}
+
+.card--league .btn {
+  width: 100%;
+}
+
+/* Challenge completion */
+.run-stats__energy dd {
+  color: var(--energy);
+}
+
+:root[data-motion='reduce'] .overlay--visible[data-kind='promoted'] .league-result__badge,
+:root[data-motion='reduce'] .hud__energy strong.is-ticking {
+  animation: none;
+}
+
+:root[data-motion='reduce'] .league-meter__fill,
+:root[data-motion='reduce'] .league-card__meter .meter__fill {
+  transition: none;
 }

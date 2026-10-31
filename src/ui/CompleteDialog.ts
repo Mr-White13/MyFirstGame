@@ -22,6 +22,23 @@ export interface CompletionSummary {
   readonly unlocked: number | null;
 }
 
+/** A completed Daily League challenge. */
+export interface ChallengeCompletion {
+  readonly number: number;
+  readonly stars: number;
+  readonly timeMs: number;
+  readonly mistakes: number;
+  readonly collected: number;
+  readonly perChallenge: number;
+  /** Points first collected during this attempt. */
+  readonly newPoints: number;
+  readonly today: number;
+  readonly maxToday: number;
+  readonly leagueName: string;
+  /** True if another challenge today is still unfinished. */
+  readonly hasNext: boolean;
+}
+
 export interface CompletionActions {
   onNext(): void;
   onReplay(): void;
@@ -52,6 +69,10 @@ export class CompleteDialog {
   private readonly unlocked = requireElement('complete-unlocked');
   private readonly nextButton = requireElement<HTMLButtonElement>('btn-next');
   private readonly fromStartButton = requireElement<HTMLButtonElement>('btn-play-from-start');
+  private readonly levelStats = requireElement('complete-level-stats');
+  private readonly challengeStats = requireElement('complete-challenge-stats');
+  private readonly nextLabel = requireElement('btn-next-label');
+  private readonly levelsLabel = requireElement('btn-levels-label');
 
   constructor(actions: CompletionActions) {
     this.nextButton.addEventListener('click', () => actions.onNext());
@@ -65,6 +86,7 @@ export class CompleteDialog {
   }
 
   show(summary: CompletionSummary): void {
+    this.setChallengeMode(false);
     const final = summary.levelId === summary.levelCount;
     this.overlay.element.classList.toggle('overlay--final', final);
     this.icon.setAttribute('href', final ? '#icon-star' : '#icon-check');
@@ -101,6 +123,42 @@ export class CompleteDialog {
     this.nextButton.hidden = final;
     this.fromStartButton.hidden = !final;
     this.overlay.show(final ? this.fromStartButton : this.nextButton);
+  }
+
+  /** The challenge variant: stars, time, Energy Arrows and points instead of personal bests and unlocks. */
+  showChallenge(c: ChallengeCompletion): void {
+    this.setChallengeMode(true);
+    this.overlay.element.classList.remove('overlay--final');
+    this.icon.setAttribute('href', '#icon-bolt');
+    this.eyebrow.textContent = `Daily League · ${c.leagueName}`;
+    this.title.textContent = `Challenge ${c.number}/3 complete`;
+    this.detail.textContent = c.mistakes === 0 ? 'Flawless: not a single mistake' : '';
+    this.detail.hidden = this.detail.textContent === '';
+    const stars = [...this.stars.children] as SVGElement[];
+    stars.forEach((star, index) => {
+      star.classList.toggle('star--earned', index < c.stars);
+      star.style.setProperty('--i', String(index));
+    });
+    this.stars.setAttribute('aria-label', `${c.stars} of ${stars.length} stars`);
+    this.lives.textContent = `${c.stars} ${c.stars === 1 ? 'life' : 'lives'} left`;
+    requireElement('complete-challenge-time').textContent = formatPrecise(c.timeMs);
+    requireElement('complete-energy').textContent = `${c.collected} / ${c.perChallenge}`;
+    requireElement('complete-new-points').textContent = `+${c.newPoints}`;
+    requireElement('complete-today').textContent = `${c.today} / ${c.maxToday}`;
+    this.newTime.hidden = true;
+    this.best.hidden = true;
+    this.unlocked.hidden = true;
+    this.nextButton.hidden = false;
+    this.fromStartButton.hidden = true;
+    this.nextLabel.textContent = c.hasNext ? 'Next challenge' : 'League';
+    this.overlay.show(this.nextButton);
+  }
+
+  private setChallengeMode(on: boolean): void {
+    this.levelStats.hidden = on;
+    this.challengeStats.hidden = !on;
+    this.levelsLabel.textContent = on ? 'League' : 'Levels';
+    if (!on) this.nextLabel.textContent = 'Next level';
   }
 
   hide(): void {

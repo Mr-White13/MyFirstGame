@@ -9,6 +9,9 @@ import { DayClock } from './daily/dayKey';
 import { Rewards } from './rewards/Rewards';
 import { AchievementsScreen } from './ui/AchievementsScreen';
 import { DailyDialog } from './ui/DailyDialog';
+import { LeagueService } from './league/LeagueService';
+import { LeagueScreen } from './ui/LeagueScreen';
+import { LeagueResultDialog } from './ui/LeagueResultDialog';
 import { LEVELS } from './levels';
 import { ProfileStorage } from './profile/Profile';
 import { StatsStorage } from './profile/Stats';
@@ -67,12 +70,12 @@ const scene = new GameScene(state, {
 const completeDialog = new CompleteDialog({
   onNext: () => app?.nextLevel(),
   onReplay: () => app?.restartLevel(),
-  onLevels: () => void app?.showLevelSelect(),
+  onLevels: () => void app?.showLevelsOrLeague(),
   onPlayFromStart: () => app?.playFromStart(),
 });
 const gameOverDialog = new GameOverDialog({
   onTryAgain: () => app?.restartLevel(),
-  onLevels: () => void app?.showLevelSelect(),
+  onLevels: () => void app?.showLevelsOrLeague(),
 });
 const home = new HomeScreen(LEVELS, {
   onPlay: (id) => void app?.openLevel(id),
@@ -81,6 +84,7 @@ const home = new HomeScreen(LEVELS, {
   onSettings: () => void app?.showSettings(),
   onDaily: () => app?.openDaily(),
   onAchievements: () => void app?.showAchievements(),
+  onLeague: () => void app?.showLeague(),
 });
 const profileScreen = new ProfileScreen(LEVELS, {
   onBack: () => void app?.goBack(),
@@ -107,6 +111,13 @@ const rewards = new Rewards({
   levels: LEVELS,
   records: () => ({ progress: app!.currentProgress, stats: app!.currentStats }),
 });
+// Daily League: its own record; milestone credits reach the wallet through an idempotent outbox.
+const dayClock = new DayClock();
+const league = new LeagueService(LEVELS, (tx) => rewards.grant(dayClock.today, tx));
+const leagueScreen = new LeagueScreen(
+  () => void app?.goBack(),
+  (number) => void app?.openChallenge(number),
+);
 const dailyDialog = new DailyDialog(() => app?.claimDaily());
 const achievementsScreen = new AchievementsScreen(() => void app?.goBack());
 
@@ -137,7 +148,10 @@ app = new App({
   settings,
   feedback: emit,
   rewards,
-  dayClock: new DayClock(),
+  dayClock,
+  league,
+  leagueScreen,
+  leagueResult: new LeagueResultDialog(),
   dailyDialog,
   achievementsScreen,
 });
@@ -170,5 +184,5 @@ audio.setHidden(document.hidden);
 
 // Handy for inspecting the game from DevTools during development.
 if (import.meta.env.DEV) {
-  Object.assign(window, { neon: { app, game, scene, state, settings, audio, rewards } });
+  Object.assign(window, { neon: { app, game, scene, state, settings, audio, rewards, league, dayClock } });
 }

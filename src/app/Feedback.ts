@@ -18,7 +18,11 @@ export type FeedbackEvent =
   /** A daily reward was claimed. */
   | { readonly type: 'claim' }
   /** One or more achievements unlocked. */
-  | { readonly type: 'achievement' };
+  | { readonly type: 'achievement' }
+  /** An Energy Arrow was collected (the point is already saved). */
+  | { readonly type: 'energy' }
+  /** A league promotion was shown. */
+  | { readonly type: 'promoted' };
 
 export interface SoundPlayer {
   play(id: SoundId, options?: SoundOptions & { delay?: number }): boolean;
@@ -87,6 +91,14 @@ export class Feedback {
       case 'achievement':
         this.sound.play('achievement');
         this.haptics.play('reward');
+        return;
+      case 'energy':
+        this.sound.play('energy');
+        this.haptics.play('release');
+        return;
+      case 'promoted':
+        this.sound.play('promoted');
+        this.haptics.play('complete');
         return;
     }
   }

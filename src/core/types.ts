@@ -15,6 +15,12 @@ export interface ArrowData {
   readonly id: string;
   readonly cells: readonly Cell[];
   readonly direction: Direction;
+  /**
+   * An Energy Arrow: a collectible variant used by Daily League challenges.
+   * It moves, blocks, turns red and chains exactly like any other arrow; the
+   * rules never read this flag. Only the league awards a point when one is removed.
+   */
+  readonly energy?: boolean;
 }
 
 export interface LevelData {

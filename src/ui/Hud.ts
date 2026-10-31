@@ -7,8 +7,28 @@ import { requireElement } from './dom';
  * with a progress meter, plus the back and restart buttons. Updates only when
  * the game state changes (never per frame); the visual easing is all CSS.
  */
+/** What the HUD shows during a Daily League challenge. */
+export interface ChallengeHud {
+  /** 1..3 */
+  readonly number: number;
+  /** Energy Arrows of this challenge collected today (0..4). */
+  readonly collected: number;
+  readonly perChallenge: number;
+  /** Energy Points today (0..12). */
+  readonly today: number;
+  readonly maxToday: number;
+  readonly leagueName: string;
+}
+
 export class Hud {
+  private readonly title = requireElement('hud-title');
   private readonly level = requireElement('hud-level');
+  private readonly league = requireElement('hud-league');
+  private readonly energy = requireElement('hud-energy');
+  private readonly energyWrap = requireElement('hud-energy-wrap');
+  private readonly leagueName = requireElement('hud-league-name');
+  private readonly points = requireElement('hud-points');
+  private challenge: ChallengeHud | null = null;
   private readonly hearts = requireElement('hud-hearts');
   private readonly remaining = requireElement('hud-remaining');
   private readonly progress = requireElement('hud-progress');
@@ -21,7 +41,7 @@ export class Hud {
 
   update(snapshot: GameSnapshot): void {
     const sameRun = this.last?.levelId === snapshot.levelId;
-    this.level.textContent = String(snapshot.levelId);
+    if (!this.challenge) this.level.textContent = String(snapshot.levelId);
     this.remaining.textContent = String(snapshot.remaining);
     const cleared = snapshot.total === 0 ? 0 : (snapshot.total - snapshot.remaining) / snapshot.total;
     this.progress.style.transform = `scaleX(${cleared})`;
@@ -39,6 +59,32 @@ export class Hud {
     if (text === this.shownTime) return;
     this.shownTime = text;
     this.time.textContent = text;
+  }
+
+  /**
+   * Switches the HUD between a regular level (null) and a Daily League
+   * challenge: "Daily 2/3", plus a strip with Energy Arrows collected, the
+   * league and today's points. Updating the numbers ticks the counter.
+   */
+  setChallenge(info: ChallengeHud | null): void {
+    const before = this.challenge;
+    this.challenge = info;
+    this.league.hidden = info === null;
+    this.backButton.setAttribute('aria-label', info ? 'Back to the league' : 'Back to levels');
+    this.restartButton.setAttribute('aria-label', info ? 'Restart challenge' : 'Restart level');
+    if (!info) {
+      this.title.textContent = 'Level';
+      if (this.last) this.level.textContent = String(this.last.levelId);
+      return;
+    }
+    this.title.textContent = 'Daily';
+    this.level.textContent = `${info.number}/3`;
+    this.energy.textContent = String(info.collected);
+    this.energyWrap.lastChild!.textContent = `/${info.perChallenge}`;
+    this.energyWrap.setAttribute('aria-label', `${info.collected} of ${info.perChallenge} Energy Arrows collected`);
+    this.leagueName.textContent = info.leagueName;
+    this.points.textContent = String(info.today);
+    if (before && info.collected > before.collected) this.tick(this.energy);
   }
 
   /**

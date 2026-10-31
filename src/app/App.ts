@@ -3,7 +3,14 @@ import type { GameState } from '../core/GameState';
 import type { LevelData } from '../core/types';
 import { withAvatar, withCountry, withNickname, type PlayerProfile, type ProfileStorage } from '../profile/Profile';
 import { addPlayTime, type AttemptOutcome, type PlayerStats, type StatsStorage } from '../profile/Stats';
-import { isUnlocked, type Progress } from '../progress/Progress';
+import { completedCount, isCompleted, isUnlocked, type Progress } from '../progress/Progress';
+import type { ArrowData } from '../core/types';
+import { ENERGY_PER_CHALLENGE, MAX_DAILY_POINTS, type DailyChallenge } from '../league/challenges';
+import { collectedIn, points } from '../league/League';
+import { league } from '../league/leagues';
+import { LEAGUE_UNLOCK_LEVEL, type LeagueService } from '../league/LeagueService';
+import type { LeagueScreen } from '../ui/LeagueScreen';
+import { noticeKind, noticeText, type LeagueResultDialog } from '../ui/LeagueResultDialog';
 import type { ProgressStorage } from '../progress/ProgressStorage';
 import type { GameScene } from '../scenes/GameScene';
 import type { CompleteDialog } from '../ui/CompleteDialog';
@@ -57,6 +64,9 @@ export interface AppParts {
   readonly dayClock: DayClock;
   readonly dailyDialog: DailyDialog;
   readonly achievementsScreen: AchievementsScreen;
+  readonly league: LeagueService;
+  readonly leagueScreen: LeagueScreen;
+  readonly leagueResult: LeagueResultDialog;
 }
 
 /** How often the HUD clock is refreshed. The time itself comes from a monotonic clock. */
@@ -80,6 +90,13 @@ export class App {
   private readonly history = new NavigationHistory();
   private readonly attempt = new AttemptTracker();
   private clockTimer = 0;
+  /** The Daily League challenge being played, or null for a regular level. */
+  private challenge: DailyChallenge | null = null;
+  /** True while the open attempt is a challenge: it never touches level progress or statistics. */
+  private attemptIsChallenge = false;
+  /** Energy Points of the current challenge already collected when this attempt began. */
+  private attemptStartCollected = 0;
+  private lastChallenge: { timeMs: number; newPoints: number } | null = null;
   /** Results of the most recent completion, shown in the dialog. */
   private lastCompletion: {
     unlocked: number | null;
@@ -114,8 +131,15 @@ export class App {
       if (!document.hidden) rewards.checkIn(today);
       this.renderRewards();
     });
+    dayClock.onChange(() => this.settleLeague());
     dayClock.start();
     rewards.checkIn(dayClock.today);
+
+    // Daily League: settle any finished days now (the app needn't be open at midnight),
+    // and award Energy Points the moment the rules remove an Energy Arrow.
+    this.parts.league.subscribe(() => this.renderLeague());
+    this.parts.state.onRemove((arrow) => this.handleRemoved(arrow));
+    this.settleLeague();
 
     this.renderAll();
     // The game loop only needs to run while its screen is visible; sleeping saves
@@ -147,6 +171,48 @@ export class App {
 
   showAchievements(): Promise<void> {
     return this.showMenuScreen('achievements');
+  }
+
+  showLeague(): Promise<void> {
+    this.settleLeague();
+    return this.showMenuScreen('league');
+  }
+
+  /** True once Level 10 is completed. Before that no competition exists and no points can be earned. */
+  get leagueUnlocked(): boolean {
+    return isCompleted(this.progress, LEAGUE_UNLOCK_LEVEL);
+  }
+
+  /**
+   * Starts one of today's Daily League challenges (1..3). It reuses the level
+   * screen, rules, lives and timer; only the records it writes differ.
+   */
+  openChallenge(number: number): Promise<void> {
+    const today = this.parts.dayClock.refresh();
+    this.settleLeague();
+    const challenge = this.parts.league.challenges(today)[number - 1];
+    if (!challenge || !this.leagueUnlocked) return Promise.resolve();
+    const level = challenge.level;
+    return this.navigate(async () => {
+      this.endAttempt('abandoned');
+      this.hideEndDialogs();
+      this.parts.confirmDialog.close(false);
+      this.challenge = challenge;
+      this.parts.gameLayout.setGrid(level.rows, level.cols);
+      this.parts.scene.loadLevel(level);
+      this.beginAttempt();
+      this.parts.hud.setTime(0);
+      this.wakeGame();
+      this.history.go('game');
+      await this.parts.screens.show('game');
+      this.attempt.interactive();
+      this.startClock();
+    });
+  }
+
+  /** "Levels" in the end-of-run dialogs: the level list, or the league after a challenge. */
+  showLevelsOrLeague(): Promise<void> {
+    return this.challenge ? this.showLeague() : this.showLevelSelect();
   }
 
   /** Opens the daily rewards calendar (checking in first, in case the day just changed). */
@@ -187,8 +253,9 @@ export class App {
       this.hideEndDialogs();
       this.parts.confirmDialog.close(false);
       this.parts.gameLayout.setGrid(level.rows, level.cols); // size the slot before the board is fitted into it
+      this.challenge = null;
       this.parts.scene.loadLevel(level); // replaces every arrow, counter and flag
-      this.attempt.begin(level.id, level.revision ?? 1);
+      this.beginAttempt();
       this.parts.hud.setTime(0);
       this.wakeGame();
       this.history.go('game');
@@ -238,9 +305,8 @@ export class App {
     if (this.navigating) return;
     this.endAttempt('abandoned'); // no-op if the attempt already ended (won or lost)
     this.hideEndDialogs();
-    const levelId = this.parts.state.levelId;
     this.parts.scene.restartLevel(); // full lives, no red arrows, counters at zero
-    this.attempt.begin(levelId, this.parts.levels[levelId - 1]?.revision ?? 1);
+    this.beginAttempt(); // collected Energy Points are kept: they live in the league record
     this.attempt.interactive(); // the board is already on screen
     this.parts.hud.setTime(0);
   }
@@ -251,6 +317,16 @@ export class App {
   handleLevelSolved(): void {
     const summary = this.attempt.finish('won', this.parts.state.snapshot());
     if (!summary) return;
+    if (this.attemptIsChallenge && this.challenge) {
+      // A challenge never touches level progress, best times or statistics.
+      const today = this.parts.dayClock.refresh();
+      this.parts.league.complete(today, this.challenge);
+      this.lastChallenge = { timeMs: summary.timeMs, newPoints: collectedIn(this.parts.league.current, this.challenge) - this.attemptStartCollected };
+      this.parts.hud.setTime(summary.timeMs);
+      this.renderAll();
+      this.parts.feedback({ type: 'complete' });
+      return;
+    }
     const { records, completion } = applyAttempt({ progress: this.progress, stats: this.stats }, summary, this.parts.levels.length);
     this.progress = records.progress;
     this.stats = records.stats;
@@ -265,13 +341,36 @@ export class App {
       timeMs: summary.timeMs,
     };
     this.parts.hud.setTime(summary.timeMs);
+    if (summary.levelId === LEAGUE_UNLOCK_LEVEL) this.settleLeague(); // completing Level 10 opens the league
     this.renderAll();
     this.parts.feedback({ type: 'complete' });
   }
 
   /** The win effect has played: show the summary dialog. */
   handleCelebrationEnd(): void {
-    if (this.parts.screens.active !== 'game' || !this.lastCompletion) return;
+    if (this.parts.screens.active !== 'game') return;
+    if (this.challenge && this.lastChallenge) {
+      const snapshot = this.parts.state.snapshot();
+      const state = this.parts.league.current;
+      const today = this.parts.dayClock.today;
+      const done = state.current?.date === today ? state.current.completed : [];
+      this.parts.completeDialog.showChallenge({
+        number: this.challenge.number,
+        stars: snapshot.stars,
+        timeMs: this.lastChallenge.timeMs,
+        mistakes: snapshot.mistakes,
+        collected: collectedIn(state, this.challenge),
+        perChallenge: ENERGY_PER_CHALLENGE,
+        newPoints: Math.max(0, this.lastChallenge.newPoints),
+        today: points(state.current),
+        maxToday: MAX_DAILY_POINTS,
+        leagueName: league(state.tier).name,
+        hasNext: this.nextChallengeNumber(done) !== null,
+      });
+      this.parts.feedback({ type: 'stars', stars: snapshot.stars, unlocked: false, reduced: prefersReducedMotion() });
+      return;
+    }
+    if (!this.lastCompletion) return;
     const snapshot = this.parts.state.snapshot();
     const c = this.lastCompletion;
     this.parts.completeDialog.show({
@@ -308,11 +407,20 @@ export class App {
       cleared: snapshot.total - snapshot.remaining,
       total: snapshot.total,
       mistakes: snapshot.mistakes,
+      challenge: this.challenge
+        ? { number: this.challenge.number, today: points(this.parts.league.current.current), maxToday: MAX_DAILY_POINTS }
+        : undefined,
     });
   }
 
   /** Called by the completion dialog's buttons. */
   nextLevel(): void {
+    if (this.challenge) {
+      const c = this.parts.league.current.current;
+      const next = this.nextChallengeNumber(c?.date === this.parts.dayClock.today ? c.completed : []);
+      void (next === null ? this.showLeague() : this.openChallenge(next));
+      return;
+    }
     void this.openLevel(this.parts.state.levelId + 1);
   }
 
@@ -377,6 +485,7 @@ export class App {
       this.history.go(screen);
       await this.parts.screens.show(screen);
       this.syncGameLoop();
+      queueMicrotask(() => this.showLeagueNotice());
       if (screen === 'levels') this.parts.levelSelect.focusLevel(this.parts.state.levelId);
     });
   }
@@ -394,7 +503,7 @@ export class App {
   }
 
   private recordEnded(summary: AttemptSummary | null): void {
-    if (!summary) return;
+    if (!summary || this.attemptIsChallenge) return; // challenges keep their own records
     const { records } = applyAttempt({ progress: this.progress, stats: this.stats }, summary, this.parts.levels.length);
     this.stats = records.stats; // a failed or abandoned attempt never changes progress
     this.parts.statsStorage.save(this.stats);
@@ -406,6 +515,106 @@ export class App {
     this.parts.levelSelect.render(this.progress);
     this.parts.profileScreen.render(this.profile, this.progress, this.stats);
     this.renderRewards();
+    this.renderLeague();
+  }
+
+  // ------------------------------------------------------------ league
+
+  /** Settles finished league days and opens today's (idempotent), then shows any new result. */
+  private settleLeague(): void {
+    const today = this.parts.dayClock.today;
+    this.parts.league.settle(today, this.leagueUnlocked);
+    if (this.challenge && this.challenge.date !== today && this.parts.screens.active === 'game') {
+      this.parts.toast.show('A new league day has started: this challenge no longer earns points', 2600);
+    }
+    this.showLeagueNotice();
+  }
+
+  /** The rules removed an arrow: if it is an Energy Arrow in a challenge, award its point now (saved at once). */
+  private handleRemoved(arrow: ArrowData): void {
+    if (!this.challenge || !this.attemptIsChallenge || !arrow.energy) return;
+    const status = this.parts.league.collect(this.parts.dayClock.refresh(), this.challenge, arrow.id);
+    if (status === 'awarded') this.parts.feedback({ type: 'energy' });
+  }
+
+  private beginAttempt(): void {
+    const level = this.parts.state;
+    this.attemptIsChallenge = this.challenge !== null;
+    this.attemptStartCollected = this.challenge ? collectedIn(this.parts.league.current, this.challenge) : 0;
+    this.lastChallenge = null;
+    this.attempt.begin(level.levelId, this.parts.levels[level.levelId - 1]?.revision ?? 1);
+    this.renderChallengeHud();
+  }
+
+  private nextChallengeNumber(completed: readonly number[]): number | null {
+    for (let n = (this.challenge?.number ?? 0) + 1; n <= 3; n++) if (!completed.includes(n)) return n;
+    for (let n = 1; n <= 3; n++) if (!completed.includes(n)) return n;
+    return null;
+  }
+
+  private renderChallengeHud(): void {
+    const ch = this.challenge;
+    if (!ch) {
+      this.parts.hud.setChallenge(null);
+      return;
+    }
+    const state = this.parts.league.current;
+    this.parts.hud.setChallenge({
+      number: ch.number,
+      collected: collectedIn(state, ch),
+      perChallenge: ENERGY_PER_CHALLENGE,
+      today: state.current?.date === ch.date ? points(state.current) : 0,
+      maxToday: MAX_DAILY_POINTS,
+      leagueName: league(state.tier).name,
+    });
+  }
+
+  private renderLeague(): void {
+    const { league: service, dayClock, home, leagueScreen, profileScreen } = this.parts;
+    const state = service.current;
+    const today = dayClock.today;
+    const unlocked = this.leagueUnlocked;
+    const live = state.current?.date === today ? state.current : null;
+    const todayPoints = unlocked ? points(live) : 0;
+    const levelsDone = Math.min(LEAGUE_UNLOCK_LEVEL, completedCount(this.progress, LEAGUE_UNLOCK_LEVEL));
+    home.renderLeague({ unlocked, levelsDone, unlockAt: LEAGUE_UNLOCK_LEVEL, tier: state.tier, today: todayPoints, maxToday: MAX_DAILY_POINTS });
+    leagueScreen.render({
+      unlocked,
+      levelsDone,
+      unlockAt: LEAGUE_UNLOCK_LEVEL,
+      tier: state.tier,
+      today: todayPoints,
+      maxToday: MAX_DAILY_POINTS,
+      perChallenge: ENERGY_PER_CHALLENGE,
+      challenges: service.challenges(today).map((challenge) => ({
+        challenge,
+        collected: collectedIn(state, challenge),
+        completed: live?.completed.includes(challenge.number) ?? false,
+      })),
+      history: state.history,
+      clockBack: state.lastDay !== null && today < state.lastDay,
+    });
+    profileScreen.renderLeague(state);
+    this.renderChallengeHud();
+  }
+
+  /**
+   * Shows what settling changed, once: a dialog for a promotion or a move
+   * down, a short toast when the league was simply kept. Never during play,
+   * and never twice (acknowledging clears it from the saved record).
+   */
+  private showLeagueNotice(): void {
+    const { league: service, leagueResult, screens, toast, feedback } = this.parts;
+    const notice = service.current.notice;
+    if (!notice || this.navigating || screens.active === 'game' || leagueResult.isOpen) return;
+    const kind = noticeKind(notice);
+    if (kind === 'retained') {
+      toast.show(noticeText(notice), 3200);
+      service.acknowledge();
+      return;
+    }
+    leagueResult.show(notice, () => service.acknowledge());
+    if (kind === 'promoted') feedback({ type: 'promoted' });
   }
 
   /** Home's daily card and counters, Profile's rewards card, the achievements list and the open calendar. */
@@ -485,7 +694,7 @@ export class App {
     if (document.hidden) {
       this.attempt.timer.pause('hidden');
       const played = this.attempt.checkpoint();
-      if (played > 0) {
+      if (played > 0 && !this.attemptIsChallenge) {
         this.stats = addPlayTime(this.stats, played);
         this.parts.statsStorage.save(this.stats);
       }
@@ -493,6 +702,7 @@ export class App {
       this.attempt.timer.resume('hidden');
       // Back from the background, possibly on a new day: count it (idempotent on the same day).
       this.parts.rewards.checkIn(this.parts.dayClock.refresh());
+      this.settleLeague();
     }
   }
 
@@ -512,6 +722,7 @@ export class App {
     const { confirmDialog, completeDialog, gameOverDialog, avatarPicker, countryPicker, profileScreen, screens, dailyDialog } = this.parts;
     if (confirmDialog.isOpen) confirmDialog.close(false);
     else if (dailyDialog.isOpen) dailyDialog.close();
+    else if (this.parts.leagueResult.isOpen) this.parts.leagueResult.close();
     else if (avatarPicker.isOpen) avatarPicker.close();
     else if (countryPicker.isOpen) countryPicker.close();
     else if (completeDialog.isOpen || gameOverDialog.isOpen || profileScreen.isEditing) return;
