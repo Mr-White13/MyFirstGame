@@ -1,11 +1,10 @@
 import Phaser from 'phaser';
 import type { GameState } from '../core/GameState';
-import type { LevelData } from '../core/types';
+import type { ArrowData, LevelData } from '../core/types';
 import { withAvatar, withCountry, withNickname, type PlayerProfile, type ProfileStorage } from '../profile/Profile';
 import { addPlayTime, type AttemptOutcome, type PlayerStats, type StatsStorage } from '../profile/Stats';
 import { completedCount, isCompleted, type Progress } from '../progress/Progress';
 import { canPlayLevel, isTestPlay } from '../progress/testUnlock';
-import type { ArrowData } from '../core/types';
 import { ENERGY_PER_CHALLENGE, MAX_DAILY_POINTS, type DailyChallenge } from '../league/challenges';
 import { collectedIn, points } from '../league/League';
 import { league } from '../league/leagues';
@@ -497,10 +496,6 @@ export class App {
     this.attempt.timer.resume('picker');
   }
 
-  comingSoon(feature: string): void {
-    this.parts.toast.show(`${feature}: coming soon`);
-  }
-
   // ------------------------------------------------------------ startup intro
 
   /** The studio splash (and recap) now cover Home. `back` is what Back / Escape do meanwhile. */
@@ -533,10 +528,6 @@ export class App {
 
   get currentStats(): PlayerStats {
     return this.stats;
-  }
-
-  get currentProfile(): PlayerProfile {
-    return this.profile;
   }
 
   get timer() {
@@ -813,7 +804,6 @@ export class App {
     else this.parts.game.loop.sleep();
   }
 
-  /** Escape: closes the topmost dialog or picker, otherwise acts as "back" (desktop convenience). */
   /** Escape on desktop: the same as Back, except that end-of-level dialogs and nickname editing keep their own buttons. */
   private handleKey(event: KeyboardEvent): void {
     if (event.key === 'Escape') this.handleBack(false);

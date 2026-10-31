@@ -18,10 +18,6 @@ export class RecapDialog {
     requireElement('btn-recap-skip').addEventListener('click', () => this.close('skip'));
   }
 
-  get isOpen(): boolean {
-    return this.overlay.isOpen;
-  }
-
   /** Shows the insight; resolves with how the player left it. */
   show(insight: Insight): Promise<'continue' | 'skip'> {
     this.title.textContent = insight.title;

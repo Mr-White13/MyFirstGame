@@ -31,8 +31,8 @@ import level29 from './level29';
 import level30 from './level30';
 
 /**
- * Every playable level, in play order. Levels 1–10 are hand-designed;
- * 11–30 were generated offline from tools/level-plan.json and reviewed.
+ * Every playable level, in play order. Levels 1–3 are hand-designed;
+ * 4–30 were generated offline from tools/level-plan.json and reviewed.
  * Level ids must be 1..n matching their
  * position here (checked by the tests). To add a level, create `levelNN.ts`
  * with `levelFromMap(NN, [...])` and append it to this list.

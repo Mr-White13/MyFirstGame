@@ -112,10 +112,6 @@ export class SettingsScreen {
     }
   }
 
-  get isOpen(): boolean {
-    return !this.root.inert && this.root.classList.contains('screen--active');
-  }
-
   render(settings: GameSettings, appearance: ResolvedAppearance): void {
     this.settings = settings;
     this.check('theme', settings.theme);
