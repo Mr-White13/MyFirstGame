@@ -39,6 +39,17 @@ export interface LevelData {
 /** Lives at the start of every level. */
 export const STARTING_LIVES = 3;
 
+/**
+ * Streak bonus (see GameState): this many successful taps in a row, each
+ * within STREAK_WINDOW_MS of the previous one, earn one bonus...
+ */
+export const STREAK_TAPS = 3;
+/** Longest pause between two taps that still continues a streak. */
+export const STREAK_WINDOW_MS = 1500;
+/** ...which clears at least BONUS_MIN and at most BONUS_MAX currently removable normal arrows. */
+export const BONUS_MIN = 2;
+export const BONUS_MAX = 3;
+
 /** One arrow leaving the board: the one the player tapped, or one released by a chain reaction. */
 export interface Removal {
   readonly arrowId: string;
@@ -56,7 +67,14 @@ export type MoveResult =
        * the order they left. Already applied to the state; listed for animation.
        */
       readonly chain: readonly Removal[];
-      /** True if this move (with its chain) emptied the board. */
+      /**
+       * Normal arrows cleared by a streak bonus after this tap (BONUS_MIN to
+       * BONUS_MAX), in the order they left; empty when no bonus fired.
+       */
+      readonly cascade: readonly Removal[];
+      /** Activated arrows released because the bonus freed them (after `cascade`). */
+      readonly cascadeChain: readonly Removal[];
+      /** True if this move (with its chain and bonus) emptied the board. */
       readonly won: boolean;
     }
   | {
@@ -84,7 +102,12 @@ export type LevelStatus = 'playing' | 'won' | 'failed';
  * - `moves`: successful player taps (kept for compatibility; equals `directClears`).
  * - `directClears`: arrows the player removed by tapping them.
  * - `autoClears`: activated arrows released automatically by chain reactions.
- * - `longestChain`: most arrows released by a single move's chain reaction (bookkeeping only).
+ * - `cascadeClears`: normal arrows cleared automatically by streak bonuses.
+ * - `streak`: successful taps in the current streak (0..STREAK_TAPS - 1; it
+ *   resets when a bonus is earned, on a blocked tap, or after a pause).
+ * - `streakAt`: clock time of the streak's last tap (ms), or null; the
+ *   streak expires STREAK_WINDOW_MS after it.
+ * - `longestChain`: most red arrows released by a single move's chain reactions (bookkeeping only).
  * - `mistakes`: taps on a blocked arrow that cost a life (repeat taps on a red arrow don't count).
  * - `lives`: lives left (`STARTING_LIVES - mistakes`, never below 0).
  * - `remaining` / `total`: arrows still on the board / at the start.
@@ -96,6 +119,9 @@ export interface GameSnapshot {
   readonly moves: number;
   readonly directClears: number;
   readonly autoClears: number;
+  readonly cascadeClears: number;
+  readonly streak: number;
+  readonly streakAt: number | null;
   readonly longestChain: number;
   readonly mistakes: number;
   readonly lives: number;

@@ -1,20 +1,21 @@
 import { levelFromMap } from './levelMap';
 
 /**
- * Level 3 — the first bent arrows. Hooks (b, c, g, h) change direction, so
- * the player has to follow each arrow to its head before judging it.
- * Drafted with the level generator (seed 104), reviewed for readability.
+ * Level 3 — the first bent arrows. Hooks (a, b, c) have to be followed to
+ * their heads, and four arrows look free at a glance but are blocked further
+ * along their line. Four dependency layers.
+ * Drafted with the level generator (seed 3301), reviewed for readability.
  */
 export default levelFromMap(
   3,
   [
-    '.  e  c  c  .  .  a^',
-    '.  e  c  .  .  .  a',
-    'b^ e  cv .  .  .  d^',
-    'b  ev .  .  f^ .  d',
-    'b  b  g  .  f  .  d',
-    '.  .  g  g  g> h^ d',
-    '.  .  .  h  h  h  .',
+    'd  a  a  .  .  .  .',
+    'd  .  av .  b  b  b>',
+    'd  .  .  c^ b  .  .',
+    'dv .  c  c  .  e^ .',
+    '.  .  .  .  f^ e  .',
+    '.  .  .  .  f  e  .',
+    '.  .  g  g> .  e  .',
   ],
-  { revision: 2 },
+  { revision: 3 },
 );

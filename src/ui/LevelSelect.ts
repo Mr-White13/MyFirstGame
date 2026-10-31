@@ -8,6 +8,7 @@ import {
   totalStars,
   type Progress,
 } from '../progress/Progress';
+import { canPlayLevel, UNLOCK_ALL_LEVELS_FOR_TESTING } from '../progress/testUnlock';
 import { requireElement } from './dom';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -41,6 +42,7 @@ export class LevelSelect {
       if (tile && !tile.disabled) this.selectHandler(Number(tile.dataset.level));
     });
     this.continueButton.addEventListener('click', () => this.selectHandler(this.continueLevel));
+    requireElement('levels-testing').hidden = !UNLOCK_ALL_LEVELS_FOR_TESTING;
   }
 
   onBack(handler: () => void): void {
@@ -90,6 +92,8 @@ export class LevelSelect {
 
   private tile(level: LevelData, progress: Progress): HTMLLIElement {
     const unlocked = isUnlocked(progress, level.id);
+    // Testing flag: really locked levels can still be opened (shown with a dashed outline; results not saved).
+    const testPlay = !unlocked && canPlayLevel(progress, level.id, this.levels.length);
     const completed = isCompleted(progress, level.id);
     const current = unlocked && !completed && level.id === nextLevelToPlay(progress, this.levels.length);
 
@@ -100,9 +104,12 @@ export class LevelSelect {
     button.classList.toggle('level-tile--locked', !unlocked);
     button.classList.toggle('level-tile--completed', completed);
     button.classList.toggle('level-tile--current', current);
-    button.disabled = !unlocked;
+    button.classList.toggle('level-tile--test', testPlay);
+    button.disabled = !unlocked && !testPlay;
     const bestStars = progress.completed[level.id]?.bestStars ?? null;
-    const state = !unlocked
+    const state = testPlay
+      ? 'locked, open for testing, result not saved'
+      : !unlocked
       ? 'locked'
       : !completed
         ? 'not completed yet'
@@ -121,7 +128,7 @@ export class LevelSelect {
       meta.textContent = `${level.rows}×${level.cols}`;
     }
     button.append(number, meta);
-    if (!unlocked) button.append(icon('lock', 'level-tile__mark'));
+    if (!unlocked && !testPlay) button.append(icon('lock', 'level-tile__mark'));
     else if (completed) button.append(icon('check', 'level-tile__mark'));
 
     const item = document.createElement('li');

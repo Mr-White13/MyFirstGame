@@ -2,7 +2,7 @@
 export type Clock = () => number;
 
 /** Why the timer is paused. Several can hold at once; it runs only when none do. */
-export type PauseReason = 'hidden' | 'confirm' | 'navigation';
+export type PauseReason = 'hidden' | 'confirm' | 'navigation' | 'picker';
 
 type TimerPhase = 'idle' | 'active' | 'stopped';
 

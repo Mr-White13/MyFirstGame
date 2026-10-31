@@ -9,10 +9,15 @@ import type { Point } from './layout';
  * - While the board is zoomed, dragging one finger past a small threshold
  *   turns the press into a **pan**: the press is cancelled, so panning never
  *   moves an arrow.
- * - A second finger cancels any press and starts a **pinch** (zoom + pan
- *   around the fingers' midpoint). After a pinch, nothing is pressed or
- *   released until every finger has left the screen, so two-finger gestures
- *   never select arrows.
+ * - A second finger landing while a press is held is an **overlap**: fast
+ *   play with two thumbs often puts the next finger down before the previous
+ *   one has lifted. If either finger then moves past the threshold, it is a
+ *   **pinch** (the press is cancelled). If instead the pressing finger lifts
+ *   first, its tap is **released** as usual and the second finger becomes the
+ *   next press, so neither tap is lost.
+ * - A pinch zooms and pans around the fingers' midpoint. After a pinch,
+ *   nothing is pressed or released until every finger has left the screen,
+ *   so two-finger gestures never select arrows.
  */
 export type GestureEvent =
   | { readonly type: 'press'; readonly x: number; readonly y: number }
@@ -23,11 +28,15 @@ export type GestureEvent =
   | { readonly type: 'pan'; readonly dx: number; readonly dy: number }
   | { readonly type: 'pinch'; readonly centerX: number; readonly centerY: number; readonly scale: number };
 
-type Mode = 'idle' | 'press' | 'pan' | 'pinch' | 'done';
+type Mode = 'idle' | 'press' | 'overlap' | 'pan' | 'pinch' | 'done';
 
 export class GestureTracker {
   private readonly pointers = new Map<number, Point>();
+  /** Where each finger touched down (overlap: telling a quick second tap from a pinch). */
+  private readonly downAt = new Map<number, Point>();
   private mode: Mode = 'idle';
+  /** The finger holding the current press. */
+  private pressId = -1;
   private start: Point = { x: 0, y: 0 };
   private last: Point = { x: 0, y: 0 };
   private pinchDistance = 0;
@@ -46,18 +55,13 @@ export class GestureTracker {
 
   down(id: number, x: number, y: number): GestureEvent[] {
     this.pointers.set(id, { x, y });
-    if (this.pointers.size === 1 && this.mode === 'idle') {
-      this.mode = 'press';
-      this.start = { x, y };
-      this.last = { x, y };
-      return [{ type: 'press', x, y }];
+    this.downAt.set(id, { x, y });
+    if (this.pointers.size === 1 && this.mode === 'idle') return this.startPress(id, x, y);
+    if (this.pointers.size === 2 && this.mode === 'press') {
+      this.mode = 'overlap'; // undecided: the next tap, or the start of a pinch
+      return [];
     }
-    if (this.pointers.size === 2) {
-      const events: GestureEvent[] = this.mode === 'press' ? [{ type: 'cancelPress' }] : [];
-      this.mode = 'pinch';
-      this.capturePinch();
-      return events;
-    }
+    if (this.pointers.size >= 2 && this.mode !== 'pinch' && this.mode !== 'done') return this.beginPinch();
     return [];
   }
 
@@ -65,6 +69,13 @@ export class GestureTracker {
     if (!this.pointers.has(id)) return [];
     this.pointers.set(id, { x, y });
     switch (this.mode) {
+      case 'overlap': {
+        const from = this.downAt.get(id)!;
+        if (Math.hypot(x - from.x, y - from.y) > this.panThreshold) return this.beginPinch();
+        if (id !== this.pressId) return [];
+        this.last = { x, y };
+        return [{ type: 'drag', x, y }];
+      }
       case 'press': {
         if (this.canPan() && Math.hypot(x - this.start.x, y - this.start.y) > this.panThreshold) {
           this.mode = 'pan';
@@ -100,6 +111,17 @@ export class GestureTracker {
 
   up(id: number, x: number, y: number): GestureEvent[] {
     if (!this.pointers.delete(id)) return [];
+    this.downAt.delete(id);
+    if (this.mode === 'overlap') {
+      const [nextId, next] = [...this.pointers.entries()][0];
+      if (id === this.pressId) {
+        // The first tap ends normally; the finger still down is the next tap.
+        return [{ type: 'release', x, y }, ...this.startPress(nextId, next.x, next.y)];
+      }
+      // The second finger lifted first without moving: keep the original press.
+      this.mode = 'press';
+      return [];
+    }
     const events: GestureEvent[] = [];
     if (this.mode === 'press') events.push({ type: 'release', x, y });
     if (this.pointers.size === 0) this.mode = 'idle';
@@ -110,9 +132,26 @@ export class GestureTracker {
 
   /** Drops everything (pointer left the game, level changed, app backgrounded). */
   cancel(): GestureEvent[] {
-    const events: GestureEvent[] = this.mode === 'press' ? [{ type: 'cancelPress' }] : [];
+    const events: GestureEvent[] = this.mode === 'press' || this.mode === 'overlap' ? [{ type: 'cancelPress' }] : [];
     this.pointers.clear();
+    this.downAt.clear();
     this.mode = 'idle';
+    return events;
+  }
+
+  private startPress(id: number, x: number, y: number): GestureEvent[] {
+    this.mode = 'press';
+    this.pressId = id;
+    this.start = { x, y };
+    this.last = { x, y };
+    return [{ type: 'press', x, y }];
+  }
+
+  /** Two (or more) fingers: a pinch. Any press is cancelled, so it never moves an arrow. */
+  private beginPinch(): GestureEvent[] {
+    const events: GestureEvent[] = this.mode === 'press' || this.mode === 'overlap' ? [{ type: 'cancelPress' }] : [];
+    this.mode = 'pinch';
+    this.capturePinch();
     return events;
   }
 

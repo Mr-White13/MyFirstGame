@@ -1,15 +1,12 @@
-import { PADDING_IN_CELLS } from '../render/layout';
+import { fitBoardSlot } from '../render/boardFit';
 import { LANDSCAPE_QUERY } from './dom';
 
-/** Boards never grow beyond this on large screens (CSS px); they'd just look stretched. */
-const MAX_BOARD = 620;
-
 /**
- * Sizes the board slot so the HUD and board form one compact, centred group.
+ * Sizes the board slot in the space the HUD leaves.
  *
- * In portrait the board takes the full content width unless that would push
- * the group past the screen height; in landscape it takes the height left of
- * the HUD column. The board keeps its true aspect (rows × cols plus padding),
+ * In portrait the HUD sits at the top and the board gets all the height
+ * below it: tall grids grow to fill it, square ones take the full width. In
+ * landscape it takes the height left of the HUD column. The board keeps its true aspect (rows × cols plus padding),
  * so 7×7, 8×8 and 9×9 all fit without stretching. The slot's size is also
  * published as `--board-width` so the HUD can line up with the board's edges.
  */
@@ -49,9 +46,7 @@ export class GameLayout {
     const availableWidth = sideways ? innerWidth - this.hud.offsetWidth - px(style.columnGap) : innerWidth;
     const availableHeight = sideways ? innerHeight : innerHeight - this.hud.offsetHeight - px(style.rowGap);
 
-    const aspect = (this.cols + 2 * PADDING_IN_CELLS) / (this.rows + 2 * PADDING_IN_CELLS);
-    const width = Math.floor(Math.max(120, Math.min(availableWidth, availableHeight * aspect, MAX_BOARD)));
-    const height = Math.floor(width / aspect);
+    const { width, height } = fitBoardSlot(availableWidth, availableHeight, this.rows, this.cols);
     if (width === this.width && height === this.height) return;
 
     this.width = width;

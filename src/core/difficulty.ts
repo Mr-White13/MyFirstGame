@@ -34,6 +34,10 @@ export interface ExactMetrics {
   readonly arrows: number;
   /** Share of grid cells covered by arrows (0..1). */
   readonly density: number;
+  /** Average arrow length in cells. */
+  readonly meanLength: number;
+  /** Side of the largest square of empty cells: a measure of unused board area (0 = full). */
+  readonly largestEmptySquare: number;
   /** Arrows that can escape on the very first move. */
   readonly initialFree: number;
   /** Share of arrows blocked at the start (0..1). */
@@ -204,7 +208,7 @@ function simulateStrategy(level: LevelData, strategy: Strategy, seed: number): S
   let chainClears = 0;
   for (let run = 0; run < LIVES_SIMULATIONS; run++) {
     // Unlimited lives so every mistake is counted; a run "wins" if it needed fewer than 3.
-    const state = new GameState(level, { validate: false, startingLives: Number.MAX_SAFE_INTEGER });
+    const state = new GameState(level, { validate: false, startingLives: Number.MAX_SAFE_INTEGER, clock: () => 0 }); // a quick player: every streak counts
     while (state.isPlaying) state.tryMove(strategy(state, level, random));
     const snapshot = state.snapshot();
     mistakes += snapshot.mistakes;
@@ -287,6 +291,8 @@ function exactMetrics(level: LevelData): ExactMetrics {
     cols: level.cols,
     arrows: level.arrows.length,
     density: occupied / (level.rows * level.cols),
+    meanLength: level.arrows.length === 0 ? 0 : occupied / level.arrows.length,
+    largestEmptySquare: largestEmptySquare(level),
     initialFree,
     blockedShare: level.arrows.length === 0 ? 0 : 1 - initialFree / level.arrows.length,
     blockingRelations,
@@ -297,6 +303,23 @@ function exactMetrics(level: LevelData): ExactMetrics {
     turns: level.arrows.reduce((sum, a) => sum + countTurns(a), 0),
     ambiguousJoins: countAmbiguousJoins(level),
   };
+}
+
+/** Side of the largest all-empty square on the board (classic dynamic programming over cells). */
+export function largestEmptySquare(level: LevelData): number {
+  const filled = new Set(level.arrows.flatMap((a) => a.cells.map(cellKey)));
+  let best = 0;
+  let prev: number[] = new Array(level.cols).fill(0);
+  for (let r = 0; r < level.rows; r++) {
+    const row: number[] = new Array(level.cols).fill(0);
+    for (let c = 0; c < level.cols; c++) {
+      if (filled.has(cellKey({ row: r, col: c }))) continue;
+      row[c] = r === 0 || c === 0 ? 1 : 1 + Math.min(prev[c], row[c - 1], prev[c - 1]);
+      best = Math.max(best, row[c]);
+    }
+    prev = row;
+  }
+  return best;
 }
 
 export function countTurns(arrow: ArrowData): number {

@@ -1,18 +1,19 @@
 import { describe, expect, it } from 'vitest';
-import { arrowStyleFor, BASE_ARROW_STYLE, thinness } from './arrowStyle';
+import { arrowStyleFor, BASE_ARROW_STYLE, MAX_BODY_CSS, thinness } from './arrowStyle';
 import { GestureTracker, type GestureEvent } from './gestures';
 import { chooseArrow, hitOptions } from './hitTest';
-import { distanceToPolyline } from './polyline';
+import { fitBoardSlot, MAX_BOARD_WIDTH } from './boardFit';
+import { distanceToPolyline, MeasuredPolyline, slicePolyline } from './polyline';
 import { BoardViewport, maxZoomFor } from './viewport';
 
 describe('adaptive arrow thickness', () => {
   it('keeps the original neon look up to 9×9', () => {
-    for (const n of [7, 8, 9]) expect(arrowStyleFor(n, n, 80, 2)).toEqual({ ...BASE_ARROW_STYLE, halo: BASE_ARROW_STYLE.halo });
+    for (const n of [7, 8, 9]) expect(arrowStyleFor(n, n, 60, 2)).toEqual({ ...BASE_ARROW_STYLE, halo: BASE_ARROW_STYLE.halo });
     expect(thinness(9, 9)).toBe(0);
   });
 
   it('gets thinner, with less glow and more compact heads, as boards grow', () => {
-    const at = (n: number) => arrowStyleFor(n, n, 60, 1);
+    const at = (n: number) => arrowStyleFor(n, n, 30, 1); // small enough cells that the thickness cap never applies
     expect(at(12).bodyWidth).toBeLessThan(at(9).bodyWidth);
     expect(at(16).bodyWidth).toBeLessThan(at(12).bodyWidth);
     expect(at(12).headHalfWidth).toBeLessThan(at(9).headHalfWidth);
@@ -41,6 +42,28 @@ describe('adaptive arrow thickness', () => {
   it('drops the core line when it would be thinner than a pixel', () => {
     expect(arrowStyleFor(16, 16, 14, 1).coreWidth).toBe(0);
     expect(arrowStyleFor(7, 7, 80, 1).coreWidth).toBeGreaterThan(0);
+  });
+});
+
+describe('smooth arrows on large cells (Levels 1–3, tablets)', () => {
+  it('caps the body at MAX_BODY_CSS on screen, whatever the cell size', () => {
+    for (const [cell, dpr] of [[96, 2], [200, 2.75], [81, 1]] as const) {
+      const s = arrowStyleFor(7, 7, cell, dpr);
+      expect((s.bodyWidth * cell) / dpr).toBeCloseTo(MAX_BODY_CSS);
+    }
+  });
+
+  it('shrinks halo and core with the body, and the head less, so it stays an arrow', () => {
+    const base = arrowStyleFor(7, 7, 60, 2); // 30 CSS px cells: uncapped
+    const big = arrowStyleFor(7, 7, 200, 2); // 100 CSS px cells
+    const k = big.bodyWidth / base.bodyWidth;
+    expect(k).toBeLessThan(1);
+    expect(big.halo[0][0]).toBeCloseTo(base.halo[0][0] * k);
+    expect(big.coreWidth).toBeCloseTo(base.coreWidth * k);
+    expect(big.headHalfWidth / base.headHalfWidth).toBeGreaterThan(k);
+    expect(big.headHalfWidth).toBeGreaterThan(big.bodyWidth); // the head is always wider than the shaft
+    expect(big.tipOffset).toBe(base.tipOffset); // positions (and so hit testing and exits) are unchanged
+    expect(big.cornerRadius).toBe(base.cornerRadius);
   });
 });
 
@@ -183,21 +206,57 @@ describe('gestures', () => {
     expect(types(g.move(1, 300, 100))).toEqual(['drag']);
   });
 
-  it('a second finger cancels the press and starts a pinch', () => {
+  it('a second finger that moves turns the touch into a pinch and cancels the press', () => {
     const g = new GestureTracker(10, () => false);
     g.down(1, 100, 100);
-    expect(types(g.down(2, 200, 100))).toEqual(['cancelPress']);
-    const events = g.move(2, 300, 100);
-    const pinch = events.find((e) => e.type === 'pinch');
-    expect(pinch).toMatchObject({ type: 'pinch', scale: 2 });
+    expect(types(g.down(2, 200, 100))).toEqual([]); // undecided: maybe just the next tap
+    expect(types(g.move(2, 204, 100))).toEqual([]); // still within the threshold
+    expect(types(g.move(2, 250, 100))).toEqual(['cancelPress']);
+    const events = g.move(2, 400, 100);
+    expect(events.find((e) => e.type === 'pinch')).toMatchObject({ type: 'pinch', scale: 2 });
     expect(types(events)).toContain('pan'); // the midpoint moved too
+  });
+
+  it('rapid taps with two thumbs: the next finger lands before the previous lifts, and both taps count', () => {
+    const g = new GestureTracker(10, () => false);
+    expect(types(g.down(1, 100, 100))).toEqual(['press']);
+    expect(g.down(2, 200, 300)).toEqual([]);
+    expect(g.up(1, 101, 100)).toEqual([
+      { type: 'release', x: 101, y: 100 },
+      { type: 'press', x: 200, y: 300 },
+    ]);
+    // A third thumb lands while the second is still down: same again.
+    expect(g.down(3, 50, 60)).toEqual([]);
+    expect(g.up(2, 200, 300)).toEqual([
+      { type: 'release', x: 200, y: 300 },
+      { type: 'press', x: 50, y: 60 },
+    ]);
+    expect(g.up(3, 50, 60)).toEqual([{ type: 'release', x: 50, y: 60 }]);
+    expect(g.state).toBe('idle');
+  });
+
+  it('a brief second touch that lifts first leaves the original press alone', () => {
+    const g = new GestureTracker(10, () => false);
+    g.down(1, 100, 100);
+    g.down(2, 200, 300);
+    expect(g.up(2, 200, 300)).toEqual([]);
+    expect(g.up(1, 100, 100)).toEqual([{ type: 'release', x: 100, y: 100 }]);
+  });
+
+  it('three fingers are always a pinch', () => {
+    const g = new GestureTracker(10, () => false);
+    g.down(1, 100, 100);
+    g.down(2, 200, 100);
+    expect(types(g.down(3, 300, 100))).toEqual(['cancelPress']);
+    expect(g.state).toBe('pinch');
   });
 
   it('after a pinch, lifting fingers never releases an arrow', () => {
     const g = new GestureTracker(10, () => false);
     g.down(1, 100, 100);
     g.down(2, 200, 100);
-    expect(g.up(2, 200, 100)).toEqual([]);
+    g.move(2, 260, 100); // it is a pinch
+    expect(g.up(2, 260, 100)).toEqual([]);
     expect(types(g.move(1, 101, 100))).toEqual([]); // the remaining finger does nothing
     expect(g.up(1, 101, 100)).toEqual([]);
     expect(types(g.down(1, 50, 50))).toEqual(['press']); // a new tap works again
@@ -209,5 +268,70 @@ describe('gestures', () => {
     expect(types(g.cancel())).toEqual(['cancelPress']);
     expect(g.up(1, 100, 100)).toEqual([]);
     expect(g.state).toBe('idle');
+  });
+});
+
+describe('tall portrait boards', () => {
+  // A 375 × 812 phone: about 359 × 690 CSS px left for the board under the compact HUD.
+  it('fill the height for tall grids and the width for square ones', () => {
+    const tall = fitBoardSlot(359, 690, 17, 12);
+    expect(tall.height).toBeGreaterThan(tall.width);
+    expect(tall.width).toBe(359); // limited by the width: the whole width is used
+    expect(tall.height).toBeLessThanOrEqual(690);
+    const square = fitBoardSlot(359, 690, 7, 7);
+    expect(square.width).toBe(square.height);
+  });
+
+  it('never overflow a short screen: the height limits the width instead', () => {
+    const slot = fitBoardSlot(359, 420, 17, 12);
+    expect(slot.height).toBeLessThanOrEqual(420);
+    expect(slot.width).toBeLessThan(359);
+  });
+
+  it('keep cells square and large enough to tap on common phones', () => {
+    for (const [w, h] of [[359, 690], [344, 640], [396, 760]]) {
+      const slot = fitBoardSlot(w, h, 17, 12);
+      const cellW = slot.width / 12.6;
+      const cellH = slot.height / 17.6;
+      expect(Math.abs(cellW - cellH)).toBeLessThan(0.2);
+      expect(cellW).toBeGreaterThanOrEqual(26);
+    }
+    expect(fitBoardSlot(2000, 2000, 7, 7).width).toBe(MAX_BOARD_WIDTH);
+  });
+});
+
+describe('animation path slicing (allocation-free)', () => {
+  const path = [
+    { x: 0, y: 0 },
+    { x: 30, y: 0 },
+    { x: 30, y: 40 },
+    { x: 30, y: 40 }, // zero-length segment
+    { x: 100, y: 40 },
+  ];
+  const measured = new MeasuredPolyline(path);
+
+  it('gives exactly the same points as slicePolyline for any window', () => {
+    const buf: { x: number; y: number }[] = [];
+    for (const [from, to] of [[0, 140], [5, 25], [10, 60], [29, 31], [45, 45], [60, 200], [-5, 20]]) {
+      const n = measured.sliceInto(from, to, buf);
+      const expected = slicePolyline(path, Math.max(0, from), to);
+      expect(buf.slice(0, n).map((p) => [+p.x.toFixed(6), +p.y.toFixed(6)])).toEqual(expected.map((p) => [+p.x.toFixed(6), +p.y.toFixed(6)]));
+    }
+    expect(measured.length).toBe(140);
+  });
+
+  it('reuses its buffer: no new point objects once it is large enough', () => {
+    const buf: { x: number; y: number }[] = [];
+    measured.sliceInto(0, 140, buf);
+    const objects = [...buf];
+    measured.sliceInto(10, 120, buf);
+    expect(buf.slice(0, objects.length).every((p, i) => p === objects[i])).toBe(true);
+  });
+
+  it('finds the point at a distance, clamped to the ends', () => {
+    const out = { x: 0, y: 0 };
+    expect(measured.pointAt(50, out)).toEqual({ x: 30, y: 20 });
+    expect(measured.pointAt(-10, out)).toEqual({ x: 0, y: 0 });
+    expect(measured.pointAt(999, out)).toEqual({ x: 100, y: 40 });
   });
 });

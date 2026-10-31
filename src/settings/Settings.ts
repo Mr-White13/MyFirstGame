@@ -30,6 +30,8 @@ export interface GameSettings {
   readonly haptics: boolean;
   readonly showTimer: boolean;
   readonly confirmRestart: boolean;
+  /** After the startup splash, show one insight from the player's own records before Home. */
+  readonly showRecap: boolean;
 }
 
 export const THEME_CHOICES: readonly ThemeChoice[] = ['dark', 'light', 'colorful', 'system'];
@@ -48,6 +50,7 @@ export const DEFAULT_SETTINGS: GameSettings = Object.freeze({
   haptics: true,
   showTimer: true,
   confirmRestart: true,
+  showRecap: true,
 });
 
 export function createSettings(): GameSettings {
@@ -73,7 +76,7 @@ export function withSettings(current: GameSettings, patch: Partial<Record<keyof 
   if (isOneOf(THEME_CHOICES, p.theme)) next.theme = p.theme;
   if (isOneOf(MOTION_CHOICES, p.motion)) next.motion = p.motion;
   if (isOneOf(EFFECTS_LEVELS, p.effects)) next.effects = p.effects;
-  for (const key of ['muted', 'music', 'sfx', 'haptics', 'showTimer', 'confirmRestart'] as const) {
+  for (const key of ['muted', 'music', 'sfx', 'haptics', 'showTimer', 'confirmRestart', 'showRecap'] as const) {
     if (typeof p[key] === 'boolean') next[key] = p[key];
   }
   for (const key of ['musicVolume', 'sfxVolume'] as const) {

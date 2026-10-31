@@ -20,6 +20,9 @@ export function createGame(parent: HTMLElement, scene: Phaser.Scene): Phaser.Gam
     transparent: true,
     banner: false,
     antialias: true,
+    // Smooth (multisampled) edges for the vector arrows; never snap them to whole pixels.
+    antialiasGL: true,
+    roundPixels: false,
     disableContextMenu: true, // no long-press / right-click menu on the board
     scene,
     scale: {

@@ -6,10 +6,11 @@ import { chooseArrow, hitOptions } from '../render/hitTest';
 import { BoardViewport, maxZoomFor } from '../render/viewport';
 import { BoardRenderer } from '../render/BoardRenderer';
 import { FxLayer } from '../render/FxLayer';
+import { StaticArrowLayer } from '../render/StaticArrowLayer';
 import { cellAtPoint, computeBoardLayout, sameLayout, type BoardLayout, type Rect } from '../render/layout';
 import type { LevelData, MoveResult } from '../core/types';
 import type { FeedbackEvent } from '../app/Feedback';
-import { MoveSequencer, type SequenceStep } from './MoveSequencer';
+import { MoveSequencer, StepOwners, type SequenceStep } from './MoveSequencer';
 
 export interface GameSceneOptions {
   /**
@@ -56,15 +57,21 @@ const INTRO_SPREAD_MS = 280;
  *
  * Interaction model:
  * - Pointer down highlights an arrow; pointer up on the same arrow releases it.
- * - GameState resolves the whole move at once (including any chain reaction);
- *   the scene then plays its animations as one sequence (see MoveSequencer).
- *   While a sequence plays, taps are ignored before they reach GameState, so
- *   an ignored tap can never cost a life.
+ * - Every tap goes to GameState the moment it is released, in tap order, and
+ *   is resolved at once (including any chain reaction and streak bonus).
+ *   Its animations then play as one sequence (see MoveSequencer), alongside
+ *   any still playing: rapid taps are never dropped because an earlier arrow
+ *   is still leaving.
+ * - Only arrows still on the board (by the rules) can be picked, so a tap
+ *   can't land on an arrow that has already left but is still animating or
+ *   waiting for its chain step: no duplicate moves, no stale taps.
+ * - Each arrow plays one step at a time: a new step on an arrow first settles
+ *   the one it interrupts, so every sequence always finishes.
  * - Each exit step hands over when the leaving arrow's tail crosses the grid
- *   edge, so the next chain release (or the next tap) follows promptly.
- * - Win and Game Over are triggered only after the sequence has finished.
- * - Restart, level change and resize cancel the sequence; the board is then
- *   re-synced from GameState, which is always the source of truth.
+ *   edge, so the next chain release follows promptly.
+ * - Win and Game Over are triggered only once every sequence has finished.
+ * - Restart, level change and resize cancel all sequences (and any press);
+ *   the board is then re-synced from GameState, which is always the source of truth.
  *
  * Zoom (large boards only): pinch with two fingers or use the mouse wheel;
  * drag one finger to pan while zoomed. Two-finger gestures and pans never
@@ -75,11 +82,15 @@ export class GameScene extends Phaser.Scene {
   private board!: BoardRenderer;
   private fx!: FxLayer;
   private arrowLayer!: Phaser.GameObjects.Container;
+  /** Resting arrows drawn from one cached texture (see StaticArrowLayer). */
+  private staticLayer!: StaticArrowLayer;
   private layout!: BoardLayout;
   private readonly views = new Map<string, ArrowView>();
   /** Arrows already removed from the logic but still animating out. */
   private readonly leaving = new Set<ArrowView>();
   private readonly sequencer = new MoveSequencer();
+  /** One step per arrow at a time: a newer step on the same arrow settles the one it interrupts. */
+  private readonly owners = new StepOwners<ArrowView>();
   private pressed?: ArrowView;
   /** Set once the win or Game Over sequence has started; no more input after that. */
   private ended = false;
@@ -99,6 +110,8 @@ export class GameScene extends Phaser.Scene {
     this.board = new BoardRenderer(this);
     this.board.setLayout(this.layout);
     this.arrowLayer = this.add.container(0, 0).setDepth(1);
+    this.staticLayer = new StaticArrowLayer(this, this.arrowLayer);
+    this.staticLayer.setLayout(this.layout);
     this.fx = new FxLayer(this, 3);
     this.board.playEntrance();
     this.buildArrows();
@@ -121,8 +134,9 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  update(_time: number, delta: number): void {
+  update(time: number, delta: number): void {
     this.fx.update(delta);
+    this.staticLayer.update(this.views, time);
   }
 
   /**
@@ -175,11 +189,13 @@ export class GameScene extends Phaser.Scene {
     const sameBoard = sameLayout(this.layout, next);
     this.layout = next;
     this.board.setLayout(this.layout);
+    this.staticLayer.setLayout(this.layout);
     if (!keepView || !sameBoard) this.configureView();
     this.endTimer?.remove();
     this.endTimer = undefined;
     this.ended = false;
     this.sequencer.cancel();
+    this.owners.clear();
     this.pressed = undefined;
     this.clearViews();
     this.fx.clear();
@@ -192,7 +208,7 @@ export class GameScene extends Phaser.Scene {
     const arrows = this.state.getArrows();
     const stagger = Math.min(30, INTRO_SPREAD_MS / Math.max(1, arrows.length));
     arrows.forEach((data, index) => {
-      const view = new ArrowView(this, data, this.layout, this.arrowLayer, this.fx, index);
+      const view = new ArrowView(this, data, this.layout, this.arrowLayer, this.fx, index, this.staticLayer);
       view.setActivated(this.state.isActivated(data.id));
       this.views.set(data.id, view);
       view.playIntro(60 + index * stagger);
@@ -200,6 +216,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private clearViews(): void {
+    this.staticLayer.clear();
     this.views.forEach((v) => v.destroy());
     this.views.clear();
     this.leaving.forEach((v) => v.destroy());
@@ -259,8 +276,9 @@ export class GameScene extends Phaser.Scene {
     const view = this.pressed;
     if (!view) return;
     this.releasePress();
-    // Locked, finished or stale taps never reach GameState, so they can't cost a life.
-    if (this.sequencer.busy || this.ended || !this.state.isPlaying || !this.views.has(view.data.id)) return;
+    // Finished or stale taps never reach GameState, so they can't cost a life. Animations
+    // still playing don't block: the rules already know the board as it is now.
+    if (this.ended || !this.state.isPlaying || !this.views.has(view.data.id) || !this.state.has(view.data.id)) return;
     const w = this.viewport.screenToWorld({ x, y });
     if (view.distanceTo(w.x, w.y) > this.cancelDistance()) return;
     this.attemptMove(view);
@@ -292,7 +310,8 @@ export class GameScene extends Phaser.Scene {
   private pickArrow(x: number, y: number): ArrowView | undefined {
     const cell = cellAtPoint(this.layout, x, y);
     const owner = cell ? this.state.arrowIdAt(cell.row, cell.col) : undefined;
-    const hits = [...this.views.values()].map((v) => ({ id: v.data.id, distance: v.distanceTo(x, y) }));
+    // Arrows the rules have already removed (a chain step still waiting its turn) can't be picked.
+    const hits = [...this.views.values()].filter((v) => this.state.has(v.data.id)).map((v) => ({ id: v.data.id, distance: v.distanceTo(x, y) }));
     const id = chooseArrow(owner, hits, this.hitOptions());
     return id === undefined ? undefined : this.views.get(id);
   }
@@ -306,14 +325,28 @@ export class GameScene extends Phaser.Scene {
     this.sequencer.run(steps, () => this.afterSequence());
   }
 
+  /** A step that animates `view` (see StepOwners: an interrupted earlier step is settled first). */
+  private viewStep(view: ArrowView, run: (done: () => void) => void): SequenceStep {
+    return this.owners.step(view, run);
+  }
+
   /** Turns a resolved move into the animation steps that show it. */
   private stepsFor(view: ArrowView, result: MoveResult): SequenceStep[] {
     switch (result.kind) {
       case 'cleared': {
-        const steps: SequenceStep[] = [this.exitStep(view, false, { type: 'release' })];
+        const steps: SequenceStep[] = [this.exitStep(view, {}, { type: 'release' })];
         result.chain.forEach((removal, index) => {
           const released = this.views.get(removal.arrowId);
-          if (released) steps.push(this.exitStep(released, true, { type: 'chain', index }));
+          if (released) steps.push(this.exitStep(released, { auto: true }, { type: 'chain', index }));
+        });
+        // Then the cascade (one arrow after another), then red arrows the cascade freed.
+        result.cascade.forEach((removal, index) => {
+          const swept = this.views.get(removal.arrowId);
+          if (swept) steps.push(this.exitStep(swept, { cascade: true }, { type: 'cascade', index }));
+        });
+        result.cascadeChain.forEach((removal, index) => {
+          const released = this.views.get(removal.arrowId);
+          if (released) steps.push(this.exitStep(released, { auto: true }, { type: 'chain', index: result.chain.length + index }));
         });
         return steps;
       }
@@ -322,12 +355,10 @@ export class GameScene extends Phaser.Scene {
         if (!result.lifeLost) {
           // Already red and still blocked: a gentle nudge, nothing else.
           return [
-            {
-              run: (done) => {
-                this.options.onFeedback?.({ type: 'blocked', lifeLost: false });
-                view.playNudge(done);
-              },
-            },
+            this.viewStep(view, (done) => {
+              this.options.onFeedback?.({ type: 'blocked', lifeLost: false });
+              view.playNudge(done);
+            }),
           ];
         }
         const blocker = this.views.get(result.blockerId);
@@ -336,20 +367,19 @@ export class GameScene extends Phaser.Scene {
         const cell = this.layout.cellSize;
         const travel = result.freePath.length * cell + (0.5 - this.layout.style.tipOffset) * cell;
         return [
-          {
-            run: (done) =>
-              view.playBlocked(
-                travel,
-                {
-                  onImpact: () => {
-                    blocker?.playHit(view.data.direction);
-                    this.options.onFeedback?.({ type: 'blocked', lifeLost: true });
-                  },
-                  onComplete: done,
+          this.viewStep(view, (done) =>
+            view.playBlocked(
+              travel,
+              {
+                onImpact: () => {
+                  blocker?.playHit(view.data.direction);
+                  this.options.onFeedback?.({ type: 'blocked', lifeLost: true });
                 },
-                { activate: true },
-              ),
-          },
+                onComplete: done,
+              },
+              { activate: true },
+            ),
+          ),
         ];
       }
 
@@ -359,21 +389,19 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** An arrow leaving the board; the step hands over once its tail is off the grid. */
-  private exitStep(view: ArrowView, auto: boolean, feedback: FeedbackEvent): SequenceStep {
-    return {
-      run: (done) => {
-        this.options.onFeedback?.(feedback);
-        if (this.pressed === view) this.pressed = undefined; // it may be highlighted while waiting for its turn
-        this.views.delete(view.data.id);
-        this.leaving.add(view);
-        view.playExit({ onLeftBoard: done, onComplete: () => this.leaving.delete(view) }, { auto });
-      },
-    };
+  private exitStep(view: ArrowView, kind: { auto?: boolean; cascade?: boolean }, feedback: FeedbackEvent): SequenceStep {
+    return this.viewStep(view, (done) => {
+      this.options.onFeedback?.(feedback);
+      if (this.pressed === view) this.pressed = undefined; // it may be highlighted while waiting for its turn
+      this.views.delete(view.data.id);
+      this.leaving.add(view);
+      view.playExit({ onLeftBoard: done, onComplete: () => this.leaving.delete(view) }, kind);
+    });
   }
 
-  /** After a sequence: start the win or Game Over sequence if the move ended the level. */
+  /** After a sequence: once nothing is playing any more, start the win or Game Over sequence if the level ended. */
   private afterSequence(): void {
-    if (this.ended) return;
+    if (this.ended || this.sequencer.busy) return;
     if (this.state.isWon) this.beginWin();
     else if (this.state.isFailed) this.beginFailure();
   }
@@ -427,6 +455,7 @@ export class GameScene extends Phaser.Scene {
   private applyLayout(layout: BoardLayout): void {
     this.layout = layout;
     this.board.setLayout(this.layout);
+    this.staticLayer.setLayout(this.layout);
     this.configureView(); // a new size or orientation: fit the board again
     this.fx.clear();
     // Pixel paths of arrows mid-exit are stale now; they are already gone
@@ -435,6 +464,7 @@ export class GameScene extends Phaser.Scene {
     this.leaving.clear();
     this.views.forEach((v) => v.setLayout(this.layout));
     this.sequencer.cancel();
+    this.owners.clear();
     this.releasePress();
     this.syncViewsWithState(); // a chain may have been mid-way: catch the board up with the rules
   }
@@ -465,6 +495,7 @@ export class GameScene extends Phaser.Scene {
     cam.setOrigin(0, 0);
     cam.setZoom(this.viewport.zoom);
     cam.setScroll(this.viewport.scroll.x, this.viewport.scroll.y);
+    this.staticLayer?.setZoom(this.viewport.zoom);
     this.options.onViewChange?.(this.viewport.zoomed, this.viewport.zoomable);
   }
 

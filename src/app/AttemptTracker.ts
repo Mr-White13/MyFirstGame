@@ -16,6 +16,8 @@ export interface AttemptSummary {
   readonly stars: number;
   readonly directClears: number;
   readonly autoClears: number;
+  /** Normal arrows cleared by cascades. */
+  readonly cascadeClears: number;
   /** Most arrows one chain reaction released in this attempt. */
   readonly longestChain: number;
   readonly mistakes: number;
@@ -112,6 +114,7 @@ export class AttemptTracker {
       stars: snapshot.stars,
       directClears: snapshot.directClears,
       autoClears: snapshot.autoClears,
+      cascadeClears: snapshot.cascadeClears,
       longestChain: snapshot.longestChain,
       mistakes: snapshot.mistakes,
     };

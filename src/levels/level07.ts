@@ -1,22 +1,20 @@
 import { levelFromMap } from './levelMap';
 
-/**
- * Level 7 — fewer arrows than level 6 but harder: nine L-hooks and an
- * eleven-step chain where almost every step leaves a single arrow that can
- * escape. Difficulty here comes from structure, not size.
- * Drafted with the level generator (seed 700), reviewed for readability.
- */
+/** Level 7 — generated from tools/level-plan.json (seed 750, attempt 2), score 50 (Medium–hard). */
 export default levelFromMap(
   7,
   [
-    '.  a  a> d  .  .  .  .',
-    '.  .  .  d  .  .  .  f',
-    'b^ .  .  d  e  e  .  f',
-    'b  c^ g  dv ev f< f  f',
-    'b  c  g  g> h  .  .  .',
-    'b  .  k  h< h  i^ .  .',
-    'b  j^ kv .  .  i  i  i',
-    'j  j  .  .  l< l  l  .',
+    'g  g  g  g  g  a< a  a',
+    'g  b^ f  f  f  f  f  a',
+    'g  b  b  c  c  c> f  a',
+    'g  d^ b  e< e  e  fv a',
+    'g  d  b  b  b  e  a  a',
+    'gv d  h< h  h  e  m  m',
+    'i< i  i  j^ h  m  m  q',
+    'n  n  k  j  h  m  p  q',
+    'n  k< k  j  j  m  p  q',
+    'n  l  l  l  l> mv p  q',
+    'nv l  o  o  o  o> pv qv',
   ],
-  { revision: 2 },
+  { revision: 5 },
 );

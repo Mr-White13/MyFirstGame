@@ -1,20 +1,21 @@
 import { levelFromMap } from './levelMap';
 
 /**
- * Level 2 — straight arrows only. The vertical arrow c holds up two others
- * (e and f) and is itself held by b: the first small chain.
- * Drafted with the level generator (seed 204), reviewed for readability.
+ * Level 2 — straight arrows and the first real dependency: a waits for b,
+ * which waits for d, and e waits for c. Three moves are free, but only one of
+ * them starts the long chain.
+ * Drafted with the level generator (seed 2301), reviewed for readability.
  */
 export default levelFromMap(
   2,
   [
-    '.  .  .  .  .  .  .',
-    '.  .  .  a< a  a  .',
-    '.  .  b< b  b  .  .',
-    '.  .  .  c^ .  .  .',
-    'd< d  .  c  .  .  .',
-    '.  .  .  c  e< e  .',
-    'f  f  f> c  .  .  .',
+    '.  .  .  .  b  .  .',
+    'a  a  a> .  b  .  .',
+    '.  .  .  .  bv .  c^',
+    '.  .  .  .  .  .  c',
+    '.  .  d< d  d  d  e^',
+    '.  f  .  .  .  .  e',
+    '.  fv .  .  .  .  e',
   ],
-  { revision: 2 },
+  { revision: 3 },
 );

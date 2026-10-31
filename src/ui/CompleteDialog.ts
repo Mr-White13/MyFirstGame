@@ -9,6 +9,7 @@ export interface CompletionSummary {
   readonly stars: number;
   readonly directClears: number;
   readonly autoClears: number;
+  readonly cascadeClears: number;
   readonly mistakes: number;
   /** Active play time of this run. */
   readonly timeMs: number;
@@ -110,8 +111,12 @@ export class CompleteDialog {
 
     this.time.textContent = formatPrecise(summary.timeMs);
     this.bestTime.textContent = formatPrecise(summary.bestTimeMs);
-    this.arrows.textContent = String(summary.directClears + summary.autoClears);
-    this.chain.textContent = summary.autoClears > 0 ? ` · ${summary.autoClears} by chain` : '';
+    this.arrows.textContent = String(summary.directClears + summary.autoClears + summary.cascadeClears);
+    const extras = [
+      summary.autoClears > 0 ? `${summary.autoClears} by chain` : '',
+      summary.cascadeClears > 0 ? `${summary.cascadeClears} by cascade` : '',
+    ].filter(Boolean);
+    this.chain.textContent = extras.length > 0 ? ` · ${extras.join(' · ')}` : '';
     this.mistakes.textContent = String(summary.mistakes);
 
     // The time and the rating are separate records: either can improve on its own.

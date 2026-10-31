@@ -29,6 +29,14 @@ const MAX_PARTICLES = 64;
 const MAX_RINGS = 8;
 /** Velocity kept per second (exponential drag), so sparks ease out instead of flying away. */
 const DRAG_PER_SECOND = 0.04;
+/** Sparks are tiny: an octagon fan reads as round (Graphics.fillCircle would build 100 segments each frame). */
+const SPARK_STEPS = 8;
+const UNIT_COS = Array.from({ length: SPARK_STEPS + 1 }, (_, i) => Math.cos((i / SPARK_STEPS) * Math.PI * 2));
+const UNIT_SIN = Array.from({ length: SPARK_STEPS + 1 }, (_, i) => Math.sin((i / SPARK_STEPS) * Math.PI * 2));
+/** Rings: a 32-sided polyline into a reused point buffer. */
+const RING_STEPS = 32;
+const RING_COS = Array.from({ length: RING_STEPS + 1 }, (_, i) => Math.cos((i / RING_STEPS) * Math.PI * 2));
+const RING_SIN = Array.from({ length: RING_STEPS + 1 }, (_, i) => Math.sin((i / RING_STEPS) * Math.PI * 2));
 
 /**
  * Short-lived sparks and rings drawn on a single Graphics object.
@@ -39,6 +47,7 @@ const DRAG_PER_SECOND = 0.04;
  */
 export class FxLayer {
   private readonly graphics: Phaser.GameObjects.Graphics;
+  private readonly ringPoints = Array.from({ length: RING_STEPS + 1 }, () => ({ x: 0, y: 0 }));
   private readonly particles: Particle[] = Array.from({ length: MAX_PARTICLES }, () => ({
     active: false, x: 0, y: 0, vx: 0, vy: 0, age: 0, life: 1, size: 1, color: 0,
   }));
@@ -117,7 +126,10 @@ export class FxLayer {
       p.y += p.vy * dt;
       const t = p.age / p.life;
       g.fillStyle(p.color, 1 - t * t);
-      g.fillCircle(p.x, p.y, p.size * (1 - 0.5 * t));
+      const size = p.size * (1 - 0.5 * t);
+      for (let k = 0; k < SPARK_STEPS; k++) {
+        g.fillTriangle(p.x, p.y, p.x + UNIT_COS[k] * size, p.y + UNIT_SIN[k] * size, p.x + UNIT_COS[k + 1] * size, p.y + UNIT_SIN[k + 1] * size);
+      }
     }
 
     for (const r of this.rings) {
@@ -131,7 +143,12 @@ export class FxLayer {
       const t = r.age / r.life;
       const eased = 1 - (1 - t) * (1 - t);
       g.lineStyle(r.width * (1 - 0.5 * t), r.color, 0.8 * (1 - t));
-      g.strokeCircle(r.x, r.y, r.from + (r.to - r.from) * eased);
+      const radius = r.from + (r.to - r.from) * eased;
+      for (let k = 0; k <= RING_STEPS; k++) {
+        this.ringPoints[k].x = r.x + RING_COS[k] * radius;
+        this.ringPoints[k].y = r.y + RING_SIN[k] * radius;
+      }
+      g.strokePoints(this.ringPoints, false, false, RING_STEPS + 1);
     }
 
     if (this.alive === 0) g.clear();

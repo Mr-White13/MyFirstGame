@@ -13,7 +13,7 @@ import type { LevelData } from '../core/types';
  */
 export function findChain(level: LevelData, target: number, maxDepth = level.arrows.length + 2): string[] | null {
   const replay = (taps: readonly string[]) => {
-    const state = new GameState(level, { validate: false });
+    const state = new GameState(level, { validate: false, clock: () => 0 });
     for (const id of taps) state.tryMove(id);
     return state;
   };

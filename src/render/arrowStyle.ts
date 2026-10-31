@@ -7,6 +7,11 @@
  * dense levels stay readable. A minimum on-screen width keeps arrows (and
  * Energy Arrow markers) visible on small cells and low-density screens.
  *
+ * Large cells (small boards on phones, any board on a tablet or desktop)
+ * would make the tubes very thick, so the body is capped at MAX_BODY_CSS on
+ * screen; halo and core shrink with it and the head a little less, so it
+ * stays clearly readable.
+ *
  * Only the drawing changes: touch targets are handled separately (see
  * hitTest.ts), and rules never depend on any of this.
  */
@@ -71,6 +76,8 @@ const MIN_BODY_CSS = 2.5;
 const MIN_HEAD_HALF_CSS = 4;
 const MIN_MARKER_CSS = 3.5;
 const MIN_CORE_CSS = 1;
+/** Thickest body on screen, in CSS pixels. */
+export const MAX_BODY_CSS = 9;
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
@@ -100,7 +107,7 @@ export function arrowStyleFor(rows: number, cols: number, cellPx: number, pxPerC
   ];
   const halo = t < 1 ? rings.filter(([, strength]) => strength > 0.01) : [[0.05, 0.12] as const];
 
-  return {
+  const style: ArrowStyle = {
     ...b,
     bodyWidth,
     halo,
@@ -110,5 +117,26 @@ export function arrowStyleFor(rows: number, cols: number, cellPx: number, pxPerC
     tipOffset: lerp(b.tipOffset, THIN.tipOffset, t),
     // The Energy marker must stay visible on thin bodies: never smaller than the body itself.
     markerSize: Math.max(bodyWidth * 0.95, atLeast(lerp(b.markerSize, THIN.markerSize, t), MIN_MARKER_CSS, 0.3)),
+  };
+  return capThickness(style, (MAX_BODY_CSS * pxPerCss) / cell);
+}
+
+/**
+ * Scales a style down so its body is at most `maxBody` (a fraction of the
+ * cell). Halo and core follow the body; the head shrinks only half as much,
+ * so it keeps a clear arrow shape. Positions (tip, corners) are unchanged.
+ */
+export function capThickness(style: ArrowStyle, maxBody: number): ArrowStyle {
+  if (style.bodyWidth <= maxBody) return style;
+  const k = maxBody / style.bodyWidth;
+  const head = (1 + k) / 2;
+  return {
+    ...style,
+    bodyWidth: maxBody,
+    halo: style.halo.map(([extra, strength]) => [extra * k, strength] as const),
+    coreWidth: style.coreWidth * k,
+    headLength: style.headLength * head,
+    headHalfWidth: style.headHalfWidth * head,
+    markerSize: Math.max(maxBody * 0.95, style.markerSize * head),
   };
 }

@@ -8,18 +8,15 @@ export type ThemeId = 'dark' | 'light' | 'colorful';
  */
 export interface CanvasPalette {
   readonly id: ThemeId;
-  /** Page colour behind the board (used to blend the frame's soft light). */
+  /** Page colour behind the board (matches --bg in style.css). */
   readonly background: number;
-  /** Board frame. */
-  readonly surface: number;
-  /** The recessed play area inside the frame, and the arrows' tail sockets. */
+  /**
+   * What the arrows are drawn on: the board is borderless, so this is the
+   * page colour too. Arrow halos blend into it and tail sockets are filled with it.
+   */
   readonly well: number;
-  /** Frame outline and light while playing, and the outline's opacity. */
-  readonly frame: number;
-  readonly frameAlpha: number;
-  /** Grid lines and cell dots, with their opacity. */
-  readonly grid: number;
-  readonly gridAlpha: number;
+  /** Cell dots marking the grid positions, with their opacity. */
+  readonly dots: number;
   readonly dotAlpha: number;
   /**
    * Resting arrow colours. One colour = every arrow alike; several = each
@@ -36,7 +33,7 @@ export interface CanvasPalette {
   readonly chain: number;
   /** Energy Arrows' gold accent (core line and marker). Never red. */
   readonly energy: number;
-  /** Strength of the halo around arrows and the frame (1 = the original neon). */
+  /** Strength of the halo around arrows (1 = the original neon). */
   readonly glow: number;
   /** How far the arrow's core line is lightened towards white (the "neon tube"). */
   readonly core: number;
@@ -46,13 +43,9 @@ export interface CanvasPalette {
 const DARK: CanvasPalette = {
   id: 'dark',
   background: 0x101522,
-  surface: 0x171f30,
-  well: 0x131a29,
-  frame: 0x27ddf5,
-  frameAlpha: 0.2,
-  grid: 0x9ba8bc,
-  gridAlpha: 0.06,
-  dotAlpha: 0.14,
+  well: 0x101522,
+  dots: 0x9ba8bc,
+  dotAlpha: 0.24,
   arrows: [0x27ddf5],
   error: 0xff526b,
   warning: 0xff9f43,
@@ -63,17 +56,13 @@ const DARK: CanvasPalette = {
   core: 0.5,
 };
 
-/** Light: daytime board with darker grid lines, deep high-contrast arrows and little glow. */
+/** Light: daytime board with darker dots, deep high-contrast arrows and little glow. */
 const LIGHT: CanvasPalette = {
   id: 'light',
   background: 0xe9eef6,
-  surface: 0xffffff,
-  well: 0xf3f6fb,
-  frame: 0x0a7f96,
-  frameAlpha: 0.45,
-  grid: 0x4a5568,
-  gridAlpha: 0.16,
-  dotAlpha: 0.3,
+  well: 0xe9eef6,
+  dots: 0x4a5568,
+  dotAlpha: 0.32,
   arrows: [0x0a7f96],
   error: 0xd42a46,
   warning: 0xc25e00,
@@ -92,13 +81,9 @@ const LIGHT: CanvasPalette = {
 const COLORFUL: CanvasPalette = {
   id: 'colorful',
   background: 0x130f26,
-  surface: 0x1d1836,
-  well: 0x17122d,
-  frame: 0xb57bff,
-  frameAlpha: 0.25,
-  grid: 0xa9a3c9,
-  gridAlpha: 0.07,
-  dotAlpha: 0.16,
+  well: 0x130f26,
+  dots: 0xa9a3c9,
+  dotAlpha: 0.26,
   // cyan, violet, orange, green, pink, blue: neighbours in this order differ in hue by a lot
   arrows: [0x27ddf5, 0xb57bff, 0xff9f43, 0x5cf28c, 0xff6fcf, 0x5b8cff],
   error: 0xff3b55,
