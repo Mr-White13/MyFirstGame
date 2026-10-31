@@ -37,6 +37,7 @@ import type { DailyDialog } from '../ui/DailyDialog';
 import type { Screens } from '../ui/Screens';
 import type { Toast } from '../ui/Toast';
 import { AttemptTracker, type AttemptSummary } from './AttemptTracker';
+import { routeBack, type BackLayer } from './backLayers';
 import { LeagueController } from './LeagueController';
 import { RecordsKeeper } from './RecordsKeeper';
 import { hasProgress, restartNeedsConfirm } from './confirmPolicy';
@@ -723,22 +724,26 @@ export class App {
    * to their own buttons, as before.
    */
   handleBack(system = true): boolean {
-    const { confirmDialog, completeDialog, gameOverDialog, avatarPicker, countryPicker, profileScreen, screens, dailyDialog, leagueResult, themePicker } = this.parts;
     if (this.navigating) return true; // a transition is running: ignore, don't exit
-    if (this.intro) this.intro.back(); // the splash ignores it; the recap takes it as Skip
-    else if (themePicker.isOpen) themePicker.close();
-    else if (confirmDialog.isOpen) confirmDialog.close(false);
-    else if (dailyDialog.isOpen) dailyDialog.close();
-    else if (leagueResult.isOpen) leagueResult.close();
-    else if (avatarPicker.isOpen) avatarPicker.close();
-    else if (countryPicker.isOpen) countryPicker.close();
-    else if (profileScreen.isEditing) {
-      if (system) profileScreen.cancelEditing();
-    } else if (completeDialog.isOpen || gameOverDialog.isOpen) {
-      if (system) void this.showLevelsOrLeague();
-    } else if (screens.active === 'game') void this.leaveLevel();
-    else if (screens.active !== null && screens.active !== 'home') void this.goBack();
-    else return false;
-    return true;
+    return routeBack(this.backLayers(), system);
+  }
+
+  /** Everything Back can answer, topmost first. A new dialog gets its own entry here. */
+  private backLayers(): BackLayer[] {
+    const { confirmDialog, completeDialog, gameOverDialog, avatarPicker, countryPicker, profileScreen, screens, dailyDialog, leagueResult, themePicker } = this.parts;
+    return [
+      // The splash ignores it; the recap takes it as Skip.
+      { active: () => this.intro !== null, back: () => this.intro!.back() },
+      { active: () => themePicker.isOpen, back: () => themePicker.close() },
+      { active: () => confirmDialog.isOpen, back: () => confirmDialog.close(false) },
+      { active: () => dailyDialog.isOpen, back: () => dailyDialog.close() },
+      { active: () => leagueResult.isOpen, back: () => leagueResult.close() },
+      { active: () => avatarPicker.isOpen, back: () => avatarPicker.close() },
+      { active: () => countryPicker.isOpen, back: () => countryPicker.close() },
+      { active: () => profileScreen.isEditing, back: (system) => { if (system) profileScreen.cancelEditing(); } },
+      { active: () => completeDialog.isOpen || gameOverDialog.isOpen, back: (system) => { if (system) void this.showLevelsOrLeague(); } },
+      { active: () => screens.active === 'game', back: () => void this.leaveLevel() },
+      { active: () => screens.active !== null && screens.active !== 'home', back: () => void this.goBack() },
+    ];
   }
 }
