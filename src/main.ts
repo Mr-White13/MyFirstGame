@@ -171,13 +171,12 @@ app = new App({
   dailyDialog,
   achievementsScreen,
 });
-app.start();
-
 // Cold launch: the Mr. White Games splash (already on screen from index.html),
 // then optionally one recap insight, then Home, which is ready underneath.
+// The intro is in place before start() settles the league, so a result waits for it.
 const recapDialog = new RecapDialog();
 const recapStorage = new RecapStorage();
-app.beginIntro(() => recapDialog.close('skip'));
+app.start(() => recapDialog.close('skip'));
 void runIntro({
   splash: new StudioSplash(document.getElementById('studio-splash'), {
     reducedMotion: appearance.current.reducedMotion,
