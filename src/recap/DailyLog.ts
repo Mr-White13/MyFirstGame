@@ -28,7 +28,7 @@ export interface DayRecord {
   readonly wins: number;
   /** Completed without a mistake. */
   readonly flawless: number;
-  /** Arrows removed: tapped, chain reactions and cascades. */
+  /** Arrows removed: tapped, chain reactions and streak bonuses. */
   readonly arrows: number;
 }
 
@@ -63,7 +63,7 @@ export function recordDayAttempt(log: DailyLog, day: DayKey, attempt: AttemptSta
     runs: r.runs + 1,
     wins: r.wins + (won ? 1 : 0),
     flawless: r.flawless + (won && attempt.mistakes === 0 ? 1 : 0),
-    arrows: r.arrows + attempt.directClears + attempt.autoClears + (attempt.cascadeClears ?? 0),
+    arrows: r.arrows + attempt.directClears + attempt.autoClears + (attempt.bonusClears ?? 0),
   }));
 }
 

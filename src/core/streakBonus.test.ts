@@ -27,7 +27,7 @@ const ids = (removals: readonly { arrowId: string }[]) => removals.map((r) => r.
 
 /** Taps free arrows (in level order) at the given times; returns each tap's bonus clears. */
 function play(state: GameState, times: readonly number[]): string[][] {
-  return times.map((at) => ids(cleared(state.tryMove(firstFreeArrow(state)!, at)).cascade));
+  return times.map((at) => ids(cleared(state.tryMove(firstFreeArrow(state)!, at)).bonus));
 }
 
 /** `n` taps, `gap` ms apart, starting at `from`. */
@@ -44,7 +44,7 @@ describe('streak bonus: frequency', () => {
     expect(bonuses.slice(0, 4)).toEqual([[], [], [], []]);
     // a–e were tapped; the first two arrows that can escape next are f and g.
     expect(bonuses[4]).toEqual(['f', 'g']);
-    expect(state.snapshot()).toMatchObject({ moves: 5, cascadeClears: 2, streak: 0, bonusCooldown: BONUS_COOLDOWN });
+    expect(state.snapshot()).toMatchObject({ moves: 5, bonusClears: 2, streak: 0, bonusCooldown: BONUS_COOLDOWN });
   });
 
   it('slow play never earns a bonus', () => {
@@ -79,7 +79,7 @@ describe('streak bonus: frequency', () => {
   it('chain and bonus clears never count towards the streak', () => {
     const state = new GameState(big);
     play(state, taps(5, 100)); // bonus: 2 automatic clears
-    expect(state.snapshot()).toMatchObject({ streak: 0, cascadeClears: 2, directClears: 5 });
+    expect(state.snapshot()).toMatchObject({ streak: 0, bonusClears: 2, directClears: 5 });
     play(state, [600]);
     expect(state.snapshot().streak).toBe(1); // only the player's own tap
   });
@@ -121,7 +121,7 @@ describe('streak bonus: eligibility and resets', () => {
     const state = new GameState(level);
     const bonuses = play(state, taps(5, 100)); // a–e: afterwards only x can escape
     expect(bonuses.flat()).toEqual([]);
-    expect(state.snapshot()).toMatchObject({ streak: 5, bonusCooldown: 0, cascadeClears: 0 });
+    expect(state.snapshot()).toMatchObject({ streak: 5, bonusCooldown: 0, bonusClears: 0 });
     // Tapping x frees m and y: now two are removable, and the streak still holds.
     expect(play(state, [600])[0]).toEqual(['m', 'y']);
     expect(state.getArrows().map((a) => a.id)).toEqual(['w']);
@@ -187,8 +187,8 @@ describe('streak bonus: records and rewards', () => {
     for (let id = firstFreeArrow(state); id && state.isPlaying; id = firstFreeArrow(state)) state.tryMove(id, (t += 100));
     const s = state.snapshot();
     expect(s.won).toBe(true);
-    expect(s.cascadeClears).toBe(2 * BONUS_CLEARS); // taps 5 and 13 earned a bonus; the cooldown was not over again before the end
-    expect(s.directClears + s.autoClears + s.cascadeClears).toBe(big.arrows.length);
+    expect(s.bonusClears).toBe(2 * BONUS_CLEARS); // taps 5 and 13 earned a bonus; the cooldown was not over again before the end
+    expect(s.directClears + s.autoClears + s.bonusClears).toBe(big.arrows.length);
   });
 
   it('awards each Energy Arrow once, also when a bonus removes it', () => {
@@ -207,7 +207,7 @@ describe('streak bonus: records and rewards', () => {
       let t = 0;
       for (let id = firstFreeArrow(state); id && state.isPlaying; id = firstFreeArrow(state)) state.tryMove(id, (t += 200));
       expect(state.isWon).toBe(true);
-      bonuses += state.snapshot().cascadeClears;
+      bonuses += state.snapshot().bonusClears;
       expect(awarded).toBe(challenge.energyArrowIds.length);
       // Collecting the same arrow again is never paid twice.
       expect(collect(league, day, challenge, challenge.energyArrowIds[0]).status).toBe('duplicate');
@@ -218,10 +218,10 @@ describe('streak bonus: records and rewards', () => {
   it('count towards arrows cleared (statistics and daily log), not towards chain clears', async () => {
     const { recordAttempt, createStats } = await import('../profile/Stats');
     const { createDailyLog, recordDayAttempt } = await import('../recap/DailyLog');
-    const attempt = { outcome: 'won' as const, directClears: 3, autoClears: 1, cascadeClears: 2, mistakes: 0, uncountedTimeMs: 5 };
+    const attempt = { outcome: 'won' as const, directClears: 3, autoClears: 1, bonusClears: 2, mistakes: 0, uncountedTimeMs: 5 };
     const stats = recordAttempt(createStats(), attempt);
     expect(stats).toMatchObject({ arrowsCleared: 6, chainClears: 1 });
     expect(recordDayAttempt(createDailyLog('2026-10-31'), '2026-10-31', attempt).days['2026-10-31'].arrows).toBe(6);
-    expect(recordAttempt(createStats(), { ...attempt, cascadeClears: undefined }).arrowsCleared).toBe(4);
+    expect(recordAttempt(createStats(), { ...attempt, bonusClears: undefined }).arrowsCleared).toBe(4);
   });
 });

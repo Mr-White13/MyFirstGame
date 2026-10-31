@@ -44,7 +44,7 @@ describe('testing flag: all levels playable', () => {
     // App.handleLevelSolved records nothing for test plays; this shows what that prevents.
     const { records } = applyAttempt(
       { progress: fresh, stats: createStats() },
-      { levelId: 25, revision: 2, outcome: 'won', timeMs: 1, uncountedTimeMs: 1, moves: 1, stars: 3, directClears: 1, autoClears: 0, cascadeClears: 0, longestChain: 0, mistakes: 0 },
+      { levelId: 25, revision: 2, outcome: 'won', timeMs: 1, uncountedTimeMs: 1, moves: 1, stars: 3, directClears: 1, autoClears: 0, bonusClears: 0, longestChain: 0, mistakes: 0 },
       LEVELS.length,
     );
     expect(records.progress.highestUnlocked).toBe(26);

@@ -420,7 +420,7 @@ export class App {
       stars: snapshot.stars,
       directClears: snapshot.directClears,
       autoClears: snapshot.autoClears,
-      cascadeClears: snapshot.cascadeClears,
+      bonusClears: snapshot.bonusClears,
       mistakes: snapshot.mistakes,
       timeMs: c.timeMs,
       bestTimeMs: c.bestTimeMs,

@@ -80,7 +80,7 @@ export class GameState {
   private status: LevelStatus = 'playing';
   private directClears = 0;
   private autoClears = 0;
-  private cascadeClears = 0;
+  private bonusClears = 0;
   /** Clock times of the recent successful manual taps (at most STREAK_TAPS, oldest first). */
   private tapTimes: number[] = [];
   /** Successful manual clears still needed before another bonus can fire. */
@@ -167,7 +167,7 @@ export class GameState {
     this.status = this.arrows.size === 0 ? 'won' : 'playing';
     this.directClears = 0;
     this.autoClears = 0;
-    this.cascadeClears = 0;
+    this.bonusClears = 0;
     this.tapTimes = [];
     this.cooldown = 0;
     this.longestChain = 0;
@@ -207,21 +207,21 @@ export class GameState {
     if (this.tapTimes.length > STREAK_TAPS) this.tapTimes.shift();
     if (this.cooldown > 0) this.cooldown--;
     const chain = this.resolveChain();
-    let cascade: Removal[] = [];
+    let bonus: Removal[] = [];
     if (this.tapTimes.length >= STREAK_TAPS && this.cooldown === 0) {
-      cascade = this.resolveBonus();
-      if (cascade.length > 0) {
+      bonus = this.resolveBonus();
+      if (bonus.length > 0) {
         this.resetStreak(); // the next bonus needs a new streak...
         this.cooldown = BONUS_COOLDOWN; // ...and BONUS_COOLDOWN more clears of the player's own
       }
     }
-    const cascadeChain = cascade.length > 0 ? this.resolveChain() : [];
-    this.autoClears += chain.length + cascadeChain.length;
-    this.cascadeClears += cascade.length;
-    this.longestChain = Math.max(this.longestChain, chain.length + cascadeChain.length);
+    const bonusChain = bonus.length > 0 ? this.resolveChain() : [];
+    this.autoClears += chain.length + bonusChain.length;
+    this.bonusClears += bonus.length;
+    this.longestChain = Math.max(this.longestChain, chain.length + bonusChain.length);
     if (this.arrows.size === 0) this.status = 'won';
     this.emit();
-    return { kind: 'cleared', arrowId, exitPath: check.path, chain, cascade, cascadeChain, won: this.status === 'won' };
+    return { kind: 'cleared', arrowId, exitPath: check.path, chain, bonus, bonusChain, won: this.status === 'won' };
   }
 
   snapshot(): GameSnapshot {
@@ -232,7 +232,7 @@ export class GameState {
       moves: this.directClears,
       directClears: this.directClears,
       autoClears: this.autoClears,
-      cascadeClears: this.cascadeClears,
+      bonusClears: this.bonusClears,
       streak: this.tapTimes.length,
       streakAt: this.tapTimes.at(-1) ?? null,
       bonusCooldown: this.cooldown,

@@ -56,7 +56,7 @@ const ACHIEVEMENT = { id: 'first', title: 'First Escape', reward: 50 } as Achiev
 
 function snapshotFor(levelId: number): GameSnapshot {
   return {
-    levelId, status: 'playing', moves: 0, directClears: 0, autoClears: 0, cascadeClears: 0, streak: 0, streakAt: null,
+    levelId, status: 'playing', moves: 0, directClears: 0, autoClears: 0, bonusClears: 0, streak: 0, streakAt: null,
     bonusCooldown: 0, longestChain: 0, mistakes: 0, lives: 3, remaining: 10, total: 10, activated: 0, won: false, stars: 0,
   };
 }
@@ -412,7 +412,7 @@ async function enterLevel(h: Harness, levelId: number): Promise<void> {
 
 function summary(patch: Partial<AttemptSummary> & Pick<AttemptSummary, 'levelId' | 'outcome' | 'timeMs'>): AttemptSummary {
   return {
-    revision: 1, uncountedTimeMs: patch.timeMs, moves: 0, stars: 0, directClears: 0, autoClears: 0, cascadeClears: 0,
+    revision: 1, uncountedTimeMs: patch.timeMs, moves: 0, stars: 0, directClears: 0, autoClears: 0, bonusClears: 0,
     longestChain: 0, mistakes: 0, ...patch,
   };
 }
@@ -503,7 +503,7 @@ describe('level completion (win)', () => {
     h.app.handleCelebrationEnd();
     expect(h.effects()).toEqual(['completeDialog.show', 'feedback stars']);
     expect(h.calls('completeDialog.show')[0][0]).toEqual({
-      levelId: 1, levelCount: LEVEL_COUNT, arrows: 10, stars: 2, directClears: 8, autoClears: 2, cascadeClears: 0, mistakes: 1,
+      levelId: 1, levelCount: LEVEL_COUNT, arrows: 10, stars: 2, directClears: 8, autoClears: 2, bonusClears: 0, mistakes: 1,
       timeMs: 12_000, bestTimeMs: 12_000, newBestTime: true, newBestStars: true, unlocked: 2,
     });
     expect(h.calls('feedback')[0][1]).toEqual({ type: 'stars', stars: 2, unlocked: true, reduced: false });

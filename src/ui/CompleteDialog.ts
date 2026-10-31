@@ -9,7 +9,7 @@ export interface CompletionSummary {
   readonly stars: number;
   readonly directClears: number;
   readonly autoClears: number;
-  readonly cascadeClears: number;
+  readonly bonusClears: number;
   readonly mistakes: number;
   /** Active play time of this run. */
   readonly timeMs: number;
@@ -111,10 +111,10 @@ export class CompleteDialog {
 
     this.time.textContent = formatPrecise(summary.timeMs);
     this.bestTime.textContent = formatPrecise(summary.bestTimeMs);
-    this.arrows.textContent = String(summary.directClears + summary.autoClears + summary.cascadeClears);
+    this.arrows.textContent = String(summary.directClears + summary.autoClears + summary.bonusClears);
     const extras = [
       summary.autoClears > 0 ? `${summary.autoClears} by chain` : '',
-      summary.cascadeClears > 0 ? `${summary.cascadeClears} by cascade` : '',
+      summary.bonusClears > 0 ? `${summary.bonusClears} by cascade` : '',
     ].filter(Boolean);
     this.chain.textContent = extras.length > 0 ? ` · ${extras.join(' · ')}` : '';
     this.mistakes.textContent = String(summary.mistakes);

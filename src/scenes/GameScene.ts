@@ -343,12 +343,12 @@ export class GameScene extends Phaser.Scene {
         });
         // Then the streak bonus: its arrows fly off together, slightly staggered,
         // with the same path-following exit as a tapped arrow. Then red arrows it freed.
-        const bonus = result.cascade.flatMap((removal, index) => {
+        const bonus = result.bonus.flatMap((removal, index) => {
           const swept = this.views.get(removal.arrowId);
-          return swept ? [this.exitStep(swept, { cascade: true }, { type: 'cascade', index })] : [];
+          return swept ? [this.exitStep(swept, { bonus: true }, { type: 'bonus', index })] : [];
         });
         if (bonus.length > 0) steps.push(this.sequencer.together(bonus, BONUS_STAGGER_MS, (start, ms) => this.time.delayedCall(ms, start)));
-        result.cascadeChain.forEach((removal, index) => {
+        result.bonusChain.forEach((removal, index) => {
           const released = this.views.get(removal.arrowId);
           if (released) steps.push(this.exitStep(released, { auto: true }, { type: 'chain', index: result.chain.length + index }));
         });
@@ -393,7 +393,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** An arrow leaving the board; the step hands over once its tail is off the grid. */
-  private exitStep(view: ArrowView, kind: { auto?: boolean; cascade?: boolean }, feedback: FeedbackEvent): SequenceStep {
+  private exitStep(view: ArrowView, kind: { auto?: boolean; bonus?: boolean }, feedback: FeedbackEvent): SequenceStep {
     return this.viewStep(view, (done) => {
       this.options.onFeedback?.(feedback);
       if (this.pressed === view) this.pressed = undefined; // it may be highlighted while waiting for its turn

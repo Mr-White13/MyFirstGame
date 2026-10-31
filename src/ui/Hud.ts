@@ -154,7 +154,7 @@ export class Hud {
         this.momentum.classList.remove('momentum--timing');
       }, STREAK_WINDOW_MS);
     }
-    const earned = previous ? snapshot.cascadeClears - previous.cascadeClears : 0;
+    const earned = previous ? snapshot.bonusClears - previous.bonusClears : 0;
     if (earned > 0) {
       this.bonus.textContent = `+${earned}`;
       this.tick(this.bonus);
