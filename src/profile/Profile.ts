@@ -1,4 +1,4 @@
-import { browserStorage, parseObject, SafeStore, type KeyValueStore, type SaveStatus } from '../storage/SafeStore';
+import { browserStorage, readVersioned, SafeStore, type KeyValueStore, type SaveStatus } from '../storage/SafeStore';
 import { DEFAULT_AVATAR, isAvatarId, type AvatarId } from './avatars';
 import { isCountryCode } from './countries';
 
@@ -100,11 +100,9 @@ export const PROFILE_VERSION = 1;
 
 /** Reads a stored profile, keeping every valid field and defaulting the rest. Never throws. */
 export function readProfile(raw: string | null): { value: PlayerProfile; status: SaveStatus } {
-  if (raw === null) return { value: createProfile(), status: 'empty' };
-  const data = parseObject(raw);
-  if (!data) return { value: createProfile(), status: 'corrupt' };
-  if (typeof data.version === 'number' && data.version > PROFILE_VERSION) return { value: createProfile(), status: 'newer' };
-  if (data.version !== PROFILE_VERSION) return { value: createProfile(), status: 'corrupt' };
+  const header = readVersioned(raw, PROFILE_VERSION);
+  if ('status' in header) return { value: createProfile(), status: header.status };
+  const { data } = header;
 
   let profile = createProfile();
   if (typeof data.nickname === 'string') profile = withNickname(profile, data.nickname);

@@ -3,7 +3,7 @@ import { checkIn, claim, claimStatus, createDaily, readDaily, type CheckInKind, 
 import type { DayKey } from '../daily/dayKey';
 import type { PlayerStats } from '../profile/Stats';
 import type { Progress } from '../progress/Progress';
-import { browserStorage, parseObject, SafeStore, type KeyValueStore, type SaveStatus } from '../storage/SafeStore';
+import { browserStorage, readVersioned, SafeStore, type KeyValueStore, type SaveStatus } from '../storage/SafeStore';
 import {
   achievementTransactionId,
   achievementViews,
@@ -40,11 +40,9 @@ const KNOWN_ACHIEVEMENTS = new Set(ACHIEVEMENTS.map((a) => a.id));
 
 /** Reads the saved record, validating every part separately. Never throws. */
 export function readRewards(raw: string | null): { value: RewardsRecord; status: SaveStatus } {
-  if (raw === null) return { value: createRewards(), status: 'empty' };
-  const data = parseObject(raw);
-  if (!data) return { value: createRewards(), status: 'corrupt' };
-  if (typeof data.version === 'number' && data.version > REWARDS_VERSION) return { value: createRewards(), status: 'newer' };
-  if (data.version !== REWARDS_VERSION) return { value: createRewards(), status: 'corrupt' };
+  const header = readVersioned(raw, REWARDS_VERSION);
+  if ('status' in header) return { value: createRewards(), status: header.status };
+  const { data } = header;
 
   const unlocked: Record<string, DayKey> = {};
   if (typeof data.achievements === 'object' && data.achievements !== null) {

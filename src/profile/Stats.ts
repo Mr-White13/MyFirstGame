@@ -2,7 +2,7 @@ import {
   browserStorage,
   isNonNegativeInt,
   isNonNegativeNumber,
-  parseObject,
+  readVersioned,
   SafeStore,
   type KeyValueStore,
   type SaveStatus,
@@ -89,11 +89,9 @@ const COUNTERS = ['successfulRuns', 'failedRuns', 'flawlessRuns', 'arrowsCleared
 
 /** Reads stored statistics; malformed counters reset to 0, the rest are kept. Never throws. */
 export function readStats(raw: string | null, now: Date = new Date()): { value: PlayerStats; status: SaveStatus } {
-  if (raw === null) return { value: createStats(now), status: 'empty' };
-  const data = parseObject(raw);
-  if (!data) return { value: createStats(now), status: 'corrupt' };
-  if (typeof data.version === 'number' && data.version > STATS_VERSION) return { value: createStats(now), status: 'newer' };
-  if (data.version !== STATS_VERSION) return { value: createStats(now), status: 'corrupt' };
+  const header = readVersioned(raw, STATS_VERSION);
+  if ('status' in header) return { value: createStats(now), status: header.status };
+  const { data } = header;
 
   const fresh = createStats(now);
   const counters = Object.fromEntries(COUNTERS.map((k) => [k, isNonNegativeInt(data[k]) ? data[k] : 0])) as Record<

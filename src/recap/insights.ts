@@ -4,7 +4,7 @@ import type { DailyState } from '../daily/Daily';
 import { addDays, type DayKey } from '../daily/dayKey';
 import type { PlayerStats } from '../profile/Stats';
 import { completedCount, MAX_STARS, nextLevelToPlay, perfectLevels, totalStars, type Progress } from '../progress/Progress';
-import { browserStorage, isNonNegativeInt, parseObject, SafeStore, type KeyValueStore, type SaveStatus } from '../storage/SafeStore';
+import { browserStorage, isNonNegativeInt, readVersioned, SafeStore, type KeyValueStore, type SaveStatus } from '../storage/SafeStore';
 import { lastSevenDays, summarize, type DailyLog } from './DailyLog';
 
 /*
@@ -141,11 +141,9 @@ export interface RecapState {
 }
 
 export function readRecap(raw: string | null): { value: RecapState; status: SaveStatus } {
-  if (raw === null) return { value: { next: 0 }, status: 'empty' };
-  const data = parseObject(raw);
-  if (!data) return { value: { next: 0 }, status: 'corrupt' };
-  if (typeof data.version === 'number' && data.version > RECAP_VERSION) return { value: { next: 0 }, status: 'newer' };
-  if (data.version !== RECAP_VERSION) return { value: { next: 0 }, status: 'corrupt' };
+  const header = readVersioned(raw, RECAP_VERSION);
+  if ('status' in header) return { value: { next: 0 }, status: header.status };
+  const { data } = header;
   return { value: { next: isNonNegativeInt(data.next) ? data.next % INSIGHT_IDS.length : 0 }, status: 'current' };
 }
 

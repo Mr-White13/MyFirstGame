@@ -4,7 +4,7 @@ import {
   browserStorage,
   isNonNegativeInt,
   isNonNegativeNumber,
-  parseObject,
+  readVersioned,
   SafeStore,
   type KeyValueStore,
   type SaveStatus,
@@ -118,11 +118,10 @@ export const DAILY_LOG_VERSION = 1;
 
 /** Reads the stored log; malformed days are dropped, the rest kept. Never throws. */
 export function readDailyLog(raw: string | null, today: DayKey): { value: DailyLog; status: SaveStatus } {
-  if (raw === null) return { value: createDailyLog(today), status: 'empty' };
-  const data = parseObject(raw);
-  if (!data) return { value: createDailyLog(today), status: 'corrupt' };
-  if (typeof data.version === 'number' && data.version > DAILY_LOG_VERSION) return { value: createDailyLog(today), status: 'newer' };
-  if (data.version !== DAILY_LOG_VERSION || !isDayKey(data.since)) return { value: createDailyLog(today), status: 'corrupt' };
+  const header = readVersioned(raw, DAILY_LOG_VERSION);
+  if ('status' in header) return { value: createDailyLog(today), status: header.status };
+  const { data } = header;
+  if (!isDayKey(data.since)) return { value: createDailyLog(today), status: 'corrupt' };
 
   const days: Record<DayKey, DayRecord> = {};
   if (typeof data.days === 'object' && data.days !== null) {
