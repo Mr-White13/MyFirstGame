@@ -73,12 +73,17 @@ export class StaticArrowLayer {
     if (!this.enabled) return;
     const zoomSettled = this.wantedScale !== this.scale && now - this.zoomChangedAt >= ZOOM_SETTLE_MS;
     let changed = this.dirty || zoomSettled;
-    let count = 0;
+    // Cached arrows still on the board. Fewer than cached means one has left the
+    // list (its exit started) and must be shown live. Live arrows are not counted:
+    // they are not in the cache, so counting them would rebuild on every frame
+    // while one is pressed, flashing or tweening.
+    let stillCached = 0;
     for (const view of views.values()) {
-      count++;
-      if (!changed && view.isStatic !== this.cached.has(view)) changed = true;
+      const isCached = this.cached.has(view);
+      if (isCached) stillCached++;
+      if (!changed && view.isStatic !== isCached) changed = true;
     }
-    if (!changed && count !== this.cached.size) changed = true;
+    if (!changed && stillCached !== this.cached.size) changed = true;
     if (changed) this.rebuild(views.values());
   }
 
