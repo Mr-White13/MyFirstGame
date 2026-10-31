@@ -141,8 +141,13 @@ export class App {
     });
   }
 
-  /** Wires up the UI callbacks and shows the Home screen. */
-  start(): void {
+  /**
+   * Wires up the UI callbacks and shows the Home screen. `introBack`: the
+   * startup intro already covers Home (see beginIntro), so a league result
+   * settled now waits for endIntro() instead of appearing under the splash.
+   */
+  start(introBack?: () => void): void {
+    if (introBack) this.beginIntro(introBack);
     const { levelSelect, hud, game } = this.parts;
     levelSelect.onSelect((id) => void this.openLevel(id));
     levelSelect.onBack(() => void this.goBack());

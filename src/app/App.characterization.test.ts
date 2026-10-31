@@ -741,22 +741,28 @@ describe('league notices', () => {
     expect(h.calls('leagueResult.show')).toEqual([]);
   });
 
-  it('B3: start() shows a pending notice before main.ts calls beginIntro(), i.e. under the splash', () => {
-    // B3 (known bug, recorded as is): main.ts runs app.start() and only then app.beginIntro(),
-    // so the notice from start()'s settleLeague() is not held back by the intro.
+  it('a notice settled at launch waits for the startup intro (B3) and shows when it ends', () => {
     const h = createHarness({ noticeOnSettle: PROMOTED });
-    h.app.start();
-    h.rec('main.beginIntro');
-    h.app.beginIntro(() => h.rec('intro.back'));
-    expect(h.effects()).toEqual([
-      'dayClock.start', `rewards.checkIn ${TODAY}`, `league.settle ${TODAY} false`, 'leagueResult.show', 'feedback promoted',
-      'dailyLog.save', 'home.render', 'screens.show home', 'main.beginIntro',
-    ]);
-    // While the intro runs, Back goes to the intro, not to the league dialog under it.
+    h.app.start(() => h.rec('intro.back')); // as main.ts starts it: the splash already covers Home
+    expect(h.effects()).toEqual(['dayClock.start', `rewards.checkIn ${TODAY}`, `league.settle ${TODAY} false`, 'dailyLog.save', 'home.render', 'screens.show home']);
+    expect(h.leagueResult.isOpen).toBe(false);
+    // While the intro runs, Back goes to the intro.
     h.clear();
     expect(h.app.handleBack()).toBe(true);
     expect(h.effects()).toEqual(['intro.back']);
-    expect(h.leagueResult.isOpen).toBe(true);
+    h.clear();
+    h.app.endIntro();
+    expect(h.effects()).toEqual(['leagueResult.show', 'feedback promoted']);
+  });
+
+  it('a "retained" result at launch is toasted (and acknowledged) only after the intro (B3)', () => {
+    const h = createHarness({ noticeOnSettle: RETAINED });
+    h.app.start(() => h.rec('intro.back'));
+    expect(h.calls('toast.show')).toEqual([]);
+    expect(h.calls('league.acknowledge')).toEqual([]);
+    h.clear();
+    h.app.endIntro();
+    expect(h.effects()).toEqual(['toast.show You stay in Silver. 3200', 'league.acknowledge']);
   });
 
   it('a notice that arrives during the intro waits for endIntro()', () => {
