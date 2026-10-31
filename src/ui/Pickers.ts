@@ -10,9 +10,7 @@ export class AvatarPicker {
 
   constructor() {
     requireElement('btn-avatar-close').addEventListener('click', () => this.overlay.hide());
-    this.overlay.element.addEventListener('click', (event) => {
-      if (event.target === this.overlay.element) this.overlay.hide();
-    });
+    this.overlay.onBackdropClick(() => this.overlay.hide());
     this.grid.addEventListener('click', (event) => {
       const option = (event.target as Element).closest<HTMLButtonElement>('button[data-avatar]');
       if (!option) return;
@@ -64,9 +62,7 @@ export class CountryPicker {
 
   constructor() {
     requireElement('btn-country-close').addEventListener('click', () => this.overlay.hide());
-    this.overlay.element.addEventListener('click', (event) => {
-      if (event.target === this.overlay.element) this.overlay.hide();
-    });
+    this.overlay.onBackdropClick(() => this.overlay.hide());
     this.search.addEventListener('input', () => this.renderList());
     this.list.addEventListener('click', (event) => {
       const option = (event.target as Element).closest<HTMLButtonElement>('button[data-country]');
