@@ -4119,8 +4119,8 @@ body.is-navigating #app {
   color: var(--text-muted);
 }
 
-/* Streak progress in the HUD (src/ui/Hud.ts): three pips, lit one per quick successful tap.
-   They drain over the 1.5 s window; a bonus flashes them and floats "+N". */
+/* Streak progress in the HUD (src/ui/Hud.ts): five pips, lit one per successful tap in the
+   rolling 4 s window; dim while the bonus recharges; a bonus flashes them and floats "+N". */
 .momentum {
   position: relative;
   display: flex;
@@ -4129,8 +4129,8 @@ body.is-navigating #app {
 }
 
 .momentum i {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   border: 1.5px solid rgb(var(--muted-rgb) / 0.45);
   transition: background-color 160ms ease, border-color 160ms ease, opacity 160ms ease;
@@ -4142,7 +4142,12 @@ body.is-navigating #app {
 }
 
 .momentum--timing i.momentum__pip--on {
-  animation: streak-drain 1.5s linear forwards;
+  animation: streak-drain 4s linear forwards;
+}
+
+/* After a bonus: the pips stay dim until enough clears have recharged it. */
+.momentum--cooldown {
+  opacity: 0.4;
 }
 
 @keyframes streak-drain {

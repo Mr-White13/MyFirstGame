@@ -40,15 +40,17 @@ export interface LevelData {
 export const STARTING_LIVES = 3;
 
 /**
- * Streak bonus (see GameState): this many successful taps in a row, each
- * within STREAK_WINDOW_MS of the previous one, earn one bonus...
+ * Streak bonus (see GameState): this many successful manual taps, all within
+ * a rolling window of STREAK_WINDOW_MS and without a blocked tap between
+ * them, earn one bonus...
  */
-export const STREAK_TAPS = 3;
-/** Longest pause between two taps that still continues a streak. */
-export const STREAK_WINDOW_MS = 1500;
-/** ...which clears at least BONUS_MIN and at most BONUS_MAX currently removable normal arrows. */
-export const BONUS_MIN = 2;
-export const BONUS_MAX = 3;
+export const STREAK_TAPS = 5;
+/** The rolling window the last STREAK_TAPS successful taps must fit in. */
+export const STREAK_WINDOW_MS = 4000;
+/** ...which clears exactly BONUS_CLEARS currently removable normal arrows (skipped if fewer are available)... */
+export const BONUS_CLEARS = 2;
+/** ...and after which this many further successful manual clears must happen before the next bonus. */
+export const BONUS_COOLDOWN = 8;
 
 /** One arrow leaving the board: the one the player tapped, or one released by a chain reaction. */
 export interface Removal {
@@ -68,8 +70,8 @@ export type MoveResult =
        */
       readonly chain: readonly Removal[];
       /**
-       * Normal arrows cleared by a streak bonus after this tap (BONUS_MIN to
-       * BONUS_MAX), in the order they left; empty when no bonus fired.
+       * Normal arrows cleared by a streak bonus after this tap (exactly
+       * BONUS_CLEARS), in the order they left; empty when no bonus fired.
        */
       readonly cascade: readonly Removal[];
       /** Activated arrows released because the bonus freed them (after `cascade`). */
@@ -103,10 +105,11 @@ export type LevelStatus = 'playing' | 'won' | 'failed';
  * - `directClears`: arrows the player removed by tapping them.
  * - `autoClears`: activated arrows released automatically by chain reactions.
  * - `cascadeClears`: normal arrows cleared automatically by streak bonuses.
- * - `streak`: successful taps in the current streak (0..STREAK_TAPS - 1; it
- *   resets when a bonus is earned, on a blocked tap, or after a pause).
- * - `streakAt`: clock time of the streak's last tap (ms), or null; the
- *   streak expires STREAK_WINDOW_MS after it.
+ * - `streak`: successful manual taps in the rolling window ending at the
+ *   last one (0..STREAK_TAPS; reset by a blocked tap, a bonus or a restart).
+ * - `streakAt`: clock time of the streak's last tap (ms), or null.
+ * - `bonusCooldown`: successful manual clears still needed before another
+ *   bonus can fire (0 = ready; BONUS_COOLDOWN right after a bonus).
  * - `longestChain`: most red arrows released by a single move's chain reactions (bookkeeping only).
  * - `mistakes`: taps on a blocked arrow that cost a life (repeat taps on a red arrow don't count).
  * - `lives`: lives left (`STARTING_LIVES - mistakes`, never below 0).
@@ -122,6 +125,7 @@ export interface GameSnapshot {
   readonly cascadeClears: number;
   readonly streak: number;
   readonly streakAt: number | null;
+  readonly bonusCooldown: number;
   readonly longestChain: number;
   readonly mistakes: number;
   readonly lives: number;

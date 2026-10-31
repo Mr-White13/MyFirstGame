@@ -249,16 +249,17 @@ One removal can set off several releases: if red C was waiting for red A, C goes
 
 ### Streak bonus
 
-Quick, clean play earns a small bonus. Three pips in the HUD show the streak:
+Fast, clean play now and then earns a small bonus. Five pips in the HUD show the streak:
 
-1. Every arrow you clear with a tap lights one pip, **if it comes within 1.5 s of your previous successful tap**. A slower tap starts a new streak at one pip. The lit pips slowly dim over the 1.5 s window and go out when it has passed.
-2. Your **third quick tap in a row** completes the streak. After that tap (and any red chain it causes), the normal arrows that **can escape right now** are counted. If there are at least 2, the first **2 or 3** of them in level order (3 when 3 or more are free) leave on their own, one after another, with a double green ring; the pips flash and "+N" floats up. Red arrows that this frees then leave by the usual chain rule.
-3. With fewer than 2 removable arrows there is no bonus. Either way the streak is used up, and the next bonus needs three new quick taps.
-4. A **blocked tap** (also a repeat tap on an arrow that is already red), a pause longer than 1.5 s, a restart or a new level resets the streak.
+1. Every arrow you clear with a tap lights a pip. The pips count your **successful taps in the last 4 seconds** (a rolling window): they slowly dim and go out once 4 s have passed since your last tap.
+2. When your **last 5 successful taps all fit within 4 s**, the bonus fires on the 5th: after that tap (and any red chain it causes), **exactly 2** normal arrows that can escape right now leave on their own, the first two in level order. They fly off together, a short stagger apart, like tapped arrows; the pips flash and "+2" floats up. Red arrows that this frees then leave by the usual chain rule.
+3. If fewer than 2 arrows can escape at that moment, the bonus is **skipped** and nothing is used up: your streak holds, so a later quick tap can still earn it.
+4. After a bonus the pips dim while it **recharges**: at least **8 more successful clears of your own** are needed before another bonus can fire (a new streak builds up meanwhile). So a bonus comes at most about once every 8 taps, never in a row.
+5. A **blocked tap** (also a repeat tap on an arrow that is already red) resets the streak. A restart, a new level or running out of lives resets the streak and the recharge.
 
-So a single tap can never remove another normal arrow, a bonus never removes a blocked arrow (only arrows you could have tapped yourself), and it never empties the board: the last arrow is always yours. It is deterministic: the same taps at the same times give the same result.
+Only your own successful taps count: chain releases and bonus clears never add to the streak or the recharge. A bonus never takes a blocked or red arrow (only arrows you could have tapped yourself) and never empties the board: the last arrow is always yours. It is deterministic: the same taps at the same times give the same result.
 
-Bonus clears cost no lives and are not your moves. They count towards "arrows cleared" in the statistics and the daily recap, collect Energy Arrows in Daily League challenges (each Energy Arrow pays exactly once: points are keyed by challenge and arrow), and a level a bonus helps finish is completed exactly as usual. Chain-reaction achievements count only red-arrow releases. The rules live in `GameState` (`STREAK_TAPS = 3`, `STREAK_WINDOW_MS = 1500`, `BONUS_MIN = 2`, `BONUS_MAX = 3` in `src/core/types.ts`) and are covered by `src/core/cascade.test.ts`. The offline difficulty analysis plays as a quick player (every streak counts).
+Bonus clears cost no lives and are not your moves. They count once towards "arrows cleared" in the statistics and the daily recap, collect Energy Arrows in Daily League challenges (each Energy Arrow pays exactly once: points are keyed by challenge and arrow), and a level a bonus helps finish is completed exactly as usual. Chain-reaction achievements count only red-arrow releases. The rules are configurable in `src/core/types.ts` (`STREAK_TAPS = 5`, `STREAK_WINDOW_MS = 4000`, `BONUS_CLEARS = 2`, `BONUS_COOLDOWN = 8`), live in `GameState` and are covered by `src/core/cascade.test.ts`. The offline difficulty analysis plays as a quick player (every streak counts).
 
 ### Stars
 
@@ -301,7 +302,7 @@ On a cold launch the **Mr. White Games** splash plays first, optionally followed
 Other screens:
 
 1. **Level select:** all 10 levels with grid size or best stars, your completion count and star total, and a Continue button. Completed levels show a check, the next level glows, and locked levels show a lock and can't be opened.
-2. **Gameplay:** a compact HUD pinned to the top (back, the level title with the timer, the **theme** palette button and restart; then hearts, a progress meter, the three **streak** pips and arrows left), and below it a borderless board (a faint dot per cell) that uses all the remaining height: Levels 4–30 are tall portrait boards. Safe areas are respected at the top and bottom. Restart is disabled until you've made a move or a mistake; with **Confirm restart** on (the default) it asks first. If leaving would lose an unfinished attempt, you're asked to confirm first.
+2. **Gameplay:** a compact HUD pinned to the top (back, the level title with the timer, the **theme** palette button and restart; then hearts, a progress meter, the five **streak** pips and arrows left), and below it a borderless board (a faint dot per cell) that uses all the remaining height: Levels 4–30 are tall portrait boards. Safe areas are respected at the top and bottom. Restart is disabled until you've made a move or a mistake; with **Confirm restart** on (the default) it asks first. If leaving would lose an unfinished attempt, you're asked to confirm first.
 3. **Settings:** see "Settings" below. **Achievements** and the **Daily rewards** calendar: see "Daily rewards, streaks and achievements".
 4. **Profile:** your avatar, nickname, country and rank, then a progress summary, statistics and personal records (see below).
 5. **Level complete:** stars and lives left, time and personal best, arrows cleared (with chain clears) and mistakes, plus "New best time!", "Best rating!" and "Level *n* unlocked" chips. Buttons: **Next level**, **Restart** and **Levels**. After level 10 a **game-complete** variant offers **Play from level 1**.

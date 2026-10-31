@@ -3,30 +3,28 @@ import { dailyChallenges } from '../league/challenges';
 import { collect, settle } from '../league/League';
 import { readLeague } from '../league/LeagueService';
 import { LEVELS } from '../levels';
-import { levelFromMap } from '../levels/levelMap';
+import { arrowLabel, levelFromMap } from '../levels/levelMap';
 import { GameState } from './GameState';
-import { BONUS_MAX, BONUS_MIN, STREAK_TAPS, STREAK_WINDOW_MS, type MoveResult } from './types';
+import { BONUS_CLEARS, BONUS_COOLDOWN, STREAK_TAPS, STREAK_WINDOW_MS, type MoveResult } from './types';
 
-/*
- * a, b, c, e and h are free. d (right) is blocked by e; f (up) by d, c, b, a;
- * g (up) by e.
+/**
+ * `free` single-cell arrows stacked in column 0, all pointing right (each free
+ * from the start), and below them `z` pointing up through all of them: it is
+ * blocked until the whole column has gone. Labels a, b, c… in level order.
  */
-const level = levelFromMap(99, [
-  'a> .  .  .  .',
-  'b> .  .  .  .',
-  'c> .  .  .  .',
-  'd> e> .  .  .',
-  'f^ g^ .  .  .',
-  '.  .  .  .  h<',
-]);
+function column(free: number) {
+  const rows = Array.from({ length: free }, (_, i) => `${arrowLabel(i)}> .  .`);
+  return levelFromMap(99, [...rows, 'z^ .  .']);
+}
+const big = column(24);
 
 const cleared = (r: MoveResult) => {
   if (r.kind !== 'cleared') throw new Error(`expected a clear, got ${r.kind}`);
   return r;
 };
 const ids = (removals: readonly { arrowId: string }[]) => removals.map((r) => r.arrowId);
-const left = (state: GameState) => state.getArrows().map((a) => a.id);
 const STEP = { up: [-1, 0], down: [1, 0], left: [0, -1], right: [0, 1] } as const;
+
 /** The first normal arrow (level order) whose way out is clear: what a careful player would tap. */
 function freeArrow(state: GameState): string | undefined {
   return state.getArrows().find((a) => {
@@ -40,150 +38,175 @@ function freeArrow(state: GameState): string | undefined {
   })?.id;
 }
 
-describe('streak bonus: the rules', () => {
-  it('uses the documented limits', () => {
-    expect([STREAK_TAPS, STREAK_WINDOW_MS, BONUS_MIN, BONUS_MAX]).toEqual([3, 1500, 2, 3]);
+/** Taps free arrows (in level order) at the given times; returns each tap's bonus clears. */
+function play(state: GameState, times: readonly number[]): string[][] {
+  return times.map((at) => ids(cleared(state.tryMove(freeArrow(state)!, at)).cascade));
+}
+
+/** `n` taps, `gap` ms apart, starting at `from`. */
+const taps = (n: number, gap: number, from = 0) => Array.from({ length: n }, (_, i) => from + i * gap);
+
+describe('streak bonus: frequency', () => {
+  it('uses the configured rules: 5 taps within 4 s, exactly 2 clears, then 8 more clears', () => {
+    expect([STREAK_TAPS, STREAK_WINDOW_MS, BONUS_CLEARS, BONUS_COOLDOWN]).toEqual([5, 4000, 2, 8]);
   });
 
-  it('a single tap never clears another normal arrow, whatever came before', () => {
-    const state = new GameState(level);
-    // Slow, separate taps: each is a streak of one.
-    for (const [id, at] of [['a', 0], ['b', 2000], ['c', 4000], ['e', 6000], ['h', 8000]] as const) {
-      const r = cleared(state.tryMove(id, at));
-      expect(r.cascade).toEqual([]);
-      expect(state.snapshot().streak).toBe(1);
+  it('four quick taps are not enough; the fifth within 4 s clears exactly 2 arrows', () => {
+    const state = new GameState(big);
+    const bonuses = play(state, taps(5, 500));
+    expect(bonuses.slice(0, 4)).toEqual([[], [], [], []]);
+    // a–e were tapped; the first two arrows that can escape next are f and g.
+    expect(bonuses[4]).toEqual(['f', 'g']);
+    expect(state.snapshot()).toMatchObject({ moves: 5, cascadeClears: 2, streak: 0, bonusCooldown: BONUS_COOLDOWN });
+  });
+
+  it('slow play never earns a bonus', () => {
+    const state = new GameState(big);
+    expect(play(state, taps(12, 1100)).flat()).toEqual([]); // 5 taps always span 4.4 s
+  });
+
+  it('uses a rolling window: the 5 most recent taps must fit in 4 s (exactly 4 s counts)', () => {
+    const state = new GameState(big);
+    // 0, 1000, 2000, 3000, 4500: the five span 4.5 s, so no bonus yet...
+    const first = play(state, [0, 1000, 2000, 3000, 4500]);
+    expect(first.flat()).toEqual([]);
+    expect(state.snapshot().streak).toBe(4); // 1000–4500 are still in the window
+    // ...but 1000, 2000, 3000, 4500, 5000 fit exactly in 4 s.
+    expect(play(state, [5000])[0]).toHaveLength(BONUS_CLEARS);
+  });
+
+  it('after a bonus, the next one needs at least 8 more clears of the player, however fast', () => {
+    const state = new GameState(big);
+    const bonuses = play(state, taps(13, 100));
+    const fired = bonuses.map((b, i) => (b.length > 0 ? i + 1 : 0)).filter(Boolean);
+    expect(fired).toEqual([5, 13]); // the 5th tap, then the 8th clear after it
+    const cooldowns: number[] = [];
+    const s2 = new GameState(big);
+    for (const at of taps(6, 100)) {
+      s2.tryMove(freeArrow(s2)!, at);
+      cooldowns.push(s2.snapshot().bonusCooldown);
     }
-    expect(state.snapshot().cascadeClears).toBe(0);
+    expect(cooldowns).toEqual([0, 0, 0, 0, 8, 7]);
   });
 
-  it('three quick taps clear 2–3 currently removable arrows, in level order', () => {
+  it('chain and bonus clears never count towards the streak', () => {
+    const state = new GameState(big);
+    play(state, taps(5, 100)); // bonus: 2 automatic clears
+    expect(state.snapshot()).toMatchObject({ streak: 0, cascadeClears: 2, directClears: 5 });
+    play(state, [600]);
+    expect(state.snapshot().streak).toBe(1); // only the player's own tap
+  });
+});
+
+describe('streak bonus: eligibility and resets', () => {
+  it('only removable normal arrows are taken, never blocked or red ones', () => {
+    // a–d free; e (up) is blocked by d, c, b, a; f free; g (up) is blocked by f.
+    const level = levelFromMap(98, [
+      'a> .  .',
+      'b> .  .',
+      'c> .  .',
+      'd> .  .',
+      'e^ f> .',
+      '.  g^ .',
+      'h> .  .',
+      'i> .  .',
+    ]);
     const state = new GameState(level);
-    expect(cleared(state.tryMove('a', 0)).cascade).toEqual([]);
-    expect(cleared(state.tryMove('b', 1000)).cascade).toEqual([]);
-    expect(state.snapshot().streak).toBe(2);
-    const third = cleared(state.tryMove('e', 2000));
-    // After e leaves, c, d, g and h can all escape: the first three go.
-    expect(ids(third.cascade)).toEqual(['c', 'd', 'g']);
-    expect(left(state)).toEqual(['f', 'h']);
-    expect(state.snapshot()).toMatchObject({ moves: 3, cascadeClears: 3, autoClears: 0, streak: 0, lives: 3 });
+    expect(state.tryMove('g', 0).kind).toBe('blocked'); // g turns red; the streak starts after this
+    const bonus = play(state, taps(5, 100, 100))[4];
+    // Tapped: a, b, c, d (freeing e) and e. Removable now: f, h, i; g is red, not eligible.
+    expect(bonus).toEqual(['f', 'h']);
+    expect(state.isActivated('g')).toBe(false); // f left: the red g was released by the chain rule
   });
 
-  it('clears only arrows that were removable at that moment, never blocked ones', () => {
+  it('is skipped while fewer than 2 arrows are removable (no cooldown), and fires on a later tap once there are', () => {
+    // a–e free. x (up) waits for all of them; m (left) and y (up) wait for x; w waits for y.
+    const level = levelFromMap(97, [
+      'a> .  .',
+      'b> .  .',
+      'c> .  .',
+      'd> .  .',
+      'e> .  .',
+      'x^ m< m',
+      'y^ .  .',
+      'w^ .  .',
+    ]);
     const state = new GameState(level);
-    state.tryMove('a', 0);
-    state.tryMove('b', 500);
-    const r = cleared(state.tryMove('c', 1000));
-    // Removable now: e and h. d and g are blocked by e and stay, even after e leaves.
-    expect(ids(r.cascade)).toEqual(['e', 'h']);
-    expect(left(state)).toEqual(['d', 'f', 'g']);
+    const bonuses = play(state, taps(5, 100)); // a–e: afterwards only x can escape
+    expect(bonuses.flat()).toEqual([]);
+    expect(state.snapshot()).toMatchObject({ streak: 5, bonusCooldown: 0, cascadeClears: 0 });
+    // Tapping x frees m and y: now two are removable, and the streak still holds.
+    expect(play(state, [600])[0]).toEqual(['m', 'y']);
+    expect(state.getArrows().map((a) => a.id)).toEqual(['w']);
+    expect(state.snapshot()).toMatchObject({ streak: 0, bonusCooldown: BONUS_COOLDOWN });
   });
 
-  it('a pause longer than 1.5 s starts a new streak; exactly 1.5 s still counts', () => {
-    const state = new GameState(level);
-    state.tryMove('a', 0);
-    state.tryMove('b', STREAK_WINDOW_MS + 1); // too slow: streak of 1
-    expect(state.snapshot().streak).toBe(1);
-    state.tryMove('c', 2 * STREAK_WINDOW_MS + 1); // exactly on time
-    expect(state.snapshot().streak).toBe(2);
-    expect(cleared(state.tryMove('e', 2 * STREAK_WINDOW_MS + 1001)).cascade.length).toBeGreaterThanOrEqual(BONUS_MIN);
+  it('never empties the board: the last arrow is always the player\'s', () => {
+    const s = new GameState(column(5)); // a–e free, z behind them
+    const bonuses = play(s, taps(5, 100));
+    expect(bonuses.flat()).toEqual([]); // after the 5th tap only z is left
+    expect(cleared(s.tryMove('z', 600)).won).toBe(true);
   });
 
   it('a blocked tap resets the streak, including a repeat tap on a red arrow', () => {
-    const state = new GameState(level);
-    state.tryMove('a', 0);
-    state.tryMove('b', 100);
-    expect(state.tryMove('d', 200).kind).toBe('blocked'); // costs a life
+    const state = new GameState(big);
+    play(state, taps(4, 100));
+    expect(state.tryMove('z', 450).kind).toBe('blocked'); // costs a life
     expect(state.snapshot().streak).toBe(0);
-    state.tryMove('c', 300);
-    state.tryMove('h', 400);
-    expect(state.snapshot().streak).toBe(2);
-    const repeat = state.tryMove('d', 500); // already red: no life lost, but the streak is gone
-    expect(repeat).toMatchObject({ kind: 'blocked', lifeLost: false });
+    play(state, taps(4, 100, 500));
+    expect(state.tryMove('z', 900)).toMatchObject({ kind: 'blocked', lifeLost: false }); // already red
     expect(state.snapshot().streak).toBe(0);
-    expect(cleared(state.tryMove('e', 600)).cascade).toEqual([]); // a new streak of 1
+    expect(play(state, [1000])[0]).toEqual([]);
   });
 
-  it('restart and a new level reset the streak', () => {
-    const state = new GameState(level);
-    state.tryMove('a', 0);
-    state.tryMove('b', 100);
+  it('restart, a new level and running out of lives reset the streak and the cooldown', () => {
+    const state = new GameState(big);
+    play(state, taps(6, 100)); // a bonus, then one clear of the cooldown
+    expect(state.snapshot()).toMatchObject({ streak: 1, bonusCooldown: 7 });
     state.reset();
-    expect(state.snapshot()).toMatchObject({ streak: 0, streakAt: null });
-    state.tryMove('a', 200);
-    state.load(level);
-    expect(state.snapshot().streak).toBe(0);
-  });
-
-  it('with fewer than 2 removable arrows there is no bonus, and the streak still ends', () => {
-    // After a, b and c leave, only d can escape (f is behind d).
-    const small = levelFromMap(98, ['a> .  .', 'b> .  .', 'd> c> .', 'f^ .  .']);
-    const state = new GameState(small);
-    state.tryMove('a', 0);
-    state.tryMove('b', 100);
-    expect(cleared(state.tryMove('c', 200)).cascade).toEqual([]);
-    expect(state.snapshot()).toMatchObject({ streak: 0, cascadeClears: 0 });
-  });
-
-  it('one bonus per streak: the next one needs three new quick taps', () => {
-    const state = new GameState(level);
-    state.tryMove('a', 0);
-    state.tryMove('b', 100);
-    cleared(state.tryMove('c', 200)); // bonus: e, h
-    expect(cleared(state.tryMove('d', 300)).cascade).toEqual([]);
-    expect(state.snapshot().streak).toBe(1);
-  });
-
-  it("never empties the board: the last arrow is always the player's", () => {
-    const four = levelFromMap(97, ['a> .', 'b> .', 'c> .', 'd> .']);
-    const state = new GameState(four);
-    state.tryMove('a', 0);
-    state.tryMove('b', 100);
-    expect(cleared(state.tryMove('c', 200)).cascade).toEqual([]); // only d is left: no bonus
-    expect(cleared(state.tryMove('d', 300)).won).toBe(true);
-  });
-
-  it('red arrows freed by a bonus leave by the usual chain rule', () => {
-    const state = new GameState(level);
-    expect(state.tryMove('f', 0).kind).toBe('blocked'); // f turns red
-    state.tryMove('a', 100);
-    state.tryMove('b', 200);
-    const r = cleared(state.tryMove('e', 300));
-    expect(ids(r.cascade)).toEqual(['c', 'd', 'g']);
-    expect(ids(r.cascadeChain)).toEqual(['f']); // freed when c and d left
-    expect(state.snapshot()).toMatchObject({ autoClears: 1, cascadeClears: 3, mistakes: 1, remaining: 1 });
+    expect(state.snapshot()).toMatchObject({ streak: 0, streakAt: null, bonusCooldown: 0 });
+    play(state, taps(6, 100));
+    state.load(big);
+    expect(state.snapshot()).toMatchObject({ streak: 0, bonusCooldown: 0 });
+    play(state, taps(6, 100));
+    for (let i = 0; i < 3; i++) state.tryMove('z', 1000 + i); // first tap red (life), repeats free
+    const s = new GameState(big, { startingLives: 1 });
+    play(s, taps(6, 100));
+    expect(s.tryMove('z', 700)).toMatchObject({ kind: 'blocked', failed: true });
+    expect(s.snapshot()).toMatchObject({ status: 'failed', streak: 0, bonusCooldown: 0 });
   });
 
   it('is deterministic for the same taps at the same times', () => {
-    const play = () => {
-      const s = new GameState(level);
-      return ([['a', 0], ['b', 900], ['e', 1800], ['h', 5000]] as const).map(([id, at]) => s.tryMove(id, at));
+    const run = () => {
+      const s = new GameState(big);
+      return taps(14, 150).map((at) => s.tryMove(freeArrow(s)!, at));
     };
-    expect(play()).toEqual(play());
+    expect(run()).toEqual(run());
   });
 });
 
 describe('streak bonus: records and rewards', () => {
   it('reports each removed arrow exactly once, bonus clears as automatic', () => {
-    const state = new GameState(level);
+    const state = new GameState(big);
     const removed: [string, boolean][] = [];
     state.onRemove((arrow, auto) => removed.push([arrow.id, auto]));
-    state.tryMove('a', 0);
-    state.tryMove('b', 100);
-    state.tryMove('e', 200);
-    expect(removed).toEqual([['a', false], ['b', false], ['e', false], ['c', true], ['d', true], ['g', true]]);
+    play(state, taps(5, 100));
+    expect(removed).toEqual([['a', false], ['b', false], ['c', false], ['d', false], ['e', false], ['f', true], ['g', true]]);
   });
 
   it('a won level counts every arrow once: taps + chain + bonus', () => {
-    const state = new GameState(level);
+    const state = new GameState(big);
     let t = 0;
     for (let id = freeArrow(state); id && state.isPlaying; id = freeArrow(state)) state.tryMove(id, (t += 100));
     const s = state.snapshot();
     expect(s.won).toBe(true);
-    expect(s.directClears + s.autoClears + s.cascadeClears).toBe(level.arrows.length);
+    expect(s.cascadeClears).toBe(2 * BONUS_CLEARS); // taps 5 and 13 earned a bonus; the cooldown was not over again before the end
+    expect(s.directClears + s.autoClears + s.cascadeClears).toBe(big.arrows.length);
   });
 
   it('awards each Energy Arrow once, also when a bonus removes it', () => {
     const day = '2026-11-05';
+    let bonuses = 0;
     for (const challenge of dailyChallenges(day, LEVELS)) {
       let league = settle(readLeague(null).value, day, true).state;
       let awarded = 0;
@@ -197,11 +220,12 @@ describe('streak bonus: records and rewards', () => {
       let t = 0;
       for (let id = freeArrow(state); id && state.isPlaying; id = freeArrow(state)) state.tryMove(id, (t += 200));
       expect(state.isWon).toBe(true);
-      expect(state.snapshot().cascadeClears).toBeGreaterThan(0); // quick play earns bonuses
+      bonuses += state.snapshot().cascadeClears;
       expect(awarded).toBe(challenge.energyArrowIds.length);
       // Collecting the same arrow again is never paid twice.
       expect(collect(league, day, challenge, challenge.energyArrowIds[0]).status).toBe('duplicate');
     }
+    expect(bonuses).toBeGreaterThan(0); // quick play earned bonuses along the way
   });
 
   it('count towards arrows cleared (statistics and daily log), not towards chain clears', async () => {

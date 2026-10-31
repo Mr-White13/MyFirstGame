@@ -230,6 +230,7 @@ describe('restart and level changes', () => {
       cascadeClears: 0,
       streak: 0,
       streakAt: null,
+      bonusCooldown: 0,
       longestChain: 0,
       mistakes: 0,
       lives: 3,

@@ -48,6 +48,8 @@ const WHEEL_STEP = 1.15;
 const WIN_DIALOG_DELAY = 600;
 /** Pause between the failure effect starting and the Game Over dialog. */
 const FAIL_DIALOG_DELAY = 550;
+/** Streak-bonus arrows start leaving this far apart, all flying at once. */
+const BONUS_STAGGER_MS = 90;
 /** The arrows' intro is spread over at most this long, whatever their number. */
 const INTRO_SPREAD_MS = 280;
 
@@ -339,11 +341,13 @@ export class GameScene extends Phaser.Scene {
           const released = this.views.get(removal.arrowId);
           if (released) steps.push(this.exitStep(released, { auto: true }, { type: 'chain', index }));
         });
-        // Then the cascade (one arrow after another), then red arrows the cascade freed.
-        result.cascade.forEach((removal, index) => {
+        // Then the streak bonus: its arrows fly off together, slightly staggered,
+        // with the same path-following exit as a tapped arrow. Then red arrows it freed.
+        const bonus = result.cascade.flatMap((removal, index) => {
           const swept = this.views.get(removal.arrowId);
-          if (swept) steps.push(this.exitStep(swept, { cascade: true }, { type: 'cascade', index }));
+          return swept ? [this.exitStep(swept, { cascade: true }, { type: 'cascade', index })] : [];
         });
+        if (bonus.length > 0) steps.push(this.sequencer.together(bonus, BONUS_STAGGER_MS, (start, ms) => this.time.delayedCall(ms, start)));
         result.cascadeChain.forEach((removal, index) => {
           const released = this.views.get(removal.arrowId);
           if (released) steps.push(this.exitStep(released, { auto: true }, { type: 'chain', index: result.chain.length + index }));

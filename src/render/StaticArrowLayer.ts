@@ -1,4 +1,4 @@
-import Phaser from 'phaser';
+import type Phaser from 'phaser';
 import type { ArrowView } from './ArrowView';
 import type { BoardLayout } from './layout';
 
@@ -111,6 +111,10 @@ export class StaticArrowLayer {
     }
     this.texture.setPosition(this.origin.x, this.origin.y).setScale(1 / scale);
     this.texture.clear();
+    // Everything drawn from the old cache becomes live first, including arrows that
+    // have just left the board's list to start their exit (chain or bonus releases,
+    // which were never pressed): otherwise they would fly off invisibly.
+    this.cached.forEach((view) => view.graphics.setVisible(true));
     this.cached.clear();
     this.texture.beginDraw();
     for (const view of views) {

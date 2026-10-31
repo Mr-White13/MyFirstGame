@@ -342,12 +342,16 @@ export class ArrowView {
     return this.activated ? p.error : arrowColor(p, this.colorIndex);
   }
 
-  /** Back to the resting look: no offset, no tint, fully visible. */
+  /**
+   * Back to the resting look: no offset, no tint, fully visible. Every
+   * animation starts here, so an arrow that was drawn from the resting cache
+   * (hidden Graphics) is always shown live while it moves.
+   */
   private resetPose(): void {
     this.offset = 0;
     this.trail = 0;
     this.color = this.baseColor;
-    this.graphics.setAlpha(1).setPosition(0, 0);
+    this.graphics.setAlpha(1).setPosition(0, 0).setVisible(true);
   }
 
   private flash(color: number, duration: number): void {
