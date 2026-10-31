@@ -35,6 +35,7 @@ import { Hud } from './ui/Hud';
 import { LevelSelect } from './ui/LevelSelect';
 import { AvatarPicker, CountryPicker } from './ui/Pickers';
 import { ProfileScreen } from './ui/ProfileScreen';
+import { RecordsScreen } from './ui/RecordsScreen';
 import { RecapDialog } from './ui/RecapDialog';
 import { Screens } from './ui/Screens';
 import { SettingsScreen } from './ui/SettingsScreen';
@@ -113,7 +114,9 @@ const profileScreen = new ProfileScreen(LEVELS, {
   onChangeAvatar: () => app?.chooseAvatar(),
   onChangeCountry: () => app?.chooseCountry(),
   onAchievements: () => void app?.showAchievements(),
+  onRecords: () => void app?.showRecords(),
 });
+const recordsScreen = new RecordsScreen(LEVELS, () => void app?.goBack());
 
 const settingsScreen = new SettingsScreen(
   {
@@ -168,6 +171,7 @@ app = new App({
   home,
   levelSelect: new LevelSelect(LEVELS),
   profileScreen,
+  recordsScreen,
   hud,
   themePicker,
   gameLayout,

@@ -1,4 +1,5 @@
-import { formatPrecise, formatTotal } from '../core/time';
+import { formatTotal } from '../core/time';
+import { recordsSummary } from '../progress/chapters';
 import type { LevelData } from '../core/types';
 import { avatarSvg } from '../profile/avatars';
 import { countryName, flagEmoji } from '../profile/countries';
@@ -15,6 +16,8 @@ export interface ProfileActions {
   onChangeAvatar(): void;
   onChangeCountry(): void;
   onAchievements(): void;
+  /** Opens the full personal records view. */
+  onRecords(): void;
 }
 
 /** Daily activity and rewards, shown alongside the play statistics. */
@@ -27,9 +30,7 @@ export interface ProfileRewards {
   readonly total: number;
 }
 
-const SVG_NS = 'http://www.w3.org/2000/svg';
-
-/** Player identity, progress summary, lifetime statistics and per-level records. */
+/** Player identity, progress summary, lifetime statistics and a summary of personal records (the full list has its own screen). */
 export class ProfileScreen {
   private readonly avatar = requireElement('profile-avatar');
   private readonly nickname = requireElement('profile-nickname');
@@ -40,7 +41,6 @@ export class ProfileScreen {
   private readonly countryFlag = requireElement('profile-country-flag');
   private readonly countryName = requireElement('profile-country-name');
   private readonly rank = requireElement('profile-rank');
-  private readonly records = requireElement('profile-records');
   private current?: PlayerProfile;
 
   constructor(
@@ -51,6 +51,7 @@ export class ProfileScreen {
     this.avatar.addEventListener('click', () => actions.onChangeAvatar());
     requireElement('btn-country').addEventListener('click', () => actions.onChangeCountry());
     requireElement('btn-profile-achievements').addEventListener('click', () => actions.onAchievements());
+    requireElement('btn-profile-records').addEventListener('click', () => actions.onRecords());
     requireElement('btn-edit-name').addEventListener('click', () => this.startEditing());
     requireElement('btn-name-cancel').addEventListener('click', () => this.stopEditing());
     this.nameForm.addEventListener('submit', (event) => {
@@ -104,7 +105,12 @@ export class ProfileScreen {
     const since = new Date(stats.trackedSince).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
     this.setText('profile-tracked-since', `Runs counted since ${since}. "Levels cleared" includes replays.`);
 
-    this.records.replaceChildren(...this.levels.map((level) => this.recordRow(level, progress)));
+    // Personal records: a summary here; RecordsScreen pages through the levels.
+    const records = recordsSummary(progress, levelCount);
+    this.setText('records-completed', `${records.completed} / ${records.levels}`);
+    this.setText('records-stars', `${records.stars} / ${records.maxStars}`);
+    this.setText('records-perfect', records.perfect);
+    this.setText('records-timed', records.timed);
   }
 
   /** League standing and lifetime league numbers (Energy Points are separate from Energy Credits). */
@@ -124,41 +130,6 @@ export class ProfileScreen {
     this.setText('stat-longest', days(r.longestStreak));
     this.setText('stat-days', r.daysPlayed);
     this.setText('profile-achievements', `${r.unlocked} / ${r.total}`);
-  }
-
-  private recordRow(level: LevelData, progress: Progress): HTMLLIElement {
-    const record = progress.completed[level.id];
-    const item = document.createElement('li');
-    item.className = 'record';
-    if (!record) item.classList.add('record--empty');
-
-    const name = document.createElement('span');
-    name.className = 'record__level';
-    name.textContent = `Level ${level.id}`;
-    const time = document.createElement('span');
-    time.className = 'record__time';
-    time.textContent = record?.bestTimeMs != null ? formatPrecise(record.bestTimeMs) : record ? 'not timed' : '–';
-    time.classList.toggle('record__time--none', record?.bestTimeMs == null);
-    const stars = document.createElement('span');
-    stars.className = 'record__stars';
-    const earned = record?.bestStars ?? 0;
-    for (let i = 0; i < MAX_STARS; i++) {
-      const svg = document.createElementNS(SVG_NS, 'svg');
-      svg.setAttribute('class', i < earned ? 'star-mini star-mini--earned' : 'star-mini');
-      svg.setAttribute('aria-hidden', 'true');
-      const use = document.createElementNS(SVG_NS, 'use');
-      use.setAttribute('href', '#icon-spark');
-      svg.append(use);
-      stars.append(svg);
-    }
-    item.setAttribute(
-      'aria-label',
-      record
-        ? `Level ${level.id}: best time ${time.textContent}, ${record.bestStars === null ? 'unranked' : `${earned} stars`}`
-        : `Level ${level.id}: not completed`,
-    );
-    item.append(name, time, stars);
-    return item;
   }
 
   /** Closes the nickname field without saving (Android Back). */

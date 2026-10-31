@@ -1,4 +1,4 @@
-export type ScreenName = 'home' | 'levels' | 'game' | 'profile' | 'settings' | 'achievements' | 'league';
+export type ScreenName = 'home' | 'levels' | 'game' | 'profile' | 'records' | 'settings' | 'achievements' | 'league';
 
 /**
  * Where "back" goes. A small history of screens with two rules:

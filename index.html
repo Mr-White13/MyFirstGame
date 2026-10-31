@@ -209,6 +209,22 @@
             </div>
             <div class="meter"><div class="meter__fill" id="progress-fill"></div></div>
           </div>
+          <!-- One chapter of 20 levels at a time (src/progress/chapters.ts). -->
+          <div class="chapter-nav" role="group" aria-label="Chapters">
+            <button type="button" class="icon-btn icon-btn--small" id="btn-chapter-prev" aria-label="Previous chapter">
+              <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
+            </button>
+            <div class="chapter-nav__info" aria-live="polite">
+              <span class="chapter-nav__title" id="chapter-title">Chapter 1</span>
+              <span class="chapter-nav__meta" id="chapter-meta"></span>
+            </div>
+            <button type="button" class="icon-btn icon-btn--small chapter-nav__next" id="btn-chapter-next" aria-label="Next chapter">
+              <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
+            </button>
+            <button type="button" class="icon-btn icon-btn--small" id="btn-chapter-current" aria-label="Jump to the current level">
+              <svg class="icon" aria-hidden="true"><use href="#icon-target" /></svg>
+            </button>
+          </div>
         </header>
         <p class="levels__testing" id="levels-testing" hidden>Testing build: every level is open. Levels you haven't unlocked are test plays and aren't saved.</p>
         <ol class="level-grid" id="level-grid" aria-label="Levels"></ol>
@@ -378,8 +394,50 @@
 
           <section class="profile__card surface" aria-labelledby="profile-records-title">
             <h2 class="card-heading" id="profile-records-title">Personal records</h2>
-            <ol class="records" id="profile-records"></ol>
+            <dl class="stat-grid">
+              <div><dt>Levels completed</dt><dd id="records-completed">0</dd></div>
+              <div><dt>Stars</dt><dd id="records-stars">0</dd></div>
+              <div><dt>Perfect levels</dt><dd id="records-perfect">0</dd></div>
+              <div><dt>Best times set</dt><dd id="records-timed">0</dd></div>
+            </dl>
+            <button type="button" class="btn btn--ghost btn--small profile__records" id="btn-profile-records">
+              <svg class="icon" aria-hidden="true"><use href="#icon-clock" /></svg>
+              <span>All records</span>
+            </button>
           </section>
+        </div>
+      </section>
+
+      <!-- Personal records: one chapter, or a level-number search, at a time (src/ui/RecordsScreen.ts). -->
+      <section class="screen screen--records" id="screen-records" aria-labelledby="records-title">
+        <header class="topbar">
+          <button type="button" class="icon-btn" id="btn-records-back" aria-label="Back">
+            <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
+          </button>
+          <h1 class="topbar__title" id="records-title">Personal records</h1>
+          <span class="topbar__spacer" aria-hidden="true"></span>
+        </header>
+        <div class="records__body">
+          <div class="records__controls surface">
+            <div class="chapter-nav" role="group" aria-label="Chapters">
+            <button type="button" class="icon-btn icon-btn--small" id="btn-records-chapter-prev" aria-label="Previous chapter">
+              <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
+            </button>
+            <div class="chapter-nav__info" aria-live="polite">
+              <span class="chapter-nav__title" id="records-chapter-title">Chapter 1</span>
+              <span class="chapter-nav__meta" id="records-chapter-meta"></span>
+            </div>
+            <button type="button" class="icon-btn icon-btn--small chapter-nav__next" id="btn-records-chapter-next" aria-label="Next chapter">
+              <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
+            </button>
+            </div>
+            <label class="records__search">
+              <svg class="icon" aria-hidden="true"><use href="#icon-search" /></svg>
+              <input type="search" id="records-search" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="Find a level number" aria-label="Find a level by number" />
+            </label>
+          </div>
+          <p class="records__note" id="records-note" aria-live="polite"></p>
+          <ol class="records surface" id="records-list"></ol>
         </div>
       </section>
 
