@@ -15,6 +15,7 @@ export class Screens {
     game: requireElement('screen-game'),
     profile: requireElement('screen-profile'),
     settings: requireElement('screen-settings'),
+    achievements: requireElement('screen-achievements'),
   };
   private current: ScreenName | null = null;
 

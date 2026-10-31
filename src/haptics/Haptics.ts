@@ -1,6 +1,6 @@
 import { Throttle } from '../audio/mix';
 
-export type HapticId = 'release' | 'blocked' | 'lifeLost' | 'chain' | 'complete';
+export type HapticId = 'release' | 'blocked' | 'lifeLost' | 'chain' | 'complete' | 'reward';
 
 /**
  * Vibration patterns in ms (on, off, on, …). All short: the longest is under
@@ -16,6 +16,7 @@ export const HAPTIC_PATTERNS: Readonly<Record<HapticId, number | readonly number
   lifeLost: [30, 50, 30], // distinct double pulse
   chain: 12, // once per chain, not per arrow (see throttle)
   complete: [18, 60, 18, 60, 40], // short celebratory triple
+  reward: [12, 40, 24], // a reward claimed or an achievement unlocked
 };
 
 /** Minimum gap per pattern, so rapid events never turn into continuous buzzing. */
@@ -25,6 +26,7 @@ const HAPTIC_GAP_MS: Readonly<Record<HapticId, number>> = {
   lifeLost: 300,
   chain: 600,
   complete: 1000,
+  reward: 800,
 };
 
 /**

@@ -14,7 +14,11 @@ export type FeedbackEvent =
   | { readonly type: 'complete' }
   /** The completion dialog reveals `stars`; `unlocked` if it opened the next level. `reduced` = no stagger. */
   | { readonly type: 'stars'; readonly stars: number; readonly unlocked: boolean; readonly reduced: boolean }
-  | { readonly type: 'gameOver' };
+  | { readonly type: 'gameOver' }
+  /** A daily reward was claimed. */
+  | { readonly type: 'claim' }
+  /** One or more achievements unlocked. */
+  | { readonly type: 'achievement' };
 
 export interface SoundPlayer {
   play(id: SoundId, options?: SoundOptions & { delay?: number }): boolean;
@@ -75,6 +79,14 @@ export class Feedback {
       }
       case 'gameOver':
         this.sound.play('gameOver');
+        return;
+      case 'claim':
+        this.sound.play('claim');
+        this.haptics.play('reward');
+        return;
+      case 'achievement':
+        this.sound.play('achievement');
+        this.haptics.play('reward');
         return;
     }
   }

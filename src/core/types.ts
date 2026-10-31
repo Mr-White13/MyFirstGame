@@ -78,6 +78,7 @@ export type LevelStatus = 'playing' | 'won' | 'failed';
  * - `moves`: successful player taps (kept for compatibility; equals `directClears`).
  * - `directClears`: arrows the player removed by tapping them.
  * - `autoClears`: activated arrows released automatically by chain reactions.
+ * - `longestChain`: most arrows released by a single move's chain reaction (bookkeeping only).
  * - `mistakes`: taps on a blocked arrow that cost a life (repeat taps on a red arrow don't count).
  * - `lives`: lives left (`STARTING_LIVES - mistakes`, never below 0).
  * - `remaining` / `total`: arrows still on the board / at the start.
@@ -89,6 +90,7 @@ export interface GameSnapshot {
   readonly moves: number;
   readonly directClears: number;
   readonly autoClears: number;
+  readonly longestChain: number;
   readonly mistakes: number;
   readonly lives: number;
   readonly remaining: number;

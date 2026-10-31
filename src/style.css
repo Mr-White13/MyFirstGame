@@ -1580,49 +1580,6 @@ body.is-navigating #app {
   }
 }
 
-.home__daily {
-  padding: 14px 16px 16px;
-  border-radius: var(--r-md);
-  border: 1px dashed rgb(var(--muted-rgb) / 0.22);
-  background: rgb(var(--surface-rgb) / 0.45);
-}
-
-.home__daily-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.daily-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-.daily-list li {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 10px 4px;
-  border-radius: var(--r-sm);
-  background: rgb(var(--muted-rgb) / 0.06);
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-align: center;
-  color: var(--text-faint);
-}
-
-.daily-list .icon {
-  width: 20px;
-  height: 20px;
-  color: var(--text-faint);
-}
-
 /* ---------- Level select back button ---------- */
 
 .levels__back {
@@ -2719,4 +2676,546 @@ body.is-navigating #app {
 :root[data-motion='reduce'] .switch::before,
 :root[data-motion='reduce'] .segmented span {
   transition: none;
+}
+
+/* ---------- Energy Credits ---------- */
+
+.credits-chip {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 14px 0 10px;
+  border-radius: var(--r-pill);
+  font: inherit;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  background: rgb(var(--surface-rgb) / 0.86);
+  border: 1px solid var(--line);
+  box-shadow: var(--highlight);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 120ms var(--ease-out), border-color 160ms ease;
+}
+
+.credits-chip .icon,
+.credits-inline .icon {
+  color: var(--green);
+}
+
+.credits-chip:active {
+  transform: scale(0.96);
+}
+
+.credits-chip:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.credits-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  color: var(--text);
+}
+
+.credits-inline .icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* ---------- Home: daily card and achievements badge ---------- */
+
+.daily-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 12px 12px 16px;
+}
+
+.daily-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.daily-card__streak {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.daily-card__streak .icon {
+  color: var(--orange);
+}
+
+.daily-card__status {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.daily-card__btn {
+  flex: none;
+  color: var(--text);
+  background: rgb(var(--surface-rgb) / 0.9);
+  border: 1px solid var(--line-strong);
+  box-shadow: var(--highlight);
+}
+
+.daily-card__btn .icon {
+  color: var(--purple);
+}
+
+/* A reward waiting: green and lit, but no flashing or countdown. */
+.daily-card__btn--ready {
+  color: var(--on-green);
+  background: var(--green);
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgb(var(--green-rgb) / 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.daily-card__btn--ready .icon {
+  color: currentColor;
+}
+
+.nav-tile__badge {
+  margin-left: auto;
+  font-style: normal;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  color: var(--text-muted);
+  background: rgb(var(--muted-rgb) / 0.12);
+}
+
+/* ---------- Daily rewards dialog ---------- */
+
+.card--daily {
+  width: min(100%, 400px);
+}
+
+.daily__summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.daily__streak {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.daily__streak strong {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  color: var(--text);
+}
+
+.daily__streak .icon {
+  width: 20px;
+  height: 20px;
+  color: var(--orange);
+}
+
+.daily-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.daily-day {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 86px;
+  padding: 8px 4px;
+  border-radius: var(--r-md);
+  background: rgb(var(--muted-rgb) / 0.07);
+  border: 1px solid var(--line);
+  text-align: center;
+}
+
+.daily-day--big {
+  grid-column: span 2;
+  background: linear-gradient(135deg, rgb(var(--purple-rgb) / 0.16), rgb(var(--cyan-rgb) / 0.08));
+  border-color: rgb(var(--purple-rgb) / 0.4);
+}
+
+.daily-day__name {
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.daily-day__icon {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: var(--text-muted);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.daily-day__amount {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.daily-day__tag {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+/* Claimed: a check mark as well as green, so it isn't told by colour alone. */
+.daily-day--claimed {
+  background: rgb(var(--green-rgb) / 0.08);
+  border-color: rgb(var(--green-rgb) / 0.4);
+}
+
+.daily-day--claimed .daily-day__icon {
+  stroke: var(--green);
+  stroke-width: 2.8;
+}
+
+.daily-day--claimed .daily-day__amount {
+  color: var(--text-muted);
+}
+
+.daily-day--missed {
+  border-style: dashed;
+  opacity: 0.6;
+}
+
+.daily-day--missed .daily-day__amount {
+  text-decoration: line-through;
+}
+
+.daily-day--today {
+  background: rgb(var(--cyan-rgb) / 0.1);
+  border: 1.5px solid var(--cyan);
+  box-shadow: 0 0 0 3px rgb(var(--cyan-rgb) / 0.14);
+}
+
+.daily-day--today .daily-day__name {
+  color: var(--cyan);
+}
+
+.daily-day--today .daily-day__icon {
+  stroke: var(--cyan);
+}
+
+.daily-day--upcoming .daily-day__amount {
+  color: var(--text-muted);
+}
+
+.daily__message {
+  min-height: 1.3em;
+  margin: 12px 0 10px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.daily__claim {
+  width: 100%;
+}
+
+.daily-day--pop {
+  animation: reward-pop 420ms var(--ease-spring);
+}
+
+@keyframes reward-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+.reward-float {
+  position: absolute;
+  left: 50%;
+  top: 6px;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--green);
+  pointer-events: none;
+  animation: reward-float 900ms var(--ease-out) forwards;
+}
+
+@keyframes reward-float {
+  0% { opacity: 0; transform: translate(-50%, 6px); }
+  25% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -34px); }
+}
+
+/* ---------- Achievements ---------- */
+
+.screen--achievements {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 12px;
+  padding:
+    max(env(safe-area-inset-top), 14px) calc(var(--gutter) + env(safe-area-inset-right))
+    0 calc(var(--gutter) + env(safe-area-inset-left));
+}
+
+.screen--achievements .topbar {
+  max-width: 480px;
+  justify-self: center;
+}
+
+.achievements__scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 480px;
+  justify-self: center;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 2px 2px max(env(safe-area-inset-bottom), 24px);
+  scrollbar-width: none;
+}
+
+.achievements__summary {
+  padding: 14px 16px;
+}
+
+.achievements__summary .meter__fill,
+.achievement__progress .meter__fill {
+  transform: none;
+  width: 0;
+  transition: width 500ms var(--ease-out);
+}
+
+.achievement-group .card-heading {
+  margin: 0 0 8px 4px;
+}
+
+.achievement-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.achievement {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--r-md);
+  background: rgb(var(--surface-rgb) / 0.7);
+  border: 1px solid var(--line);
+}
+
+.achievement__badge {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgb(var(--muted-rgb) / 0.1);
+  border: 1.5px dashed rgb(var(--muted-rgb) / 0.35);
+}
+
+.achievement__icon {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: var(--text-faint);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.achievement__lock {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 18px;
+  height: 18px;
+  padding: 3px;
+  border-radius: 50%;
+  fill: none;
+  stroke: var(--text-muted);
+  stroke-width: 2.4;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+}
+
+.achievement__title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.achievement__text {
+  margin: 2px 0 0;
+  font-size: 0.76rem;
+  line-height: 1.35;
+  color: var(--text-muted);
+}
+
+.achievement__progress {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px;
+  margin-top: 7px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+.achievement__done {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 5px 0 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--green);
+}
+
+.achievement__check {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.achievement__reward {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 9px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  background: rgb(var(--muted-rgb) / 0.1);
+}
+
+.achievement__reward .icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* Unlocked: a solid neon badge with no dashed ring or lock, so state isn't shown by colour alone. */
+.achievement--unlocked {
+  border-color: rgb(var(--purple-rgb) / 0.35);
+  background: linear-gradient(90deg, rgb(var(--purple-rgb) / 0.1), transparent 60%), rgb(var(--surface-rgb) / 0.86);
+}
+
+.achievement--unlocked .achievement__badge {
+  background: rgb(var(--purple-rgb) / 0.16);
+  border: 1.5px solid var(--purple);
+  box-shadow: 0 0 14px rgb(var(--purple-rgb) / 0.25);
+}
+
+.achievement--unlocked .achievement__icon {
+  stroke: var(--purple);
+}
+
+.achievement--unlocked .achievement__reward {
+  color: var(--green);
+  background: rgb(var(--green-rgb) / 0.1);
+}
+
+/* ---------- Profile rewards card ---------- */
+
+.profile__achievements {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.profile__achievements strong {
+  margin-left: 6px;
+  color: var(--purple);
+}
+
+/* ---------- Toast variants ---------- */
+
+.toast[data-kind='achievement'] {
+  border-color: rgb(var(--purple-rgb) / 0.6);
+  box-shadow: var(--shadow), 0 0 18px rgb(var(--purple-rgb) / 0.2);
+}
+
+.toast[data-kind='reward'] {
+  border-color: rgb(var(--green-rgb) / 0.6);
+}
+
+/* ---------- Rewards: motion and effects ---------- */
+
+:root[data-motion='reduce'] .daily-day--pop {
+  animation: none;
+}
+
+:root[data-motion='reduce'] .reward-float {
+  display: none;
+}
+
+:root[data-motion='reduce'] .achievements__summary .meter__fill,
+:root[data-motion='reduce'] .achievement__progress .meter__fill {
+  transition: none;
+}
+
+:root[data-effects='off'] .achievement--unlocked .achievement__badge,
+:root[data-effects='off'] .daily-card__btn--ready {
+  box-shadow: none;
+}
+
+@media (max-width: 360px) {
+  .daily-grid {
+    gap: 6px;
+  }
+  .daily-day {
+    min-height: 76px;
+  }
+  .daily-card__btn {
+    padding: 0 10px;
+  }
 }

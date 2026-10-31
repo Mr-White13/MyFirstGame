@@ -5,6 +5,10 @@ import { AudioManager } from './audio/AudioManager';
 import { GameState } from './core/GameState';
 import { createGame } from './createGame';
 import { Haptics } from './haptics/Haptics';
+import { DayClock } from './daily/dayKey';
+import { Rewards } from './rewards/Rewards';
+import { AchievementsScreen } from './ui/AchievementsScreen';
+import { DailyDialog } from './ui/DailyDialog';
 import { LEVELS } from './levels';
 import { ProfileStorage } from './profile/Profile';
 import { StatsStorage } from './profile/Stats';
@@ -75,13 +79,15 @@ const home = new HomeScreen(LEVELS, {
   onLevels: () => void app?.showLevelSelect(),
   onProfile: () => void app?.showProfile(),
   onSettings: () => void app?.showSettings(),
-  onComingSoon: (feature) => app?.comingSoon(feature),
+  onDaily: () => app?.openDaily(),
+  onAchievements: () => void app?.showAchievements(),
 });
 const profileScreen = new ProfileScreen(LEVELS, {
   onBack: () => void app?.goBack(),
   onRename: (name) => app?.renameTo(name),
   onChangeAvatar: () => app?.chooseAvatar(),
   onChangeCountry: () => app?.chooseCountry(),
+  onAchievements: () => void app?.showAchievements(),
 });
 
 const settingsScreen = new SettingsScreen(
@@ -94,6 +100,15 @@ const settingsScreen = new SettingsScreen(
   { vibration: haptics.supported, audio: typeof AudioContext !== 'undefined' },
   __APP_VERSION__,
 );
+
+// Daily check-in, Energy Credits and achievements: one saved record. Achievements
+// read the latest progress and statistics from the app.
+const rewards = new Rewards({
+  levels: LEVELS,
+  records: () => ({ progress: app!.currentProgress, stats: app!.currentStats }),
+});
+const dailyDialog = new DailyDialog(() => app?.claimDaily());
+const achievementsScreen = new AchievementsScreen(() => void app?.goBack());
 
 const game = createGame(requireElement('stage'), scene);
 // Sizes the board slot; the scene re-fits the board whenever the slot changes.
@@ -121,6 +136,10 @@ app = new App({
   toast: new Toast(),
   settings,
   feedback: emit,
+  rewards,
+  dayClock: new DayClock(),
+  dailyDialog,
+  achievementsScreen,
 });
 app.start();
 
@@ -151,5 +170,5 @@ audio.setHidden(document.hidden);
 
 // Handy for inspecting the game from DevTools during development.
 if (import.meta.env.DEV) {
-  Object.assign(window, { neon: { app, game, scene, state, settings, audio } });
+  Object.assign(window, { neon: { app, game, scene, state, settings, audio, rewards } });
 }

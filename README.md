@@ -4,7 +4,7 @@ A 2D arrow-clearing puzzle game for mobile, built with **Phaser 3**, **TypeScrip
 
 Tap an arrow to send it flying off the board in the direction it points. It can only leave if nothing is in its way. Clear every arrow to finish the level.
 
-It opens on a **Home** screen with your local **player profile** (nickname, avatar, country) and lifetime **statistics**. Every level is **timed**, with personal bests. A **Settings** screen offers four visual themes, reduced motion and effects options, synthesised sound effects and ambient music, vibration and gameplay preferences. The game has **10 hand-made levels** that grow from a 5-arrow tutorial to dense 9×9 boards. It includes a level select screen, unlockable progression and progress saved in the browser.
+It opens on a **Home** screen with your local **player profile** (nickname, avatar, country) and lifetime **statistics**. Every level is **timed**, with personal bests. A **Settings** screen offers four visual themes, reduced motion and effects options, synthesised sound effects and ambient music, vibration and gameplay preferences. A **daily check-in** with a 7-day reward cycle, login streaks, **Energy Credits** and **12 achievements** reward coming back. The game has **10 hand-made levels** that grow from a 5-arrow tutorial to dense 9×9 boards. It includes a level select screen, unlockable progression and progress saved in the browser.
 
 ## Requirements
 
@@ -114,16 +114,16 @@ The completion dialog shows the time precisely (`24.6 s`, `1:35.2`) next to your
 ## Screens and progression
 
 The game opens on **Home**:
-- **Header:** Settings, and your avatar and nickname, which open the Profile.
+- **Header:** Settings, your **Energy Credits** balance (opens Daily rewards), and your avatar and nickname, which open the Profile.
 - **Play card:** the next level to play, a big **Play / Continue / Play again** button, your level progress and your total stars.
-- **Menu:** **Levels**, **Profile**, **Settings** and **Events** ("coming soon").
-- **Daily activity:** a preview of the login streak, daily challenge and special events. These aren't implemented yet.
+- **Daily card:** your login streak and today's reward: a green **Claim +N** when it's ready, otherwise "Claimed today · Tomorrow +N" and a **Rewards** button. See "Daily rewards, streaks and achievements".
+- **Menu:** **Levels**, **Profile**, **Awards** (achievements, with *n*/12) and **Settings**. The old "Events" and "Daily activity (coming soon)" placeholders were replaced by these.
 
 Other screens:
 
 1. **Level select:** all 10 levels with grid size or best stars, your completion count and star total, and a Continue button. Completed levels show a check, the next level glows, and locked levels show a lock and can't be opened.
 2. **Gameplay:** a compact HUD above the board: back, the level title with the timer (can be hidden in Settings), restart, then your hearts, a progress meter and arrows left. Restart is disabled until you've made a move or a mistake; with **Confirm restart** on (the default) it asks first. If leaving would lose an unfinished attempt, you're asked to confirm first.
-3. **Settings:** see "Settings" below.
+3. **Settings:** see "Settings" below. **Achievements** and the **Daily rewards** calendar: see "Daily rewards, streaks and achievements".
 4. **Profile:** your avatar, nickname, country and rank, then a progress summary, statistics and personal records (see below).
 5. **Level complete:** stars and lives left, time and personal best, arrows cleared (with chain clears) and mistakes, plus "New best time!", "Best rating!" and "Level *n* unlocked" chips. Buttons: **Next level**, **Restart** and **Levels**. After level 10 a **game-complete** variant offers **Play from level 1**.
 6. **Game Over:** see "Lives" above.
@@ -168,7 +168,7 @@ Everything is local: no account, no backend, nothing leaves the device.
 
 ### Saved data
 
-Four separate keys in `localStorage`, each versioned and loaded with the same safety rules (`src/storage/SafeStore.ts`):
+Five separate keys in `localStorage`, each versioned and loaded with the same safety rules (`src/storage/SafeStore.ts`):
 
 | Key | Contents | Version |
 | --- | -------- | ------- |
@@ -176,6 +176,7 @@ Four separate keys in `localStorage`, each versioned and loaded with the same sa
 | `neon-escape.profile` | Nickname, avatar, country | 1 |
 | `neon-escape.stats` | Lifetime counters and `trackedSince` | 1 |
 | `neon-escape.settings` | Theme, motion, effects, audio, vibration and gameplay options (see "Settings") | 1 |
+| `neon-escape.rewards` | Daily check-in, Energy Credits wallet, achievements (see "How rewards are saved") | 1 |
 
 ```json
 { "version": 4, "highestUnlocked": 4, "completed": {
@@ -327,6 +328,104 @@ Key `neon-escape.settings`, version 1, separate from progress, profile and stati
 11. **Reset settings:** change a few settings, finish a level, then Reset settings → Reset. Settings return to defaults; Levels and Profile still show your stars, times and statistics.
 12. **Storage:** in DevTools → Application → Local Storage, `neon-escape.settings` updates on every change. Set it to `{oops` and refresh: defaults load and the bad value is kept in `neon-escape.settings.backup`.
 
+## Daily rewards, streaks and achievements
+
+### Daily check-in and login streak
+
+- **Check-in is automatic.** Opening the game on a day (starting it, refreshing, coming back from the background, or midnight passing while it is in front of you) counts that day. Checking in several times on one day changes nothing.
+- **Streak:** consecutive calendar days with a check-in. The next day adds 1; missing a day starts again at 1. The **longest streak** never goes down. **Days played** counts distinct days.
+- **Claiming is always a tap.** Check-in never pays anything; leaving the game open overnight doesn't either. When a new day is noticed, Home updates to show the reward is ready, and you claim it in **Daily rewards**.
+- **No pressure:** there are no countdowns or timers. A claimed day just says what tomorrow brings.
+
+### Reward cycle
+
+| Day | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+| --- | - | - | - | - | - | - | - |
+| Energy Credits | 10 | 15 | 20 | 25 | 30 | 40 | 75 |
+
+The day of the cycle follows the streak: streak 1 = Day 1, streak 7 = Day 7, streak 8 starts again at Day 1. Missing a day restarts the cycle at Day 1, but credits already earned are always kept. A day you played without claiming shows as **Missed** in the calendar. These amounts are initial balancing values (`DAILY_REWARDS` in `src/daily/Daily.ts`).
+
+Open the calendar from the **daily card** on Home or the **credits chip** in the Home header. It shows the streak, the balance, and the 7 days: claimed (check mark), missed (dashed, struck through), today (highlighted) and upcoming. Claiming plays a short pop and "+N" with a count-up of the balance, a sound and a short vibration. With reduced motion only the numbers change; with sound or vibration off, those are skipped.
+
+### Energy Credits and Energy Points
+
+**Energy Credits** are the reward currency added in this step:
+- Earned from daily rewards and achievements. They never reset.
+- Offline only: they can't be bought, transferred or exchanged, and have no real-money value.
+- There is no shop yet. The wallet already supports validated spending (`spend()`), so cosmetics or optional hints can be added later without changing the save format.
+
+**Energy Points** are a different thing, coming in Step 10: points collected from special arrows during play that count toward daily league progress and reset with each competition. They will have their own record. Nothing in the wallet counts them, and the two are never mixed.
+
+### Achievements
+
+Twelve achievements, shown on the **Achievements** screen (Home → Awards, or Profile → Achievements) with icon, description, progress, reward and locked/unlocked state, plus "*n* / 12 achievements unlocked".
+
+| Achievement | Requirement | Credits |
+| ----------- | ----------- | ------- |
+| First Escape | Complete your first level | 15 |
+| Perfect Run | Finish a level with 3 stars | 20 |
+| Chain Reaction | Free a red arrow so it leaves on its own | 20 |
+| Double Chain | Release 2 red arrows in a single chain reaction | 40 |
+| Puzzle Explorer | Complete 5 different levels | 30 |
+| Puzzle Veteran | Complete all 10 levels | 60 |
+| Speed Runner | Complete a level with 10+ arrows in under 30 seconds | 40 |
+| Flawless Five | Earn 3 stars on 5 different levels | 50 |
+| First Check-in | Claim a daily reward | 10 |
+| Three-Day Streak | Play on 3 days in a row | 20 |
+| Weekly Explorer | Play on 7 days in a row | 50 |
+| Dedicated Player | Play on 14 different days | 60 |
+
+**Adjusted to the real rules.** A chain reaction can release at most **two** arrows: only two red arrows can exist while a life is left, because the third mistake ends the level. "Clear 3 / 5 arrows in one chain" would be impossible, so they became Chain Reaction (one automatic release) and Double Chain (two in one move). A test searches the levels to prove a 2-arrow chain is reachable (from level 2 on) and a 3-arrow chain is not. Speed Runner only counts levels with 10+ arrows (levels 4–10), so the tutorial can't make it trivial.
+
+- Progress is computed from data the game already saves (progress, statistics, daily record), plus the longest chain ever, which is recorded after every attempt (`longestChain` is now part of the game snapshot; the rules are unchanged).
+- Each achievement unlocks **once**, and its credits are paid once. Replays never pay again.
+- **Existing players** get what they've already earned the first time this version starts (for example First Escape if level 1 was completed before). Each is still paid only once.
+- Unlocking shows a small notice at the bottom of the screen (several at once are combined into one) with a short sound and vibration. It never blocks play.
+
+### How rewards are saved
+
+All of this is **one** record, `neon-escape.rewards` (version 1), separate from the other saves:
+
+```json
+{ "version": 1,
+  "daily": { "lastCheckIn": "2026-10-31", "streak": 3, "longestStreak": 5, "daysPlayed": 12,
+             "lastClaim": "2026-10-31", "claims": 9, "claimedDays": ["2026-10-29", "2026-10-30", "2026-10-31"],
+             "history": ["…", "2026-10-31"] },
+  "wallet": { "credits": 245, "earned": 245, "applied": ["achievement:first-escape", "daily:2026-10-31"] },
+  "achievements": { "first-escape": "2026-10-20" },
+  "bestChain": 2 }
+```
+
+- **Atomic claims.** A claim, its credits and any achievement it completes are written in a single `localStorage.setItem`. There is never a moment where the claim is saved and the credits aren't, or the other way round. If the write fails, neither is saved.
+- **No duplicate rewards.** Every credit has a transaction id (`daily:<date>`, `achievement:<id>`), and the wallet refuses an id it has already applied. On top of that, the daily record only lets claims move forward in time. So a double tap, a refresh, or a hand-edited daily record can't pay the same day twice, and an unlock record that gets lost doesn't pay an achievement twice. Daily ids are trimmed to the last 30; achievement ids are kept forever.
+- **Validation** is the same as for the other saves (`SafeStore`). Every part is checked separately: bad dates, negative counters and unknown achievements are dropped or repaired, and a balance above what was ever earned is clamped. Corrupted data is backed up to `neon-escape.rewards.backup`, a save from a newer version is never overwritten, and without storage the rewards work for the session.
+- **Migration:** this is the first version of the record. Existing progress, profile, statistics and settings keys are not touched (a test checks they are byte-for-byte unchanged).
+- **Not tamper-proof.** `localStorage` is readable and writable by anyone with DevTools. These protections stop accidents and bugs, not deliberate editing. That is acceptable for an offline game with no real-money value, but it is the reason leagues will need a server.
+
+### Dates and times
+
+- A day is the **device-local calendar date** (`YYYY-MM-DD`), not a 24-hour interval and not the UTC date. Differences are counted in calendar days, so daylight-saving days (23 or 25 hours) and month and year ends behave correctly (all tested in a DST time zone).
+- **This is an offline system using the device clock, which the player can change.** Moving the clock **back** is handled: no streak change and no reward for a date earlier than one already checked in or claimed; the calendar explains that rewards resume later. Moving the clock **forward** can't be detected offline.
+- **Time zones:** only the local date matters. Flying west so that it is "yesterday" again counts as the clock moving back (nothing happens). Crossing the date line eastwards can skip a date and reset the streak.
+- **New day while open:** one timer is set for the next local midnight (no polling), and the date is re-checked whenever the game becomes visible again, because timers don't run while a phone sleeps.
+
+### Foundation for daily content (Step 10)
+
+`src/daily/dayKey.ts` is the shared base for anything date-based: `dayKey()` (a stable daily id), `daysBetween()` / `addDays()`, `DayClock` (new-day detection), `doneOn()` / `recordDay()` (was it done today?), and a small `DailyObjective` interface for future daily goals. Daily challenges, Energy Points and leagues can reuse these without new date logic. No daily puzzles exist yet.
+
+### Manual testing in Chrome
+
+1. `npm run dev`, open http://localhost:5173 with device emulation (`Ctrl+Shift+M`).
+2. **First day:** Home shows "1-day streak · Day 1 reward ready" and a green **Claim +10**. Tap it: the calendar opens with Day 1 highlighted. Claim: Day 1 pops and gets a check, "+10" floats up, the balance counts up, and "Achievement unlocked: First Check-in · +10" appears. Double-tapping Claim pays once.
+3. **Refresh:** the claim and balance stay; Home says "Claimed today · Tomorrow +15".
+4. **Next day:** in DevTools → Application → Local Storage, edit `neon-escape.rewards`: set `daily.lastCheckIn`, `daily.lastClaim` and the last `claimedDays` entry one day earlier (e.g. `2026-10-30`), then refresh. The streak becomes 2 and Day 2 (+15) is ready.
+5. **Missed day:** move those dates two or more days back instead and refresh. The streak restarts at 1, the cycle at Day 1, and the balance is unchanged.
+6. **Clock moved back:** set `lastCheckIn` to tomorrow's date and refresh. Nothing can be claimed and the calendar explains why.
+7. **Achievements:** Home → Awards. Complete level 1 with 3 stars: First Escape and Perfect Run unlock once (replays don't repeat them). Tap two blocked arrows, then clear what blocks them, to see Chain Reaction or Double Chain (level 2 works well).
+8. **Profile:** the "Daily & rewards" card shows credits, streaks and days played, and links to Achievements.
+9. **Corruption:** set `neon-escape.rewards` to `{oops` and refresh. Rewards start fresh, the bad value is kept in `neon-escape.rewards.backup`, and levels, stars, times and settings are untouched.
+10. **Preferences:** with Reduced motion on, claims show no pop or float; with Sound off, no sounds; with Vibration off, no pulses. In the Light theme the calendar and cards follow the theme.
+
 ## Levels
 
 Ten curated levels with a steadily rising estimated difficulty. The full analysis, including the
@@ -404,6 +503,16 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     ├── levelgen/          Offline level generator (developer tool, not in the game bundle)
     │   └── generateLevel.ts   Seeded generation, refinement, layout similarity
     │
+    ├── daily/             Calendar-day logic, shared by daily features
+    │   ├── dayKey.ts          Local day ids, day arithmetic, DayClock (new-day detection), daily objectives
+    │   └── Daily.ts           Check-in, streaks, 7-day reward cycle, claims, calendar view
+    │
+    ├── rewards/           Energy Credits and achievements
+    │   ├── Rewards.ts         One saved record (daily + wallet + achievements); atomic claims
+    │   ├── Wallet.ts          Energy Credits: validated, de-duplicated transactions
+    │   ├── Achievements.ts    The 12 achievements and their progress
+    │   └── chainFeasibility.ts Proves chain achievements are reachable (used by tests)
+    │
     ├── settings/          Player preferences, separate from progress
     │   ├── Settings.ts        Settings model, validation, versioned storage and migration, SettingsStore
     │   └── Appearance.ts      Theme / reduced-motion / effects resolution; applies them to CSS and the board
@@ -444,12 +553,14 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     │   └── MoveSequencer.ts Plays one action's animations in order; input lock with cancel tokens
     │
     └── ui/                DOM views, no game rules
-        ├── Screens.ts         Switches between Home, Levels, Game, Profile and Settings
+        ├── Screens.ts         Switches between Home, Levels, Game, Profile, Settings and Achievements
+        ├── DailyDialog.ts     Daily rewards calendar and claim animation
+        ├── AchievementsScreen.ts Achievement cards, progress and summary
         ├── SettingsScreen.ts  Settings controls (switches, segmented controls, sliders)
         ├── HomeScreen.ts      Start screen: identity, next level, progress, menu
-        ├── ProfileScreen.ts   Identity, summary, statistics, personal records, nickname editing
+        ├── ProfileScreen.ts   Identity, summary, statistics, daily & rewards, personal records, nickname editing
         ├── Pickers.ts         Avatar grid and searchable country list
-        ├── Toast.ts           Short "coming soon" messages
+        ├── Toast.ts           Short notices (achievement unlocked, settings reset)
         ├── GameLayout.ts      Sizes the board slot so the HUD and board form one centred group
         ├── LevelSelect.ts     Level tiles and progress summary
         ├── Hud.ts             In-game timer, hearts, arrows left, back and restart buttons
@@ -567,6 +678,6 @@ layout aren't compared with the new one.
 
 ## Not in this prototype
 
-Capacitor/Android packaging, in-game level generation (the generator is an offline developer tool), hints, lives, power-ups and monetisation are intentionally left out.
+Capacitor/Android packaging, in-game level generation (the generator is an offline developer tool), hints, power-ups, a shop, leagues, accounts, ads and monetisation are intentionally left out. Energy Credits cannot be bought.
 
 **About scoring:** the star rating (lives left) is the measure of skill. The move counter is kept for compatibility. It counts arrows you cleared by tapping, so it equals the arrow count minus chain-reaction releases, and it isn't used for ratings.
