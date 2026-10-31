@@ -5,3 +5,10 @@ dist/
 .vscode/
 .idea/
 .tools/
+
+# Android (Capacitor). Build output, the copied web build and machine-specific
+# files are already ignored by android/.gitignore; never commit signing keys or APKs.
+*.apk
+*.aab
+*.jks
+*.keystore

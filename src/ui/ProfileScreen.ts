@@ -161,6 +161,11 @@ export class ProfileScreen {
     return item;
   }
 
+  /** Closes the nickname field without saving (Android Back). */
+  cancelEditing(): void {
+    if (this.isEditing) this.stopEditing();
+  }
+
   private startEditing(): void {
     this.nameInput.value = this.current?.nickname ?? '';
     this.nameError.textContent = '';

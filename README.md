@@ -42,6 +42,9 @@ Optionally, in Chrome's menu choose **Add to Home screen** to play full-screen w
 | `npm run levels:analyze` | Search score and lives model for every level (`-- --level N` for details, `-- --json` for data) |
 | `npm run levels:validate` | Check every level: valid, solvable, readable, not a near-duplicate |
 | `npm run levels:generate` | Generate candidate levels offline (see "Level tools" below) |
+| `npm run levels` | Same as `levels:validate` |
+| `npm run android:apk` | Build a debug APK of the Android app (see "Android app") |
+| `npm run android:sync` / `android:open` / `android:run` | Copy the web build into the Android project / open it in Android Studio / run it on a phone or emulator |
 
 ## Playing as an Android phone in Chrome DevTools
 
@@ -52,6 +55,116 @@ Optionally, in Chrome's menu choose **Add to Home screen** to play full-screen w
 5. DevTools now emulates touch input, so clicks behave like taps. Portrait is the main layout. Use the rotate button to check landscape, where the HUD moves into a side column.
 
 Good sizes to check are 360×800, 390×844 and 412×915 (use **Responsive** and type the size).
+
+## Android app (Capacitor)
+
+NEON ESCAPE also runs as an installed Android app. [Capacitor](https://capacitorjs.com) 8 wraps the production web build (`dist/`) in a native WebView. The game code is the same: you keep developing in the browser with `npm run dev`, and build a new APK whenever you want.
+
+### What's set up
+
+| | |
+| --- | --- |
+| App name | NEON ESCAPE |
+| App id | `dev.neonescape.prototype` (temporary, see "Changing the app id") |
+| Web content | `dist/`, copied into the app by `cap sync`. Everything is bundled: no internet needed to play. |
+| Orientation | Portrait only (`android:screenOrientation="portrait"` in `AndroidManifest.xml`) |
+| Full screen | Immersive: status and navigation bars are hidden and appear briefly when you swipe from an edge (`MainActivity.java`). The page is edge-to-edge and the existing CSS safe-area padding keeps the UI clear of the notch and gesture area (`SystemBars.insetsHandling: "native"` in `capacitor.config.json`). |
+| Back button / gesture | Follows the game: closes the open dialog or picker, cancels nickname editing, answers an end-of-level dialog as "Levels"/"League", leaves a level (asking "Leave level?" if an attempt would be lost), or goes to the previous screen. On Home it sends the app to the background (like the Home button) instead of closing it. Escape on desktop works as before. |
+| Background | Pausing the app pauses the level timer (play time is saved), fades the music and suspends audio, and stops vibration. Resuming continues the timer, resumes audio, and checks for a new day (daily reward, league settlement). Uses the native pause/resume events as well as the page's own visibility events. |
+| Vibration | Native, through `@capacitor/haptics` (`src/native/nativeApp.ts`), with the same short patterns as the browser. Android's WebView doesn't reliably support the web Vibration API, so the browser backend isn't used in the app. The Vibration setting works the same way. |
+| Audio | The same synthesised Web Audio. As in Chrome, it starts after your first tap. |
+| Saved data | `localStorage` inside the app's private WebView storage: progress, profile, statistics, settings, daily rewards, achievements and league all work as in the browser. The app's data is separate from Chrome's (your browser progress doesn't move to the phone), and it is deleted if the app is uninstalled. Updating the app over the old one keeps it. |
+| No | ads, accounts, network calls or backend. The only permissions are `INTERNET` (Capacitor's default, unused by the game) and `VIBRATE`. |
+
+### Scripts
+
+| Command | What it does |
+| --- | --- |
+| `npm run android:sync` | Builds the web app and copies it into `android/` (run after every web change) |
+| `npm run android:apk` | `android:sync`, then builds a **debug APK** with Gradle and prints its path |
+| `npm run android:open` | Opens the `android/` project in Android Studio |
+| `npm run android:run` | `android:sync`, then installs and starts the app on a connected phone or a running emulator |
+
+The APK is written to `android/app/build/outputs/apk/debug/app-debug.apk`.
+
+### What you need (one-time)
+
+- **Android Studio** (it includes the Android SDK and a Java runtime). Open it once and finish the setup wizard so the SDK is installed. The build finds both in their default locations; otherwise set `JAVA_HOME` and `ANDROID_HOME`.
+- Missing SDK parts (platform 36, build tools) are downloaded automatically on the first build. The first build also downloads Gradle and takes a few minutes; later builds take about 30 seconds.
+- The project uses **Gradle 9.1** because current Android Studio runs on Java 25 and older Gradle versions can't (Capacitor's template shipped Gradle 8.14.3). The Android Gradle Plugin stays at Capacitor's tested 8.13.0.
+
+### Build the debug APK
+
+From the project folder:
+
+```bash
+npm run android:apk
+```
+
+Or in Android Studio: `npm run android:open`, wait for "Gradle sync" to finish (bottom status bar), then **Build → Build App Bundle(s) / APK(s) → Build APK(s)**. When it's done, click **locate** in the notification to open the folder with `app-debug.apk`.
+
+### Install it on your phone
+
+1. Copy `app-debug.apk` to the phone: USB cable (copy it to *Download*), Google Drive, email to yourself, or Nearby Share / Quick Share.
+2. On the phone, open the file (Files app → Downloads). Android asks to allow installing apps from that source (Files, Drive, Chrome…): allow it for that app, then tap **Install**.
+3. Google Play Protect may warn about an app from an unknown developer. That's expected for your own debug build: choose **Install anyway**.
+4. Open **NEON ESCAPE** from the app drawer.
+
+**With a USB cable and developer mode** (faster for repeated testing): enable *Developer options* (tap *Build number* in *About phone* 7 times), turn on *USB debugging*, connect the phone, accept the prompt, then run `npm run android:run`.
+
+### What to test on the phone
+
+1. It starts full screen in portrait, with no white flash, and nothing hidden under the notch or the gesture bar.
+2. Tap Play: the first tap starts the music (if enabled); arrows, sounds and vibration work. Toggle Settings → Vibration and Sound to check they respond.
+3. Back: from a level it asks "Leave level?" (after a move), from Levels/Profile/Settings it goes back, it closes dialogs, and on Home it sends the app to the background.
+4. Press Home during a level, wait, and come back: the timer didn't run while away and the music resumes.
+5. Force-close the app (recent apps → swipe away) and reopen: progress, stars, settings, credits and the daily calendar are still there.
+6. Turn on airplane mode: everything still works.
+7. Rotate the phone: the game stays in portrait.
+
+**Tested so far:** on the Android emulator (Android 17 / API 37, WebView Chrome 145): immersive full screen, Back in dialogs, levels and on Home, pause/resume of the timer and audio, native vibration calls, and saved data surviving a force-close. **Not yet tested on a physical phone.** Once, on the emulator, Android delivered an extra Back event right after the app resumed, which opened "Leave level?" (nothing is lost; tap Keep playing). It didn't reproduce; if it happens on a phone, report it.
+
+### After changing the code
+
+The app contains a copy of the web build, so rebuild after each change:
+
+```bash
+npm run android:apk
+```
+
+Then install the new APK over the old one. Your saved progress on the phone is kept, as long as the app id and signing key stay the same; debug builds from the same computer share a debug key.
+
+### Debug APK vs release AAB
+
+| | Debug APK (`app-debug.apk`) | Release AAB (`app-release.aab`) |
+| --- | --- | --- |
+| For | Testing on your own devices | Publishing on Google Play |
+| Signed with | An automatic debug key on this computer | Your private upload key (keep it safe and never commit it: `*.jks` / `*.keystore` are git-ignored) |
+| Install | Directly on a phone | Google Play builds device-specific APKs from it; it can't be installed directly |
+| Optimised | No (debuggable, larger) | Yes (can be minified) |
+
+A release build needs a signing key (Android Studio: **Build → Generate Signed App Bundle / APK**), a final app id, an app icon, a version code and a Play Console account. None of this is set up yet.
+
+### Changing the app id
+
+The id must be unique on Google Play and can never change after publishing. Pick a reverse-domain id you control (for example `com.yourname.neonescape`) before the first release, then:
+1. Set `appId` in `capacitor.config.json`.
+2. Set `namespace` and `applicationId` in `android/app/build.gradle`.
+3. Move `MainActivity.java` to the matching folder under `android/app/src/main/java/` and update its `package` line.
+4. Update `package_name` and `custom_url_scheme` in `android/app/src/main/res/values/strings.xml`.
+5. Run `npm run android:sync`.
+
+A new id is a different app on the phone: it installs next to the old one with empty saved data.
+
+### Files
+
+- `capacitor.config.json`: app id, name, web folder, background colour, safe-area handling.
+- `android/`: the native project (committed). Build output, the copied web build (`app/src/main/assets/public`) and `local.properties` are ignored by `android/.gitignore`.
+- `android/app/src/main/java/.../MainActivity.java`: immersive full screen.
+- `src/native/nativeApp.ts`: Back button, pause/resume and native vibration. It does nothing in the browser.
+- `scripts/android-apk.mjs`: the APK build behind `npm run android:apk`.
+
+**Not yet:** app icon and splash screen (Capacitor defaults), release signing, store listing. Capacitor's CLI sends anonymous usage data; turn it off with `npx cap telemetry off`.
 
 ## How to play
 
@@ -630,6 +743,9 @@ count. The only real challenge is **finding an arrow that can escape**, again an
 ```
 ├── index.html             App shell: level select and game screens, dialogs, shared SVG icons
 ├── vite.config.ts
+├── capacitor.config.json  Android app id, name and web folder (Capacitor)
+├── android/               Native Android project (Capacitor); MainActivity.java = immersive full screen
+├── scripts/android-apk.mjs Debug APK build used by `npm run android:apk`
 ├── docs/level-analysis.md  Difficulty analysis of the levels (old vs new)
 ├── tools/                 Level CLI (analyze, validate, generate) and its build config
 ├── tsconfig.json
@@ -699,6 +815,9 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     │   ├── avatars.ts         10 original inline-SVG avatars
     │   ├── countries.ts       ISO 3166-1 alpha-2 list, names via Intl, flag emoji, search
     │   └── Stats.ts           Lifetime counters per attempt, stats storage
+    │
+    ├── native/
+    │   └── nativeApp.ts       Android app only: Back button, pause/resume, native vibration (no-op in browsers)
     │
     ├── storage/
     │   └── SafeStore.ts       One versioned localStorage record: backups, newer-save protection
@@ -848,6 +967,6 @@ layout aren't compared with the new one.
 
 ## Not in this prototype
 
-Capacitor/Android packaging, in-game level generation (the generator is an offline developer tool), hints, power-ups, a shop, online leagues or leaderboards, accounts, ads and monetisation are intentionally left out. Energy Credits cannot be bought.
+Release signing and store publishing, a custom app icon and splash screen, in-game level generation (the generator is an offline developer tool), hints, power-ups, a shop, online leagues or leaderboards, accounts, ads and monetisation are intentionally left out. Energy Credits cannot be bought.
 
 **About scoring:** the star rating (lives left) is the measure of skill. The move counter is kept for compatibility. It counts arrows you cleared by tapping, so it equals the arrow count minus chain-reaction releases, and it isn't used for ratings.

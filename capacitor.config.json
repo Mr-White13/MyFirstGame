@@ -1,0 +1,13 @@
+{
+  "appId": "dev.neonescape.prototype",
+  "appName": "NEON ESCAPE",
+  "webDir": "dist",
+  "android": {
+    "backgroundColor": "#101522"
+  },
+  "plugins": {
+    "SystemBars": {
+      "insetsHandling": "native"
+    }
+  }
+}

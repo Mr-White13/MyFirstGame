@@ -13,12 +13,22 @@
     "levels:build": "vite build --config tools/vite.config.ts",
     "levels:analyze": "npm run levels:build --silent && node .tools/levels.mjs analyze",
     "levels:validate": "npm run levels:build --silent && node .tools/levels.mjs validate",
-    "levels:generate": "npm run levels:build --silent && node .tools/levels.mjs generate"
+    "levels:generate": "npm run levels:build --silent && node .tools/levels.mjs generate",
+    "levels": "npm run levels:validate",
+    "android:sync": "npm run build && cap sync android",
+    "android:open": "cap open android",
+    "android:apk": "npm run android:sync && node scripts/android-apk.mjs",
+    "android:run": "npm run android:sync && cap run android"
   },
   "dependencies": {
+    "@capacitor/android": "^8.6.0",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/core": "^8.6.0",
+    "@capacitor/haptics": "^8.0.2",
     "phaser": "^3.90.0"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.6.0",
     "@types/node": "^22.20.5",
     "typescript": "^7.0.2",
     "vite": "^8.3.5",
