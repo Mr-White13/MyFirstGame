@@ -4,7 +4,8 @@ import { Feedback, type FeedbackEvent } from './app/Feedback';
 import { AudioManager } from './audio/AudioManager';
 import { GameState } from './core/GameState';
 import { createGame } from './createGame';
-import { Haptics } from './haptics/Haptics';
+import { Haptics, webVibrationBackend } from './haptics/Haptics';
+import { connectNativeApp, isNativeApp, nativeHapticsBackend } from './native/nativeApp';
 import { DayClock } from './daily/dayKey';
 import { Rewards } from './rewards/Rewards';
 import { AchievementsScreen } from './ui/AchievementsScreen';
@@ -42,7 +43,8 @@ const appearance = new Appearance(settings, {
 });
 const audio = new AudioManager(settings.current);
 audio.listenForGestures(document);
-const haptics = new Haptics(() => settings.current.haptics);
+// In the Android app vibration goes through the native Haptics plugin; in browsers, the Vibration API.
+const haptics = new Haptics(() => settings.current.haptics, isNativeApp() ? nativeHapticsBackend() : webVibrationBackend());
 const feedback = new Feedback(audio, haptics);
 const emit = (event: FeedbackEvent) => feedback.handle(event);
 
@@ -174,13 +176,20 @@ appearance.onChange(() => {
 });
 applySettings();
 
-// Backgrounded app: silence music and effects, stop any vibration; resume when visible.
-document.addEventListener('visibilitychange', () => {
-  audio.setHidden(document.hidden);
-  if (document.hidden) haptics.stop();
+// Backgrounded app: pause the level timer and save play time, silence music and
+// effects, stop any vibration; resume when visible. Browsers report this with
+// visibilitychange; the Android app also with native pause/resume. Repeats are harmless.
+const setBackground = (hidden: boolean) => {
+  app!.setBackground(hidden);
+  audio.setHidden(hidden);
+  if (hidden) haptics.stop();
   else settingsScreen.setAudioUnavailable(audio.isUnavailable);
-});
+};
+document.addEventListener('visibilitychange', () => setBackground(document.hidden));
 audio.setHidden(document.hidden);
+
+// Android: the Back button/gesture follows the game's own navigation and dialogs.
+connectNativeApp({ onBack: () => app!.handleBack(true), onBackground: setBackground });
 
 // Handy for inspecting the game from DevTools during development.
 if (import.meta.env.DEV) {

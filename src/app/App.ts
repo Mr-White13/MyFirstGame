@@ -90,6 +90,8 @@ export class App {
   private readonly history = new NavigationHistory();
   private readonly attempt = new AttemptTracker();
   private clockTimer = 0;
+  /** True while the app is hidden or in the background (browser tab or Android app). */
+  private background = false;
   /** The Daily League challenge being played, or null for a regular level. */
   private challenge: DailyChallenge | null = null;
   /** True while the open attempt is a challenge: it never touches level progress or statistics. */
@@ -120,7 +122,7 @@ export class App {
     hud.onBack(() => void this.leaveLevel());
     hud.onRestart(() => void this.requestRestart());
     document.addEventListener('keydown', (event) => this.handleKey(event));
-    document.addEventListener('visibilitychange', () => this.handleVisibility());
+    document.addEventListener('visibilitychange', () => this.setBackground(document.hidden));
 
     // Daily check-in: now, and whenever the date changes while the game is open
     // (midnight, or noticed on return from the background). Never pays out by itself.
@@ -147,6 +149,7 @@ export class App {
     // and again whenever it auto-resumes on returning to the tab.
     game.events.once(Phaser.Core.Events.POST_RENDER, () => this.syncGameLoop());
     game.events.on(Phaser.Core.Events.VISIBLE, () => this.syncGameLoop());
+    this.background = document.hidden;
     if (document.hidden) this.attempt.timer.pause('hidden');
     void this.parts.screens.show(this.history.current);
   }
@@ -689,9 +692,13 @@ export class App {
   /**
    * Hidden tab or backgrounded app: pause the clock and save the play time so
    * far, because the page may never come back. Visible again: resume.
+   * Called from the page's visibilitychange and, in the Android app, from the
+   * native pause/resume events; repeated calls with the same state do nothing.
    */
-  private handleVisibility(): void {
-    if (document.hidden) {
+  setBackground(hidden: boolean): void {
+    if (hidden === this.background) return;
+    this.background = hidden;
+    if (hidden) {
       this.attempt.timer.pause('hidden');
       const played = this.attempt.checkpoint();
       if (played > 0 && !this.attemptIsChallenge) {
@@ -717,16 +724,37 @@ export class App {
   }
 
   /** Escape: closes the topmost dialog or picker, otherwise acts as "back" (desktop convenience). */
+  /** Escape on desktop: the same as Back, except that end-of-level dialogs and nickname editing keep their own buttons. */
   private handleKey(event: KeyboardEvent): void {
-    if (event.key !== 'Escape') return;
-    const { confirmDialog, completeDialog, gameOverDialog, avatarPicker, countryPicker, profileScreen, screens, dailyDialog } = this.parts;
+    if (event.key === 'Escape') this.handleBack(false);
+  }
+
+  /**
+   * "Back", from Escape or the Android Back button / gesture: closes the
+   * topmost dialog or picker, otherwise leaves the level (asking first if an
+   * attempt would be lost) or goes to the previous screen. Returns false only
+   * on Home with nothing open, where the Android app then goes to the
+   * background (like the Home button) instead of closing.
+   *
+   * `system` (Android Back) also answers the end-of-level dialogs (as
+   * "Levels" / "League") and cancels nickname editing; Escape leaves those
+   * to their own buttons, as before.
+   */
+  handleBack(system = true): boolean {
+    const { confirmDialog, completeDialog, gameOverDialog, avatarPicker, countryPicker, profileScreen, screens, dailyDialog, leagueResult } = this.parts;
+    if (this.navigating) return true; // a transition is running: ignore, don't exit
     if (confirmDialog.isOpen) confirmDialog.close(false);
     else if (dailyDialog.isOpen) dailyDialog.close();
-    else if (this.parts.leagueResult.isOpen) this.parts.leagueResult.close();
+    else if (leagueResult.isOpen) leagueResult.close();
     else if (avatarPicker.isOpen) avatarPicker.close();
     else if (countryPicker.isOpen) countryPicker.close();
-    else if (completeDialog.isOpen || gameOverDialog.isOpen || profileScreen.isEditing) return;
-    else if (screens.active === 'game') void this.leaveLevel();
-    else if (screens.active !== 'home') void this.goBack();
+    else if (profileScreen.isEditing) {
+      if (system) profileScreen.cancelEditing();
+    } else if (completeDialog.isOpen || gameOverDialog.isOpen) {
+      if (system) void this.showLevelsOrLeague();
+    } else if (screens.active === 'game') void this.leaveLevel();
+    else if (screens.active !== null && screens.active !== 'home') void this.goBack();
+    else return false;
+    return true;
   }
 }
