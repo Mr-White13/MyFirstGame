@@ -359,13 +359,6 @@ body.is-navigating #app {
   color: var(--text-muted);
 }
 
-.progress__label {
-  font-size: 0.66rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-
 .progress__count strong {
   font-size: 1rem;
   color: var(--text);
@@ -614,17 +607,6 @@ body.is-navigating #app {
   min-width: 0;
 }
 
-.hud__brand {
-  font-size: 0.6rem;
-  font-weight: 800;
-  letter-spacing: 0.34em;
-  margin-right: -0.34em;
-  background: linear-gradient(90deg, var(--cyan), var(--purple));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
 .hud__level {
   margin: 0;
   font-family: var(--font-display);
@@ -677,10 +659,6 @@ body.is-navigating #app {
 
 .stat--end .stat__value {
   text-align: right;
-}
-
-.stat__value--accent {
-  color: var(--cyan);
 }
 
 .stat__value.is-ticking {
@@ -986,34 +964,6 @@ body.is-navigating #app {
 
 .card__title--warning {
   margin-bottom: 8px;
-}
-
-.card__moves {
-  margin: 18px 0 4px;
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  gap: 8px;
-}
-
-.card__moves-value {
-  font-family: var(--font-display);
-  font-size: 3.1rem;
-  font-weight: 800;
-  line-height: 1;
-  color: var(--green);
-}
-
-.overlay--final .card__moves-value {
-  color: var(--text);
-}
-
-.card__moves-label {
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-muted);
 }
 
 .card__detail {
@@ -1389,19 +1339,6 @@ body.is-navigating #app {
   outline-offset: 3px;
 }
 
-.soon {
-  font-style: normal;
-  font-size: 0.56rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  padding: 2px 7px;
-  border-radius: var(--r-pill);
-  color: var(--orange);
-  background: rgb(var(--orange-rgb) / 0.12);
-  border: 1px solid rgb(var(--orange-rgb) / 0.35);
-}
-
 /* ---------- Home ---------- */
 
 .screen--home {
@@ -1573,20 +1510,6 @@ body.is-navigating #app {
   transform: scale(0.96);
   background: var(--surface-raised);
   border-color: rgb(var(--purple-rgb) / 0.55);
-}
-
-.nav-tile--soon {
-  color: var(--text-muted);
-}
-
-.nav-tile--soon .icon {
-  color: var(--text-faint);
-}
-
-.nav-tile .soon {
-  position: absolute;
-  top: 7px;
-  right: 8px;
 }
 
 @media (hover: hover) {
@@ -3208,10 +3131,6 @@ body.is-navigating #app {
   box-shadow: var(--shadow), 0 0 18px rgb(var(--purple-rgb) / 0.2);
 }
 
-.toast[data-kind='reward'] {
-  border-color: rgb(var(--green-rgb) / 0.6);
-}
-
 /* ---------- Rewards: motion and effects ---------- */
 
 :root[data-motion='reduce'] .daily-day--pop {
@@ -4395,12 +4314,6 @@ body.is-navigating #app {
 
 #records-list {
   padding: 4px 14px;
-}
-
-.record__status {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--text-faint);
 }
 
 /* A best set on an earlier layout of the level: kept, and marked (the note explains the mark). */
