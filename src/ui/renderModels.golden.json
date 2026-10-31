@@ -1,0 +1,507 @@
+{
+ "fresh": {
+  "header": {
+   "completed": 0,
+   "stars": 0,
+   "perfect": 0,
+   "next": 1,
+   "currentChapter": 1
+  },
+  "recordsSummary": {
+   "completed": 0,
+   "levels": 30,
+   "stars": 0,
+   "maxStars": 90,
+   "perfect": 0,
+   "timed": 0
+  },
+  "chapters": {
+   "0": {
+    "summary": "1: 1-20 levels=20 done=0 stars=0/60 unlocked=true",
+    "tiles": "1:current:null 2:test:null 3:test:null 4:test:null 5:test:null 6:test:null 7:test:null 8:test:null 9:test:null 10:test:null 11:test:null 12:test:null 13:test:null 14:test:null 15:test:null 16:test:null 17:test:null 18:test:null 19:test:null 20:test:null",
+    "releaseTiles": "1:current 2:locked 3:locked 4:locked 5:locked 6:locked 7:locked 8:locked 9:locked 10:locked 11:locked 12:locked 13:locked 14:locked 15:locked 16:locked 17:locked 18:locked 19:locked 20:locked",
+    "records": [
+     "chapter=1 matches=20",
+     "1:not completed:null:null",
+     "2:locked:null:null",
+     "3:locked:null:null",
+     "4:locked:null:null",
+     "5:locked:null:null",
+     "6:locked:null:null",
+     "7:locked:null:null",
+     "8:locked:null:null",
+     "9:locked:null:null",
+     "10:locked:null:null",
+     "11:locked:null:null",
+     "12:locked:null:null",
+     "13:locked:null:null",
+     "14:locked:null:null",
+     "15:locked:null:null",
+     "16:locked:null:null",
+     "17:locked:null:null",
+     "18:locked:null:null",
+     "19:locked:null:null",
+     "20:locked:null:null"
+    ]
+   },
+   "1": {
+    "summary": "1: 1-20 levels=20 done=0 stars=0/60 unlocked=true",
+    "tiles": "1:current:null 2:test:null 3:test:null 4:test:null 5:test:null 6:test:null 7:test:null 8:test:null 9:test:null 10:test:null 11:test:null 12:test:null 13:test:null 14:test:null 15:test:null 16:test:null 17:test:null 18:test:null 19:test:null 20:test:null",
+    "releaseTiles": "1:current 2:locked 3:locked 4:locked 5:locked 6:locked 7:locked 8:locked 9:locked 10:locked 11:locked 12:locked 13:locked 14:locked 15:locked 16:locked 17:locked 18:locked 19:locked 20:locked",
+    "records": [
+     "chapter=1 matches=20",
+     "1:not completed:null:null",
+     "2:locked:null:null",
+     "3:locked:null:null",
+     "4:locked:null:null",
+     "5:locked:null:null",
+     "6:locked:null:null",
+     "7:locked:null:null",
+     "8:locked:null:null",
+     "9:locked:null:null",
+     "10:locked:null:null",
+     "11:locked:null:null",
+     "12:locked:null:null",
+     "13:locked:null:null",
+     "14:locked:null:null",
+     "15:locked:null:null",
+     "16:locked:null:null",
+     "17:locked:null:null",
+     "18:locked:null:null",
+     "19:locked:null:null",
+     "20:locked:null:null"
+    ]
+   },
+   "2": {
+    "summary": "2: 21-30 levels=10 done=0 stars=0/30 unlocked=false",
+    "tiles": "21:test:null 22:test:null 23:test:null 24:test:null 25:test:null 26:test:null 27:test:null 28:test:null 29:test:null 30:test:null",
+    "releaseTiles": "21:locked 22:locked 23:locked 24:locked 25:locked 26:locked 27:locked 28:locked 29:locked 30:locked",
+    "records": [
+     "chapter=2 matches=10",
+     "21:locked:null:null",
+     "22:locked:null:null",
+     "23:locked:null:null",
+     "24:locked:null:null",
+     "25:locked:null:null",
+     "26:locked:null:null",
+     "27:locked:null:null",
+     "28:locked:null:null",
+     "29:locked:null:null",
+     "30:locked:null:null"
+    ]
+   },
+   "3": {
+    "summary": "2: 21-30 levels=10 done=0 stars=0/30 unlocked=false",
+    "tiles": "21:test:null 22:test:null 23:test:null 24:test:null 25:test:null 26:test:null 27:test:null 28:test:null 29:test:null 30:test:null",
+    "releaseTiles": "21:locked 22:locked 23:locked 24:locked 25:locked 26:locked 27:locked 28:locked 29:locked 30:locked",
+    "records": [
+     "chapter=2 matches=10",
+     "21:locked:null:null",
+     "22:locked:null:null",
+     "23:locked:null:null",
+     "24:locked:null:null",
+     "25:locked:null:null",
+     "26:locked:null:null",
+     "27:locked:null:null",
+     "28:locked:null:null",
+     "29:locked:null:null",
+     "30:locked:null:null"
+    ]
+   }
+  },
+  "searches": {
+   "0": "chapter=null matches=0 ids=",
+   "1": "chapter=null matches=11 ids=1,10,11,12,13,14,15,16,17,18,19",
+   "2": "chapter=null matches=11 ids=2,20,21,22,23,24,25,26,27,28,29",
+   "3": "chapter=null matches=2 ids=3,30",
+   "5": "chapter=null matches=1 ids=5",
+   "30": "chapter=null matches=1 ids=30",
+   "31": "chapter=null matches=0 ids=",
+   "007": "chapter=null matches=1 ids=7",
+   " 12 ": "chapter=null matches=1 ids=12",
+   "x": "chapter=null matches=0 ids=",
+   "": "chapter=null matches=0 ids="
+  }
+ },
+ "mid": {
+  "header": {
+   "completed": 7,
+   "stars": 11,
+   "perfect": 2,
+   "next": 8,
+   "currentChapter": 1
+  },
+  "recordsSummary": {
+   "completed": 7,
+   "levels": 30,
+   "stars": 11,
+   "maxStars": 90,
+   "perfect": 2,
+   "timed": 5
+  },
+  "chapters": {
+   "0": {
+    "summary": "1: 1-20 levels=20 done=7 stars=11/60 unlocked=true",
+    "tiles": "1:completed:3 2:completed:2 3:completed:1 4:completed:null 5:completed:3 6:completed:null 7:completed:2 8:current:null 9:test:null 10:test:null 11:test:null 12:test:null 13:test:null 14:test:null 15:test:null 16:test:null 17:test:null 18:test:null 19:test:null 20:test:null",
+    "releaseTiles": "1:completed 2:completed 3:completed 4:completed 5:completed 6:completed 7:completed 8:current 9:locked 10:locked 11:locked 12:locked 13:locked 14:locked 15:locked 16:locked 17:locked 18:locked 19:locked 20:locked",
+    "records": [
+     "chapter=1 matches=20",
+     "1:completed:3:12345",
+     "2:completed:2:61000",
+     "3:completed:1:null",
+     "4:completed:null:9870",
+     "5:completed:3:45500:older",
+     "6:completed:null:null",
+     "7:completed:2:3600001",
+     "8:not completed:null:null",
+     "9:locked:null:null",
+     "10:locked:null:null",
+     "11:locked:null:null",
+     "12:locked:null:null",
+     "13:locked:null:null",
+     "14:locked:null:null",
+     "15:locked:null:null",
+     "16:locked:null:null",
+     "17:locked:null:null",
+     "18:locked:null:null",
+     "19:locked:null:null",
+     "20:locked:null:null"
+    ]
+   },
+   "1": {
+    "summary": "1: 1-20 levels=20 done=7 stars=11/60 unlocked=true",
+    "tiles": "1:completed:3 2:completed:2 3:completed:1 4:completed:null 5:completed:3 6:completed:null 7:completed:2 8:current:null 9:test:null 10:test:null 11:test:null 12:test:null 13:test:null 14:test:null 15:test:null 16:test:null 17:test:null 18:test:null 19:test:null 20:test:null",
+    "releaseTiles": "1:completed 2:completed 3:completed 4:completed 5:completed 6:completed 7:completed 8:current 9:locked 10:locked 11:locked 12:locked 13:locked 14:locked 15:locked 16:locked 17:locked 18:locked 19:locked 20:locked",
+    "records": [
+     "chapter=1 matches=20",
+     "1:completed:3:12345",
+     "2:completed:2:61000",
+     "3:completed:1:null",
+     "4:completed:null:9870",
+     "5:completed:3:45500:older",
+     "6:completed:null:null",
+     "7:completed:2:3600001",
+     "8:not completed:null:null",
+     "9:locked:null:null",
+     "10:locked:null:null",
+     "11:locked:null:null",
+     "12:locked:null:null",
+     "13:locked:null:null",
+     "14:locked:null:null",
+     "15:locked:null:null",
+     "16:locked:null:null",
+     "17:locked:null:null",
+     "18:locked:null:null",
+     "19:locked:null:null",
+     "20:locked:null:null"
+    ]
+   },
+   "2": {
+    "summary": "2: 21-30 levels=10 done=0 stars=0/30 unlocked=false",
+    "tiles": "21:test:null 22:test:null 23:test:null 24:test:null 25:test:null 26:test:null 27:test:null 28:test:null 29:test:null 30:test:null",
+    "releaseTiles": "21:locked 22:locked 23:locked 24:locked 25:locked 26:locked 27:locked 28:locked 29:locked 30:locked",
+    "records": [
+     "chapter=2 matches=10",
+     "21:locked:null:null",
+     "22:locked:null:null",
+     "23:locked:null:null",
+     "24:locked:null:null",
+     "25:locked:null:null",
+     "26:locked:null:null",
+     "27:locked:null:null",
+     "28:locked:null:null",
+     "29:locked:null:null",
+     "30:locked:null:null"
+    ]
+   },
+   "3": {
+    "summary": "2: 21-30 levels=10 done=0 stars=0/30 unlocked=false",
+    "tiles": "21:test:null 22:test:null 23:test:null 24:test:null 25:test:null 26:test:null 27:test:null 28:test:null 29:test:null 30:test:null",
+    "releaseTiles": "21:locked 22:locked 23:locked 24:locked 25:locked 26:locked 27:locked 28:locked 29:locked 30:locked",
+    "records": [
+     "chapter=2 matches=10",
+     "21:locked:null:null",
+     "22:locked:null:null",
+     "23:locked:null:null",
+     "24:locked:null:null",
+     "25:locked:null:null",
+     "26:locked:null:null",
+     "27:locked:null:null",
+     "28:locked:null:null",
+     "29:locked:null:null",
+     "30:locked:null:null"
+    ]
+   }
+  },
+  "searches": {
+   "0": "chapter=null matches=0 ids=",
+   "1": "chapter=null matches=11 ids=1,10,11,12,13,14,15,16,17,18,19",
+   "2": "chapter=null matches=11 ids=2,20,21,22,23,24,25,26,27,28,29",
+   "3": "chapter=null matches=2 ids=3,30",
+   "5": "chapter=null matches=1 ids=5",
+   "30": "chapter=null matches=1 ids=30",
+   "31": "chapter=null matches=0 ids=",
+   "007": "chapter=null matches=1 ids=7",
+   " 12 ": "chapter=null matches=1 ids=12",
+   "x": "chapter=null matches=0 ids=",
+   "": "chapter=null matches=0 ids="
+  }
+ },
+ "chapter2": {
+  "header": {
+   "completed": 22,
+   "stars": 43,
+   "perfect": 7,
+   "next": 20,
+   "currentChapter": 1
+  },
+  "recordsSummary": {
+   "completed": 22,
+   "levels": 30,
+   "stars": 43,
+   "maxStars": 90,
+   "perfect": 7,
+   "timed": 21
+  },
+  "chapters": {
+   "0": {
+    "summary": "1: 1-20 levels=20 done=19 stars=37/60 unlocked=true",
+    "tiles": "1:completed:1 2:completed:2 3:completed:3 4:completed:1 5:completed:2 6:completed:3 7:completed:1 8:completed:2 9:completed:3 10:completed:1 11:completed:2 12:completed:3 13:completed:1 14:completed:2 15:completed:3 16:completed:1 17:completed:2 18:completed:3 19:completed:1 20:current:null",
+    "releaseTiles": "1:completed 2:completed 3:completed 4:completed 5:completed 6:completed 7:completed 8:completed 9:completed 10:completed 11:completed 12:completed 13:completed 14:completed 15:completed 16:completed 17:completed 18:completed 19:completed 20:current",
+    "records": [
+     "chapter=1 matches=20",
+     "1:completed:1:20000",
+     "2:completed:2:21000",
+     "3:completed:3:22000",
+     "4:completed:1:23000",
+     "5:completed:2:24000",
+     "6:completed:3:25000",
+     "7:completed:1:26000",
+     "8:completed:2:27000",
+     "9:completed:3:28000",
+     "10:completed:1:29000",
+     "11:completed:2:30000",
+     "12:completed:3:31000",
+     "13:completed:1:32000",
+     "14:completed:2:33000",
+     "15:completed:3:34000",
+     "16:completed:1:35000",
+     "17:completed:2:36000",
+     "18:completed:3:37000",
+     "19:completed:1:38000",
+     "20:not completed:null:null"
+    ]
+   },
+   "1": {
+    "summary": "1: 1-20 levels=20 done=19 stars=37/60 unlocked=true",
+    "tiles": "1:completed:1 2:completed:2 3:completed:3 4:completed:1 5:completed:2 6:completed:3 7:completed:1 8:completed:2 9:completed:3 10:completed:1 11:completed:2 12:completed:3 13:completed:1 14:completed:2 15:completed:3 16:completed:1 17:completed:2 18:completed:3 19:completed:1 20:current:null",
+    "releaseTiles": "1:completed 2:completed 3:completed 4:completed 5:completed 6:completed 7:completed 8:completed 9:completed 10:completed 11:completed 12:completed 13:completed 14:completed 15:completed 16:completed 17:completed 18:completed 19:completed 20:current",
+    "records": [
+     "chapter=1 matches=20",
+     "1:completed:1:20000",
+     "2:completed:2:21000",
+     "3:completed:3:22000",
+     "4:completed:1:23000",
+     "5:completed:2:24000",
+     "6:completed:3:25000",
+     "7:completed:1:26000",
+     "8:completed:2:27000",
+     "9:completed:3:28000",
+     "10:completed:1:29000",
+     "11:completed:2:30000",
+     "12:completed:3:31000",
+     "13:completed:1:32000",
+     "14:completed:2:33000",
+     "15:completed:3:34000",
+     "16:completed:1:35000",
+     "17:completed:2:36000",
+     "18:completed:3:37000",
+     "19:completed:1:38000",
+     "20:not completed:null:null"
+    ]
+   },
+   "2": {
+    "summary": "2: 21-30 levels=10 done=3 stars=6/30 unlocked=true",
+    "tiles": "21:completed:3 22:completed:1 23:completed:2 24:open:null 25:test:null 26:test:null 27:test:null 28:test:null 29:test:null 30:test:null",
+    "releaseTiles": "21:completed 22:completed 23:completed 24:open 25:locked 26:locked 27:locked 28:locked 29:locked 30:locked",
+    "records": [
+     "chapter=2 matches=10",
+     "21:completed:3:30250",
+     "22:completed:1:99999",
+     "23:completed:2:null",
+     "24:not completed:null:null",
+     "25:locked:null:null",
+     "26:locked:null:null",
+     "27:locked:null:null",
+     "28:locked:null:null",
+     "29:locked:null:null",
+     "30:locked:null:null"
+    ]
+   },
+   "3": {
+    "summary": "2: 21-30 levels=10 done=3 stars=6/30 unlocked=true",
+    "tiles": "21:completed:3 22:completed:1 23:completed:2 24:open:null 25:test:null 26:test:null 27:test:null 28:test:null 29:test:null 30:test:null",
+    "releaseTiles": "21:completed 22:completed 23:completed 24:open 25:locked 26:locked 27:locked 28:locked 29:locked 30:locked",
+    "records": [
+     "chapter=2 matches=10",
+     "21:completed:3:30250",
+     "22:completed:1:99999",
+     "23:completed:2:null",
+     "24:not completed:null:null",
+     "25:locked:null:null",
+     "26:locked:null:null",
+     "27:locked:null:null",
+     "28:locked:null:null",
+     "29:locked:null:null",
+     "30:locked:null:null"
+    ]
+   }
+  },
+  "searches": {
+   "0": "chapter=null matches=0 ids=",
+   "1": "chapter=null matches=11 ids=1,10,11,12,13,14,15,16,17,18,19",
+   "2": "chapter=null matches=11 ids=2,20,21,22,23,24,25,26,27,28,29",
+   "3": "chapter=null matches=2 ids=3,30",
+   "5": "chapter=null matches=1 ids=5",
+   "30": "chapter=null matches=1 ids=30",
+   "31": "chapter=null matches=0 ids=",
+   "007": "chapter=null matches=1 ids=7",
+   " 12 ": "chapter=null matches=1 ids=12",
+   "x": "chapter=null matches=0 ids=",
+   "": "chapter=null matches=0 ids="
+  }
+ },
+ "allComplete": {
+  "header": {
+   "completed": 30,
+   "stars": 90,
+   "perfect": 30,
+   "next": 30,
+   "currentChapter": 2
+  },
+  "recordsSummary": {
+   "completed": 30,
+   "levels": 30,
+   "stars": 90,
+   "maxStars": 90,
+   "perfect": 30,
+   "timed": 30
+  },
+  "chapters": {
+   "0": {
+    "summary": "1: 1-20 levels=20 done=20 stars=60/60 unlocked=true",
+    "tiles": "1:completed:3 2:completed:3 3:completed:3 4:completed:3 5:completed:3 6:completed:3 7:completed:3 8:completed:3 9:completed:3 10:completed:3 11:completed:3 12:completed:3 13:completed:3 14:completed:3 15:completed:3 16:completed:3 17:completed:3 18:completed:3 19:completed:3 20:completed:3",
+    "releaseTiles": "1:completed 2:completed 3:completed 4:completed 5:completed 6:completed 7:completed 8:completed 9:completed 10:completed 11:completed 12:completed 13:completed 14:completed 15:completed 16:completed 17:completed 18:completed 19:completed 20:completed",
+    "records": [
+     "chapter=1 matches=20",
+     "1:completed:3:10000",
+     "2:completed:3:10500",
+     "3:completed:3:11000",
+     "4:completed:3:11500",
+     "5:completed:3:12000",
+     "6:completed:3:12500",
+     "7:completed:3:13000",
+     "8:completed:3:13500",
+     "9:completed:3:14000",
+     "10:completed:3:14500",
+     "11:completed:3:15000",
+     "12:completed:3:15500",
+     "13:completed:3:16000",
+     "14:completed:3:16500",
+     "15:completed:3:17000",
+     "16:completed:3:17500",
+     "17:completed:3:18000",
+     "18:completed:3:18500",
+     "19:completed:3:19000",
+     "20:completed:3:19500"
+    ]
+   },
+   "1": {
+    "summary": "1: 1-20 levels=20 done=20 stars=60/60 unlocked=true",
+    "tiles": "1:completed:3 2:completed:3 3:completed:3 4:completed:3 5:completed:3 6:completed:3 7:completed:3 8:completed:3 9:completed:3 10:completed:3 11:completed:3 12:completed:3 13:completed:3 14:completed:3 15:completed:3 16:completed:3 17:completed:3 18:completed:3 19:completed:3 20:completed:3",
+    "releaseTiles": "1:completed 2:completed 3:completed 4:completed 5:completed 6:completed 7:completed 8:completed 9:completed 10:completed 11:completed 12:completed 13:completed 14:completed 15:completed 16:completed 17:completed 18:completed 19:completed 20:completed",
+    "records": [
+     "chapter=1 matches=20",
+     "1:completed:3:10000",
+     "2:completed:3:10500",
+     "3:completed:3:11000",
+     "4:completed:3:11500",
+     "5:completed:3:12000",
+     "6:completed:3:12500",
+     "7:completed:3:13000",
+     "8:completed:3:13500",
+     "9:completed:3:14000",
+     "10:completed:3:14500",
+     "11:completed:3:15000",
+     "12:completed:3:15500",
+     "13:completed:3:16000",
+     "14:completed:3:16500",
+     "15:completed:3:17000",
+     "16:completed:3:17500",
+     "17:completed:3:18000",
+     "18:completed:3:18500",
+     "19:completed:3:19000",
+     "20:completed:3:19500"
+    ]
+   },
+   "2": {
+    "summary": "2: 21-30 levels=10 done=10 stars=30/30 unlocked=true",
+    "tiles": "21:completed:3 22:completed:3 23:completed:3 24:completed:3 25:completed:3 26:completed:3 27:completed:3 28:completed:3 29:completed:3 30:completed:3",
+    "releaseTiles": "21:completed 22:completed 23:completed 24:completed 25:completed 26:completed 27:completed 28:completed 29:completed 30:completed",
+    "records": [
+     "chapter=2 matches=10",
+     "21:completed:3:20000",
+     "22:completed:3:20500",
+     "23:completed:3:21000",
+     "24:completed:3:21500",
+     "25:completed:3:22000",
+     "26:completed:3:22500",
+     "27:completed:3:23000",
+     "28:completed:3:23500",
+     "29:completed:3:24000",
+     "30:completed:3:24500"
+    ]
+   },
+   "3": {
+    "summary": "2: 21-30 levels=10 done=10 stars=30/30 unlocked=true",
+    "tiles": "21:completed:3 22:completed:3 23:completed:3 24:completed:3 25:completed:3 26:completed:3 27:completed:3 28:completed:3 29:completed:3 30:completed:3",
+    "releaseTiles": "21:completed 22:completed 23:completed 24:completed 25:completed 26:completed 27:completed 28:completed 29:completed 30:completed",
+    "records": [
+     "chapter=2 matches=10",
+     "21:completed:3:20000",
+     "22:completed:3:20500",
+     "23:completed:3:21000",
+     "24:completed:3:21500",
+     "25:completed:3:22000",
+     "26:completed:3:22500",
+     "27:completed:3:23000",
+     "28:completed:3:23500",
+     "29:completed:3:24000",
+     "30:completed:3:24500"
+    ]
+   }
+  },
+  "searches": {
+   "0": "chapter=null matches=0 ids=",
+   "1": "chapter=null matches=11 ids=1,10,11,12,13,14,15,16,17,18,19",
+   "2": "chapter=null matches=11 ids=2,20,21,22,23,24,25,26,27,28,29",
+   "3": "chapter=null matches=2 ids=3,30",
+   "5": "chapter=null matches=1 ids=5",
+   "30": "chapter=null matches=1 ids=30",
+   "31": "chapter=null matches=0 ids=",
+   "007": "chapter=null matches=1 ids=7",
+   " 12 ": "chapter=null matches=1 ids=12",
+   "x": "chapter=null matches=0 ids=",
+   "": "chapter=null matches=0 ids="
+  }
+ },
+ "searchLevelIds": {
+  "1": "matches=612 ids=1,10,11,12,13,14,15,16,17,18,19,100,101,102,103,104,105,106,107,108",
+  "7": "matches=111 ids=7,70,71,72,73,74,75,76,77,78,79,700,701,702,703,704,705,706,707,708",
+  "10": "matches=111 ids=10,100,101,102,103,104,105,106,107,108,109,1000,1001,1002,1003,1004,1005,1006,1007,1008",
+  "99": "matches=11 ids=99,990,991,992,993,994,995,996,997,998,999",
+  "100": "matches=11 ids=100,1000,1001,1002,1003,1004,1005,1006,1007,1008,1009",
+  "12345": "matches=0 ids=",
+  "0001": "matches=612 ids=1,10,11,12,13,14,15,16,17,18,19,100,101,102,103,104,105,106,107,108"
+ }
+}
