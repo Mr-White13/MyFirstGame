@@ -1,7 +1,6 @@
 import Phaser from 'phaser';
+import { DIAGNOSTICS_KEY as KEY } from './diagnosticsKey';
 import { FrameStats } from './frameStats';
-
-const KEY = 'neon-escape.debug';
 
 /** Developer diagnostics flag (also enables detailed haptics logging, see native/nativeApp.ts). */
 export function diagnosticsEnabled(): boolean {
