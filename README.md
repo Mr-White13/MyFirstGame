@@ -4,7 +4,7 @@ A 2D arrow-clearing puzzle game for mobile, built with **Phaser 3**, **TypeScrip
 
 Tap an arrow to send it flying off the board in the direction it points. It can only leave if nothing is in its way. Clear every arrow to finish the level.
 
-It opens on a **Home** screen with your local **player profile** (nickname, avatar, country) and lifetime **statistics**. Every level is **timed**, with personal bests. The game has **10 hand-made levels** that grow from a 5-arrow tutorial to dense 9×9 boards. It includes a level select screen, unlockable progression and progress saved in the browser.
+It opens on a **Home** screen with your local **player profile** (nickname, avatar, country) and lifetime **statistics**. Every level is **timed**, with personal bests. A **Settings** screen offers four visual themes, reduced motion and effects options, synthesised sound effects and ambient music, vibration and gameplay preferences. The game has **10 hand-made levels** that grow from a 5-arrow tutorial to dense 9×9 boards. It includes a level select screen, unlockable progression and progress saved in the browser.
 
 ## Requirements
 
@@ -114,21 +114,22 @@ The completion dialog shows the time precisely (`24.6 s`, `1:35.2`) next to your
 ## Screens and progression
 
 The game opens on **Home**:
-- **Header:** settings (coming soon) and your avatar and nickname, which open the Profile.
+- **Header:** Settings, and your avatar and nickname, which open the Profile.
 - **Play card:** the next level to play, a big **Play / Continue / Play again** button, your level progress and your total stars.
-- **Menu:** **Levels**, **Profile**, and **Events** and **Settings** (both "coming soon").
+- **Menu:** **Levels**, **Profile**, **Settings** and **Events** ("coming soon").
 - **Daily activity:** a preview of the login streak, daily challenge and special events. These aren't implemented yet.
 
 Other screens:
 
 1. **Level select:** all 10 levels with grid size or best stars, your completion count and star total, and a Continue button. Completed levels show a check, the next level glows, and locked levels show a lock and can't be opened.
-2. **Gameplay:** a compact HUD above the board: back, the level title with the timer, restart, then your hearts, a progress meter and arrows left. Restart is disabled until you've made a move or a mistake. If leaving would lose an unfinished attempt, you're asked to confirm first.
-3. **Profile:** your avatar, nickname, country and rank, then a progress summary, statistics and personal records (see below).
-4. **Level complete:** stars and lives left, time and personal best, arrows cleared (with chain clears) and mistakes, plus "New best time!", "Best rating!" and "Level *n* unlocked" chips. Buttons: **Next level**, **Restart** and **Levels**. After level 10 a **game-complete** variant offers **Play from level 1**.
-5. **Game Over:** see "Lives" above.
+2. **Gameplay:** a compact HUD above the board: back, the level title with the timer (can be hidden in Settings), restart, then your hearts, a progress meter and arrows left. Restart is disabled until you've made a move or a mistake; with **Confirm restart** on (the default) it asks first. If leaving would lose an unfinished attempt, you're asked to confirm first.
+3. **Settings:** see "Settings" below.
+4. **Profile:** your avatar, nickname, country and rank, then a progress summary, statistics and personal records (see below).
+5. **Level complete:** stars and lives left, time and personal best, arrows cleared (with chain clears) and mistakes, plus "New best time!", "Best rating!" and "Level *n* unlocked" chips. Buttons: **Next level**, **Restart** and **Levels**. After level 10 a **game-complete** variant offers **Play from level 1**.
+6. **Game Over:** see "Lives" above.
 
 **Back** works the way you'd expect:
-- Levels and Profile go back to wherever you opened them from.
+- Levels, Profile and Settings go back to wherever you opened them from.
 - Leaving a level returns to the screen you started it from (Home or Levels).
 - A level you've left never reappears in the back history.
 - **Escape** closes the top dialog or acts as Back on desktop.
@@ -167,13 +168,14 @@ Everything is local: no account, no backend, nothing leaves the device.
 
 ### Saved data
 
-Three separate keys in `localStorage`, each versioned and loaded with the same safety rules (`src/storage/SafeStore.ts`):
+Four separate keys in `localStorage`, each versioned and loaded with the same safety rules (`src/storage/SafeStore.ts`):
 
 | Key | Contents | Version |
 | --- | -------- | ------- |
 | `neon-escape.progress` | Unlocks and per-level records: best moves, stars, mistakes, time and layout revision | 4 |
 | `neon-escape.profile` | Nickname, avatar, country | 1 |
 | `neon-escape.stats` | Lifetime counters and `trackedSince` | 1 |
+| `neon-escape.settings` | Theme, motion, effects, audio, vibration and gameplay options (see "Settings") | 1 |
 
 ```json
 { "version": 4, "highestUnlocked": 4, "completed": {
@@ -193,6 +195,137 @@ Three separate keys in `localStorage`, each versioned and loaded with the same s
 
 To reset everything, clear the site's data, or run this in the DevTools console:
 `Object.keys(localStorage).filter(k => k.startsWith('neon-escape')).forEach(k => localStorage.removeItem(k))`
+
+## Settings
+
+Open **Settings** from the gear in the Home header or the Settings tile. Every control applies at once and is saved immediately, so a refresh keeps it. Back (or Escape) returns to Home.
+
+| Group | Setting | Options (default first) |
+| ----- | ------- | ----------------------- |
+| Appearance | Theme | **Dark Neon**, Light, Colorful, System |
+| | Reduced motion | **Auto**, On, Off |
+| | Visual effects | **Normal**, Low, Off |
+| Audio | Sound (master) | **On** / Off |
+| | Music, Music volume | **On**, **35 %** |
+| | Sound effects, Effects volume | **On**, **70 %** |
+| Feedback | Vibration | **On** / Off |
+| Gameplay | Show gameplay timer | **On** / Off |
+| | Confirm restart | **On** / Off |
+| Information | Version, credits, privacy, **Reset settings** | |
+
+### Themes
+
+| Theme | Look |
+| ----- | ---- |
+| **Dark Neon** | The original NEON ESCAPE look: dark navy, cyan and purple neon, dark board. |
+| **Light** | Light page and white board, darker grid lines and cell dots, deep teal arrows, reduced glow. Accents are darkened so text and icons on white meet WCAG AA, and solid buttons switch to white text. |
+| **Colorful** | A deep indigo board where each arrow takes the next colour of a coordinated neon palette (cyan, violet, orange, green, pink, blue), so neighbours are always distinct. Red is never used for a resting arrow. |
+| **System** | Follows the device: Light when it prefers a light scheme, otherwise Dark Neon. Switching the OS theme while the game runs switches the game too, even mid-level. |
+
+How it works:
+
+- **One place for colours.** CSS colours are tokens on `:root`, redefined per theme under `[data-theme='light']` and `[data-theme='colorful']`. Translucent tints use channel tokens such as `rgb(var(--cyan-rgb) / 0.1)`, so no colour is hard-coded in rules. The Phaser board has matching **semantic** palettes in `src/render/theme.ts` (`frame`, `well`, `grid`, `arrows`, `error`, `warning`, `success`, `chain`, `glow`, …).
+- **The board follows the theme.** `Appearance` sets `data-theme` on `<html>`, switches the Phaser palette and calls `GameScene.refreshTheme()`, which redraws the board and arrows in place. Nothing is rebuilt: arrows, animations, input, lives and the timer carry on.
+- **No startup flash.** A tiny inline script in `index.html` reads the saved settings and sets `data-theme`, `data-motion` and `data-effects` before the first paint.
+- **Gameplay is identical in every theme.** Themes only change colours.
+- **Warning, success and error** keep their meaning in every theme: orange/amber = the arrow in the way, green = leaving and cleared, red = activated arrows and failure. Hearts use a separate pink.
+
+### Reduced motion and visual effects
+
+**Reduced motion** is *Auto* (follow the device's `prefers-reduced-motion`), *On* or *Off*. An explicit On or Off always wins over the device; Auto follows device changes live.
+
+With reduced motion, screen and dialog transitions, decorative particles and rings, energy trails, staggered arrow intros, the board wave, background motes and pulsing glows are all off. Arrows still slide out and bump into blockers, and the hit arrow still flashes, because that motion explains what happened.
+
+**Visual effects** scales only decoration:
+
+| Level | Canvas | Background |
+| ----- | ------ | ---------- |
+| Normal | All sparks, rings and energy trails | Grid and six drifting motes |
+| Low | About 40 % of the sparks, shorter trails | Grid and two motes |
+| Off | No sparks, rings, trails or board wave | No ambient grid or motes, no glow pulse on the next level tile |
+
+Collision feedback (the bump, the orange flash, the red arrow) is never turned off by either setting. Fewer particles also means less work on low-end phones.
+
+### Audio
+
+All audio goes through one `AudioManager` (`src/audio/`) with a **music bus** and an **effects bus** under a **master gain**, followed by a gentle limiter so bursts never clip.
+
+- **Master sound** silences everything without changing the Music and Sound effects switches, so turning it back on restores exactly what was there.
+- **Volumes** are independent, in 5 % steps, on a perceptual (squared) curve. Changes glide over ~40 ms, so sliders and switches never click. Releasing the effects slider plays a sample at the new volume.
+- **Autoplay rules:** no audio context exists until the first tap or key press. Sounds before that are skipped; music starts after it.
+- **Background:** hiding the tab or app fades the music and suspends the audio context; it resumes when visible.
+- **Failures** (no Web Audio, no output device, a refused resume, an OS interruption) never throw into the game; the next tap tries again, and Settings shows a note if audio is unavailable.
+- **No pile-ups:** each sound has a minimum gap (for example 70 ms for chain releases), at most six effects overlap, and music is never started twice. Navigating between screens doesn't restart it.
+- Phaser's own sound system is turned off (`audio.noAudio`): everything is synthesised, so there are no files to load, and one audio context is cheaper than two.
+
+**Sound effects** (`src/audio/sounds.ts`) are short, soft electronic tones: sine and triangle oscillators with smooth envelopes and low-pass filters. Button tap, arrow release (an upward zip), blocked collision (a low soft bump), losing a heart (two falling notes), chain reaction (pings climbing a pentatonic scale, so long chains sound musical), level complete (rising arpeggio), star reveal (one note per star, timed with the dialog), Game Over (a slow, calm descending line) and level unlock.
+
+**Background music** (`src/audio/AmbientMusic.ts`) is a generative ambient track: a slow, warm pad over Am9 – Fmaj7 – Cmaj7 – Em7 (8 s per chord), a soft sub bass, and sparse plucks through an echo. It is scheduled ahead on the audio clock, so it loops without a seam, fades in over 2.5 s and out over 0.8 s, and runs only while it can be heard.
+
+**Licensing:** every sound and the music are original and generated in code at run time. There are no audio files and no third-party audio, so there is nothing to license. A composed, recorded track could later replace the generator by playing a looped buffer into the same music bus.
+
+### Vibration (haptics)
+
+`src/haptics/Haptics.ts` uses the Web Vibration API (`navigator.vibrate`) behind a small `HapticsBackend` interface, so a native Capacitor Haptics backend can replace it later without changing game code.
+
+| Event | Pattern |
+| ----- | ------- |
+| Arrow released | 8 ms tick |
+| Blocked collision that costs a life | 30-50-30 ms double pulse |
+| Chain reaction | one 12 ms pulse per chain, not per arrow |
+| Level complete | 18-60-18-60-40 ms |
+
+- Every pattern is under 250 ms, and each has a minimum gap, so nothing buzzes continuously.
+- Free nudges, button taps and decorative animations never vibrate.
+- Vibration is skipped before the first user interaction (Chrome ignores it then anyway), and when the switch is off. Turning it off or backgrounding the app cancels a pulse in progress.
+- **Browser support:** works in Chrome on Android. **Desktop Chrome** has the API but no vibration motor, so nothing happens. Safari and iOS have no Vibration API: there the switch is disabled with an explanation.
+- **No intensity setting:** the web API controls only duration, not strength, so a "haptic intensity" slider would do nothing. It is intentionally not offered.
+
+### Gameplay preferences
+
+- **Show gameplay timer:** hides only the HUD clock. Attempts are still timed exactly as before, and completion times, personal bests and statistics are unaffected. The completion dialog always shows the time.
+- **Confirm restart:** the HUD restart button asks "Restart level?" when the attempt has moves or mistakes and the level is still going. An untouched level restarts immediately (the button is disabled anyway), and so do the Restart / Try again buttons in the end-of-level dialogs. The clock pauses while the question is open. With the setting off, restart is immediate. The "Leave level?" question is unchanged.
+
+### Accessibility
+
+- **Activated arrows** are drawn as a **dashed** tube as well as red, so they are recognisable without colour vision. Hearts change shape (filled vs outline), and the last heart pulses.
+- **Muted or without vibration**, nothing is lost: every sound and pulse has a visible counterpart (flashes, hearts, dialogs).
+- **Contrast:** a unit test checks that every arrow, error and success colour has at least 3:1 contrast with its board in every theme. Light-theme text and accents were darkened for readable contrast on white.
+- **Keyboard:** all Settings controls are native inputs. Tab moves between them, Space toggles switches, arrow keys change the segmented choices and sliders, and every control has a visible focus ring. Escape closes dialogs or goes back.
+- **Labels:** switches use `role="switch"` with their visible label, segmented controls are labelled radio groups with hints, sliders announce their percentage.
+- **Touch targets** are at least 44 px high (sliders have a 44 px hit area around a thinner track). "On" is shown by the knob's position and a check mark, and the selected theme by a check badge, not by colour alone.
+
+### Settings storage
+
+Key `neon-escape.settings`, version 1, separate from progress, profile and statistics:
+
+```json
+{ "version": 1, "theme": "dark", "motion": "auto", "effects": "normal",
+  "muted": false, "music": true, "sfx": true, "musicVolume": 0.35, "sfxVolume": 0.7,
+  "haptics": true, "showTimer": true, "confirmRestart": true }
+```
+
+- Loaded with the same `SafeStore` rules as the other saves: each field is validated (unknown themes, wrong types and out-of-range volumes fall back to the default for that field only), corrupted data is backed up to `neon-escape.settings.backup` and replaced by defaults, a save from a newer game version is never overwritten, and without storage the settings still work for the session.
+- **Migration:** `SETTINGS_MIGRATIONS` in `src/settings/Settings.ts` upgrades older versions one step at a time. Version 1 is the first format, so the table is empty for now; fields added later within a version simply take their defaults.
+
+### Reset settings
+
+**Reset settings** (Information group) asks for confirmation, then puts every setting back to its default and applies it at once (theme, audio, timer…). Levels, stars, best times, statistics, profile and avatar are stored under other keys and are never touched.
+
+### Manual testing in Chrome
+
+1. `npm run dev`, open http://localhost:5173, and turn on device emulation (`Ctrl+Shift+M`, e.g. Pixel 7).
+2. **Themes:** Home → Settings → pick Light, Colorful, Dark Neon. Home, Levels, Profile, the HUD, the board and dialogs all change. Refresh: the theme is applied immediately, with no dark flash.
+3. **System theme:** choose System, then in DevTools open the Command Menu (`Ctrl+Shift+P`) → "Emulate CSS prefers-color-scheme: light" / "dark". The game follows live, also during a level.
+4. **Reduced motion:** with Auto, use "Emulate CSS prefers-reduced-motion: reduce": screen transitions and particles stop. Set Off: animations come back despite the emulation. Set On: they stop again.
+5. **Effects:** Off removes the background motes and the sparks when arrows leave; Low keeps a few.
+6. **Audio:** tap anything once (this unlocks audio), then play a level: tap sounds, releases, the collision bump and heart loss, chain pings, the win arpeggio and stars. Toggle Sound, Music and Sound effects and drag the sliders: changes are immediate. Switch to another tab: the music fades; come back: it resumes.
+7. **Vibration:** on a real Android phone with Chrome (via the Network URL), blocked taps and wins vibrate; turning Vibration off stops it. On desktop nothing vibrates (expected).
+8. **Timer:** turn off Show gameplay timer: the HUD clock disappears, but the completion dialog still shows your time and personal best.
+9. **Confirm restart:** make a move, then tap restart: "Restart level?" appears. Turn the setting off: restart is immediate.
+10. **Activated arrows:** tap a blocked arrow: it turns red *and* dashed, in every theme.
+11. **Reset settings:** change a few settings, finish a level, then Reset settings → Reset. Settings return to defaults; Levels and Profile still show your stars, times and statistics.
+12. **Storage:** in DevTools → Application → Local Storage, `neon-escape.settings` updates on every change. Set it to `{oops` and refresh: defaults load and the bad value is kept in `neon-escape.settings.backup`.
 
 ## Levels
 
@@ -244,6 +377,8 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     ├── app/
     │   ├── App.ts         Navigation, progression and records: screens, level loading, attempts, saving
     │   ├── AttemptTracker.ts  One attempt's timer and bookkeeping; applyAttempt() updates progress + stats
+    │   ├── Feedback.ts    Game events → sound effects and haptics
+    │   ├── confirmPolicy.ts When leaving or restarting needs a confirmation
     │   └── Navigation.ts  Back-navigation history (Home is the root; gameplay is never a back target)
     ├── createGame.ts      Phaser bootstrap: high-DPI canvas covering the game screen
     ├── style.css          All styling: screens, HUD, level tiles, dialogs (mobile-first, landscape variants)
@@ -269,6 +404,19 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     ├── levelgen/          Offline level generator (developer tool, not in the game bundle)
     │   └── generateLevel.ts   Seeded generation, refinement, layout similarity
     │
+    ├── settings/          Player preferences, separate from progress
+    │   ├── Settings.ts        Settings model, validation, versioned storage and migration, SettingsStore
+    │   └── Appearance.ts      Theme / reduced-motion / effects resolution; applies them to CSS and the board
+    │
+    ├── audio/             Synthesised audio, no files
+    │   ├── AudioManager.ts    One context: master, music and effects buses; unlock, mute, background, failures
+    │   ├── sounds.ts          Original procedural sound effects
+    │   ├── AmbientMusic.ts    Original generative ambient music
+    │   └── mix.ts             Channel gains, volume curve, throttling (pure)
+    │
+    ├── haptics/
+    │   └── Haptics.ts         Vibration patterns, web backend (native-ready interface)
+    │
     ├── profile/           Local player identity and lifetime statistics
     │   ├── Profile.ts         Nickname rules, avatar/country choice, rank, profile storage
     │   ├── avatars.ts         10 original inline-SVG avatars
@@ -283,20 +431,21 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     │   └── ProgressStorage.ts localStorage save format, migration, backups and safe loading
     │
     ├── render/            Phaser drawing, no game rules
-    │   ├── theme.ts           NEON ESCAPE palette and arrow proportions
+    │   ├── theme.ts           Semantic board palettes per theme, arrow proportions, contrast helpers
     │   ├── layout.ts          Board geometry fitted into the board slot, grid bounds, pixel ↔ cell mapping
     │   ├── polyline.ts        Polyline length, slicing and point distance (animation, hit testing)
     │   ├── BoardRenderer.ts   Board frame, recessed play area, grid; entrance and win-wave effects
     │   ├── ArrowView.ts       Draws one arrow (rounded turns, notched head); press, intro, exit, blocked, hit
     │   ├── FxLayer.ts         Pooled sparks and rings on one Graphics object
-    │   └── motion.ts          prefers-reduced-motion for the canvas
+    │   └── motion.ts          Resolved reduced-motion and effects preferences
     │
     ├── scenes/
     │   ├── GameScene.ts   Turns input into moves and move results into animations; loads levels
     │   └── MoveSequencer.ts Plays one action's animations in order; input lock with cancel tokens
     │
     └── ui/                DOM views, no game rules
-        ├── Screens.ts         Switches between Home, Levels, Game and Profile
+        ├── Screens.ts         Switches between Home, Levels, Game, Profile and Settings
+        ├── SettingsScreen.ts  Settings controls (switches, segmented controls, sliders)
         ├── HomeScreen.ts      Start screen: identity, next level, progress, menu
         ├── ProfileScreen.ts   Identity, summary, statistics, personal records, nickname editing
         ├── Pickers.ts         Avatar grid and searchable country list
@@ -306,11 +455,11 @@ count. The only real challenge is **finding an arrow that can escape**, again an
         ├── Hud.ts             In-game timer, hearts, arrows left, back and restart buttons
         ├── CompleteDialog.ts  Level-complete / game-complete dialog: stars, time, personal best, statistics
         ├── GameOverDialog.ts  Out-of-lives dialog
-        ├── ConfirmDialog.ts   "Leave level?" confirmation
+        ├── ConfirmDialog.ts   Confirmations: leave level, restart level, reset settings
         └── dom.ts             Small DOM helpers (element lookup, overlay fade)
 ```
 
-Tests live next to the code they cover: `*.test.ts` in `core/`, `levels/` and `progress/`.
+Tests live next to the code they cover (`*.test.ts`). Browser APIs (Web Audio, vibration, media queries, the DOM) are replaced by small fakes, so everything runs in plain Node.
 
 ### Architecture notes
 
@@ -324,12 +473,14 @@ Tests live next to the code they cover: `*.test.ts` in `core/`, `levels/` and `p
 - **Layout:** the canvas covers the whole game screen, so arrows can fly past the board. The HUD and an empty `#board-slot` element sit on top of it. `GameLayout` sizes the slot to the largest board that fits beside the HUD (true aspect, max 620 px). `GameScene` reads the slot's rectangle and fits the board into it, so CSS layout and canvas drawing always agree. Taps on anything but a button fall through the UI to the canvas.
 - **Rendering:** arrows are drawn with Phaser `Graphics`, not image files. The "glow" is made of opaque halo rings blended with the board colour, because a shader glow was far too slow on low-end GPUs. The canvas renders at device-pixel resolution so it stays sharp on phones.
 - **Effects:** `FxLayer` draws sparks (when an arrow breaks out of the grid, or bounces off a blocker) and expanding rings. Both come from fixed pools, so no objects are created during play. The layer only redraws while an effect is alive. Leaving arrows draw a short fading energy trail. Restart, level change and resize clear every effect.
-- **Motion:** gameplay animations stay in the 150–400 ms range. The arrows' entrance is spread over at most about 280 ms, whatever their number, and never blocks input. The level-complete wave and dialog take about 0.6 s. With `prefers-reduced-motion`, particles, trails, intros and the board wave are skipped, and CSS animations and transitions are turned off. Arrows still move, because their movement shows what happened.
+- **Motion:** gameplay animations stay in the 150–400 ms range. The arrows' entrance is spread over at most about 280 ms, whatever their number, and never blocks input. The level-complete wave and dialog take about 0.6 s. With reduced motion (the Settings choice, or the device's `prefers-reduced-motion` on Auto), particles, trails, intros and the board wave are skipped, and CSS animations and transitions are turned off. Arrows still move, because their movement shows what happened. `render/motion.ts` holds the resolved preference for both the canvas and the DOM.
 - **Atmosphere** is pure CSS: a faint masked grid and six slowly drifting motes, animated with `transform`/`opacity` only (GPU-composited, no repaint).
 - **UI** (screens, counters, buttons, dialogs) is plain HTML/CSS on top of the canvas. This keeps text sharp and makes the layout easy to adapt. Hidden screens stay in the layout but are `inert`, so the canvas keeps its size, and the Phaser loop sleeps while the level select is shown.
 - **Navigation** goes through `App.navigate()`, which ignores new requests while a transition runs, so double taps can't open two levels. `GameScene.loadLevel()` rebuilds every arrow, the board size, counters and win state from scratch.
 
 ## Visual design
+
+The table shows Dark Neon; Light and Colorful keep the same roles with adjusted values (see "Themes").
 
 | Role | Colour | Used for |
 | ---- | ------ | -------- |
@@ -416,6 +567,6 @@ layout aren't compared with the new one.
 
 ## Not in this prototype
 
-Capacitor/Android packaging, in-game level generation (the generator is an offline developer tool), sounds, hints, lives, power-ups and monetisation are intentionally left out.
+Capacitor/Android packaging, in-game level generation (the generator is an offline developer tool), hints, lives, power-ups and monetisation are intentionally left out.
 
 **About scoring:** the star rating (lives left) is the measure of skill. The move counter is kept for compatibility. It counts arrows you cleared by tapping, so it equals the arrow count minus chain-reaction releases, and it isn't used for ratings.

@@ -30,6 +30,8 @@ export function createGame(parent: HTMLElement, scene: Phaser.Scene): Phaser.Gam
       autoRound: false,
     },
     input: { activePointers: 1 }, // a single touch: no accidental multi-finger moves
+    // Sound is handled by src/audio/AudioManager (synthesised, one shared context).
+    audio: { noAudio: true },
   });
 
   const fit = () => {

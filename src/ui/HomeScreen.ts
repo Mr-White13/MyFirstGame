@@ -8,7 +8,8 @@ export interface HomeActions {
   onPlay(levelId: number): void;
   onLevels(): void;
   onProfile(): void;
-  /** A feature that isn't available yet (settings, events). */
+  onSettings(): void;
+  /** A feature that isn't available yet (events). */
   onComingSoon(feature: string): void;
 }
 
@@ -36,8 +37,8 @@ export class HomeScreen {
     requireElement('btn-home-profile').addEventListener('click', () => actions.onProfile());
     requireElement('btn-home-avatar').addEventListener('click', () => actions.onProfile());
     requireElement('btn-home-events').addEventListener('click', () => actions.onComingSoon('Events'));
-    requireElement('btn-home-settings').addEventListener('click', () => actions.onComingSoon('Settings'));
-    requireElement('btn-home-settings-tile').addEventListener('click', () => actions.onComingSoon('Settings'));
+    requireElement('btn-home-settings').addEventListener('click', () => actions.onSettings());
+    requireElement('btn-home-settings-tile').addEventListener('click', () => actions.onSettings());
   }
 
   render(profile: PlayerProfile, progress: Progress): void {

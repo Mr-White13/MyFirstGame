@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { reducedMotion } from './motion';
+import { decorationScale } from './motion';
 
 interface Particle {
   active: boolean;
@@ -53,10 +53,13 @@ export class FxLayer {
 
   /**
    * A cone of sparks around direction (dx, dy). `scale` is the cell size, so
-   * effects look the same on every board size.
+   * effects look the same on every board size. The effects setting scales
+   * the number of sparks (none with reduced motion or effects off).
    */
   burst(x: number, y: number, dx: number, dy: number, color: number, scale: number, count = 8, spread = 0.75): void {
-    if (reducedMotion()) return;
+    const amount = decorationScale();
+    if (amount === 0) return;
+    count = Math.max(1, Math.round(count * amount));
     const base = Math.atan2(dy, dx);
     for (let i = 0; i < count; i++) {
       const p = this.particles.find((q) => !q.active);
@@ -78,7 +81,7 @@ export class FxLayer {
 
   /** An expanding, fading outline ring. */
   ring(x: number, y: number, color: number, scale: number, from = 0.15, to = 0.55, life = 280): void {
-    if (reducedMotion()) return;
+    if (decorationScale() === 0) return;
     const r = this.rings.find((q) => !q.active);
     if (!r) return;
     r.active = true;

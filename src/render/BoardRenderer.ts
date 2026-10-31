@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import type { BoardLayout } from './layout';
-import { reducedMotion } from './motion';
-import { BOARD_COLORS, COLORS, mixColors } from './theme';
+import { decorationScale, reducedMotion } from './motion';
+import { mixColors, palette } from './theme';
 
 const WIN_WAVE_MS = 650;
 
@@ -52,7 +52,8 @@ export class BoardRenderer {
     this.won = true;
     this.stopEffects();
 
-    if (reducedMotion()) {
+    // The wave and ring are decoration; the green board alone says the level is done.
+    if (decorationScale() === 0) {
       this.wave = 1;
       this.draw();
       return;
@@ -71,7 +72,7 @@ export class BoardRenderer {
 
     this.pulse
       .clear()
-      .lineStyle(Math.max(2, l.cellSize * 0.06), COLORS.green, 1)
+      .lineStyle(Math.max(2, l.cellSize * 0.06), palette().success, 1)
       .strokeRoundedRect(-l.width / 2, -l.height / 2, l.width, l.height, l.radius)
       .setPosition(l.x + l.width / 2, l.y + l.height / 2)
       .setScale(1)
@@ -94,10 +95,10 @@ export class BoardRenderer {
     this.failed = true;
     this.stopEffects();
     this.draw();
-    if (reducedMotion()) return;
+    if (decorationScale() === 0) return; // the red frame stays: only the ring is decoration
     this.pulse
       .clear()
-      .lineStyle(Math.max(2, l.cellSize * 0.06), COLORS.red, 1)
+      .lineStyle(Math.max(2, l.cellSize * 0.06), palette().error, 1)
       .strokeRoundedRect(-l.width / 2, -l.height / 2, l.width, l.height, l.radius)
       .setPosition(l.x + l.width / 2, l.y + l.height / 2)
       .setScale(1.05)
@@ -111,6 +112,11 @@ export class BoardRenderer {
       ease: 'Cubic.easeOut',
       onComplete: () => this.pulse.setVisible(false),
     });
+  }
+
+  /** Redraws in the active theme's colours, keeping the current state (playing, won or failed). */
+  refreshTheme(): void {
+    this.draw();
   }
 
   /** Back to the normal look, cancelling any running win or failure effect. */
@@ -146,25 +152,26 @@ export class BoardRenderer {
     const x0 = -l.width / 2;
     const y0 = -l.height / 2;
     const stroke = Math.max(1, l.cellSize * 0.025);
-    const accent = this.won ? COLORS.green : this.failed ? COLORS.red : COLORS.cyan;
+    const p = palette();
+    const accent = this.won ? p.success : this.failed ? p.error : p.frame;
     const lit = this.won || this.failed;
 
     // Soft light around the frame: two wide, faint, opaque rings (no shader, no blur).
-    g.lineStyle(stroke * 10, mixColors(COLORS.background, accent, lit ? 0.08 : 0.035), 1);
+    g.lineStyle(stroke * 10, mixColors(p.background, accent, (lit ? 0.08 : 0.035) * p.glow), 1);
     g.strokeRoundedRect(x0, y0, l.width, l.height, l.radius);
-    g.lineStyle(stroke * 5, mixColors(COLORS.background, accent, lit ? 0.16 : 0.07), 1);
+    g.lineStyle(stroke * 5, mixColors(p.background, accent, (lit ? 0.16 : 0.07) * p.glow), 1);
     g.strokeRoundedRect(x0, y0, l.width, l.height, l.radius);
 
     // Frame, then the slightly darker play area recessed inside it.
-    g.fillStyle(COLORS.surface, 1);
+    g.fillStyle(p.surface, 1);
     g.fillRoundedRect(x0, y0, l.width, l.height, l.radius);
     const inset = l.padding * 0.45;
     const wellRadius = Math.max(2, l.radius - inset);
     const greenWash = this.won ? 0.07 * (1 - this.wave * 0.5) : 0;
-    g.fillStyle(mixColors(BOARD_COLORS.well, COLORS.green, greenWash), 1);
+    g.fillStyle(mixColors(p.well, p.success, greenWash), 1);
     g.fillRoundedRect(x0 + inset, y0 + inset, l.width - 2 * inset, l.height - 2 * inset, wellRadius);
     // Hairline outline in the accent colour: cyan normally, green once solved.
-    g.lineStyle(stroke, accent, lit ? 0.7 : 0.2);
+    g.lineStyle(stroke, accent, lit ? 0.7 : p.frameAlpha);
     g.strokeRoundedRect(x0, y0, l.width, l.height, l.radius);
 
     // Interior grid lines only; the well's edge frames the outside.
@@ -172,7 +179,7 @@ export class BoardRenderer {
     const top = y0 + l.padding;
     const right = left + l.cols * l.cellSize;
     const bottom = top + l.rows * l.cellSize;
-    g.lineStyle(Math.max(1, stroke * 0.6), COLORS.textSecondary, 0.06);
+    g.lineStyle(Math.max(1, stroke * 0.6), p.grid, p.gridAlpha);
     for (let c = 1; c < l.cols; c++) g.lineBetween(left + c * l.cellSize, top, left + c * l.cellSize, bottom);
     for (let r = 1; r < l.rows; r++) g.lineBetween(left, top + r * l.cellSize, right, top + r * l.cellSize);
 
@@ -184,13 +191,13 @@ export class BoardRenderer {
       for (let c = 0; c < l.cols; c++) {
         const x = left + (c + 0.5) * l.cellSize;
         const y = top + (r + 0.5) * l.cellSize;
-        let alpha = 0.14;
+        let alpha = p.dotAlpha;
         let size = dot;
-        let color: number = COLORS.textSecondary;
+        let color = p.grid;
         if (this.won) {
           const d = Math.hypot(c + 0.5 - l.cols / 2, r + 0.5 - l.rows / 2);
           const band = 1 - Math.min(1, Math.abs(front - d) / 1.5); // 1 at the wave front
-          color = COLORS.green;
+          color = p.success;
           alpha = 0.22 + 0.6 * band * (1 - this.wave * 0.4);
           size = dot * (1 + 1.6 * band);
         }

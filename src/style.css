@@ -4,23 +4,50 @@
    secondary actions, orange = warnings / blockers, green = success.
    ========================================================================== */
 
+/* Theme tokens. Every colour in this file comes from these, so a theme only
+   redefines tokens. The Phaser board has the matching palettes in
+   src/render/theme.ts. `data-theme` on <html> is set before first paint by the
+   inline script in index.html, then kept up to date by src/settings/Appearance.ts.
+   `--x-rgb` channels are for translucent tints: rgb(var(--cyan-rgb) / 0.1). */
+
+/* Dark Neon (default) */
 :root {
   --bg: #101522;
   --surface: #171f30;
+  --surface-rgb: 23 31 48;
   --surface-raised: #1c2539;
   --cyan: #27ddf5;
+  --cyan-rgb: 39 221 245;
   --purple: #a855f7;
+  --purple-rgb: 168 85 247;
   --orange: #ff9f43;
+  --orange-rgb: 255 159 67;
   --green: #48f5a5;
+  --green-rgb: 72 245 165;
   --red: #ff526b;
+  --red-rgb: 255 82 107;
+  --pink: #ff5c8a; /* hearts: a pinker red than error red, so lives read as "health", not "wrong" */
+  --pink-rgb: 255 92 138;
   --text: #f4f7fc;
   --text-muted: #9ba8bc;
-  --text-faint: rgba(155, 168, 188, 0.55);
+  --muted-rgb: 155 168 188;
+  --text-faint: rgb(var(--muted-rgb) / 0.55);
+  --shadow-rgb: 4 7 14;
+  --scrim-rgb: 10 14 24;
+  /* Text on solid accent buttons */
+  --on-cyan: #062029;
+  --on-green: #06291a;
+  --on-orange: #2b1503;
+  --on-red: #2b060c;
+  --star-stroke: #b8f6ff;
+  --star-final-stroke: #e3c7ff;
+  --title-mid: #7aa8f9;
+  --focus: var(--text);
 
-  --line: rgba(155, 168, 188, 0.13);
-  --line-strong: rgba(155, 168, 188, 0.24);
+  --line: rgb(var(--muted-rgb) / 0.13);
+  --line-strong: rgb(var(--muted-rgb) / 0.24);
   --highlight: inset 0 1px 0 rgba(255, 255, 255, 0.045);
-  --shadow: 0 10px 28px rgba(4, 7, 14, 0.35);
+  --shadow: 0 10px 28px rgb(var(--shadow-rgb) / 0.35);
 
   --r-sm: 10px;
   --r-md: 14px;
@@ -37,6 +64,65 @@
     sans-serif;
 
   color-scheme: dark;
+}
+
+/* Light: comfortable daytime contrast. Accents are deepened so text and icons
+   on white meet WCAG AA, glows are toned down, solid buttons get white text. */
+:root[data-theme='light'] {
+  --bg: #e9eef6;
+  --surface: #ffffff;
+  --surface-rgb: 255 255 255;
+  --surface-raised: #f1f4f9;
+  --cyan: #0a7f96;
+  --cyan-rgb: 10 127 150;
+  --purple: #7c3aed;
+  --purple-rgb: 124 58 237;
+  --orange: #b35400;
+  --orange-rgb: 179 84 0;
+  --green: #0b8050;
+  --green-rgb: 11 128 80;
+  --red: #d42a46;
+  --red-rgb: 212 42 70;
+  --pink: #d61f63;
+  --pink-rgb: 214 31 99;
+  --text: #131a2a;
+  --text-muted: #4a5568;
+  --muted-rgb: 74 85 104;
+  --text-faint: rgb(var(--muted-rgb) / 0.75);
+  --shadow-rgb: 40 52 80;
+  --scrim-rgb: 28 36 56;
+  --on-cyan: #ffffff;
+  --on-green: #ffffff;
+  --on-orange: #ffffff;
+  --on-red: #ffffff;
+  --star-stroke: #0a7f96;
+  --star-final-stroke: #7c3aed;
+  --title-mid: #3d63d6;
+  --line: rgb(var(--muted-rgb) / 0.2);
+  --line-strong: rgb(var(--muted-rgb) / 0.34);
+  --highlight: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --shadow: 0 8px 22px rgb(var(--shadow-rgb) / 0.12);
+  color-scheme: light;
+}
+
+/* Colorful: the dark look with a wider coordinated neon palette. */
+:root[data-theme='colorful'] {
+  --bg: #130f26;
+  --surface: #1d1836;
+  --surface-rgb: 29 24 54;
+  --surface-raised: #262046;
+  --purple: #b57bff;
+  --purple-rgb: 181 123 255;
+  --green: #5cf28c;
+  --green-rgb: 92 242 140;
+  --red: #ff3b55;
+  --red-rgb: 255 59 85;
+  --pink: #ff6fcf;
+  --pink-rgb: 255 111 207;
+  --text-muted: #a9a3c9;
+  --muted-rgb: 169 163 201;
+  --title-mid: #ff6fcf;
+  --star-final-stroke: #ffd1f0;
 }
 
 *,
@@ -59,8 +145,8 @@ html {
 
 body {
   background:
-    radial-gradient(90% 50% at 50% -5%, rgba(39, 221, 245, 0.07), transparent 70%),
-    radial-gradient(80% 45% at 50% 108%, rgba(168, 85, 247, 0.08), transparent 70%),
+    radial-gradient(90% 50% at 50% -5%, rgb(var(--cyan-rgb) / 0.07), transparent 70%),
+    radial-gradient(80% 45% at 50% 108%, rgb(var(--purple-rgb) / 0.08), transparent 70%),
     var(--bg);
   color: var(--text);
   font-family: var(--font);
@@ -96,8 +182,8 @@ body.is-navigating #app {
   pointer-events: none;
   overflow: hidden;
   background-image:
-    linear-gradient(rgba(39, 221, 245, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(39, 221, 245, 0.035) 1px, transparent 1px);
+    linear-gradient(rgb(var(--cyan-rgb) / 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--cyan-rgb) / 0.035) 1px, transparent 1px);
   background-size: 36px 36px;
   background-position: center;
   /* Fade the grid out towards the edges so it reads as depth, not pattern. */
@@ -163,7 +249,7 @@ body.is-navigating #app {
   margin-right: -0.18em;
   line-height: 1.05;
   white-space: nowrap;
-  background: linear-gradient(95deg, var(--cyan) 15%, #7aa8f9 55%, var(--purple) 90%);
+  background: linear-gradient(95deg, var(--cyan) 15%, var(--title-mid) 55%, var(--purple) 90%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -172,7 +258,7 @@ body.is-navigating #app {
 /* ---------- Surfaces and meters ---------- */
 
 .surface {
-  background: rgba(23, 31, 48, 0.86);
+  background: rgb(var(--surface-rgb) / 0.86);
   border: 1px solid var(--line);
   border-radius: var(--r-md);
   box-shadow: var(--highlight), var(--shadow);
@@ -181,7 +267,7 @@ body.is-navigating #app {
 .meter {
   height: 6px;
   border-radius: var(--r-pill);
-  background: rgba(155, 168, 188, 0.12);
+  background: rgb(var(--muted-rgb) / 0.12);
   overflow: hidden;
 }
 
@@ -258,7 +344,7 @@ body.is-navigating #app {
   width: 100%;
   margin-top: 14px;
   padding: 12px 14px;
-  background: rgba(23, 31, 48, 0.7);
+  background: rgb(var(--surface-rgb) / 0.7);
   border: 1px solid var(--line);
   border-radius: var(--r-md);
   box-shadow: var(--highlight);
@@ -371,7 +457,7 @@ body.is-navigating #app {
 
 /* Completed: quiet green accents, still clearly tappable for replay. */
 .level-tile--completed {
-  border-color: rgba(72, 245, 165, 0.35);
+  border-color: rgb(var(--green-rgb) / 0.35);
 }
 
 .level-tile--completed .level-tile__mark {
@@ -382,7 +468,7 @@ body.is-navigating #app {
 .level-tile--current {
   color: var(--cyan);
   border-color: var(--cyan);
-  background: linear-gradient(180deg, rgba(39, 221, 245, 0.14), rgba(39, 221, 245, 0.03)), var(--surface);
+  background: linear-gradient(180deg, rgb(var(--cyan-rgb) / 0.14), rgb(var(--cyan-rgb) / 0.03)), var(--surface);
 }
 
 .level-tile--current::after {
@@ -390,7 +476,7 @@ body.is-navigating #app {
   position: absolute;
   inset: -5px;
   border-radius: calc(var(--r-md) + 5px);
-  border: 1.5px solid rgba(39, 221, 245, 0.5);
+  border: 1.5px solid rgb(var(--cyan-rgb) / 0.5);
   animation: breathe 2.4s ease-in-out infinite;
   pointer-events: none;
 }
@@ -404,8 +490,8 @@ body.is-navigating #app {
 .level-tile--locked {
   cursor: default;
   color: var(--text-faint);
-  background: rgba(23, 31, 48, 0.4);
-  border: 1px dashed rgba(155, 168, 188, 0.18);
+  background: rgb(var(--surface-rgb) / 0.4);
+  border: 1px dashed rgb(var(--muted-rgb) / 0.18);
   box-shadow: none;
 }
 
@@ -433,7 +519,7 @@ body.is-navigating #app {
 @media (hover: hover) {
   .level-tile:not(:disabled):hover {
     background: var(--surface-raised);
-    border-color: rgba(39, 221, 245, 0.6);
+    border-color: rgb(var(--cyan-rgb) / 0.6);
   }
 }
 
@@ -543,7 +629,7 @@ body.is-navigating #app {
   gap: 14px;
   margin: 0;
   padding: 9px 14px;
-  background: rgba(23, 31, 48, 0.86);
+  background: rgb(var(--surface-rgb) / 0.86);
   border: 1px solid var(--line);
   border-radius: var(--r-md);
   box-shadow: var(--highlight);
@@ -604,7 +690,7 @@ body.is-navigating #app {
   padding: 0;
   border-radius: var(--r-md);
   color: var(--text);
-  background: rgba(23, 31, 48, 0.86);
+  background: rgb(var(--surface-rgb) / 0.86);
   border: 1px solid var(--line);
   box-shadow: var(--highlight);
   cursor: pointer;
@@ -625,7 +711,7 @@ body.is-navigating #app {
 .icon-btn:active:not(:disabled) {
   transform: scale(0.9);
   background: var(--surface-raised);
-  border-color: rgba(168, 85, 247, 0.6);
+  border-color: rgb(var(--purple-rgb) / 0.6);
 }
 
 .icon-btn--restart:active:not(:disabled) .icon {
@@ -691,25 +777,25 @@ body.is-navigating #app {
 
 /* Primary: cyan, the main "go" action on the level select. */
 .btn--primary {
-  color: #062029;
+  color: var(--on-cyan);
   background: var(--cyan);
   border: none;
-  box-shadow: 0 6px 20px rgba(39, 221, 245, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  box-shadow: 0 6px 20px rgb(var(--cyan-rgb) / 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
 /* Success: green, the main action after winning. */
 .btn--solid {
   width: 100%;
-  color: #06291a;
+  color: var(--on-green);
   background: var(--green);
   border: none;
-  box-shadow: 0 6px 20px rgba(72, 245, 165, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  box-shadow: 0 6px 20px rgb(var(--green-rgb) / 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
 /* Secondary: neutral surface with a purple accent, for navigation. */
 .btn--ghost {
   color: var(--text);
-  background: rgba(23, 31, 48, 0.9);
+  background: rgb(var(--surface-rgb) / 0.9);
   border: 1px solid var(--line-strong);
   box-shadow: var(--highlight);
 }
@@ -719,13 +805,13 @@ body.is-navigating #app {
 }
 
 .btn--ghost:active:not(:disabled) {
-  border-color: rgba(168, 85, 247, 0.6);
+  border-color: rgb(var(--purple-rgb) / 0.6);
   background: var(--surface-raised);
 }
 
 /* Warning: orange, for leaving a level. */
 .btn--warning {
-  color: #2b1503;
+  color: var(--on-orange);
   background: var(--orange);
   border: none;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
@@ -734,7 +820,7 @@ body.is-navigating #app {
 @media (hover: hover) {
   .icon-btn:not(:disabled):hover,
   .btn--ghost:not(:disabled):hover {
-    border-color: rgba(168, 85, 247, 0.55);
+    border-color: rgb(var(--purple-rgb) / 0.55);
   }
   .btn--primary:not(:disabled):hover,
   .btn--solid:not(:disabled):hover,
@@ -753,7 +839,7 @@ body.is-navigating #app {
   align-items: center;
   justify-content: center;
   padding: max(env(safe-area-inset-top), var(--gutter)) var(--gutter) max(env(safe-area-inset-bottom), var(--gutter));
-  background: rgba(10, 14, 24, 0.66);
+  background: rgb(var(--scrim-rgb) / 0.66);
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
   opacity: 0;
@@ -776,7 +862,7 @@ body.is-navigating #app {
   background: var(--surface);
   border: 1px solid var(--line-strong);
   border-radius: var(--r-lg);
-  box-shadow: var(--highlight), 0 24px 48px rgba(4, 7, 14, 0.5);
+  box-shadow: var(--highlight), 0 24px 48px rgb(var(--shadow-rgb) / 0.5);
   transform: translateY(18px) scale(0.95);
   opacity: 0;
   transition:
@@ -803,13 +889,13 @@ body.is-navigating #app {
 
 .card--success {
   --card-accent: var(--green);
-  background: radial-gradient(120% 60% at 50% 0%, rgba(72, 245, 165, 0.08), transparent 70%), var(--surface);
+  background: radial-gradient(120% 60% at 50% 0%, rgb(var(--green-rgb) / 0.08), transparent 70%), var(--surface);
 }
 
 /* Game-complete variant: purple to set it apart from a regular level. */
 .overlay--final .card--success {
   --card-accent: linear-gradient(90deg, var(--cyan), var(--purple));
-  background: radial-gradient(120% 60% at 50% 0%, rgba(168, 85, 247, 0.13), transparent 70%), var(--surface);
+  background: radial-gradient(120% 60% at 50% 0%, rgb(var(--purple-rgb) / 0.13), transparent 70%), var(--surface);
 }
 
 .card--warning {
@@ -824,8 +910,8 @@ body.is-navigating #app {
   place-items: center;
   border-radius: 50%;
   color: var(--green);
-  background: rgba(72, 245, 165, 0.1);
-  box-shadow: 0 0 0 1px rgba(72, 245, 165, 0.45), 0 0 24px rgba(72, 245, 165, 0.18);
+  background: rgb(var(--green-rgb) / 0.1);
+  box-shadow: 0 0 0 1px rgb(var(--green-rgb) / 0.45), 0 0 24px rgb(var(--green-rgb) / 0.18);
   transform: scale(0.6);
   transition: transform 420ms var(--ease-spring) 60ms;
 }
@@ -836,8 +922,8 @@ body.is-navigating #app {
 
 .overlay--final .badge {
   color: var(--purple);
-  background: rgba(168, 85, 247, 0.12);
-  box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.5), 0 0 28px rgba(168, 85, 247, 0.22);
+  background: rgb(var(--purple-rgb) / 0.12);
+  box-shadow: 0 0 0 1px rgb(var(--purple-rgb) / 0.5), 0 0 28px rgb(var(--purple-rgb) / 0.22);
 }
 
 .badge__icon {
@@ -935,8 +1021,8 @@ body.is-navigating #app {
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--purple);
-  background: rgba(168, 85, 247, 0.12);
-  border: 1px solid rgba(168, 85, 247, 0.35);
+  background: rgb(var(--purple-rgb) / 0.12);
+  border: 1px solid rgb(var(--purple-rgb) / 0.35);
 }
 
 .chip[hidden] {
@@ -966,11 +1052,11 @@ body.is-navigating #app {
 .heart {
   width: 22px;
   height: 22px;
-  fill: #ff5c8a; /* a pinker red than error red, so lives read as "health", not "wrong" */
-  stroke: #ff5c8a;
+  fill: var(--pink); /* a pinker red than error red, so lives read as "health", not "wrong" */
+  stroke: var(--pink);
   stroke-width: 1.4;
   stroke-linejoin: round;
-  filter: drop-shadow(0 0 4px rgba(255, 92, 138, 0.45));
+  filter: drop-shadow(0 0 4px rgb(var(--pink-rgb) / 0.45));
   transition:
     fill 200ms ease,
     stroke 200ms ease,
@@ -980,7 +1066,7 @@ body.is-navigating #app {
 
 .heart--lost {
   fill: transparent;
-  stroke: rgba(155, 168, 188, 0.4);
+  stroke: rgb(var(--muted-rgb) / 0.4);
   filter: none;
 }
 
@@ -990,7 +1076,7 @@ body.is-navigating #app {
 }
 
 @keyframes heart-break {
-  0% { transform: scale(1); fill: #ff5c8a; stroke: #ff5c8a; }
+  0% { transform: scale(1); fill: var(--pink); stroke: var(--pink); }
   30% { transform: scale(1.35); fill: #fff; stroke: #fff; }
   100% { transform: scale(1); }
 }
@@ -1018,8 +1104,8 @@ body.is-navigating #app {
 .star {
   width: 40px;
   height: 40px;
-  fill: rgba(155, 168, 188, 0.08);
-  stroke: rgba(155, 168, 188, 0.35);
+  fill: rgb(var(--muted-rgb) / 0.08);
+  stroke: rgb(var(--muted-rgb) / 0.35);
   stroke-width: 1.2;
   stroke-linejoin: round;
 }
@@ -1031,8 +1117,8 @@ body.is-navigating #app {
 
 .star--earned {
   fill: var(--cyan);
-  stroke: #b8f6ff;
-  filter: drop-shadow(0 0 8px rgba(39, 221, 245, 0.55));
+  stroke: var(--star-stroke);
+  filter: drop-shadow(0 0 8px rgb(var(--cyan-rgb) / 0.55));
 }
 
 /* Earned stars light up one by one once the card is in. */
@@ -1049,8 +1135,8 @@ body.is-navigating #app {
 
 .overlay--final .star--earned {
   fill: var(--purple);
-  stroke: #e3c7ff;
-  filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.55));
+  stroke: var(--star-final-stroke);
+  filter: drop-shadow(0 0 8px rgb(var(--purple-rgb) / 0.55));
 }
 
 .run-stats {
@@ -1067,7 +1153,7 @@ body.is-navigating #app {
 .run-stats div {
   padding: 8px 4px 7px;
   border-radius: var(--r-sm);
-  background: rgba(155, 168, 188, 0.07);
+  background: rgb(var(--muted-rgb) / 0.07);
 }
 
 .run-stats dt {
@@ -1104,20 +1190,20 @@ body.is-navigating #app {
 
 .chip--best {
   color: var(--cyan);
-  background: rgba(39, 221, 245, 0.1);
-  border-color: rgba(39, 221, 245, 0.4);
+  background: rgb(var(--cyan-rgb) / 0.1);
+  border-color: rgb(var(--cyan-rgb) / 0.4);
 }
 
 /* Game Over */
 .card--danger {
   --card-accent: var(--red);
-  background: radial-gradient(120% 60% at 50% 0%, rgba(255, 82, 107, 0.09), transparent 70%), var(--surface);
+  background: radial-gradient(120% 60% at 50% 0%, rgb(var(--red-rgb) / 0.09), transparent 70%), var(--surface);
 }
 
 .badge--danger {
   color: var(--red);
-  background: rgba(255, 82, 107, 0.1);
-  box-shadow: 0 0 0 1px rgba(255, 82, 107, 0.45), 0 0 24px rgba(255, 82, 107, 0.18);
+  background: rgb(var(--red-rgb) / 0.1);
+  box-shadow: 0 0 0 1px rgb(var(--red-rgb) / 0.45), 0 0 24px rgb(var(--red-rgb) / 0.18);
 }
 
 .badge__icon--solid {
@@ -1142,10 +1228,10 @@ body.is-navigating #app {
 
 .btn--danger {
   width: 100%;
-  color: #2b060c;
+  color: var(--on-red);
   background: var(--red);
   border: none;
-  box-shadow: 0 6px 20px rgba(255, 82, 107, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow: 0 6px 20px rgb(var(--red-rgb) / 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 /* Level select: best rating on completed tiles, star total in the progress card. */
@@ -1159,7 +1245,7 @@ body.is-navigating #app {
   width: 11px;
   height: 11px;
   fill: transparent;
-  stroke: rgba(155, 168, 188, 0.45);
+  stroke: rgb(var(--muted-rgb) / 0.45);
   stroke-width: 1.6;
   stroke-linejoin: round;
 }
@@ -1296,8 +1382,8 @@ body.is-navigating #app {
   padding: 2px 7px;
   border-radius: var(--r-pill);
   color: var(--orange);
-  background: rgba(255, 159, 67, 0.12);
-  border: 1px solid rgba(255, 159, 67, 0.35);
+  background: rgb(var(--orange-rgb) / 0.12);
+  border: 1px solid rgb(var(--orange-rgb) / 0.35);
 }
 
 /* ---------- Home ---------- */
@@ -1329,7 +1415,7 @@ body.is-navigating #app {
   border-radius: var(--r-pill);
   font: inherit;
   color: var(--text);
-  background: rgba(23, 31, 48, 0.86);
+  background: rgb(var(--surface-rgb) / 0.86);
   border: 1px solid var(--line);
   box-shadow: var(--highlight);
   cursor: pointer;
@@ -1370,10 +1456,10 @@ body.is-navigating #app {
   flex-direction: column;
   gap: 16px;
   padding: 18px;
-  border-color: rgba(39, 221, 245, 0.28);
+  border-color: rgb(var(--cyan-rgb) / 0.28);
   background:
-    radial-gradient(120% 90% at 50% 0%, rgba(39, 221, 245, 0.1), transparent 60%),
-    rgba(23, 31, 48, 0.9);
+    radial-gradient(120% 90% at 50% 0%, rgb(var(--cyan-rgb) / 0.1), transparent 60%),
+    rgb(var(--surface-rgb) / 0.9);
 }
 
 .home__next {
@@ -1453,7 +1539,7 @@ body.is-navigating #app {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text);
-  background: rgba(23, 31, 48, 0.86);
+  background: rgb(var(--surface-rgb) / 0.86);
   border: 1px solid var(--line);
   box-shadow: var(--highlight);
   cursor: pointer;
@@ -1470,7 +1556,7 @@ body.is-navigating #app {
 .nav-tile:active {
   transform: scale(0.96);
   background: var(--surface-raised);
-  border-color: rgba(168, 85, 247, 0.55);
+  border-color: rgb(var(--purple-rgb) / 0.55);
 }
 
 .nav-tile--soon {
@@ -1490,15 +1576,15 @@ body.is-navigating #app {
 @media (hover: hover) {
   .nav-tile:hover,
   .avatar-chip:hover {
-    border-color: rgba(168, 85, 247, 0.5);
+    border-color: rgb(var(--purple-rgb) / 0.5);
   }
 }
 
 .home__daily {
   padding: 14px 16px 16px;
   border-radius: var(--r-md);
-  border: 1px dashed rgba(155, 168, 188, 0.22);
-  background: rgba(23, 31, 48, 0.45);
+  border: 1px dashed rgb(var(--muted-rgb) / 0.22);
+  background: rgb(var(--surface-rgb) / 0.45);
 }
 
 .home__daily-head {
@@ -1524,7 +1610,7 @@ body.is-navigating #app {
   gap: 6px;
   padding: 10px 4px;
   border-radius: var(--r-sm);
-  background: rgba(155, 168, 188, 0.06);
+  background: rgb(var(--muted-rgb) / 0.06);
   font-size: 0.7rem;
   font-weight: 600;
   text-align: center;
@@ -1664,7 +1750,7 @@ body.is-navigating #app {
 
 .text-input:focus {
   border-color: var(--cyan);
-  box-shadow: 0 0 0 3px rgba(39, 221, 245, 0.18);
+  box-shadow: 0 0 0 3px rgb(var(--cyan-rgb) / 0.18);
 }
 
 .field-error {
@@ -1689,7 +1775,7 @@ body.is-navigating #app {
   font: inherit;
   font-size: 0.85rem;
   color: var(--text-muted);
-  background: rgba(155, 168, 188, 0.08);
+  background: rgb(var(--muted-rgb) / 0.08);
   border: 1px solid var(--line);
   cursor: pointer;
 }
@@ -1701,8 +1787,8 @@ body.is-navigating #app {
 .chip--rank {
   margin: 0;
   color: var(--cyan);
-  background: rgba(39, 221, 245, 0.1);
-  border-color: rgba(39, 221, 245, 0.35);
+  background: rgb(var(--cyan-rgb) / 0.1);
+  border-color: rgb(var(--cyan-rgb) / 0.35);
 }
 
 .profile__summary {
@@ -1718,7 +1804,7 @@ body.is-navigating #app {
   gap: 2px;
   padding: 12px 6px;
   border-radius: var(--r-md);
-  background: rgba(23, 31, 48, 0.86);
+  background: rgb(var(--surface-rgb) / 0.86);
   border: 1px solid var(--line);
   box-shadow: var(--highlight);
   text-align: center;
@@ -1767,7 +1853,7 @@ body.is-navigating #app {
 .stat-grid div {
   padding: 10px 12px;
   border-radius: var(--r-sm);
-  background: rgba(155, 168, 188, 0.06);
+  background: rgb(var(--muted-rgb) / 0.06);
 }
 
 .stat-grid dt {
@@ -1869,8 +1955,8 @@ body.is-navigating #app {
 
 .chip--time {
   color: var(--green);
-  background: rgba(72, 245, 165, 0.1);
-  border-color: rgba(72, 245, 165, 0.4);
+  background: rgb(var(--green-rgb) / 0.1);
+  border-color: rgb(var(--green-rgb) / 0.4);
 }
 
 /* ---------- Pickers ---------- */
@@ -1913,7 +1999,7 @@ body.is-navigating #app {
   border-radius: var(--r-md);
   font: inherit;
   color: var(--text-muted);
-  background: rgba(155, 168, 188, 0.06);
+  background: rgb(var(--muted-rgb) / 0.06);
   border: 1.5px solid transparent;
   cursor: pointer;
   touch-action: manipulation;
@@ -1938,7 +2024,7 @@ body.is-navigating #app {
 .avatar-option[aria-selected='true'] {
   color: var(--text);
   border-color: var(--cyan);
-  background: rgba(39, 221, 245, 0.08);
+  background: rgb(var(--cyan-rgb) / 0.08);
 }
 
 .search {
@@ -1988,7 +2074,7 @@ body.is-navigating #app {
 
 .country-list button:active,
 .country-list button[aria-selected='true'] {
-  background: rgba(39, 221, 245, 0.1);
+  background: rgb(var(--cyan-rgb) / 0.1);
 }
 
 .country-list button[aria-selected='true'] {
@@ -2019,7 +2105,7 @@ body.is-navigating #app {
   font-weight: 700;
   color: var(--text);
   background: var(--surface-raised);
-  border: 1px solid rgba(255, 159, 67, 0.45);
+  border: 1px solid rgb(var(--orange-rgb) / 0.45);
   box-shadow: var(--shadow);
   opacity: 0;
   transform: translate(-50%, 10px);
@@ -2126,37 +2212,511 @@ body.is-navigating #app {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .toast {
-    transition: none;
-  }
+/* ---------- Settings ---------- */
 
-  .heart--breaking,
-  .hearts--last .heart:not(.heart--lost),
-  .overlay--visible .star--earned,
-  .overlay--visible .badge__icon--solid {
-    animation: none;
-  }
+.screen--settings {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 12px;
+  padding:
+    max(env(safe-area-inset-top), 14px) calc(var(--gutter) + env(safe-area-inset-right))
+    0 calc(var(--gutter) + env(safe-area-inset-left));
+}
 
-  .ambient span,
-  .level-tile--current::after,
-  .stat__value.is-ticking,
-  .overlay--visible .badge__icon {
-    animation: none;
-  }
-  .ambient span {
-    display: none;
-  }
-  .badge__icon {
-    stroke-dashoffset: 0;
-  }
-  .screen,
-  .screen--active,
-  .overlay,
-  .card,
-  .badge,
-  .meter__fill,
-  .progress .meter__fill {
-    transition: none;
-  }
+.screen--settings .topbar {
+  max-width: 480px;
+  justify-self: center;
+}
+
+.settings__scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  max-width: 480px;
+  justify-self: center;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 2px 2px max(env(safe-area-inset-bottom), 24px);
+  scrollbar-width: none;
+}
+
+.settings-group {
+  padding: 14px 16px 6px;
+}
+
+.settings-group__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 4px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.settings-group__title .icon {
+  color: var(--purple);
+}
+
+.setting {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 58px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+
+.settings-group__title + .setting {
+  border-top: none;
+}
+
+.setting--switch {
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.setting--stack {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.setting__text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.setting__label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.setting__hint {
+  margin: 0;
+  font-size: 0.76rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+.setting__hint:empty {
+  display: none;
+}
+
+.setting__note {
+  margin: 0 0 10px;
+  padding: 9px 12px;
+  border-radius: var(--r-sm);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--text);
+  background: rgb(var(--orange-rgb) / 0.1);
+  border: 1px solid rgb(var(--orange-rgb) / 0.35);
+}
+
+.setting__note[hidden] {
+  display: none;
+}
+
+.setting--inactive .slider,
+.setting--inactive .slider__value {
+  opacity: 0.45;
+}
+
+/* Switch: a native checkbox (keyboard and screen readers for free) drawn as a neon toggle. */
+.switch {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  flex: none;
+  width: 54px;
+  height: 32px;
+  margin: 0;
+  border-radius: var(--r-pill);
+  background: rgb(var(--muted-rgb) / 0.22);
+  border: 1px solid var(--line-strong);
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.switch::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  box-shadow: 0 1px 3px rgb(var(--shadow-rgb) / 0.35);
+  transition: transform 180ms var(--ease-out), background-color 160ms ease;
+}
+
+/* "On" is shown by position and a check mark, not by colour alone. */
+.switch:checked {
+  background: var(--cyan);
+  border-color: var(--cyan);
+}
+
+.switch:checked::before {
+  transform: translateX(22px);
+  background: var(--on-cyan) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2327DDF5' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4L18 8.5'/%3E%3C/svg%3E") center / 14px no-repeat;
+}
+
+:root[data-theme='light'] .switch:checked::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230A7F96' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4L18 8.5'/%3E%3C/svg%3E");
+}
+
+.switch:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.switch:focus-visible,
+.slider:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+/* Segmented control: native radios, visually hidden but focusable (arrow keys move between options). */
+.segmented {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--r-md);
+  background: rgb(var(--muted-rgb) / 0.08);
+  border: 1px solid var(--line);
+}
+
+.segmented input,
+.theme-option input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+}
+
+.segmented span {
+  display: grid;
+  place-items: center;
+  min-height: 44px;
+  padding: 0 6px;
+  border-radius: var(--r-sm);
+  border: 1px solid transparent;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.segmented input:checked + span {
+  color: var(--text);
+  background: var(--surface-raised);
+  border-color: var(--cyan);
+  box-shadow: var(--highlight), 0 0 0 1px rgb(var(--cyan-rgb) / 0.25);
+  font-weight: 800;
+}
+
+.segmented input:focus-visible + span,
+.theme-option input:focus-visible ~ .theme-option__swatch {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Theme picker: a small preview of each theme. */
+.theme-picker {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.theme-option {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.theme-option__swatch {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  height: 52px;
+  border-radius: var(--r-md);
+  border: 1.5px solid var(--line-strong);
+  transition: border-color 160ms ease, transform 120ms var(--ease-out);
+}
+
+.theme-option__swatch i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.theme-option--dark .theme-option__swatch { background: #101522; }
+.theme-option--dark i:nth-child(1) { background: #27ddf5; }
+.theme-option--dark i:nth-child(2) { background: #a855f7; }
+.theme-option--dark i:nth-child(3) { background: #48f5a5; }
+.theme-option--light .theme-option__swatch { background: #f3f6fb; }
+.theme-option--light i:nth-child(1) { background: #0a7f96; }
+.theme-option--light i:nth-child(2) { background: #7c3aed; }
+.theme-option--light i:nth-child(3) { background: #0b8050; }
+.theme-option--colorful .theme-option__swatch { background: #130f26; }
+.theme-option--colorful i:nth-child(1) { background: #ff9f43; }
+.theme-option--colorful i:nth-child(2) { background: #ff6fcf; }
+.theme-option--colorful i:nth-child(3) { background: #5cf28c; }
+.theme-option--system .theme-option__swatch { background: linear-gradient(135deg, #101522 50%, #f3f6fb 50%); }
+.theme-option--system i:nth-child(1) { background: #27ddf5; }
+.theme-option--system i:nth-child(2) { background: #7c3aed; }
+.theme-option--system i:nth-child(3) { display: none; }
+
+.theme-option__name {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.theme-option input:checked ~ .theme-option__swatch {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 2px rgb(var(--cyan-rgb) / 0.3);
+}
+
+/* The selected theme also gets a check badge, so it isn't marked by colour alone. */
+.theme-option input:checked ~ .theme-option__swatch::after {
+  content: '';
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--cyan) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4L18 8.5'/%3E%3C/svg%3E") center / 13px no-repeat;
+}
+
+.theme-option input:checked ~ .theme-option__name {
+  color: var(--text);
+  font-weight: 800;
+}
+
+.theme-option:active .theme-option__swatch {
+  transform: scale(0.95);
+}
+
+/* Volume slider */
+.setting--slider {
+  display: grid;
+  grid-template-columns: 1fr 3.2em;
+  grid-template-areas: 'label value' 'slider slider';
+  row-gap: 4px;
+}
+
+.setting--slider .setting__label {
+  grid-area: label;
+}
+
+.slider__value {
+  grid-area: value;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--cyan);
+}
+
+.slider {
+  grid-area: slider;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 44px; /* a comfortable touch target; the visible track is thinner */
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(90deg, var(--cyan), var(--purple)) 0 / var(--fill, 50%) 100% no-repeat, rgb(var(--muted-rgb) / 0.2);
+}
+
+.slider::-moz-range-track {
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(90deg, var(--cyan), var(--purple)) 0 / var(--fill, 50%) 100% no-repeat, rgb(var(--muted-rgb) / 0.2);
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  margin-top: -9px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 3px solid var(--cyan);
+  box-shadow: 0 2px 6px rgb(var(--shadow-rgb) / 0.35);
+}
+
+.slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 3px solid var(--cyan);
+}
+
+.about {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.about div {
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+
+.about div:first-child {
+  display: flex;
+  justify-content: space-between;
+  border-top: none;
+}
+
+.about dt {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.about dd {
+  margin: 4px 0 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.about div:first-child dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--cyan);
+}
+
+.btn--reset {
+  width: 100%;
+  margin: 6px 0 10px;
+}
+
+.btn--reset .icon {
+  color: var(--red);
+}
+
+.hud__timer[hidden] {
+  display: none;
+}
+
+.switch:focus-visible,
+.level-tile:focus-visible,
+.icon-btn:focus-visible,
+.btn:focus-visible {
+  outline-color: var(--focus);
+}
+
+/* ---------- Theme details ---------- */
+
+/* Light: the ambient grid and motes would read as dirt on a bright page; keep them faint. */
+:root[data-theme='light'] .ambient {
+  opacity: 0.6;
+}
+
+:root[data-theme='light'] .heart {
+  filter: none;
+}
+
+:root[data-theme='light'] .star--earned,
+:root[data-theme='light'] .overlay--final .star--earned {
+  filter: none;
+}
+
+/* Colorful: menu icons and summary numbers take different neon accents. */
+:root[data-theme='colorful'] .nav-tile:nth-child(1) .icon { color: var(--cyan); }
+:root[data-theme='colorful'] .nav-tile:nth-child(2) .icon { color: var(--pink); }
+:root[data-theme='colorful'] .nav-tile:nth-child(3) .icon { color: var(--orange); }
+:root[data-theme='colorful'] .nav-tile:nth-child(4) .icon { color: var(--green); }
+:root[data-theme='colorful'] .settings-group:nth-child(2) .settings-group__title .icon { color: var(--pink); }
+:root[data-theme='colorful'] .settings-group:nth-child(3) .settings-group__title .icon { color: var(--orange); }
+:root[data-theme='colorful'] .settings-group:nth-child(4) .settings-group__title .icon { color: var(--green); }
+:root[data-theme='colorful'] .settings-group:nth-child(5) .settings-group__title .icon { color: var(--cyan); }
+:root[data-theme='colorful'] .ambient span:nth-child(3) { background: var(--orange); }
+:root[data-theme='colorful'] .ambient span:nth-child(5) { background: var(--pink); }
+:root[data-theme='colorful'] .ambient span:nth-child(6) { background: var(--green); }
+
+/* ---------- Visual effects intensity (data-effects, from Settings) ---------- */
+
+:root[data-effects='low'] .ambient span:nth-child(n + 3) {
+  display: none;
+}
+
+:root[data-effects='off'] .ambient {
+  display: none;
+}
+
+:root[data-effects='off'] .level-tile--current::after {
+  animation: none;
+  opacity: 0.5;
+}
+
+/* ---------- Reduced motion (data-motion, from Settings: Auto follows the device) ---------- */
+
+:root[data-motion='reduce'] .toast {
+  transition: none;
+}
+
+:root[data-motion='reduce'] .heart--breaking,
+:root[data-motion='reduce'] .hearts--last .heart:not(.heart--lost),
+:root[data-motion='reduce'] .overlay--visible .star--earned,
+:root[data-motion='reduce'] .overlay--visible .badge__icon--solid,
+:root[data-motion='reduce'] .ambient span,
+:root[data-motion='reduce'] .level-tile--current::after,
+:root[data-motion='reduce'] .stat__value.is-ticking,
+:root[data-motion='reduce'] .overlay--visible .badge__icon {
+  animation: none;
+}
+
+:root[data-motion='reduce'] .ambient span {
+  display: none;
+}
+
+:root[data-motion='reduce'] .badge__icon {
+  stroke-dashoffset: 0;
+}
+
+:root[data-motion='reduce'] .screen,
+:root[data-motion='reduce'] .screen--active,
+:root[data-motion='reduce'] .overlay,
+:root[data-motion='reduce'] .card,
+:root[data-motion='reduce'] .badge,
+:root[data-motion='reduce'] .meter__fill,
+:root[data-motion='reduce'] .progress .meter__fill,
+:root[data-motion='reduce'] .switch,
+:root[data-motion='reduce'] .switch::before,
+:root[data-motion='reduce'] .segmented span {
+  transition: none;
 }

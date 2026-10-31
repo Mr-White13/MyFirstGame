@@ -7,7 +7,8 @@ import { isUnlocked, type Progress } from '../progress/Progress';
 import type { ProgressStorage } from '../progress/ProgressStorage';
 import type { GameScene } from '../scenes/GameScene';
 import type { CompleteDialog } from '../ui/CompleteDialog';
-import type { ConfirmDialog } from '../ui/ConfirmDialog';
+import { RESET_SETTINGS, RESTART_LEVEL, type ConfirmDialog } from '../ui/ConfirmDialog';
+import { prefersReducedMotion } from '../ui/dom';
 import type { GameLayout } from '../ui/GameLayout';
 import type { GameOverDialog } from '../ui/GameOverDialog';
 import type { HomeScreen } from '../ui/HomeScreen';
@@ -15,9 +16,12 @@ import type { Hud } from '../ui/Hud';
 import type { LevelSelect } from '../ui/LevelSelect';
 import type { AvatarPicker, CountryPicker } from '../ui/Pickers';
 import type { ProfileScreen } from '../ui/ProfileScreen';
+import type { SettingsStore } from '../settings/Settings';
 import type { Screens } from '../ui/Screens';
 import type { Toast } from '../ui/Toast';
 import { applyAttempt, AttemptTracker, type AttemptSummary } from './AttemptTracker';
+import { hasProgress, restartNeedsConfirm } from './confirmPolicy';
+import type { FeedbackEvent } from './Feedback';
 import { NavigationHistory, type ScreenName } from './Navigation';
 
 export interface AppParts {
@@ -40,6 +44,9 @@ export interface AppParts {
   readonly avatarPicker: AvatarPicker;
   readonly countryPicker: CountryPicker;
   readonly toast: Toast;
+  readonly settings: SettingsStore;
+  /** Sound and haptics for game events (see Feedback). */
+  readonly feedback: (event: FeedbackEvent) => void;
 }
 
 /** How often the HUD clock is refreshed. The time itself comes from a monotonic clock. */
@@ -84,7 +91,7 @@ export class App {
     levelSelect.onSelect((id) => void this.openLevel(id));
     levelSelect.onBack(() => void this.goBack());
     hud.onBack(() => void this.leaveLevel());
-    hud.onRestart(() => this.restartLevel());
+    hud.onRestart(() => void this.requestRestart());
     document.addEventListener('keydown', (event) => this.handleKey(event));
     document.addEventListener('visibilitychange', () => this.handleVisibility());
 
@@ -110,6 +117,10 @@ export class App {
 
   showProfile(): Promise<void> {
     return this.showMenuScreen('profile');
+  }
+
+  showSettings(): Promise<void> {
+    return this.showMenuScreen('settings');
   }
 
   /** Back to the screen this one was opened from (Home if there is none). */
@@ -146,8 +157,7 @@ export class App {
     const { state, confirmDialog } = this.parts;
     const snapshot = state.snapshot();
     // Only an unfinished attempt with something to lose needs confirming.
-    const inProgress = state.isPlaying && (snapshot.moves > 0 || snapshot.mistakes > 0);
-    if (inProgress) {
+    if (hasProgress(snapshot, state.isPlaying)) {
       // Answering the question isn't play time: pause the clock while it is open.
       this.attempt.timer.pause('confirm');
       const leave = await confirmDialog.ask();
@@ -155,6 +165,24 @@ export class App {
       if (!leave) return;
     }
     await this.goBack();
+  }
+
+  /**
+   * The HUD's restart button. With "Confirm restart" on, an attempt with
+   * moves or mistakes asks first; an untouched level restarts at once.
+   */
+  async requestRestart(): Promise<void> {
+    if (this.navigating || this.parts.screens.active !== 'game') return;
+    const { state, confirmDialog, settings } = this.parts;
+    const snapshot = state.snapshot();
+    if (restartNeedsConfirm(snapshot, state.isPlaying, settings.current.confirmRestart)) {
+      this.attempt.timer.pause('confirm');
+      const restart = await confirmDialog.ask(RESTART_LEVEL);
+      this.attempt.timer.resume('confirm');
+      // The level may have changed or ended while the question was open.
+      if (!restart || this.parts.screens.active !== 'game' || this.parts.state.levelId !== snapshot.levelId) return;
+    }
+    this.restartLevel();
   }
 
   /** Restarts only the current level; saved progress is untouched. */
@@ -189,6 +217,7 @@ export class App {
     };
     this.parts.hud.setTime(summary.timeMs);
     this.renderAll();
+    this.parts.feedback({ type: 'complete' });
   }
 
   /** The win effect has played: show the summary dialog. */
@@ -210,6 +239,7 @@ export class App {
       newBestStars: c.newBestStars,
       unlocked: c.unlocked,
     });
+    this.parts.feedback({ type: 'stars', stars: snapshot.stars, unlocked: c.unlocked !== null, reduced: prefersReducedMotion() });
   }
 
   /** The last life is gone: stop the clock and count the failed attempt. Progress is untouched. */
@@ -217,6 +247,7 @@ export class App {
     const summary = this.attempt.finish('failed', this.parts.state.snapshot());
     if (summary) this.parts.hud.setTime(summary.timeMs);
     this.recordEnded(summary);
+    this.parts.feedback({ type: 'gameOver' });
   }
 
   /** The failure feedback has played: show Game Over. */
@@ -252,6 +283,13 @@ export class App {
 
   chooseCountry(): void {
     this.parts.countryPicker.open(this.profile.country, (code) => this.updateProfile(withCountry(this.profile, code)));
+  }
+
+  /** Asks, then puts every setting back to its default. Progress, profile and statistics are separate and untouched. */
+  async resetSettings(): Promise<void> {
+    if (this.parts.screens.active !== 'settings') return;
+    if (!(await this.parts.confirmDialog.ask(RESET_SETTINGS))) return;
+    if (this.parts.settings.reset()) this.parts.toast.show('Settings reset');
   }
 
   comingSoon(feature: string): void {
