@@ -1,5 +1,6 @@
 import { daysBetween, isDayKey, addDays, type DayKey } from '../daily/dayKey';
 import type { Transaction } from '../rewards/Wallet';
+import { isNonNegativeInt } from '../storage/SafeStore';
 import { CHALLENGES_PER_DAY, collectionKey, CURRENT_POOL, isPoolVersion, MAX_DAILY_POINTS, type DailyChallenge } from './challenges';
 import { BRONZE, LEAGUE_REWARDS, leagueTransactionIds, PROTECTED_INACTIVE_DAYS, TOP_TIER, league } from './leagues';
 
@@ -315,8 +316,7 @@ export function delivered(state: LeagueState, ids: readonly string[]): LeagueSta
 
 // ------------------------------------------------------------ validation
 
-const isCount = (v: unknown): v is number => typeof v === 'number' && Number.isInteger(v) && v >= 0;
-const isTier = (v: unknown): v is number => isCount(v) && v <= TOP_TIER;
+const isTier = (v: unknown): v is number => isNonNegativeInt(v) && v <= TOP_TIER;
 const OUTCOMES: readonly DayOutcome[] = ['promoted', 'retained', 'relegated', 'inactive'];
 
 function readCompetition(v: unknown): Competition | null {
@@ -324,7 +324,7 @@ function readCompetition(v: unknown): Competition | null {
   const c = v as Record<string, unknown>;
   if (!isDayKey(c.date) || !isTier(c.startTier)) return null;
   const strings = (x: unknown) => (Array.isArray(x) ? [...new Set(x.filter((s): s is string => typeof s === 'string' && s.startsWith(`${c.date}:`)))] : []);
-  const completed = Array.isArray(c.completed) ? [...new Set(c.completed.filter((n): n is number => isCount(n) && n >= 1 && n <= CHALLENGES_PER_DAY))].sort() : [];
+  const completed = Array.isArray(c.completed) ? [...new Set(c.completed.filter((n): n is number => isNonNegativeInt(n) && n >= 1 && n <= CHALLENGES_PER_DAY))].sort() : [];
   return {
     date: c.date,
     startTier: c.startTier,
@@ -342,9 +342,9 @@ function readEntry(v: unknown): HistoryEntry | null {
   if (!isDayKey(e.date) || !isTier(e.startTier) || !isTier(e.endTier) || !OUTCOMES.includes(e.outcome as DayOutcome)) return null;
   return {
     date: e.date,
-    days: isCount(e.days) && e.days >= 1 ? e.days : 1,
-    points: isCount(e.points) ? Math.min(MAX_DAILY_POINTS, e.points) : 0,
-    challenges: isCount(e.challenges) ? Math.min(CHALLENGES_PER_DAY, e.challenges) : 0,
+    days: isNonNegativeInt(e.days) && e.days >= 1 ? e.days : 1,
+    points: isNonNegativeInt(e.points) ? Math.min(MAX_DAILY_POINTS, e.points) : 0,
+    challenges: isNonNegativeInt(e.challenges) ? Math.min(CHALLENGES_PER_DAY, e.challenges) : 0,
     startTier: e.startTier,
     endTier: e.endTier,
     outcome: e.outcome as DayOutcome,
@@ -361,7 +361,7 @@ export function readLeagueState(data: Record<string, unknown>): LeagueState {
   const outbox = Array.isArray(data.outbox)
     ? data.outbox.filter(
         (t): t is Transaction =>
-          typeof t === 'object' && t !== null && typeof (t as Transaction).id === 'string' && isCount((t as Transaction).amount) && (t as Transaction).amount > 0,
+          typeof t === 'object' && t !== null && typeof (t as Transaction).id === 'string' && isNonNegativeInt((t as Transaction).amount) && (t as Transaction).amount > 0,
       )
     : [];
   const n = data.notice as Record<string, unknown> | null | undefined;
@@ -370,14 +370,14 @@ export function readLeagueState(data: Record<string, unknown>): LeagueState {
       ? {
           fromTier: n.fromTier,
           toTier: n.toTier,
-          daysSettled: isCount(n.daysSettled) ? n.daysSettled : 0,
-          promotions: isCount(n.promotions) ? n.promotions : 0,
-          relegations: isCount(n.relegations) ? n.relegations : 0,
+          daysSettled: isNonNegativeInt(n.daysSettled) ? n.daysSettled : 0,
+          promotions: isNonNegativeInt(n.promotions) ? n.promotions : 0,
+          relegations: isNonNegativeInt(n.relegations) ? n.relegations : 0,
           lastPlayed:
             n.lastPlayed && typeof n.lastPlayed === 'object' && isDayKey((n.lastPlayed as Record<string, unknown>).date)
               ? {
                   date: (n.lastPlayed as Record<string, string>).date,
-                  points: isCount((n.lastPlayed as Record<string, unknown>).points) ? ((n.lastPlayed as Record<string, number>).points) : 0,
+                  points: isNonNegativeInt((n.lastPlayed as Record<string, unknown>).points) ? ((n.lastPlayed as Record<string, number>).points) : 0,
                   outcome: OUTCOMES.includes((n.lastPlayed as Record<string, DayOutcome>).outcome) ? (n.lastPlayed as Record<string, DayOutcome>).outcome : 'retained',
                 }
               : null,
@@ -386,15 +386,15 @@ export function readLeagueState(data: Record<string, unknown>): LeagueState {
   return {
     tier,
     highestTier: Math.max(tier, isTier(data.highestTier) ? data.highestTier : BRONZE),
-    inactiveStreak: isCount(data.inactiveStreak) ? data.inactiveStreak : 0,
+    inactiveStreak: isNonNegativeInt(data.inactiveStreak) ? data.inactiveStreak : 0,
     lastDay: current && lastDay && current.date > lastDay ? current.date : lastDay,
     current: current && lastDay && current.date < lastDay ? null : current,
     history: Array.isArray(data.history) ? data.history.map(readEntry).filter((e): e is HistoryEntry => e !== null).slice(-KEEP_HISTORY) : [],
     lifetime: {
-      points: isCount(life.points) ? life.points : fresh.lifetime.points,
-      promotions: isCount(life.promotions) ? life.promotions : 0,
-      relegations: isCount(life.relegations) ? life.relegations : 0,
-      challengesCompleted: isCount(life.challengesCompleted) ? life.challengesCompleted : 0,
+      points: isNonNegativeInt(life.points) ? life.points : fresh.lifetime.points,
+      promotions: isNonNegativeInt(life.promotions) ? life.promotions : 0,
+      relegations: isNonNegativeInt(life.relegations) ? life.relegations : 0,
+      challengesCompleted: isNonNegativeInt(life.challengesCompleted) ? life.challengesCompleted : 0,
     },
     milestones: Array.isArray(data.milestones) ? [...new Set(data.milestones.filter((m): m is string => typeof m === 'string'))] : [],
     outbox,

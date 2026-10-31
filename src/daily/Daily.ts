@@ -1,4 +1,5 @@
 import { addDays, daysBetween, isDayKey, recordDay, type DayKey } from './dayKey';
+import { isNonNegativeInt } from '../storage/SafeStore';
 
 /**
  * Daily check-in and login streak. Pure functions over a small record; the
@@ -153,7 +154,6 @@ export function nextReward(state: DailyState, today: DayKey): { day: number; cre
   return { day, credits: rewardForDay(day) };
 }
 
-const isCount = (v: unknown): v is number => typeof v === 'number' && Number.isInteger(v) && v >= 0;
 
 /** Validates a stored daily record field by field. Inconsistent values are repaired, never trusted. */
 export function readDaily(data: unknown): DailyState {
@@ -162,17 +162,17 @@ export function readDaily(data: unknown): DailyState {
   const days = (v: unknown, keep: number) =>
     Array.isArray(v) ? [...new Set(v.filter(isDayKey))].sort().slice(-keep) : [];
   const lastCheckIn = isDayKey(d.lastCheckIn) ? d.lastCheckIn : null;
-  const streak = lastCheckIn && isCount(d.streak) && d.streak >= 1 ? d.streak : lastCheckIn ? 1 : 0;
+  const streak = lastCheckIn && isNonNegativeInt(d.streak) && d.streak >= 1 ? d.streak : lastCheckIn ? 1 : 0;
   const claimedDays = days(d.claimedDays, KEEP_CLAIMS);
   const lastClaim = isDayKey(d.lastClaim) ? d.lastClaim : (claimedDays[claimedDays.length - 1] ?? null);
   const history = days(d.history, KEEP_HISTORY);
   return {
     lastCheckIn,
     streak,
-    longestStreak: Math.max(streak, isCount(d.longestStreak) ? d.longestStreak : 0),
-    daysPlayed: Math.max(lastCheckIn ? 1 : 0, history.length, isCount(d.daysPlayed) ? d.daysPlayed : 0),
+    longestStreak: Math.max(streak, isNonNegativeInt(d.longestStreak) ? d.longestStreak : 0),
+    daysPlayed: Math.max(lastCheckIn ? 1 : 0, history.length, isNonNegativeInt(d.daysPlayed) ? d.daysPlayed : 0),
     lastClaim,
-    claims: Math.max(claimedDays.length, isCount(d.claims) ? d.claims : 0),
+    claims: Math.max(claimedDays.length, isNonNegativeInt(d.claims) ? d.claims : 0),
     claimedDays,
     history,
   };

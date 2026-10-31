@@ -87,6 +87,24 @@ export function parseObject(raw: string): Record<string, unknown> | null {
   }
 }
 
+/**
+ * The checks every versioned reader starts with: the stored object when `raw`
+ * holds exactly `version`, otherwise the status to report with the reader's
+ * fallback value (nothing stored, unreadable or the wrong version, or written
+ * by a newer version of the game).
+ */
+export function readVersioned(
+  raw: string | null,
+  version: number,
+): { readonly data: Record<string, unknown> } | { readonly status: 'empty' | 'corrupt' | 'newer' } {
+  if (raw === null) return { status: 'empty' };
+  const data = parseObject(raw);
+  if (!data) return { status: 'corrupt' };
+  if (typeof data.version === 'number' && data.version > version) return { status: 'newer' };
+  if (data.version !== version) return { status: 'corrupt' };
+  return { data };
+}
+
 export const isPositiveInt = (value: unknown): value is number =>
   typeof value === 'number' && Number.isInteger(value) && value > 0;
 

@@ -1,7 +1,7 @@
 import type { LevelData } from '../core/types';
 import type { DayKey } from '../daily/dayKey';
 import type { Transaction } from '../rewards/Wallet';
-import { browserStorage, parseObject, SafeStore, type KeyValueStore, type SaveStatus } from '../storage/SafeStore';
+import { browserStorage, readVersioned, SafeStore, type KeyValueStore, type SaveStatus } from '../storage/SafeStore';
 import { CURRENT_POOL, dailyChallenges, type DailyChallenge } from './challenges';
 import {
   acknowledge,
@@ -20,11 +20,9 @@ export const LEAGUE_KEY = 'neon-escape.league';
 export const LEAGUE_VERSION = 1;
 
 export function readLeague(raw: string | null): { value: LeagueState; status: SaveStatus } {
-  if (raw === null) return { value: createLeague(), status: 'empty' };
-  const data = parseObject(raw);
-  if (!data) return { value: createLeague(), status: 'corrupt' };
-  if (typeof data.version === 'number' && data.version > LEAGUE_VERSION) return { value: createLeague(), status: 'newer' };
-  if (data.version !== LEAGUE_VERSION) return { value: createLeague(), status: 'corrupt' };
+  const header = readVersioned(raw, LEAGUE_VERSION);
+  if ('status' in header) return { value: createLeague(), status: header.status };
+  const { data } = header;
   return { value: readLeagueState(data), status: 'current' };
 }
 
