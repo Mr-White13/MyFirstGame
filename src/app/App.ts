@@ -157,8 +157,8 @@ export class App {
     dayClock.onChange((today) => {
       if (!document.hidden) rewards.checkIn(today);
       this.renderRewards();
+      this.leagueController.settle();
     });
-    dayClock.onChange(() => this.leagueController.settle());
     dayClock.start();
     rewards.checkIn(dayClock.today);
 

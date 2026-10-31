@@ -118,26 +118,6 @@ const profileScreen = new ProfileScreen(LEVELS, {
 });
 const recordsScreen = new RecordsScreen(LEVELS, () => void app?.goBack());
 
-const settingsScreen = new SettingsScreen(
-  {
-    onBack: () => void app?.goBack(),
-    onChange: (patch) => settings.update(patch),
-    onPreviewSfx: () => audio.play('release'),
-    onToggleDiagnostics: () => (diagnostics.toggle() ? 'diagnostics on' : 'diagnostics off'),
-    onTestVibration: async () => {
-      const result = await haptics.test();
-      if (result.status === 'unsupported') return "This device can't vibrate.";
-      if (result.status === 'failed') return "The vibration couldn't be started. Check that the app may vibrate.";
-      return isNativeApp()
-        ? "Sent. Felt nothing? Check Android Settings → Sound & vibration → Vibration & haptics (media vibration, battery saver, Do not disturb)."
-        : 'Sent. Browsers on computers usually have no vibration motor.';
-    },
-    onReset: () => void app?.resetSettings(),
-  },
-  { vibration: haptics.supported, audio: typeof AudioContext !== 'undefined' },
-  __APP_VERSION__,
-);
-
 // Daily check-in, Energy Credits and achievements: one saved record. Achievements
 // read the latest progress and statistics from the app.
 const rewards = new Rewards({
@@ -218,6 +198,28 @@ const diagnostics = new Diagnostics(game, () => {
   const zoom = (scene as unknown as { viewport?: { zoom: number } }).viewport?.zoom ?? 1;
   return `${state.getArrows().length} arrows · ${state.rows}×${state.cols} · zoom ${zoom.toFixed(2)}× · haptics ${haptics.kind}`;
 });
+
+// Created after the diagnostics overlay it can switch on. Its controls only
+// touch its own elements, so this placement changes no event order.
+const settingsScreen = new SettingsScreen(
+  {
+    onBack: () => void app?.goBack(),
+    onChange: (patch) => settings.update(patch),
+    onPreviewSfx: () => audio.play('release'),
+    onToggleDiagnostics: () => (diagnostics.toggle() ? 'diagnostics on' : 'diagnostics off'),
+    onTestVibration: async () => {
+      const result = await haptics.test();
+      if (result.status === 'unsupported') return "This device can't vibrate.";
+      if (result.status === 'failed') return "The vibration couldn't be started. Check that the app may vibrate.";
+      return isNativeApp()
+        ? "Sent. Felt nothing? Check Android Settings → Sound & vibration → Vibration & haptics (media vibration, battery saver, Do not disturb)."
+        : 'Sent. Browsers on computers usually have no vibration motor.';
+    },
+    onReset: () => void app?.resetSettings(),
+  },
+  { vibration: haptics.supported, audio: typeof AudioContext !== 'undefined' },
+  __APP_VERSION__,
+);
 
 // Apply settings now and whenever they (or the device's theme / motion preference) change.
 // Nothing is rebuilt: the board just redraws, so a level in progress carries on.
