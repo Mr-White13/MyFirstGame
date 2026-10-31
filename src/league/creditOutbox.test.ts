@@ -8,10 +8,9 @@ import { MemoryStore } from '../testing/memoryStore';
 
 /**
  * League credits travel to the wallet through an outbox (see LeagueService).
- * These tests record what happens today when the Rewards save fails or the
- * Rewards record is read-only, including the loss the audit calls B4: the
- * retry sees the transaction as a duplicate, reports it delivered, and the
- * outbox drops it although the saved wallet never got it.
+ * A credit leaves the outbox only once the wallet holding it is saved, also
+ * when the Rewards save fails or the Rewards record is read-only (B4: a retry
+ * used to see a duplicate, report it delivered and drop it unsaved).
  */
 
 const DAY = '2026-10-31';
@@ -37,35 +36,44 @@ describe('league credit outbox', () => {
     expect(savedOutbox()).toEqual([]);
   });
 
-  it('a failed Rewards save keeps the transaction in the outbox, but (B4) the retry drops it without saving the wallet', () => {
+  it('a failed Rewards save keeps the credit in the outbox; the retry saves the wallet, then drains it (B4)', () => {
     const store = new MemoryStore();
     const { rewards, league, savedWallet, savedOutbox } = setup(store);
     store.failWrites = (key) => key === REWARDS_KEY;
     league.flush();
-    expect(rewards.credits).toBe(50); // applied in memory
+    league.flush(); // still failing: still owed
+    expect(rewards.credits).toBe(50); // applied in memory, once
     expect(savedWallet()).toBeNull();
     expect(league.current.outbox).toEqual([TX]);
+    expect(savedOutbox()).toEqual([TX]);
 
     store.failWrites = false;
-    league.flush(); // earn() reports a duplicate, grant() says true
-    expect(league.current.outbox).toEqual([]);
+    league.flush();
+    expect(savedWallet()).toMatchObject({ credits: 50, earned: 50, applied: [TX.id] }); // saved now...
+    expect(league.current.outbox).toEqual([]); // ...and only then delivered
     expect(savedOutbox()).toEqual([]);
-    expect(savedWallet()).toBeNull(); // nothing re-saved the wallet
-    expect(rewards.credits).toBe(50); // only the in-memory record has it (saved by the next Rewards change)
+    expect(rewards.credits).toBe(50); // never paid twice
   });
 
-  it('a read-only (newer) Rewards record: the outbox drains on the second flush and the credit is never saved (B4)', () => {
+  it('a read-only (newer) Rewards record: the credit stays owed in the outbox and the newer save is untouched (B4)', () => {
     const store = new MemoryStore();
     const newer = JSON.stringify({ version: 2, wallet: { credits: 7, earned: 7, applied: [] } });
     store.data.set(REWARDS_KEY, newer);
+    const { league, savedOutbox } = setup(store);
+    for (let i = 0; i < 3; i++) league.flush();
+    expect(league.current.outbox).toEqual([TX]);
+    expect(savedOutbox()).toEqual([TX]); // kept for a version that can save the wallet
+    expect(store.data.get(REWARDS_KEY)).toBe(newer);
+    expect(store.data.get(`${REWARDS_KEY}.backup`)).toBe(newer);
+  });
+
+  it('a credit already in the saved wallet (delivered before an interruption) is delivered without paying again', () => {
+    const store = new MemoryStore();
+    store.data.set(REWARDS_KEY, JSON.stringify({ version: 1, wallet: { credits: 50, earned: 50, applied: [TX.id] } }));
     const { rewards, league, savedOutbox } = setup(store);
-    league.flush();
-    expect(league.current.outbox).toEqual([TX]); // the save was refused
     league.flush();
     expect(league.current.outbox).toEqual([]);
     expect(savedOutbox()).toEqual([]);
-    expect(store.data.get(REWARDS_KEY)).toBe(newer); // the newer save is protected, the credit is gone
-    expect(store.data.get(`${REWARDS_KEY}.backup`)).toBe(newer);
     expect(rewards.credits).toBe(50);
   });
 

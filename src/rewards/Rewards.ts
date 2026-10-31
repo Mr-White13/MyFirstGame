@@ -139,10 +139,19 @@ export class Rewards {
    * true once it is in the saved wallet: applied now, or already applied before
    * (the id is known). Invalid transactions also return true, so they are dropped
    * rather than retried forever.
+   *
+   * A known id is only "saved" if the last save succeeded: when it failed (full
+   * or blocked storage, or a newer save that must not be overwritten), the
+   * record is saved again first, and the caller keeps owing the credit until
+   * that works.
    */
   grant(today: DayKey, tx: Transaction): boolean {
     const paid = earn(this.record.wallet, tx);
-    if (!paid.ok) return paid.reason !== 'insufficient';
+    if (!paid.ok) {
+      if (paid.reason !== 'duplicate') return paid.reason !== 'insufficient';
+      if (!this.lastSaveOk) this.lastSaveOk = this.safe.save(this.record);
+      return this.lastSaveOk;
+    }
     this.commit({ ...this.record, wallet: paid.wallet }, today);
     return this.lastSaveOk;
   }
