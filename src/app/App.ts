@@ -1,16 +1,16 @@
 import Phaser from 'phaser';
 import type { GameState } from '../core/GameState';
-import type { ArrowData, LevelData } from '../core/types';
+import type { LevelData } from '../core/types';
 import { withAvatar, withCountry, withNickname, type PlayerProfile, type ProfileStorage } from '../profile/Profile';
 import type { AttemptOutcome, PlayerStats, StatsStorage } from '../profile/Stats';
-import { completedCount, isCompleted, type Progress } from '../progress/Progress';
+import { isCompleted, type Progress } from '../progress/Progress';
 import { canPlayLevel, isTestPlay } from '../progress/testUnlock';
 import { ENERGY_PER_CHALLENGE, MAX_DAILY_POINTS, type DailyChallenge } from '../league/challenges';
 import { collectedIn, points } from '../league/League';
 import { league } from '../league/leagues';
 import { LEAGUE_UNLOCK_LEVEL, type LeagueService } from '../league/LeagueService';
 import type { LeagueScreen } from '../ui/LeagueScreen';
-import { noticeKind, noticeText, type LeagueResultDialog } from '../ui/LeagueResultDialog';
+import type { LeagueResultDialog } from '../ui/LeagueResultDialog';
 import type { ProgressStorage } from '../progress/ProgressStorage';
 import type { DailyLogStorage } from '../recap/DailyLog';
 import type { RecapRecords } from '../recap/insights';
@@ -37,6 +37,7 @@ import type { DailyDialog } from '../ui/DailyDialog';
 import type { Screens } from '../ui/Screens';
 import type { Toast } from '../ui/Toast';
 import { AttemptTracker, type AttemptSummary } from './AttemptTracker';
+import { LeagueController } from './LeagueController';
 import { RecordsKeeper } from './RecordsKeeper';
 import { hasProgress, restartNeedsConfirm } from './confirmPolicy';
 import type { FeedbackEvent } from './Feedback';
@@ -94,6 +95,7 @@ const CLOCK_REFRESH_MS = 250;
  */
 export class App {
   private readonly records: RecordsKeeper;
+  private readonly leagueController: LeagueController;
   private profile: PlayerProfile;
   private navigating = false;
   /** The startup splash / recap covering Home: Back answers it and league notices wait for it. */
@@ -127,6 +129,13 @@ export class App {
     const progress = parts.storage.load();
     this.profile = parts.profileStorage.load();
     this.records = new RecordsKeeper(parts, progress, parts.statsStorage.load(), parts.dailyLogStorage.load());
+    this.leagueController = new LeagueController(parts, {
+      challenge: () => this.challenge,
+      attemptIsChallenge: () => this.attemptIsChallenge,
+      unlocked: () => this.leagueUnlocked,
+      progress: () => this.records.progress,
+      busy: () => this.navigating || this.intro !== null,
+    });
   }
 
   /** Wires up the UI callbacks and shows the Home screen. */
@@ -148,15 +157,15 @@ export class App {
       if (!document.hidden) rewards.checkIn(today);
       this.renderRewards();
     });
-    dayClock.onChange(() => this.settleLeague());
+    dayClock.onChange(() => this.leagueController.settle());
     dayClock.start();
     rewards.checkIn(dayClock.today);
 
     // Daily League: settle any finished days now (the app needn't be open at midnight),
     // and award Energy Points the moment the rules remove an Energy Arrow.
-    this.parts.league.subscribe(() => this.renderLeague());
-    this.parts.state.onRemove((arrow) => this.handleRemoved(arrow));
-    this.settleLeague();
+    this.parts.league.subscribe(() => this.leagueController.render());
+    this.parts.state.onRemove((arrow) => this.leagueController.collect(arrow));
+    this.leagueController.settle();
 
     // Pins the first tracked day, so later summaries know which days are complete.
     this.records.saveDailyLog();
@@ -201,7 +210,7 @@ export class App {
   }
 
   showLeague(): Promise<void> {
-    this.settleLeague();
+    this.leagueController.settle();
     return this.showMenuScreen('league');
   }
 
@@ -216,7 +225,7 @@ export class App {
    */
   openChallenge(number: number): Promise<void> {
     const today = this.parts.dayClock.refresh();
-    this.settleLeague();
+    this.leagueController.settle();
     const challenge = this.parts.league.challenges(today)[number - 1];
     if (!challenge || !this.leagueUnlocked) return Promise.resolve();
     const level = challenge.level;
@@ -371,7 +380,7 @@ export class App {
       timeMs: summary.timeMs,
     };
     this.parts.hud.setTime(summary.timeMs);
-    if (summary.levelId === LEAGUE_UNLOCK_LEVEL) this.settleLeague(); // completing Level 10 opens the league
+    if (summary.levelId === LEAGUE_UNLOCK_LEVEL) this.leagueController.settle(); // completing Level 10 opens the league
     this.renderAll();
     this.parts.feedback({ type: 'complete' });
   }
@@ -395,7 +404,7 @@ export class App {
         today: points(state.current),
         maxToday: MAX_DAILY_POINTS,
         leagueName: league(state.tier).name,
-        hasNext: this.nextChallengeNumber(done) !== null,
+        hasNext: this.leagueController.nextChallengeNumber(done) !== null,
       });
       this.parts.feedback({ type: 'stars', stars: snapshot.stars, unlocked: false, reduced: prefersReducedMotion() });
       return;
@@ -448,7 +457,7 @@ export class App {
   nextLevel(): void {
     if (this.challenge) {
       const c = this.parts.league.current.current;
-      const next = this.nextChallengeNumber(c?.date === this.parts.dayClock.today ? c.completed : []);
+      const next = this.leagueController.nextChallengeNumber(c?.date === this.parts.dayClock.today ? c.completed : []);
       void (next === null ? this.showLeague() : this.openChallenge(next));
       return;
     }
@@ -499,7 +508,7 @@ export class App {
   /** Home is uncovered: anything that waited (a league result) may show now. */
   endIntro(): void {
     this.intro = null;
-    this.showLeagueNotice();
+    this.leagueController.showNotice();
   }
 
   /** The player's own saved records, as the recap reads them. */
@@ -543,7 +552,7 @@ export class App {
       this.history.go(screen);
       await this.parts.screens.show(screen);
       this.syncGameLoop();
-      queueMicrotask(() => this.showLeagueNotice());
+      queueMicrotask(() => this.leagueController.showNotice());
       if (screen === 'levels') this.parts.levelSelect.focusLevel(this.parts.state.levelId);
     });
   }
@@ -572,27 +581,10 @@ export class App {
     this.parts.profileScreen.render(this.profile, progress, stats);
     this.parts.recordsScreen.render(progress);
     this.renderRewards();
-    this.renderLeague();
+    this.leagueController.render();
   }
 
   // ------------------------------------------------------------ league
-
-  /** Settles finished league days and opens today's (idempotent), then shows any new result. */
-  private settleLeague(): void {
-    const today = this.parts.dayClock.today;
-    this.parts.league.settle(today, this.leagueUnlocked);
-    if (this.challenge && this.challenge.date !== today && this.parts.screens.active === 'game') {
-      this.parts.toast.show('A new league day has started: this challenge no longer earns points', 2600);
-    }
-    this.showLeagueNotice();
-  }
-
-  /** The rules removed an arrow: if it is an Energy Arrow in a challenge, award its point now (saved at once). */
-  private handleRemoved(arrow: ArrowData): void {
-    if (!this.challenge || !this.attemptIsChallenge || !arrow.energy) return;
-    const status = this.parts.league.collect(this.parts.dayClock.refresh(), this.challenge, arrow.id);
-    if (status === 'awarded') this.parts.feedback({ type: 'energy' });
-  }
 
   private beginAttempt(): void {
     const level = this.parts.state;
@@ -601,78 +593,7 @@ export class App {
     this.attemptStartCollected = this.challenge ? collectedIn(this.parts.league.current, this.challenge) : 0;
     this.lastChallenge = null;
     this.attempt.begin(level.levelId, this.parts.levels[level.levelId - 1]?.revision ?? 1);
-    this.renderChallengeHud();
-  }
-
-  private nextChallengeNumber(completed: readonly number[]): number | null {
-    for (let n = (this.challenge?.number ?? 0) + 1; n <= 3; n++) if (!completed.includes(n)) return n;
-    for (let n = 1; n <= 3; n++) if (!completed.includes(n)) return n;
-    return null;
-  }
-
-  private renderChallengeHud(): void {
-    const ch = this.challenge;
-    if (!ch) {
-      this.parts.hud.setChallenge(null);
-      return;
-    }
-    const state = this.parts.league.current;
-    this.parts.hud.setChallenge({
-      number: ch.number,
-      collected: collectedIn(state, ch),
-      perChallenge: ENERGY_PER_CHALLENGE,
-      today: state.current?.date === ch.date ? points(state.current) : 0,
-      maxToday: MAX_DAILY_POINTS,
-      leagueName: league(state.tier).name,
-    });
-  }
-
-  private renderLeague(): void {
-    const { league: service, dayClock, home, leagueScreen, profileScreen } = this.parts;
-    const state = service.current;
-    const today = dayClock.today;
-    const unlocked = this.leagueUnlocked;
-    const live = state.current?.date === today ? state.current : null;
-    const todayPoints = unlocked ? points(live) : 0;
-    const levelsDone = Math.min(LEAGUE_UNLOCK_LEVEL, completedCount(this.records.progress, LEAGUE_UNLOCK_LEVEL));
-    home.renderLeague({ unlocked, levelsDone, unlockAt: LEAGUE_UNLOCK_LEVEL, tier: state.tier, today: todayPoints, maxToday: MAX_DAILY_POINTS });
-    leagueScreen.render({
-      unlocked,
-      levelsDone,
-      unlockAt: LEAGUE_UNLOCK_LEVEL,
-      tier: state.tier,
-      today: todayPoints,
-      maxToday: MAX_DAILY_POINTS,
-      perChallenge: ENERGY_PER_CHALLENGE,
-      challenges: service.challenges(today).map((challenge) => ({
-        challenge,
-        collected: collectedIn(state, challenge),
-        completed: live?.completed.includes(challenge.number) ?? false,
-      })),
-      history: state.history,
-      clockBack: state.lastDay !== null && today < state.lastDay,
-    });
-    profileScreen.renderLeague(state);
-    this.renderChallengeHud();
-  }
-
-  /**
-   * Shows what settling changed, once: a dialog for a promotion or a move
-   * down, a short toast when the league was simply kept. Never during play,
-   * and never twice (acknowledging clears it from the saved record).
-   */
-  private showLeagueNotice(): void {
-    const { league: service, leagueResult, screens, toast, feedback } = this.parts;
-    const notice = service.current.notice;
-    if (!notice || this.navigating || this.intro || screens.active === 'game' || leagueResult.isOpen) return;
-    const kind = noticeKind(notice);
-    if (kind === 'retained') {
-      toast.show(noticeText(notice), 3200);
-      service.acknowledge();
-      return;
-    }
-    leagueResult.show(notice, () => service.acknowledge());
-    if (kind === 'promoted') feedback({ type: 'promoted' });
+    this.leagueController.renderChallengeHud();
   }
 
   /** Home's daily card and counters, Profile's rewards card, the achievements list and the open calendar. */
@@ -771,7 +692,7 @@ export class App {
       this.attempt.timer.resume('hidden');
       // Back from the background, possibly on a new day: count it (idempotent on the same day).
       this.parts.rewards.checkIn(this.parts.dayClock.refresh());
-      this.settleLeague();
+      this.leagueController.settle();
     }
   }
 
