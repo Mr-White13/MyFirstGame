@@ -152,8 +152,8 @@ export class ArrowView {
    * `auto` marks a release by a chain reaction: it launches from red with a
    * purple ring instead of the cyan-to-green flash of a tapped arrow.
    */
-  /** `auto`: a red arrow released by a chain reaction. `cascade`: a normal arrow cleared by a cascade. */
-  playExit(callbacks: ExitCallbacks, options: { auto?: boolean; cascade?: boolean } = {}): void {
+  /** `auto`: a red arrow released by a chain reaction. `bonus`: a normal arrow cleared by a streak bonus. */
+  playExit(callbacks: ExitCallbacks, options: { auto?: boolean; bonus?: boolean } = {}): void {
     this.stopAnimations();
     this.resetPose();
     this.pressed = false;
@@ -176,8 +176,8 @@ export class ArrowView {
     if (options.auto) {
       this.fx.ring(tip.x, tip.y, p.chain, cell, 0.15, 0.75, 320);
       this.fx.burst(tip.x, tip.y, v.dCol, v.dRow, p.chain, cell, 5, 1.4);
-    } else if (options.cascade) {
-      // Cascade: a wider double ring in the arrow's own success colour, so it reads as "swept along".
+    } else if (options.bonus) {
+      // Bonus: a wider double ring in the arrow's own success colour, so it reads as "swept along".
       this.fx.ring(tip.x, tip.y, p.success, cell, 0.15, 0.85, 340);
       this.fx.ring(tip.x, tip.y, p.success, cell, 0.1, 0.45, 220);
     } else {

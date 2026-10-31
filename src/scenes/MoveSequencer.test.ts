@@ -121,7 +121,7 @@ class TapHarness {
     const step = (arrowId: string) => this.owners.step(arrowId, (done) => this.animating.set(arrowId, done));
     const steps =
       result.kind === 'cleared'
-        ? [result.arrowId, ...result.chain.map((r) => r.arrowId), ...result.cascade.map((r) => r.arrowId), ...result.cascadeChain.map((r) => r.arrowId)].map(step)
+        ? [result.arrowId, ...result.chain.map((r) => r.arrowId), ...result.bonus.map((r) => r.arrowId), ...result.bonusChain.map((r) => r.arrowId)].map(step)
         : result.kind === 'blocked'
           ? [step(result.arrowId)]
           : [];
@@ -223,10 +223,10 @@ describe('rapid taps', () => {
     const h = new TapHarness(new GameState(column));
     ['a', 'b', 'c', 'd', 'e'].forEach((id, i) => h.tap(id, i * 300)); // 5 taps within 4 s
     const bonus = h.results[4];
-    expect(bonus.kind === 'cleared' && bonus.cascade.map((r) => r.arrowId)).toEqual(['f', 'g']);
+    expect(bonus.kind === 'cleared' && bonus.bonus.map((r) => r.arrowId)).toEqual(['f', 'g']);
     h.tap('f', 1300); // already cleared by the bonus, still animating: ignored, no penalty
     expect(h.results).toHaveLength(5);
-    expect(h.state.snapshot()).toMatchObject({ mistakes: 0, cascadeClears: 2, remaining: 2 });
+    expect(h.state.snapshot()).toMatchObject({ mistakes: 0, bonusClears: 2, remaining: 2 });
   });
 
   it('restart mid-animation drops every pending animation; new taps start clean', () => {

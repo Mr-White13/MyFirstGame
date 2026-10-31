@@ -23,8 +23,8 @@ const fork = levelFromMap(2, [
   '.  .  .  .  .',
 ]);
 
-// x is blocked by y, y is blocked by z, z is free: a cascade.
-const cascade = levelFromMap(3, [
+// x is blocked by y, y is blocked by z, z is free: a chain of blockers.
+const blockerChain = levelFromMap(3, [
   '.  .  .  .  .',
   'x  x> y  .  .',
   '.  .  y  .  .',
@@ -81,7 +81,7 @@ describe('lives and mistakes', () => {
   });
 
   it('red arrows stay on the board and keep blocking', () => {
-    const state = new GameState(cascade);
+    const state = new GameState(blockerChain);
     state.tryMove('y'); // y is blocked by z → red
     expect(state.getArrows().map((a) => a.id)).toContain('y');
     // x is still blocked by the red y
@@ -127,7 +127,7 @@ describe('chain reactions', () => {
   });
 
   it('cascades: each release can free the next', () => {
-    const state = new GameState(cascade);
+    const state = new GameState(blockerChain);
     state.tryMove('x');
     state.tryMove('y');
     const result = cleared(state.tryMove('z'));
@@ -138,7 +138,7 @@ describe('chain reactions', () => {
 
   it('is deterministic', () => {
     const play = () => {
-      const state = new GameState(cascade, { clock: () => 0 });
+      const state = new GameState(blockerChain, { clock: () => 0 });
       return [state.tryMove('x'), state.tryMove('y'), state.tryMove('z'), state.snapshot()];
     };
     expect(play()).toEqual(play());
@@ -227,7 +227,7 @@ describe('restart and level changes', () => {
       moves: 0,
       directClears: 0,
       autoClears: 0,
-      cascadeClears: 0,
+      bonusClears: 0,
       streak: 0,
       streakAt: null,
       bonusCooldown: 0,
@@ -269,6 +269,6 @@ describe('all levels', () => {
     for (const id of findSolution(level)!) if (state.getArrows().some((a) => a.id === id)) expect(state.tryMove(id).kind).toBe('cleared');
     const s = state.snapshot();
     expect(s).toMatchObject({ won: true, stars: 3, autoClears: 0 });
-    expect(s.moves + s.cascadeClears).toBe(level.arrows.length);
+    expect(s.moves + s.bonusClears).toBe(level.arrows.length);
   });
 });

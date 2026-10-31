@@ -28,7 +28,7 @@ function snapshot(patch: Partial<GameSnapshot> = {}): GameSnapshot {
     moves: 0,
     directClears: 0,
     autoClears: 0,
-    cascadeClears: 0,
+    bonusClears: 0,
     streak: 0,
     streakAt: null,
     bonusCooldown: 0,
@@ -70,10 +70,10 @@ describe('Hud render (golden)', () => {
     step('last life', () => hud.update(snapshot({ moves: 5, directClears: 5, remaining: 15, mistakes: 2, lives: 1, streak: 1 })));
     step('streak 5', () => hud.update(snapshot({ moves: 10, directClears: 10, remaining: 10, mistakes: 2, lives: 1, streak: 5 })));
     step('bonus +2, cooldown', () =>
-      hud.update(snapshot({ moves: 10, directClears: 10, cascadeClears: 2, remaining: 8, mistakes: 2, lives: 1, bonusCooldown: 8 })),
+      hud.update(snapshot({ moves: 10, directClears: 10, bonusClears: 2, remaining: 8, mistakes: 2, lives: 1, bonusCooldown: 8 })),
     );
     step('streak 6 (lights the +N label too)', () =>
-      hud.update(snapshot({ moves: 16, directClears: 16, cascadeClears: 2, remaining: 2, mistakes: 2, lives: 1, streak: 6, bonusCooldown: 2 })),
+      hud.update(snapshot({ moves: 16, directClears: 16, bonusClears: 2, remaining: 2, mistakes: 2, lives: 1, streak: 6, bonusCooldown: 2 })),
     );
     step('streak window passed', () => vi.advanceTimersByTime(STREAK_WINDOW_MS));
     step('time, timer hidden, zoomed', () => {

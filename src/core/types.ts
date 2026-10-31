@@ -73,9 +73,9 @@ export type MoveResult =
        * Normal arrows cleared by a streak bonus after this tap (exactly
        * BONUS_CLEARS), in the order they left; empty when no bonus fired.
        */
-      readonly cascade: readonly Removal[];
-      /** Activated arrows released because the bonus freed them (after `cascade`). */
-      readonly cascadeChain: readonly Removal[];
+      readonly bonus: readonly Removal[];
+      /** Activated arrows released because the bonus freed them (after `bonus`). */
+      readonly bonusChain: readonly Removal[];
       /** True if this move (with its chain and bonus) emptied the board. */
       readonly won: boolean;
     }
@@ -104,7 +104,7 @@ export type LevelStatus = 'playing' | 'won' | 'failed';
  * - `moves`: successful player taps (kept for compatibility; equals `directClears`).
  * - `directClears`: arrows the player removed by tapping them.
  * - `autoClears`: activated arrows released automatically by chain reactions.
- * - `cascadeClears`: normal arrows cleared automatically by streak bonuses.
+ * - `bonusClears`: normal arrows cleared automatically by streak bonuses.
  * - `streak`: successful manual taps in the rolling window ending at the
  *   last one (0..STREAK_TAPS; reset by a blocked tap, a bonus or a restart).
  * - `streakAt`: clock time of the streak's last tap (ms), or null.
@@ -122,7 +122,7 @@ export interface GameSnapshot {
   readonly moves: number;
   readonly directClears: number;
   readonly autoClears: number;
-  readonly cascadeClears: number;
+  readonly bonusClears: number;
   readonly streak: number;
   readonly streakAt: number | null;
   readonly bonusCooldown: number;

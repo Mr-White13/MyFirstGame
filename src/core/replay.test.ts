@@ -137,7 +137,7 @@ function describeMove(level: LevelData, tap: Tap, r: MoveResult, s: GameSnapshot
   switch (r.kind) {
     case 'cleared':
       assertStraight(level, r.arrowId, r.exitPath);
-      return `@${tap.at} C ${r.arrowId}:${r.exitPath.length} [${removals(level, r.chain)}] [${removals(level, r.cascade)}] [${removals(level, r.cascadeChain)}]${r.won ? ' WON' : ''} | ${after}`;
+      return `@${tap.at} C ${r.arrowId}:${r.exitPath.length} [${removals(level, r.chain)}] [${removals(level, r.bonus)}] [${removals(level, r.bonusChain)}]${r.won ? ' WON' : ''} | ${after}`;
     case 'blocked':
       assertStraight(level, r.arrowId, r.freePath);
       return `@${tap.at} B ${r.arrowId}<${r.blockerId}:${r.freePath.length}${r.lifeLost ? ' LIFE' : ''}${r.failed ? ' FAILED' : ''} | ${after}`;
@@ -194,7 +194,7 @@ describe.each(LEVELS.map((level) => [level.id, level] as const))('replay of leve
       });
       expect(r.removed, name).toBe(fromMoves.join(' '));
       const f = r.final;
-      expect(f.directClears + f.autoClears + f.cascadeClears + f.remaining, name).toBe(level.arrows.length);
+      expect(f.directClears + f.autoClears + f.bonusClears + f.remaining, name).toBe(level.arrows.length);
     }
   });
 
@@ -221,7 +221,7 @@ describe('records from replayed attempts', () => {
     stars: final.stars,
     directClears: final.directClears,
     autoClears: final.autoClears,
-    cascadeClears: final.cascadeClears,
+    bonusClears: final.bonusClears,
     longestChain: final.longestChain,
     mistakes: final.mistakes,
   });

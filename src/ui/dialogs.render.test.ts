@@ -35,7 +35,7 @@ const SUMMARY: CompletionSummary = {
   stars: 2,
   directClears: 14,
   autoClears: 4,
-  cascadeClears: 2,
+  bonusClears: 2,
   mistakes: 1,
   timeMs: 61_234,
   bestTimeMs: 58_000,
@@ -71,8 +71,8 @@ describe('dialogs render (golden)', () => {
     out['complete: closed'] = view('complete-dialog');
     const cases: [string, () => void][] = [
       ['level', () => dialog.show(SUMMARY)],
-      ['flawless, new time, nothing unlocked', () => dialog.show({ ...SUMMARY, stars: 3, mistakes: 0, autoClears: 0, cascadeClears: 0, newBestTime: true, newBestStars: false, unlocked: null })],
-      ['one star, chain only', () => dialog.show({ ...SUMMARY, stars: 1, mistakes: 2, cascadeClears: 0 })],
+      ['flawless, new time, nothing unlocked', () => dialog.show({ ...SUMMARY, stars: 3, mistakes: 0, autoClears: 0, bonusClears: 0, newBestTime: true, newBestStars: false, unlocked: null })],
+      ['one star, chain only', () => dialog.show({ ...SUMMARY, stars: 1, mistakes: 2, bonusClears: 0 })],
       ['final level', () => dialog.show({ ...SUMMARY, levelId: 30, unlocked: null })],
       ['challenge, next', () => dialog.showChallenge(CHALLENGE)],
       ['challenge, last', () => dialog.showChallenge({ ...CHALLENGE, number: 3, stars: 1, mistakes: 2, hasNext: false, leagueName: 'Neon Elite' })],

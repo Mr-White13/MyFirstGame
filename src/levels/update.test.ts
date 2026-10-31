@@ -49,7 +49,7 @@ describe('updating from 10 to 30 levels', () => {
     let progress = new ProgressStorage(LEVELS.length, store).load();
     const won = (levelId: number): AttemptSummary => ({
       levelId, revision: LEVELS[levelId - 1].revision ?? 1, outcome: 'won', timeMs: 40_000, uncountedTimeMs: 40_000,
-      moves: 10, stars: 3, directClears: 10, autoClears: 0, cascadeClears: 0, longestChain: 0, mistakes: 0,
+      moves: 10, stars: 3, directClears: 10, autoClears: 0, bonusClears: 0, longestChain: 0, mistakes: 0,
     });
     for (let id = 11; id <= 29; id++) {
       const { records, completion } = applyAttempt({ progress, stats: createStats() }, won(id), LEVELS.length);
