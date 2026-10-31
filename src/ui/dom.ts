@@ -28,10 +28,10 @@ export function starIcons(earned: number): SVGSVGElement[] {
   return Array.from({ length: MAX_STARS }, (_, i) => svgIcon('icon-spark', i < earned ? 'star-mini star-mini--earned' : 'star-mini'));
 }
 
-/** Must match the landscape media query in style.css. */
+/** Must match the landscape media query in style.css (checked by crossLanguage.test.ts). */
 export const LANDSCAPE_QUERY = '(orientation: landscape) and (max-height: 520px)';
 
-/** Must match the screen/overlay transition durations in style.css. */
+/** Must match the screen/overlay transition durations in style.css (checked by crossLanguage.test.ts). */
 export const TRANSITION_MS = 220;
 
 /**
