@@ -17,6 +17,12 @@ import type { LevelSelect } from '../ui/LevelSelect';
 import type { AvatarPicker, CountryPicker } from '../ui/Pickers';
 import type { ProfileScreen } from '../ui/ProfileScreen';
 import type { SettingsStore } from '../settings/Settings';
+import { claimStatus, cycleDay, nextReward, rewardForDay } from '../daily/Daily';
+import type { DayClock } from '../daily/dayKey';
+import type { AchievementDefinition } from '../rewards/Achievements';
+import type { Rewards } from '../rewards/Rewards';
+import type { AchievementsScreen } from '../ui/AchievementsScreen';
+import type { DailyDialog } from '../ui/DailyDialog';
 import type { Screens } from '../ui/Screens';
 import type { Toast } from '../ui/Toast';
 import { applyAttempt, AttemptTracker, type AttemptSummary } from './AttemptTracker';
@@ -47,6 +53,10 @@ export interface AppParts {
   readonly settings: SettingsStore;
   /** Sound and haptics for game events (see Feedback). */
   readonly feedback: (event: FeedbackEvent) => void;
+  readonly rewards: Rewards;
+  readonly dayClock: DayClock;
+  readonly dailyDialog: DailyDialog;
+  readonly achievementsScreen: AchievementsScreen;
 }
 
 /** How often the HUD clock is refreshed. The time itself comes from a monotonic clock. */
@@ -95,6 +105,18 @@ export class App {
     document.addEventListener('keydown', (event) => this.handleKey(event));
     document.addEventListener('visibilitychange', () => this.handleVisibility());
 
+    // Daily check-in: now, and whenever the date changes while the game is open
+    // (midnight, or noticed on return from the background). Never pays out by itself.
+    const { rewards, dayClock } = this.parts;
+    rewards.onUnlock((unlocked) => this.announce(unlocked));
+    rewards.subscribe(() => this.renderRewards());
+    dayClock.onChange((today) => {
+      if (!document.hidden) rewards.checkIn(today);
+      this.renderRewards();
+    });
+    dayClock.start();
+    rewards.checkIn(dayClock.today);
+
     this.renderAll();
     // The game loop only needs to run while its screen is visible; sleeping saves
     // battery. Phaser starts the loop after READY, so sleep after the first frame,
@@ -121,6 +143,32 @@ export class App {
 
   showSettings(): Promise<void> {
     return this.showMenuScreen('settings');
+  }
+
+  showAchievements(): Promise<void> {
+    return this.showMenuScreen('achievements');
+  }
+
+  /** Opens the daily rewards calendar (checking in first, in case the day just changed). */
+  openDaily(): void {
+    const { rewards, dayClock, dailyDialog } = this.parts;
+    const today = dayClock.refresh();
+    rewards.checkIn(today);
+    dailyDialog.render(rewards.current.daily, today, rewards.credits);
+    dailyDialog.open();
+  }
+
+  /** Claims today's reward: saved (claim + credits in one write) before any animation plays. */
+  claimDaily(): void {
+    const { rewards, dayClock, dailyDialog, feedback } = this.parts;
+    const today = dayClock.refresh();
+    rewards.checkIn(today);
+    const before = rewards.credits;
+    const result = rewards.claimDaily(today);
+    if (!result) return; // already claimed (double tap) or not available
+    dailyDialog.render(rewards.current.daily, today, rewards.credits);
+    dailyDialog.celebrate(result.reward, before, rewards.credits);
+    feedback({ type: 'claim' });
   }
 
   /** Back to the screen this one was opened from (Home if there is none). */
@@ -208,6 +256,7 @@ export class App {
     this.stats = records.stats;
     this.parts.storage.save(this.progress);
     this.parts.statsStorage.save(this.stats);
+    this.parts.rewards.afterAttempt(this.parts.dayClock.today, summary.longestChain);
     this.lastCompletion = completion && {
       unlocked: completion.unlocked,
       newBestStars: completion.newBestStars,
@@ -349,12 +398,55 @@ export class App {
     const { records } = applyAttempt({ progress: this.progress, stats: this.stats }, summary, this.parts.levels.length);
     this.stats = records.stats; // a failed or abandoned attempt never changes progress
     this.parts.statsStorage.save(this.stats);
+    this.parts.rewards.afterAttempt(this.parts.dayClock.today, summary.longestChain);
   }
 
   private renderAll(): void {
     this.parts.home.render(this.profile, this.progress);
     this.parts.levelSelect.render(this.progress);
     this.parts.profileScreen.render(this.profile, this.progress, this.stats);
+    this.renderRewards();
+  }
+
+  /** Home's daily card and counters, Profile's rewards card, the achievements list and the open calendar. */
+  private renderRewards(): void {
+    const { rewards, dayClock, home, profileScreen, achievementsScreen, dailyDialog } = this.parts;
+    const today = dayClock.today;
+    const daily = rewards.current.daily;
+    const views = rewards.achievements();
+    const unlocked = views.filter((v) => v.unlocked).length;
+    const day = cycleDay(daily.lastCheckIn === today ? daily.streak : 1);
+    home.renderRewards({
+      credits: rewards.credits,
+      streak: daily.lastCheckIn === today ? daily.streak : 0,
+      status: claimStatus(daily, today),
+      today: { day, credits: rewardForDay(day) },
+      next: nextReward(daily, today),
+      unlocked,
+      total: views.length,
+    });
+    profileScreen.renderRewards({
+      credits: rewards.credits,
+      streak: daily.lastCheckIn === today ? daily.streak : 0,
+      longestStreak: daily.longestStreak,
+      daysPlayed: daily.daysPlayed,
+      unlocked,
+      total: views.length,
+    });
+    achievementsScreen.render(views, rewards.credits);
+    if (dailyDialog.isOpen) dailyDialog.render(daily, today, rewards.credits);
+  }
+
+  /** A small, non-blocking notice for newly unlocked achievements (several at once are combined). */
+  private announce(unlocked: readonly AchievementDefinition[]): void {
+    if (unlocked.length === 0) return;
+    const credits = unlocked.reduce((sum, a) => sum + a.reward, 0);
+    const message =
+      unlocked.length === 1
+        ? `Achievement unlocked: ${unlocked[0].title} · +${credits}`
+        : `${unlocked.length} achievements unlocked · +${credits}`;
+    this.parts.toast.show(message, 2600, 'achievement');
+    this.parts.feedback({ type: 'achievement' });
   }
 
   private hideEndDialogs(): void {
@@ -399,6 +491,8 @@ export class App {
       }
     } else {
       this.attempt.timer.resume('hidden');
+      // Back from the background, possibly on a new day: count it (idempotent on the same day).
+      this.parts.rewards.checkIn(this.parts.dayClock.refresh());
     }
   }
 
@@ -415,8 +509,9 @@ export class App {
   /** Escape: closes the topmost dialog or picker, otherwise acts as "back" (desktop convenience). */
   private handleKey(event: KeyboardEvent): void {
     if (event.key !== 'Escape') return;
-    const { confirmDialog, completeDialog, gameOverDialog, avatarPicker, countryPicker, profileScreen, screens } = this.parts;
+    const { confirmDialog, completeDialog, gameOverDialog, avatarPicker, countryPicker, profileScreen, screens, dailyDialog } = this.parts;
     if (confirmDialog.isOpen) confirmDialog.close(false);
+    else if (dailyDialog.isOpen) dailyDialog.close();
     else if (avatarPicker.isOpen) avatarPicker.close();
     else if (countryPicker.isOpen) countryPicker.close();
     else if (completeDialog.isOpen || gameOverDialog.isOpen || profileScreen.isEditing) return;

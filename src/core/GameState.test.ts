@@ -227,6 +227,7 @@ describe('restart and level changes', () => {
       moves: 0,
       directClears: 0,
       autoClears: 0,
+      longestChain: 0,
       mistakes: 0,
       lives: 3,
       remaining: LEVELS[8].arrows.length,

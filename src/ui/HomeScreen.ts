@@ -1,4 +1,5 @@
 import type { LevelData } from '../core/types';
+import type { ClaimStatus } from '../daily/Daily';
 import { avatarSvg } from '../profile/avatars';
 import type { PlayerProfile } from '../profile/Profile';
 import { completedCount, MAX_STARS, nextLevelToPlay, totalStars, type Progress } from '../progress/Progress';
@@ -9,8 +10,21 @@ export interface HomeActions {
   onLevels(): void;
   onProfile(): void;
   onSettings(): void;
-  /** A feature that isn't available yet (events). */
-  onComingSoon(feature: string): void;
+  onDaily(): void;
+  onAchievements(): void;
+}
+
+/** What the Home screen shows about daily rewards and achievements. */
+export interface HomeRewards {
+  readonly credits: number;
+  readonly streak: number;
+  readonly status: ClaimStatus;
+  /** Today's cycle day and reward. */
+  readonly today: { readonly day: number; readonly credits: number };
+  /** Tomorrow's reward if the streak continues. */
+  readonly next: { readonly day: number; readonly credits: number };
+  readonly unlocked: number;
+  readonly total: number;
 }
 
 /** The start screen: identity, the next level to play, progress and the main menu. */
@@ -26,6 +40,14 @@ export class HomeScreen {
   private readonly fill = requireElement('home-progress-fill');
   private readonly stars = requireElement('home-stars');
   private readonly starsTotal = requireElement('home-stars-total');
+  private readonly credits = requireElement('home-credits');
+  private readonly creditsButton = requireElement('btn-home-credits');
+  private readonly streak = requireElement('home-streak');
+  private readonly dailyStatus = requireElement('home-daily-status');
+  private readonly dailyButton = requireElement('btn-home-daily');
+  private readonly dailyLabel = requireElement('home-daily-label');
+  private readonly achievements = requireElement('home-achievements');
+  private readonly achievementsButton = requireElement('btn-home-achievements');
   private playLevel = 1;
 
   constructor(
@@ -36,7 +58,9 @@ export class HomeScreen {
     requireElement('btn-home-levels').addEventListener('click', () => actions.onLevels());
     requireElement('btn-home-profile').addEventListener('click', () => actions.onProfile());
     requireElement('btn-home-avatar').addEventListener('click', () => actions.onProfile());
-    requireElement('btn-home-events').addEventListener('click', () => actions.onComingSoon('Events'));
+    this.dailyButton.addEventListener('click', () => actions.onDaily());
+    this.creditsButton.addEventListener('click', () => actions.onDaily());
+    this.achievementsButton.addEventListener('click', () => actions.onAchievements());
     requireElement('btn-home-settings').addEventListener('click', () => actions.onSettings());
     requireElement('btn-home-settings-tile').addEventListener('click', () => actions.onSettings());
   }
@@ -60,5 +84,29 @@ export class HomeScreen {
     this.fill.style.width = `${(done / levelCount) * 100}%`;
     this.stars.textContent = String(totalStars(progress, levelCount));
     this.starsTotal.textContent = String(levelCount * MAX_STARS);
+  }
+
+  /**
+   * One compact daily card and two small numbers: the streak and today's
+   * reward state, the credits balance, and achievement progress. Play stays
+   * the main action; the card only asks for attention when a reward is ready.
+   */
+  renderRewards(r: HomeRewards): void {
+    this.credits.textContent = String(r.credits);
+    this.creditsButton.setAttribute('aria-label', `Energy Credits: ${r.credits}. Open daily rewards`);
+    this.streak.textContent = r.streak > 0 ? `${r.streak}-day streak` : 'Start a streak';
+    const ready = r.status === 'available';
+    this.dailyButton.classList.toggle('daily-card__btn--ready', ready);
+    this.dailyLabel.textContent = ready ? `Claim +${r.today.credits}` : 'Rewards';
+    this.dailyStatus.textContent =
+      r.status === 'available'
+        ? `Day ${r.today.day} reward ready`
+        : r.status === 'claimed'
+          ? `Claimed today · Tomorrow +${r.next.credits}`
+          : r.status === 'clock-back'
+            ? 'Device date moved back: rewards resume later'
+            : `Day ${r.today.day} reward`;
+    this.achievements.textContent = `${r.unlocked}/${r.total}`;
+    this.achievementsButton.setAttribute('aria-label', `Achievements: ${r.unlocked} of ${r.total} unlocked`);
   }
 }

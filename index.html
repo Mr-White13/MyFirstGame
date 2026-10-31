@@ -72,6 +72,9 @@
       <symbol id="icon-vibrate" viewBox="0 0 24 24"><rect x="8" y="4" width="8" height="16" rx="2" /><path d="M4.5 9v6M19.5 9v6M2 10.5v3M22 10.5v3" /></symbol>
       <symbol id="icon-gamepad" viewBox="0 0 24 24"><path d="M7 8h10a4 4 0 0 1 4 4.4l-.5 3.4a2.4 2.4 0 0 1-4.1 1.3L14.7 15H9.3l-1.7 2.1a2.4 2.4 0 0 1-4.1-1.3L3 12.4A4 4 0 0 1 7 8z" /><path d="M8 10.5v3M6.5 12h3" /><circle cx="16" cy="11.3" r=".6" /><circle cx="17.3" cy="13" r=".6" /></symbol>
       <symbol id="icon-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" /><path d="M12 11v5.2" /><path d="M12 7.8v.1" /></symbol>
+      <symbol id="icon-trophy" viewBox="0 0 24 24"><path d="M7.5 4.5h9v4.5a4.5 4.5 0 0 1-9 0z" /><path d="M7.5 6.5H5a2.5 2.5 0 0 0 2.6 3M16.5 6.5H19a2.5 2.5 0 0 1-2.6 3" /><path d="M12 13.5v3.5M8.5 20h7M10 17h4" /></symbol>
+      <symbol id="icon-calendar" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5" /><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4" /><path d="M9.5 14.5l1.8 1.8 3.4-3.4" /></symbol>
+      <symbol id="icon-credit" viewBox="0 0 24 24"><path d="M12 3l7.8 4.5v9L12 21l-7.8-4.5v-9z" /><path d="M12.8 7.5L9.5 12.5h3l-.8 4 3.3-5h-3z" /></symbol>
       <symbol id="icon-star" viewBox="0 0 24 24">
         <path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z" />
       </symbol>
@@ -88,7 +91,9 @@
           <button type="button" class="icon-btn" id="btn-home-settings" aria-label="Settings">
             <svg class="icon" aria-hidden="true"><use href="#icon-settings" /></svg>
           </button>
-          <span class="topbar__spacer" aria-hidden="true"></span>
+          <button type="button" class="credits-chip" id="btn-home-credits" aria-label="Energy Credits: 0. Open daily rewards">
+            <svg class="icon" aria-hidden="true"><use href="#icon-credit" /></svg><span id="home-credits">0</span>
+          </button>
           <button type="button" class="avatar-chip" id="btn-home-avatar" aria-label="Open profile">
             <span class="avatar-chip__name" id="home-nickname">Player</span>
             <span class="avatar avatar--small" id="home-avatar"></span>
@@ -119,6 +124,21 @@
           </div>
         </section>
 
+        <section class="daily-card surface" aria-labelledby="home-daily-title">
+          <div class="daily-card__info">
+            <h2 class="visually-hidden" id="home-daily-title">Daily reward</h2>
+            <span class="daily-card__streak">
+              <svg class="icon" aria-hidden="true"><use href="#icon-flame" /></svg>
+              <span id="home-streak">1-day streak</span>
+            </span>
+            <span class="daily-card__status" id="home-daily-status">Day 1 reward ready</span>
+          </div>
+          <button type="button" class="btn btn--small daily-card__btn" id="btn-home-daily">
+            <svg class="icon" aria-hidden="true"><use href="#icon-calendar" /></svg>
+            <span id="home-daily-label">Claim +10</span>
+          </button>
+        </section>
+
         <nav class="home__nav" aria-label="Main menu">
           <button type="button" class="nav-tile" id="btn-home-levels">
             <svg class="icon" aria-hidden="true"><use href="#icon-grid" /></svg><span>Levels</span>
@@ -126,25 +146,13 @@
           <button type="button" class="nav-tile" id="btn-home-profile">
             <svg class="icon" aria-hidden="true"><use href="#icon-user" /></svg><span>Profile</span>
           </button>
-          <button type="button" class="nav-tile nav-tile--soon" id="btn-home-events" aria-label="Events (coming soon)">
-            <svg class="icon" aria-hidden="true"><use href="#icon-bolt" /></svg><span>Events</span><em class="soon">Soon</em>
+          <button type="button" class="nav-tile" id="btn-home-achievements">
+            <svg class="icon" aria-hidden="true"><use href="#icon-trophy" /></svg><span>Awards</span><em class="nav-tile__badge" id="home-achievements">0/12</em>
           </button>
           <button type="button" class="nav-tile" id="btn-home-settings-tile">
             <svg class="icon" aria-hidden="true"><use href="#icon-settings" /></svg><span>Settings</span>
           </button>
         </nav>
-
-        <section class="home__daily" aria-label="Daily activity (coming soon)">
-          <div class="home__daily-head">
-            <span class="eyebrow">Daily activity</span>
-            <em class="soon">Coming soon</em>
-          </div>
-          <ul class="daily-list">
-            <li><svg class="icon" aria-hidden="true"><use href="#icon-flame" /></svg><span>Login streak</span></li>
-            <li><svg class="icon" aria-hidden="true"><use href="#icon-target" /></svg><span>Daily challenge</span></li>
-            <li><svg class="icon" aria-hidden="true"><use href="#icon-bolt" /></svg><span>Special events</span></li>
-          </ul>
-        </section>
       </section>
 
       <!-- Screen 1: level selection -->
@@ -258,6 +266,20 @@
               <div><dt>Chain reactions</dt><dd id="stat-chains">0</dd></div>
             </dl>
             <p class="card-note" id="profile-tracked-since"></p>
+          </section>
+
+          <section class="profile__card surface" aria-labelledby="profile-rewards-title">
+            <h2 class="card-heading" id="profile-rewards-title">Daily &amp; rewards</h2>
+            <dl class="stat-grid">
+              <div><dt>Energy Credits</dt><dd id="stat-credits">0</dd></div>
+              <div><dt>Login streak</dt><dd id="stat-streak">0 days</dd></div>
+              <div><dt>Longest streak</dt><dd id="stat-longest">0 days</dd></div>
+              <div><dt>Days played</dt><dd id="stat-days">0</dd></div>
+            </dl>
+            <button type="button" class="btn btn--ghost btn--small profile__achievements" id="btn-profile-achievements">
+              <svg class="icon" aria-hidden="true"><use href="#icon-trophy" /></svg>
+              <span>Achievements <strong id="profile-achievements">0 / 12</strong></span>
+            </button>
           </section>
 
           <section class="profile__card surface" aria-labelledby="profile-records-title">
@@ -417,6 +439,47 @@
           </section>
         </div>
       </section>
+
+      <!-- Achievements -->
+      <section class="screen screen--achievements" id="screen-achievements" aria-labelledby="achievements-title">
+        <header class="topbar">
+          <button type="button" class="icon-btn" id="btn-achievements-back" aria-label="Back">
+            <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
+          </button>
+          <h1 class="topbar__title" id="achievements-title">Achievements</h1>
+          <span class="topbar__spacer" aria-hidden="true"></span>
+        </header>
+        <div class="achievements__scroll">
+          <section class="achievements__summary surface" aria-label="Summary">
+            <div class="progress__row">
+              <span class="progress__count"><strong id="ach-count">0</strong> / <span id="ach-total">12</span> achievements unlocked</span>
+              <span class="credits-inline"><svg class="icon" aria-hidden="true"><use href="#icon-credit" /></svg><strong id="ach-credits">0</strong></span>
+            </div>
+            <div class="meter"><div class="meter__fill" id="ach-fill"></div></div>
+          </section>
+          <div class="achievement-groups" id="achievement-list"></div>
+        </div>
+      </section>
+
+      <!-- Daily rewards -->
+      <div class="overlay" id="daily-dialog" role="dialog" aria-modal="true" aria-labelledby="daily-title" hidden>
+        <div class="card card--picker card--daily">
+          <header class="picker__head">
+            <h2 class="card__title card__title--small" id="daily-title">Daily rewards</h2>
+            <button type="button" class="icon-btn icon-btn--small" id="btn-daily-close" aria-label="Close">
+              <svg class="icon" aria-hidden="true"><use href="#icon-close" /></svg>
+            </button>
+          </header>
+          <div class="daily__summary">
+            <span class="daily__streak"><svg class="icon" aria-hidden="true"><use href="#icon-flame" /></svg><strong id="daily-streak">0</strong><span id="daily-streak-label">-day streak</span></span>
+            <span class="credits-inline" id="daily-balance-wrap"><svg class="icon" aria-hidden="true"><use href="#icon-credit" /></svg><strong id="daily-balance">0</strong></span>
+          </div>
+          <ol class="daily-grid" id="daily-grid" aria-label="7-day reward cycle"></ol>
+          <p class="daily__message" id="daily-message" role="status" aria-live="polite"></p>
+          <button type="button" class="btn btn--primary daily__claim" id="btn-daily-claim">Claim</button>
+          <p class="card-note" id="daily-note">Play on consecutive days to move through the 7-day cycle. Miss a day and the cycle starts again from Day 1. Credits you've earned are always kept. Best streak: <strong id="daily-best">0</strong>.</p>
+        </div>
+      </div>
 
       <!-- Screen 3: level complete / game complete -->
       <div class="overlay" id="complete-dialog" role="dialog" aria-modal="true" aria-labelledby="complete-title" hidden>

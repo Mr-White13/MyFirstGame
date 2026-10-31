@@ -15,7 +15,9 @@ export type SoundId =
   | 'complete'
   | 'star'
   | 'gameOver'
-  | 'unlock';
+  | 'unlock'
+  | 'claim'
+  | 'achievement';
 
 export interface SoundOptions {
   /** Chain position or star number: raises the pitch step by step. */
@@ -144,6 +146,21 @@ export function playSound(ctx: BaseAudioContext, out: AudioNode, id: SoundId, t:
       playTone(ctx, out, { freq: 1174.66, start: t + 0.09, duration: 0.36, gain: 0.1 });
       playTone(ctx, out, { freq: 1174.66, start: t + 0.09, duration: 0.36, gain: 0.04, detune: 9 });
       return 0.45;
+
+    case 'claim': {
+      // A bright, quick shimmer: credits landing.
+      const notes = [987.77, 1318.5, 1975.5];
+      notes.forEach((freq, i) => playTone(ctx, out, { freq, start: t + i * 0.06, duration: 0.28, gain: 0.09 }));
+      playTone(ctx, out, { type: 'triangle', freq: 659.25, start: t, duration: 0.3, gain: 0.08, cutoff: 2600 });
+      return 0.42;
+    }
+
+    case 'achievement': {
+      // Two-chord "badge" fanfare, soft and short.
+      [523.25, 659.25, 783.99].forEach((freq) => playTone(ctx, out, { type: 'triangle', freq, start: t, duration: 0.3, gain: 0.07, cutoff: 3000 }));
+      [698.46, 880, 1046.5].forEach((freq) => playTone(ctx, out, { type: 'triangle', freq, start: t + 0.16, duration: 0.5, gain: 0.07, cutoff: 3000 }));
+      return 0.66;
+    }
   }
 }
 
@@ -159,4 +176,6 @@ export const SOUND_GAP_MS: Readonly<Record<SoundId, number>> = {
   star: 60,
   gameOver: 600,
   unlock: 400,
+  claim: 400,
+  achievement: 700,
 };

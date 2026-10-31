@@ -116,6 +116,14 @@ describe('feedback mapping', () => {
     expect(haptics).toEqual(['chain']);
   });
 
+  it('reward claims and achievements play a sound and one short pulse', () => {
+    const { sounds, haptics, send } = setup();
+    send({ type: 'claim' });
+    send({ type: 'achievement' });
+    expect(sounds.map((s) => s.id)).toEqual(['claim', 'achievement']);
+    expect(haptics).toEqual(['reward', 'reward']);
+  });
+
   it('stars follow the dialog reveal, then the unlock', () => {
     const { sounds, send } = setup();
     send({ type: 'stars', stars: 3, unlocked: true, reduced: false });

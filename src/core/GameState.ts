@@ -57,6 +57,7 @@ export class GameState {
   private status: LevelStatus = 'playing';
   private directClears = 0;
   private autoClears = 0;
+  private longestChain = 0;
   private mistakes = 0;
 
   constructor(level: LevelData, options: GameStateOptions = {}) {
@@ -131,6 +132,7 @@ export class GameState {
     this.status = this.arrows.size === 0 ? 'won' : 'playing';
     this.directClears = 0;
     this.autoClears = 0;
+    this.longestChain = 0;
     this.mistakes = 0;
     this.emit();
   }
@@ -156,6 +158,7 @@ export class GameState {
     this.directClears++;
     const chain = this.resolveChain();
     this.autoClears += chain.length;
+    this.longestChain = Math.max(this.longestChain, chain.length);
     if (this.arrows.size === 0) this.status = 'won';
     this.emit();
     return { kind: 'cleared', arrowId, exitPath: check.path, chain, won: this.status === 'won' };
@@ -169,6 +172,7 @@ export class GameState {
       moves: this.directClears,
       directClears: this.directClears,
       autoClears: this.autoClears,
+      longestChain: this.longestChain,
       mistakes: this.mistakes,
       lives: this.lives,
       remaining: this.arrows.size,

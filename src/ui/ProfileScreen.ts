@@ -12,6 +12,17 @@ export interface ProfileActions {
   onRename(nickname: string): void;
   onChangeAvatar(): void;
   onChangeCountry(): void;
+  onAchievements(): void;
+}
+
+/** Daily activity and rewards, shown alongside the play statistics. */
+export interface ProfileRewards {
+  readonly credits: number;
+  readonly streak: number;
+  readonly longestStreak: number;
+  readonly daysPlayed: number;
+  readonly unlocked: number;
+  readonly total: number;
 }
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -37,6 +48,7 @@ export class ProfileScreen {
     requireElement('btn-profile-back').addEventListener('click', () => actions.onBack());
     this.avatar.addEventListener('click', () => actions.onChangeAvatar());
     requireElement('btn-country').addEventListener('click', () => actions.onChangeCountry());
+    requireElement('btn-profile-achievements').addEventListener('click', () => actions.onAchievements());
     requireElement('btn-edit-name').addEventListener('click', () => this.startEditing());
     requireElement('btn-name-cancel').addEventListener('click', () => this.stopEditing());
     this.nameForm.addEventListener('submit', (event) => {
@@ -91,6 +103,15 @@ export class ProfileScreen {
     this.setText('profile-tracked-since', `Runs counted since ${since}. "Levels cleared" includes replays.`);
 
     this.records.replaceChildren(...this.levels.map((level) => this.recordRow(level, progress)));
+  }
+
+  renderRewards(r: ProfileRewards): void {
+    const days = (n: number) => `${n} ${n === 1 ? 'day' : 'days'}`;
+    this.setText('stat-credits', r.credits);
+    this.setText('stat-streak', days(r.streak));
+    this.setText('stat-longest', days(r.longestStreak));
+    this.setText('stat-days', r.daysPlayed);
+    this.setText('profile-achievements', `${r.unlocked} / ${r.total}`);
   }
 
   private recordRow(level: LevelData, progress: Progress): HTMLLIElement {
