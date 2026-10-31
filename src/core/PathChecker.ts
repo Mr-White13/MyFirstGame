@@ -1,12 +1,22 @@
 import { headOf, step } from './Arrow';
 import type { Grid } from './Grid';
-import type { ArrowData, Cell } from './types';
+import type { ArrowData, Cell, Direction } from './types';
 
 export interface PathCheck {
   readonly clear: boolean;
   /** Free cells in front of the head, in travel order, up to the edge or the blocker. */
   readonly path: readonly Cell[];
   readonly blockerId?: string;
+}
+
+/**
+ * The board cells in front of `head` in `direction`, nearest first, up to the
+ * edge, whatever stands on them: the line an arrow with that head travels along.
+ */
+export function exitRay(head: Cell, direction: Direction, rows: number, cols: number): Cell[] {
+  const cells: Cell[] = [];
+  for (let c = step(head, direction); c.row >= 0 && c.row < rows && c.col >= 0 && c.col < cols; c = step(c, direction)) cells.push(c);
+  return cells;
 }
 
 /**

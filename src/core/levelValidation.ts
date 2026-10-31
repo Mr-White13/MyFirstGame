@@ -1,5 +1,6 @@
-import { cellKey, directionBetween, headOf, step } from './Arrow';
+import { cellKey, directionBetween, headOf } from './Arrow';
 import { Grid } from './Grid';
+import { exitRay } from './PathChecker';
 import { findSolution } from './solver';
 import type { LevelData } from './types';
 
@@ -32,8 +33,8 @@ export function validateLevel(level: LevelData): void {
     }
 
     // Its own exit line must not run back through its body.
-    for (let c = step(headOf(arrow), arrow.direction); grid.inBounds(c); c = step(c, arrow.direction)) {
-      if (own.has(cellKey(c))) throw new Error(`Arrow "${arrow.id}" points into its own body`);
+    if (exitRay(headOf(arrow), arrow.direction, level.rows, level.cols).some((c) => own.has(cellKey(c)))) {
+      throw new Error(`Arrow "${arrow.id}" points into its own body`);
     }
 
     grid.place(arrow); // throws on overlap or out-of-bounds cells

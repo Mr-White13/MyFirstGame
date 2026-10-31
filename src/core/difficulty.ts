@@ -1,7 +1,8 @@
 import { cellKey, directionBetween, headOf, step } from './Arrow';
 import { GameState } from './GameState';
 import { Grid } from './Grid';
-import { checkExitPath } from './PathChecker';
+import { checkExitPath, exitRay } from './PathChecker';
+import { clearInWaves } from './solver';
 import { createRandom } from './random';
 import { STARTING_LIVES, type ArrowData, type Cell, type LevelData } from './types';
 
@@ -251,12 +252,10 @@ function placeAll(level: LevelData): Grid {
 /** Every arrow standing on `arrow`'s exit line, with its distance from the head. */
 function blockersOf(grid: Grid, arrow: ArrowData): { id: string; distance: number }[] {
   const seen = new Map<string, number>();
-  let distance = 0;
-  for (let c = step(headOf(arrow), arrow.direction); grid.inBounds(c); c = step(c, arrow.direction)) {
-    distance++;
+  exitRay(headOf(arrow), arrow.direction, grid.rows, grid.cols).forEach((c, i) => {
     const id = grid.occupantAt(c);
-    if (id !== undefined && id !== arrow.id && !seen.has(id)) seen.set(id, distance);
-  }
+    if (id !== undefined && id !== arrow.id && !seen.has(id)) seen.set(id, i + 1);
+  });
   return [...seen].map(([id, d]) => ({ id, distance: d }));
 }
 
@@ -272,17 +271,9 @@ function exactMetrics(level: LevelData): ExactMetrics {
     longRangeBlocks += blockers.filter((b) => b.distance >= 3).length;
   }
 
-  // Waves: clear every free arrow at once until the board is empty.
-  const waveGrid = placeAll(level);
-  const waves: number[] = [];
-  let remaining = [...level.arrows];
-  while (remaining.length > 0) {
-    const wave = remaining.filter((a) => checkExitPath(waveGrid, a).clear);
-    if (wave.length === 0) break; // unsolvable; validation reports that separately
-    wave.forEach((a) => waveGrid.remove(a));
-    remaining = remaining.filter((a) => !wave.includes(a));
-    waves.push(wave.length);
-  }
+  // Waves: clear every free arrow at once until the board is empty (an
+  // unsolvable level stops early; validation reports that separately).
+  const waves = clearInWaves(level).waves.map((wave) => wave.length);
 
   const occupied = level.arrows.reduce((sum, a) => sum + a.cells.length, 0);
   const initialFree = waves[0] ?? 0;

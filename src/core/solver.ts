@@ -1,6 +1,26 @@
 import { Grid } from './Grid';
 import { checkExitPath } from './PathChecker';
-import type { LevelData } from './types';
+import type { ArrowData, LevelData } from './types';
+
+/**
+ * Clears every free arrow at once, wave after wave, until the board is empty
+ * or nothing can move. Each wave lists its arrows in level order; `stuck` is
+ * what was left when no arrow could move (empty when the level is solvable).
+ */
+export function clearInWaves(level: LevelData): { waves: ArrowData[][]; stuck: ArrowData[] } {
+  const grid = new Grid(level.rows, level.cols);
+  level.arrows.forEach((a) => grid.place(a));
+  const waves: ArrowData[][] = [];
+  let remaining = [...level.arrows];
+  while (remaining.length > 0) {
+    const wave = remaining.filter((a) => checkExitPath(grid, a).clear);
+    if (wave.length === 0) break;
+    wave.forEach((a) => grid.remove(a));
+    remaining = remaining.filter((a) => !wave.includes(a));
+    waves.push(wave);
+  }
+  return { waves, stuck: remaining };
+}
 
 /**
  * Returns an order in which every arrow can be cleared, or null if the level
@@ -41,20 +61,10 @@ export interface LevelStats {
 
 /** Difficulty-related numbers for a level, or null if it cannot be solved. */
 export function analyzeLevel(level: LevelData): LevelStats | null {
-  const grid = new Grid(level.rows, level.cols);
-  level.arrows.forEach((a) => grid.place(a));
-
-  let remaining = [...level.arrows];
-  let depth = 0;
-  let initialFree = 0;
-  while (remaining.length > 0) {
-    const wave = remaining.filter((a) => checkExitPath(grid, a).clear);
-    if (wave.length === 0) return null;
-    if (depth === 0) initialFree = wave.length;
-    wave.forEach((a) => grid.remove(a));
-    remaining = remaining.filter((a) => !wave.includes(a));
-    depth++;
-  }
+  const { waves, stuck } = clearInWaves(level);
+  if (stuck.length > 0) return null;
+  const depth = waves.length;
+  const initialFree = waves[0]?.length ?? 0;
 
   // Blockers per arrow: everything standing anywhere on its exit line at the start.
   let maxBlockers = 0;
