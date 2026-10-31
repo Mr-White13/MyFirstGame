@@ -70,6 +70,7 @@ NEON ESCAPE also runs as an installed Android app. [Capacitor](https://capacitor
 | Web content | `dist/`, copied into the app by `cap sync`. Everything is bundled: no internet needed to play. |
 | Orientation | Portrait only (`android:screenOrientation="portrait"` in `AndroidManifest.xml`) |
 | Full screen | Immersive: status and navigation bars are hidden and appear briefly when you swipe from an edge (`MainActivity.java`). The page is edge-to-edge and the existing CSS safe-area padding keeps the UI clear of the notch and gesture area (`SystemBars.insetsHandling: "native"` in `capacitor.config.json`). |
+| Launch screen | A plain `#101522` window with no logo or icon (`AppTheme.NoActionBarLaunch` in `res/values/styles.xml`, `launch_blank.xml`). The only branded splash is the web **Mr. White Games** splash, which starts on the same colour, so there is no double splash and no white flash. |
 | Back button / gesture | Follows the game: closes the open dialog or picker, cancels nickname editing, answers an end-of-level dialog as "Levels"/"League", leaves a level (asking "Leave level?" if an attempt would be lost), or goes to the previous screen. On Home it sends the app to the background (like the Home button) instead of closing it. Escape on desktop works as before. |
 | Background | Pausing the app pauses the level timer (play time is saved), fades the music and suspends audio, and stops vibration. Resuming continues the timer, resumes audio, and checks for a new day (daily reward, league settlement). Uses the native pause/resume events as well as the page's own visibility events. |
 | Vibration | Native, through the app's own `NeonHaptics` plugin (`android/.../NeonHapticsPlugin.java`, used by `src/native/nativeApp.ts`). It plays waveforms with set strengths as **game/media vibration**. The stock `@capacitor/haptics` remains as a fallback. See "Vibration on Android" below. |
@@ -116,12 +117,13 @@ Or in Android Studio: `npm run android:open`, wait for "Gradle sync" to finish (
 ### What to test on the phone
 
 1. It starts full screen in portrait, with no white flash, and nothing hidden under the notch or the gesture bar.
-2. Tap Play: the first tap starts the music (if enabled); arrows, sounds and vibration work. Toggle Settings → Vibration and Sound to check they respond.
-3. Back: from a level it asks "Leave level?" (after a move), from Levels/Profile/Settings it goes back, it closes dialogs, and on Home it sends the app to the background.
-4. Press Home during a level, wait, and come back: the timer didn't run while away and the music resumes.
-5. Force-close the app (recent apps → swipe away) and reopen: progress, stars, settings, credits and the daily calendar are still there.
-6. Turn on airplane mode: everything still works.
-7. Rotate the phone: the game stays in portrait.
+2. On a cold start the Mr. White Games splash plays once (about 3.7 s; tap to skip once the logo is shown), then the recap card (if you have records and it's on in Settings), then Home. Press Home and come back: no splash.
+3. Tap Play: the first tap starts the music (if enabled); arrows, sounds and vibration work. Toggle Settings → Vibration and Sound to check they respond.
+4. Back: from a level it asks "Leave level?" (after a move), from Levels/Profile/Settings it goes back, it closes dialogs, and on Home it sends the app to the background.
+5. Press Home during a level, wait, and come back: the timer didn't run while away and the music resumes.
+6. Force-close the app (recent apps → swipe away) and reopen: progress, stars, settings, credits and the daily calendar are still there.
+7. Turn on airplane mode: everything still works.
+8. Rotate the phone: the game stays in portrait.
 
 **Tested so far:** on the Android emulator (Android 17 / API 37, WebView Chrome 145): immersive full screen, Back in dialogs, levels and on Home, pause/resume of the timer and audio, vibration requests (checked in Android's vibration history), a 16×16 level, and saved data surviving a force-close. Physical-phone testing is up to you; see "Vibration on Android" for what to check. Once, on the emulator, Android delivered an extra Back event right after the app resumed, which opened "Leave level?" (nothing is lost; tap Keep playing). It didn't reproduce; if it happens on a phone, report it.
 
@@ -243,7 +245,20 @@ Example:
 3. You tap B, which has a clear path, and it leaves.
 4. A's path is now clear, so A leaves automatically, with a purple ring. No tap is needed and no life is lost.
 
-One removal can set off several releases: if red C was waiting for red A, C goes next, and so on. The rules are resolved instantly and deterministically. After each removal, the **first** red arrow in level order that can escape is released, then the board is checked again, until no red arrow can move. The animations then play one after another, and taps are ignored until they finish. Ordinary cyan arrows are never released automatically.
+One removal can set off several releases: if red C was waiting for red A, C goes next, and so on. The rules are resolved instantly and deterministically. After each removal, the **first** red arrow in level order that can escape is released, then the board is checked again, until no red arrow can move. The animations then play one after another, and taps are ignored until they finish. Ordinary arrows are never released by this rule; the only other automatic removal is the streak bonus (below).
+
+### Streak bonus
+
+Quick, clean play earns a small bonus. Three pips in the HUD show the streak:
+
+1. Every arrow you clear with a tap lights one pip, **if it comes within 1.5 s of your previous successful tap**. A slower tap starts a new streak at one pip. The lit pips slowly dim over the 1.5 s window and go out when it has passed.
+2. Your **third quick tap in a row** completes the streak. After that tap (and any red chain it causes), the normal arrows that **can escape right now** are counted. If there are at least 2, the first **2 or 3** of them in level order (3 when 3 or more are free) leave on their own, one after another, with a double green ring; the pips flash and "+N" floats up. Red arrows that this frees then leave by the usual chain rule.
+3. With fewer than 2 removable arrows there is no bonus. Either way the streak is used up, and the next bonus needs three new quick taps.
+4. A **blocked tap** (also a repeat tap on an arrow that is already red), a pause longer than 1.5 s, a restart or a new level resets the streak.
+
+So a single tap can never remove another normal arrow, a bonus never removes a blocked arrow (only arrows you could have tapped yourself), and it never empties the board: the last arrow is always yours. It is deterministic: the same taps at the same times give the same result.
+
+Bonus clears cost no lives and are not your moves. They count towards "arrows cleared" in the statistics and the daily recap, collect Energy Arrows in Daily League challenges (each Energy Arrow pays exactly once: points are keyed by challenge and arrow), and a level a bonus helps finish is completed exactly as usual. Chain-reaction achievements count only red-arrow releases. The rules live in `GameState` (`STREAK_TAPS = 3`, `STREAK_WINDOW_MS = 1500`, `BONUS_MIN = 2`, `BONUS_MAX = 3` in `src/core/types.ts`) and are covered by `src/core/cascade.test.ts`. The offline difficulty analysis plays as a quick player (every streak counts).
 
 ### Stars
 
@@ -257,6 +272,7 @@ Finishing a level awards one spark-shaped star per life left: **3 lives = 3 star
 | Mistakes | First taps on blocked arrows (each cost a life) |
 | Cleared by you | Arrows you removed by tapping them |
 | Chain reactions | Red arrows that left automatically |
+| Streak bonus | Normal arrows cleared by a streak bonus (counted in "Arrows cleared", not in chain reactions) |
 | Left | Arrows still on the board |
 | Moves | Kept for compatibility: equals "cleared by you". Automatic releases never count as moves. |
 | Time | Active play time of the attempt (see "Timer") |
@@ -275,7 +291,7 @@ The completion dialog shows the time precisely (`24.6 s`, `1:35.2`) next to your
 
 ## Screens and progression
 
-The game opens on **Home**:
+On a cold launch the **Mr. White Games** splash plays first, optionally followed by one **recap** card (see "Studio splash and player recap"). The game then shows **Home**:
 - **Header:** Settings, your **Energy Credits** balance (opens Daily rewards), and your avatar and nickname, which open the Profile.
 - **Play card:** the next level to play, a big **Play / Continue / Play again** button, your level progress and your total stars.
 - **Daily card:** your login streak and today's reward: a green **Claim +N** when it's ready, otherwise "Claimed today · Tomorrow +N" and a **Rewards** button. See "Daily rewards, streaks and achievements".
@@ -285,7 +301,7 @@ The game opens on **Home**:
 Other screens:
 
 1. **Level select:** all 10 levels with grid size or best stars, your completion count and star total, and a Continue button. Completed levels show a check, the next level glows, and locked levels show a lock and can't be opened.
-2. **Gameplay:** a compact HUD above the board: back, the level title with the timer (can be hidden in Settings), restart, then your hearts, a progress meter and arrows left. Restart is disabled until you've made a move or a mistake; with **Confirm restart** on (the default) it asks first. If leaving would lose an unfinished attempt, you're asked to confirm first.
+2. **Gameplay:** a compact HUD pinned to the top (back, the level title with the timer, the **theme** palette button and restart; then hearts, a progress meter, the three **streak** pips and arrows left), and below it a borderless board (a faint dot per cell) that uses all the remaining height: Levels 4–30 are tall portrait boards. Safe areas are respected at the top and bottom. Restart is disabled until you've made a move or a mistake; with **Confirm restart** on (the default) it asks first. If leaving would lose an unfinished attempt, you're asked to confirm first.
 3. **Settings:** see "Settings" below. **Achievements** and the **Daily rewards** calendar: see "Daily rewards, streaks and achievements".
 4. **Profile:** your avatar, nickname, country and rank, then a progress summary, statistics and personal records (see below).
 5. **Level complete:** stars and lives left, time and personal best, arrows cleared (with chain clears) and mistakes, plus "New best time!", "Best rating!" and "Level *n* unlocked" chips. Buttons: **Next level**, **Restart** and **Levels**. After level 10 a **game-complete** variant offers **Play from level 1**.
@@ -297,6 +313,8 @@ Other screens:
 - A level you've left never reappears in the back history.
 - **Escape** closes the top dialog or acts as Back on desktop.
 - Navigation is locked during transitions, so double taps can't open two screens.
+
+**Testing build: all levels open.** `UNLOCK_ALL_LEVELS_FOR_TESTING` in `src/progress/testUnlock.ts` is currently `true`, so every one of the 30 levels can be opened from Level select (a note says so, and levels you haven't really unlocked have a dashed outline). Such a level is a **test play**: its result is shown, with a "not saved" notice, but nothing is recorded: no completion, stars, best time, unlock, statistics or daily stats. Your real unlocks and records never change because of the flag. For a release, set it to `false`; nothing else needs to change.
 
 Only level 1 is unlocked at first. Completing a level unlocks the next one. You can replay any unlocked level, and replaying never locks anything again.
 
@@ -331,7 +349,7 @@ Everything is local: no account, no backend, nothing leaves the device.
 
 ### Saved data
 
-Six separate keys in `localStorage`, each versioned and loaded with the same safety rules (`src/storage/SafeStore.ts`):
+Eight separate keys in `localStorage`, each versioned and loaded with the same safety rules (`src/storage/SafeStore.ts`):
 
 | Key | Contents | Version |
 | --- | -------- | ------- |
@@ -341,6 +359,10 @@ Six separate keys in `localStorage`, each versioned and loaded with the same saf
 | `neon-escape.settings` | Theme, motion, effects, audio, vibration and gameplay options (see "Settings") | 1 |
 | `neon-escape.rewards` | Daily check-in, Energy Credits wallet, achievements (see "How rewards are saved") | 1 |
 | `neon-escape.league` | Daily League: tier, today's Energy Points, history, milestones (see "How league data is saved") | 1 |
+| `neon-escape.daily-stats` | Per-day play time, runs, levels cleared, flawless clears and arrows (newest 35 days) and the first tracked day, for the recap | 1 |
+| `neon-escape.recap` | The recap's rotation position | 1 |
+
+`sessionStorage` holds one flag, `neon-escape.splash-shown`, so the studio splash plays once per cold launch.
 
 ```json
 { "version": 4, "highestUnlocked": 4, "completed": {
@@ -376,6 +398,7 @@ Open **Settings** from the gear in the Home header or the Settings tile. Every c
 | Feedback | Vibration | **On** / Off |
 | Gameplay | Show gameplay timer | **On** / Off |
 | | Confirm restart | **On** / Off |
+| | Player recap | **On** / Off |
 | Information | Version, credits, privacy, **Reset settings** | |
 
 ### Themes
@@ -383,13 +406,14 @@ Open **Settings** from the gear in the Home header or the Settings tile. Every c
 | Theme | Look |
 | ----- | ---- |
 | **Dark Neon** | The original NEON ESCAPE look: dark navy, cyan and purple neon, dark board. |
-| **Light** | Light page and white board, darker grid lines and cell dots, deep teal arrows, reduced glow. Accents are darkened so text and icons on white meet WCAG AA, and solid buttons switch to white text. |
+| **Light** | Light page, darker cell dots, deep teal arrows, reduced glow. Accents are darkened so text and icons on white meet WCAG AA, and solid buttons switch to white text. |
 | **Colorful** | A deep indigo board where each arrow takes the next colour of a coordinated neon palette (cyan, violet, orange, green, pink, blue), so neighbours are always distinct. Red is never used for a resting arrow. |
 | **System** | Follows the device: Light when it prefers a light scheme, otherwise Dark Neon. Switching the OS theme while the game runs switches the game too, even mid-level. |
 
 How it works:
 
-- **One place for colours.** CSS colours are tokens on `:root`, redefined per theme under `[data-theme='light']` and `[data-theme='colorful']`. Translucent tints use channel tokens such as `rgb(var(--cyan-rgb) / 0.1)`, so no colour is hard-coded in rules. The Phaser board has matching **semantic** palettes in `src/render/theme.ts` (`frame`, `well`, `grid`, `arrows`, `error`, `warning`, `success`, `chain`, `glow`, …).
+- **One place for colours.** CSS colours are tokens on `:root`, redefined per theme under `[data-theme='light']` and `[data-theme='colorful']`. Translucent tints use channel tokens such as `rgb(var(--cyan-rgb) / 0.1)`, so no colour is hard-coded in rules. The Phaser board has matching **semantic** palettes in `src/render/theme.ts` (`background`, `well`, `dots`, `arrows`, `error`, `warning`, `success`, `chain`, `glow`, …). The board is borderless, so `well` (what arrows are drawn on) is the page colour.
+- **In-game picker.** The palette button in the gameplay HUD opens a compact card with the same four themes. A choice applies at once and is saved to the same setting; the level, zoom and pan are untouched. The timer is paused while the card is open, and a tap outside it (which never reaches the board), Back or Escape closes it without a change.
 - **The board follows the theme.** `Appearance` sets `data-theme` on `<html>`, switches the Phaser palette and calls `GameScene.refreshTheme()`, which redraws the board and arrows in place. Nothing is rebuilt: arrows, animations, input, lives and the timer carry on.
 - **No startup flash.** A tiny inline script in `index.html` reads the saved settings and sets `data-theme`, `data-motion` and `data-effects` before the first paint.
 - **Gameplay is identical in every theme.** Themes only change colours.
@@ -442,6 +466,7 @@ All audio goes through one `AudioManager` (`src/audio/`) with a **music bus** an
 
 ### Gameplay preferences
 
+- **Player recap:** after the studio splash on a cold launch, show one fact from your own records before Home (see "Studio splash and player recap"). On by default; older settings saves get it on.
 - **Show gameplay timer:** hides only the HUD clock. Attempts are still timed exactly as before, and completion times, personal bests and statistics are unaffected. The completion dialog always shows the time.
 - **Confirm restart:** the HUD restart button asks "Restart level?" when the attempt has moves or mistakes and the level is still going. An untouched level restarts immediately (the button is disabled anyway), and so do the Restart / Try again buttons in the end-of-level dialogs. The clock pauses while the question is open. With the setting off, restart is immediate. The "Leave level?" question is unchanged.
 
@@ -605,8 +630,8 @@ An Energy Arrow is an ordinary arrow with one extra property: in a Daily League 
 - **Gameplay** is the normal level screen: three lives, red arrows, chains, timer, restart, Game Over and retry. The HUD adds a gold strip: Energy Arrows collected in this challenge (0/4), your league, and today's points (0/12).
 - **Completing** a challenge shows stars, time, Energy Arrows collected, newly earned points and today's total, with **Next challenge** (or **League**), **Restart** and **League**.
 - **Separate records:** challenges never change level unlocks, stars, best times or the lifetime statistics on the Profile. Challenge numbers are tracked in the league record instead (challenges completed, Energy Points).
-- **Layout pool:** levels with 10+ arrows on boards up to 12×12 (Levels 4–20, 17 layouts), so daily challenges stay quick and playable without zooming. The level generator is not used at runtime.
-- **Game updates never change a day in progress.** Each competition day saves the pool version it started with (`CHALLENGE_POOLS` in `src/league/challenges.ts`). A day that began before this update (saved without a version) keeps the original pool (Levels 4–10) until midnight: the same three layouts and the same Energy Arrows. So arrows you already collected still count and can't be collected twice, and the daily maximum stays 12. The new pool applies from the next day.
+- **Layout pool:** levels with 10+ arrows on boards up to 11 columns × 15 rows (Levels 4–21 since the Step 14 full-coverage redesign, 18 layouts), so daily challenges stay quick and playable on a phone without zooming. The level generator is not used at runtime.
+- **Game updates never change a day in progress.** Each competition day saves the pool version it started with (`CHALLENGE_POOLS` in `src/league/challenges.ts`). A day that began before this update (saved without a version) keeps the original pool (Levels 4–10) until midnight: the same three layouts and the same Energy Arrows. So arrows you already collected still count and can't be collected twice, and the daily maximum stays 12. The new pool applies from the next day. Likewise for redesigns: pool versions 1–3 draw only from frozen copies of the layouts they were defined on (`src/levels/archive/`: the revision-2 Levels 4–10, and Levels 4–20 as shipped in Step 12), never from the current levels. A day that began before an update keeps exactly its three layouts and Energy Arrow ids (a golden test, `src/league/pools.golden.json`, checks this). Pool 4 now draws from `src/levels/archive/step13/` (Levels 4–21 as shipped in Step 13, recovered verbatim from that build); the Step 14 layouts are pool 5.
 
 ### Energy Points and Energy Credits
 
@@ -745,6 +770,20 @@ sessionStorage.setItem('neon-backup', JSON.stringify(Object.fromEntries(Object.k
    const b = JSON.parse(sessionStorage.getItem('neon-backup')); Object.keys(localStorage).filter(k => k.startsWith('neon-escape')).forEach(k => localStorage.removeItem(k)); Object.entries(b).forEach(([k, v]) => localStorage.setItem(k, v)); location.reload();
    ```
 
+## Studio splash and player recap
+
+**Mr. White Games splash.** The studio mark is an original design: an **M** and its mirror image, a **W**, across a dotted line (the reflection reads as "Mr. White"; the dots echo the board). It is one SVG symbol, `#mw-mark` in `index.html`, reused by the splash and the Settings → Information "Studio" row.
+
+- The splash markup is in `index.html`, so it is on screen from the first paint, on the studio dark (`#101522`) in every theme. `src/branding/StudioSplash.ts` times it with `DEFAULT_SPLASH_TIMING` (configurable): a **1.3 s reveal** (the M and W draw in, the name fades in), a **1.7 s hold** with one soft glow so "Mr. White Games" can be read, and a **0.7 s fade-out**: about **3.7 s** in all. Once the logo has fully appeared, a small "Tap to skip" hint shows and a tap ends the intro with a 0.25 s fade; taps during the reveal are ignored. With reduced motion the finished logo appears at once, stays 2.4 s (skippable at once) and is removed without drawing, glow, scale or fade.
+- **Once per cold launch.** A `sessionStorage` flag is set when it plays and checked by the inline script before the first paint. Android resume never reloads the page; a reload in the same session or WebView skips it too; a new app process starts with empty session storage.
+- **No double splash** on Android: the native launch window is a plain colour (see "Android app").
+
+**Player recap.** After the splash, if **Player recap** is on (Settings → Gameplay, default on), one card shows a single fact from your own saved records, with **Continue** and **Skip** (both go to Home; Back counts as Skip). Each cold launch shows the next fact in a fixed rotation (`src/recap/insights.ts`), skipping any that your records don't support yet. A new player with no records goes straight to Home. League results wait until the intro is over.
+
+- Facts: last 7 days (levels cleared, play time, days played), yesterday, level progress and next level, stars and perfect levels, best time on your highest completed level, daily streak, flawless clears, arrows escaped, chain-reaction releases, total play time.
+- Only real saved data: lifetime numbers say "since <date>" (when statistics tracking started). Best times from an older layout of a redesigned level are not used. There is no data about other players and no comparison with them.
+- **Daily tracking** (`src/recap/DailyLog.ts`, key `neon-escape.daily-stats`): the same attempts and play time that update the lifetime statistics are also split by the local calendar day they end on (Daily League challenges are excluded, as for statistics). Tracking starts on the first launch with this version and remembers that day, so a weekly summary appears only once all seven days were tracked. The newest 35 days are kept, ready for future weekly summaries.
+
 ## Large boards: thin arrows, zoom and touch
 
 The game supports boards from 7×7 up to 20×20. Nothing in the rules, validation, rendering or level format assumes a size, and boards up to 20×20 are covered by tests. The permanent levels go up to 16×16; larger boards are possible but become hard to read on a phone.
@@ -759,6 +798,7 @@ Arrows are drawn in proportion to the cell, and the proportions change with the 
 | 10×10 to 15×15 | Gradually thinner bodies, fainter glow, more compact heads |
 | 16×16 and up | Clean thin paths, one faint ring, small but clear arrowheads |
 
+- **Maximum thickness on screen:** on large cells (Levels 1–3 on a phone, any level on a tablet) the body is capped at 9 CSS px. Halo and core shrink with it; the head shrinks only half as much, so it stays clearly an arrow. Corner arcs get more segments on large cells (about one per 4 px), and WebGL multisampled anti-aliasing is requested explicitly. Tip position, corners and hit testing are unchanged.
 - **Minimum sizes on screen:** bodies are never thinner than 2.5 CSS px and heads never narrower than 4 CSS px (capped at 30% of a cell, so neighbours never touch). The core line is dropped when it would be thinner than a pixel.
 - **Device pixel density** is taken into account: the canvas renders at device resolution and the minimums are in CSS pixels.
 - **What stays the same:** colours, rounded turns, themes, the gold Energy Arrow diamond (never smaller than the body) and the red dashed look of activated arrows.
@@ -793,71 +833,76 @@ Boards whose cells are smaller than about 44 CSS px on your screen can be zoomed
 
 ### Performance
 
-- Arrows are redrawn only when they change (a press, an animation, a theme switch), not every frame. The grid and dots are drawn once per layout.
-- Effects come from fixed pools, and zoom/pan only moves the camera: nothing is re-rendered or allocated.
-- **Diagnostics overlay for real devices:** in Settings, tap **Version** five times. A small line at the bottom shows frames per second, arrows on the board, grid size, zoom and the vibration backend. Tap five times again to hide it. This also turns on detailed vibration logging.
-- **Measured so far:** Level 30 (16×16, 47 arrows) ran at about 37–39 fps on the Android emulator, which renders without a GPU. That isn't representative of a phone; check yours with the overlay.
-- **Known limits:** the difficulty and lives analysis run offline only (never in the game). Very dense 20×20 boards are supported but not used for levels, because they are hard to read on a phone even with zoom.
+Phaser rebuilds the triangles of every `Graphics` object on every frame, whether it changed or not. That, not the moving arrow, was the cost: each arrow drew a filled circle (100 segments) at every point of its path, in three or four glow layers, and the grid dots were 100-segment circles too. Step 14 changed this:
+
+- **Resting arrows are cached** (`src/render/StaticArrowLayer.ts`): all arrows at rest are drawn into one render texture and their `Graphics` are hidden, so the board costs one textured quad per frame. Arrows that move, flash, are pressed or tweened stay live vectors on top. The cache is rebuilt only when that set changes, a resting arrow changes look (theme, red state) or the board moves, and after zooming it is re-rendered at the new resolution (up to 2×, at most 2048 px) once the zoom settles.
+- **Cheaper geometry:** a body is one joined stroke with small triangle-fan caps (no circle per vertex); heads and Energy diamonds are triangles (no polygon triangulation); grid dots and sparks are 8-sided fans; rings are reused 32-point strokes.
+- **No allocations per frame:** a moving arrow's path is measured once (`MeasuredPolyline`), and each frame's shaft, trail and dash pieces are cut into reused point buffers.
+- **Less glow in motion:** a moving arrow drops its faint outer halo ring (invisible at speed); resting arrows keep the full look.
+- Animations are tween- and delta-time-based (Phaser tweens; sparks use the frame delta, clamped), so a slow frame never changes their speed or length. The canvas still renders at the device pixel ratio (up to 3×) for sharp arrows.
+
+Measured in desktop Chrome with a phone-sized canvas (375 × 812 CSS px at 2×), CPU time per frame (update + render, from `game.step`):
+
+| Level | Arrows | Before, idle | After, idle | After, 5 long arrows leaving |
+| --- | --- | --- | --- | --- |
+| 3 | 7 | 5.9 ms | 0.05 ms | 0.3 ms |
+| 18 | 33 | 37.0 ms | 0.11 ms | 0.4 ms |
+| 30 | 40 | 37.8 ms | 0.13 ms | 0.35 ms |
+
+Before, Levels 18 and 30 could not reach 60 fps even on a desktop CPU; after, all three hold 60 fps in that browser with a large margin. These are desktop numbers: **phone performance has not been verified** on a real device.
+
+- **Diagnostics overlay for real devices:** in Settings, tap **Version** five times. The line at the bottom shows fps, then the average and worst frame interval over the last half second, the share of frames slower than 20 ms, and the CPU time per frame, then arrows, grid size, zoom and the vibration backend. Tap five times again to hide it. To compare, open Levels 3, 18 and 30 and watch it at rest and while releasing long arrows.
+- **Known limits:** the difficulty and lives analysis run offline only (never in the game). At zoom above 2× the cached arrows are slightly soft until an arrow is touched.
 
 ## Levels
 
-Thirty levels. Levels 1–10 are hand-designed, with a steadily rising estimated difficulty. The full analysis, including the
-original set, the redesign and an old-vs-new comparison, is in [docs/level-analysis.md](docs/level-analysis.md).
+Thirty levels. **Levels 1–3** are the small square tutorials (unchanged since Step 12). **Levels 4–30** are tall portrait boards, redesigned in Step 14 for **full coverage**: the board starts almost completely filled with arrow paths.
 
-| Level | Grid | Arrows | Free at start | Depth | Score | Category | Idea |
-| ----- | ---- | ------ | ------------- | ----- | ----- | -------- | ---- |
-| 1 | 7×7 | 5  | 3 | 2  | 14 | Very easy | Tutorial: two arrows, each blocked by one free arrow |
-| 2 | 7×7 | 6  | 3 | 3  | 23 | Easy | Straight arrows; the first small chain |
-| 3 | 7×7 | 8  | 4 | 4  | 28 | Easy–medium | First bent arrows |
-| 4 | 7×7 | 10 | 4 | 5  | 37 | Easy–medium | Long arrows blocked from several cells away |
-| 5 | 7×7 | 11 | 3 | 8  | 45 | Medium | Tight board: the visual sweep stops working |
-| 6 | 8×8 | 13 | 4 | 6  | 47 | Medium | Mostly long-range blocking |
-| 7 | 8×8 | 12 | 2 | 11 | 54 | Medium–hard | Fewer arrows than level 6 but harder: L-hooks, one free arrow per step |
-| 8 | 8×8 | 18 | 2 | 11 | 57 | Medium–hard | Interlocking L-shapes mid-chain |
-| 9 | 9×9 | 20 | 4 | 12 | 59 | Hard | Dense board with long hooks |
-| 10 | 9×9 | 23 | 1 | 15 | 63 | Hard | First major challenge: one free arrow, fifteen-step chain |
+- **Coverage:** 100 % of cells on 26 of the 27 levels and 99.5 % on Level 29 (one stranded cell), up from 74–79 % in Step 13. The tests require at least 97 % on every level, no empty 2×2 area anywhere, and full coverage on at least 90 % of the levels.
+- **How:** the fill-first generator (`src/levelgen/fillLevel.ts`) covers the whole board with long, winding, non-touching paths first (always extending into the most constrained free cell, at most 4 cells straight before a turn), picks a head for each path (mostly pointing into the board), then repairs: while some arrows block each other in a cycle, or two arrows read as one, it flips a head or splits an arrow. Short leftovers are merged into neighbours where the level stays solvable. The older place-one-arrow-at-a-time generator stalls at about 75 %, because every new arrow needs an empty exit line.
+- **Is 100 % always possible?** Yes, under these rules: an arrow on the edge pointing out is free, so a fully covered board can still be solved from the outside in. The only cost is a few 2-cell arrows where a path had to be split (at most 12 % of arrows per level, never a single-cell arrow).
+- **Long arrows:** about 5 cells on average; most bend, many several times.
+- **A gradual curve with spikes at 10, 20 and 30:** the score never drops between spikes; each spike is at least 3 points above the level before, has a deeper dependency chain and only 2–3 free arrows; the next level drops back.
+- **Distinct and readable:** valid, solvable, no overlaps, no arrow that runs alongside itself or reads as two joined arrows, and no near-duplicates (including mirror images and rotations).
 
-### Levels 11–30
+Revisions: Levels 4–10 are now revision 5 and Levels 11–30 revision 3, so your completions, unlocks, stars and times are kept, and old bests aren't compared with the new layouts (see "Saved data"). More detail is in [docs/level-analysis.md](docs/level-analysis.md) (section 9).
 
-Generated offline from `tools/level-plan.json` (see "Level tools"), then checked by the tests:
-- valid and solvable;
-- readable (no arrow runs alongside itself, none reads as two joined arrows);
-- no near-duplicates of each other or of Levels 1–10 (including rotations and mirror images);
-- few free arrows at the start, and a long chain of moves.
+| Level | Grid (rows × cols) | Arrows | Coverage | Mean length | Free at start | Depth | Score | Note |
+| ----- | ---- | ------ | ---- | ---- | ------------- | ----- | ----- | ---- |
+| 1 | 7×7 | 5 | 27% | 2.6 | 3 | 2 | 14 | Tutorial |
+| 2 | 7×7 | 6 | 35% | 2.8 | 3 | 3 | 20 | Straight arrows, a three-arrow chain |
+| 3 | 7×7 | 7 | 45% | 3.1 | 3 | 4 | 29 | First bent arrows and decoys |
+| 4 | 9×7 | 12 | 100% | 5.3 | 3 | 4 | 40 | First full board |
+| 5 | 10×7 | 14 | 100% | 5.0 | 2 | 5 | 43 | |
+| 6 | 10×8 | 14 | 100% | 5.7 | 3 | 5 | 46 | |
+| 7 | 11×8 | 17 | 100% | 5.2 | 4 | 6 | 50 | |
+| 8 | 11×8 | 18 | 100% | 4.9 | 3 | 7 | 52 | |
+| 9 | 12×9 | 19 | 100% | 5.7 | 2 | 8 | 54 | |
+| 10 | 12×9 | 19 | 100% | 5.7 | 3 | 13 | 62 | **Spike** |
+| 11 | 12×9 | 23 | 100% | 4.7 | 4 | 9 | 56 | Back on the curve |
+| 12 | 13×9 | 21 | 100% | 5.6 | 3 | 9 | 57 | |
+| 13 | 13×10 | 24 | 100% | 5.4 | 5 | 9 | 57 | |
+| 14 | 13×10 | 24 | 100% | 5.4 | 5 | 11 | 59 | |
+| 15 | 14×10 | 27 | 100% | 5.2 | 5 | 10 | 60 | |
+| 16 | 14×10 | 27 | 100% | 5.2 | 6 | 11 | 61 | |
+| 17 | 14×11 | 33 | 100% | 4.7 | 6 | 10 | 62 | |
+| 18 | 15×11 | 33 | 100% | 5.0 | 6 | 11 | 63 | |
+| 19 | 15×11 | 29 | 100% | 5.7 | 3 | 13 | 64 | |
+| 20 | 15×11 | 29 | 100% | 5.7 | 2 | 15 | 68 | **Spike** |
+| 21 | 15×11 | 33 | 100% | 5.0 | 6 | 11 | 64 | Back on the curve |
+| 22 | 15×12 | 27 | 100% | 6.7 | 5 | 11 | 64 | |
+| 23 | 16×12 | 36 | 100% | 5.3 | 4 | 11 | 65 | |
+| 24 | 16×12 | 33 | 100% | 5.8 | 4 | 10 | 65 | |
+| 25 | 16×12 | 36 | 100% | 5.3 | 5 | 13 | 66 | |
+| 26 | 16×12 | 34 | 100% | 5.6 | 7 | 14 | 67 | |
+| 27 | 17×12 | 39 | 100% | 5.2 | 8 | 16 | 68 | |
+| 28 | 17×12 | 37 | 100% | 5.5 | 8 | 15 | 68 | |
+| 29 | 17×12 | 39 | 99.5% | 5.2 | 5 | 14 | 68 | |
+| 30 | 17×12 | 40 | 100% | 5.1 | 2 | 18 | 73 | **Spike:** the final challenge |
 
-| Band | Levels | Boards | Character |
-| --- | --- | --- | --- |
-| A | 11–15 | 10×10 | Longer arrows (up to 7 cells) and more bends than before |
-| B | 16–20 | 11×11–12×12 | Denser blocking, longer chains (depth up to 18), few obvious first moves |
-| C | 21–25 | 13×13–15×15 | Many more arrows; zoom becomes useful on phones |
-| D | 26–30 | 15×15–16×16 | The largest boards, winding paths up to 9 cells, the deepest chains (19) |
+**Limitation:** the 0–100 score saturates in the high 60s, so late levels differ more in depth and board size than in score. On a full board an arrow can only start free if its head is on the edge pointing out, so openings are clear to read; the difficulty comes from the dependency depth.
 
-| Level | Grid | Arrows | Free at start | Depth | Score |
-| ----- | ---- | ------ | ------------- | ----- | ----- |
-| 11 | 10×10 | 19 | 5 | 13 | 58 |
-| 12 | 10×10 | 22 | 5 | 12 | 59 |
-| 13 | 10×10 | 20 | 4 | 13 | 59 |
-| 14 | 10×10 | 21 | 5 | 13 | 61 |
-| 15 | 10×10 | 27 | 3 | 12 | 60 |
-| 16 | 11×11 | 25 | 5 | 15 | 60 |
-| 17 | 11×11 | 29 | 5 | 15 | 63 |
-| 18 | 12×12 | 28 | 6 | 16 | 61 |
-| 19 | 12×12 | 31 | 6 | 13 | 62 |
-| 20 | 12×12 | 32 | 6 | 18 | 65 |
-| 21 | 13×13 | 35 | 7 | 15 | 63 |
-| 22 | 13×13 | 34 | 7 | 13 | 63 |
-| 23 | 14×14 | 37 | 7 | 17 | 65 |
-| 24 | 14×14 | 37 | 7 | 14 | 63 |
-| 25 | 15×15 | 37 | 8 | 15 | 65 |
-| 26 | 15×15 | 40 | 8 | 17 | 63 |
-| 27 | 15×15 | 42 | 8 | 18 | 66 |
-| 28 | 16×16 | 40 | 9 | 15 | 65 |
-| 29 | 16×16 | 42 | 9 | 19 | 67 |
-| 30 | 16×16 | 47 | 9 | 19 | 67 |
-
-The average score rises band by band (59.4 → 62.4 → 63.8 → 65.6), and every later band has deeper chains. **Limitation:** the 0–100 score saturates in the high 60s, because its parts cap at 6 layers of depth, 20 arrows and 2 wrong taps per move. So it can't separate a hard 12×12 from a hard 16×16. Bigger boards are harder mainly through scanning load and longer chains, shown by "Depth" and the arrow count. Changing the formula would re-score and reorder Levels 1–10, so it was left as is.
-
-**Progression:** players keep every unlock, star and best time. Anyone who finished Level 10 can play Level 11 right away (unlocks are repaired to match completions), and the "game complete" screen now appears after Level 30. Totals become 30 levels and 90 stars. The cosmetic ranks keep their thresholds (Grid Master at 27★), and Puzzle Veteran still means 10 completed levels (now worded "Complete 10 different levels").
+**Progression:** players keep every unlock, star and best time. Records made on the old layouts stay visible, and the first clear of a new layout starts fresh records for it.
 
 ### How difficulty works
 
@@ -897,6 +942,7 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     │   ├── AttemptTracker.ts  One attempt's timer and bookkeeping; applyAttempt() updates progress + stats
     │   ├── Feedback.ts    Game events → sound effects and haptics
     │   ├── confirmPolicy.ts When leaving or restarting needs a confirmation
+    │   ├── Intro.ts       Startup sequence: studio splash, then the optional recap, then Home
     │   └── Navigation.ts  Back-navigation history (Home is the root; gameplay is never a back target)
     ├── createGame.ts      Phaser bootstrap: high-DPI canvas covering the game screen
     ├── style.css          All styling: screens, HUD, level tiles, dialogs (mobile-first, landscape variants)
@@ -917,10 +963,12 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     ├── levels/            Level data only
     │   ├── index.ts           Registry: LEVELS in play order, LEVEL_COUNT, getLevel(id)
     │   ├── levelMap.ts        levelFromMap() / levelToMap(): text maps ↔ LevelData
-    │   └── level01.ts … level10.ts
+    │   ├── archive/           Frozen older layouts for old Daily League pool versions (never edit)
+    │   └── level01.ts … level30.ts
     │
     ├── levelgen/          Offline level generator (developer tool, not in the game bundle)
-    │   └── generateLevel.ts   Seeded generation, refinement, layout similarity
+    │   ├── generateLevel.ts   Seeded generation, refinement, layout similarity
+    │   └── fillLevel.ts       Fill-first generator: full-coverage boards made solvable (Levels 4–30)
     │
     ├── daily/             Calendar-day logic, shared by daily features
     │   ├── dayKey.ts          Local day ids, day arithmetic, DayClock (new-day detection), daily objectives
@@ -931,6 +979,13 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     │   ├── challenges.ts      Deterministic daily challenges and Energy Arrow placement
     │   ├── League.ts          Collection, completion, settlement, inactivity, validation (pure)
     │   └── LeagueService.ts   Saved record, settlement calls, credit outbox
+    │
+    ├── branding/
+    │   └── StudioSplash.ts    Mr. White Games splash timing, once per cold launch (markup and mark in index.html)
+    │
+    ├── recap/             Startup recap (rules only, no DOM)
+    │   ├── DailyLog.ts        Per-day play statistics, storage, 7-day summaries
+    │   └── insights.ts        Facts from the player's own records, rotation, rotation storage
     │
     ├── rewards/           Energy Credits and achievements
     │   ├── Rewards.ts         One saved record (daily + wallet + achievements); atomic claims
@@ -965,7 +1020,8 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     │
     ├── progress/          Progression, independent of rendering and game rules
     │   ├── Progress.ts        Unlock/complete rules (pure functions)
-    │   └── ProgressStorage.ts localStorage save format, migration, backups and safe loading
+    │   ├── ProgressStorage.ts localStorage save format, migration, backups and safe loading
+    │   └── testUnlock.ts      TESTING flag: every level playable, test plays never recorded
     │
     ├── render/            Phaser drawing, no game rules
     │   ├── theme.ts           Semantic board palettes per theme, contrast helpers
@@ -974,10 +1030,12 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     │   ├── viewport.ts        Zoom/pan transform for large boards
     │   ├── gestures.ts        Press, release, pan and pinch from raw pointers
     │   ├── layout.ts          Board geometry fitted into the board slot, grid bounds, pixel ↔ cell mapping
+    │   ├── boardFit.ts        Board slot size for any grid shape (tall portrait boards), no Phaser
     │   ├── polyline.ts        Polyline length, slicing and point distance (animation, hit testing)
-    │   ├── BoardRenderer.ts   Board frame, recessed play area, grid; entrance and win-wave effects
+    │   ├── BoardRenderer.ts   Borderless board: one dot per cell; entrance, win and failure waves
     │   ├── ArrowView.ts       Draws one arrow (rounded turns, notched head); press, intro, exit, blocked, hit
     │   ├── FxLayer.ts         Pooled sparks and rings on one Graphics object
+    │   ├── StaticArrowLayer.ts Resting arrows cached in one render texture (performance)
     │   └── motion.ts          Resolved reduced-motion and effects preferences
     │
     ├── scenes/
@@ -998,6 +1056,8 @@ count. The only real challenge is **finding an arrow that can escape**, again an
         ├── GameLayout.ts      Sizes the board slot so the HUD and board form one centred group
         ├── LevelSelect.ts     Level tiles and progress summary
         ├── Hud.ts             In-game timer, hearts, arrows left, back and restart buttons
+        ├── ThemePicker.ts     HUD palette button and compact theme card (pauses the timer)
+        ├── RecapDialog.ts     Startup recap card with Continue and Skip
         ├── CompleteDialog.ts  Level-complete / game-complete dialog: stars, time, personal best, statistics
         ├── GameOverDialog.ts  Out-of-lives dialog
         ├── ConfirmDialog.ts   Confirmations: leave level, restart level, reset settings
@@ -1034,7 +1094,7 @@ The table shows Dark Neon; Light and Colorful keep the same roles with adjusted 
 | Warning | orange `#FF9F43` | the arrow in the way, the "Leave level?" dialog |
 | Success | green `#48F5A5` | leaving arrows, completed levels, the level-complete dialog |
 | Lives | pink `#FF5C8A` | hearts (a softer red than "error", so health doesn't read as "wrong") |
-| Error | red `#FF526B` | activated (red) arrows, the Game Over dialog, the board frame on failure |
+| Error | red `#FF526B` | activated (red) arrows, the Game Over dialog, the board's dots on failure |
 
 Surfaces share one set of radii (10 / 14 / 22 px and pills), a 1 px hairline border and a faint top highlight. Buttons come in four kinds: primary (cyan), success (green), secondary (neutral with purple icon) and warning (orange). Each has a pressed scale, a hover state on pointer devices, a visible keyboard focus ring and a disabled state.
 
@@ -1092,7 +1152,7 @@ The output shows the map, every metric, and a ready-to-paste level file.
 
 ### Generating a series: `levels:plan`
 
-`tools/level-plan.json` lists each planned level: size, arrow range, longest arrow, turns, bend chance, score range, opening cap and seeds. `npm run levels:plan` generates the listed levels in order, each avoiding near-duplicates of every level before it. For each, the first seed that produces an acceptable level wins, and it writes `src/levels/levelNN.ts`. Levels already in the game are skipped unless you pass `--force`. Levels 11–30 were made this way in about 45 s and then reviewed; the plan file documents exactly how.
+`tools/level-plan.json` lists each planned level: `rows` and `cols` (or `size` for a square board), arrow range, longest and shortest arrow (`length`, `minLength`), preference for long arrows (`lengthWeight`), turns, bend chance, score range, depth range, opening cap (`maxFree`), layout targets (`minDensity`, `maxEmptySquare`), the `revision` to write, and seeds. `--only 10,20` regenerates just those ids. `npm run levels:plan` generates the listed levels in order, each avoiding near-duplicates of every level before it. For each, the first seed that produces an acceptable level wins, and it writes `src/levels/levelNN.ts`. Levels already in the game are skipped unless you pass `--force`. Levels 4–30 were made this way in Step 14 with `"fill": true` (about 40 s) and then reviewed; the plan file documents exactly how. In fill mode the plan uses `src/levelgen/fillLevel.ts` (see "Levels") and also accepts `minCoverage`, `minMeanLength`, `maxShortShare`, `maxStraight` and `attempts`. The plan that produced the earlier Levels 11–30 is kept in `tools/archive/level-plan-step11.json`. Because each level avoids near-duplicates of the levels present when it is generated, rerunning a plan from scratch can pick different seeds.
 
 ### Adding a level
 

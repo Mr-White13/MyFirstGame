@@ -1,17 +1,24 @@
 import { levelFromMap } from './levelMap';
 
-/** Level 20 — generated from tools/level-plan.json (seed 2022, attempt 41), score 65 (Hard). */
-export default levelFromMap(20, [
-  '.  a  a  a  a> .  .  .  g  g  b  b>',
-  'c^ .  .  d^ e^ f  f> .  gv .  b  .',
-  'c  k  .  d  e  e  e  .  .  .  j  j',
-  '.  k  m  m  .  h< h  i< i  i  jv .',
-  '.  kv m  .  n  n  .  .  .  .  .  .',
-  'l^ .  m  m> nv .  q  .  .  o  o> .',
-  'l  .  t  .  p  p> qv .  .  r  .  .',
-  't  t  t  .  .  v  v  v  .  rv s< s',
-  'tv A  u< u  u  u  u  vv .  w  w  w>',
-  'z  A  x  x  x  x> .  C  F  F  F  y^',
-  'zv A  A> B  B  B> .  Cv F  .  F  y',
-  'D< D  E< E  .  .  .  F  F  .  Fv .',
-]);
+/** Level 20 — difficulty spike, generated from tools/level-plan.json (seed 2050, attempt 0), score 68 (Hard). */
+export default levelFromMap(
+  20,
+  [
+    'a  a  a> b  b  b> c  c  c  c  c>',
+    'd< d  b  b  e  e  c  m  m  m  f^',
+    'g^ d  k  k  k  e  c  h< h  m  f',
+    'g  g  k  n  k  e  c  i^ h  m  f',
+    'j^ g  k  n  kv e  l^ i  i  mv f',
+    'j  g  k  n  e  e  l  l  i  f  f',
+    'j  j  k  nv ev r  r  l  s  s  o^',
+    'p^ j  q< q  q  q  rv l  y  s  o',
+    'p  j  u  u  u  u  u> l  y  s  o',
+    'j  j  u  v  v  v  l  l  y  sv o',
+    't^ u  u  vv x  v  w  w> y  o  o',
+    't  t  x< x  x  v  y< y  y  o  z^',
+    'A^ t  C  C  C  v  B  B  B> o  z',
+    'A  t  C  A  C  v  v  v  C  C> z',
+    'A  A  A  A  C  C  C  C  C  z  z',
+  ],
+  { revision: 3 },
+);

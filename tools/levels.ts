@@ -19,17 +19,20 @@
  *   --id N                         level id for the output (default next free id)
  *   --out PATH                     also write the first level to a .ts file (never overwrites)
  *
- *   npm run levels:plan -- [--plan tools/level-plan.json] [--force]
+ *   npm run levels:plan -- [--plan tools/level-plan.json] [--force] [--only N[,N…]]
  *     generates every level listed in a plan file, in order, each avoiding
  *     near-duplicates of all levels before it, and writes src/levels/levelNN.ts.
- *     Existing files are kept unless --force. Each entry may list several seeds:
- *     the first that produces an acceptable level wins (reproducible).
+ *     Existing files are kept unless --force; --only limits the run to some ids.
+ *     Each entry may list several seeds: the first that produces an acceptable
+ *     level (score, free arrows, depth, density, empty area) wins (reproducible).
+ *     Entries give `rows` and `cols` (or `size` for a square board).
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { analyzeDifficulty, type DifficultyReport } from '../src/core/difficulty';
 import { validateLevel } from '../src/core/levelValidation';
 import type { LevelData } from '../src/core/types';
+import { fillLevel } from '../src/levelgen/fillLevel';
 import { generateLevel, layoutSimilarity } from '../src/levelgen/generateLevel';
 import { LEVELS } from '../src/levels';
 import { levelToMap } from '../src/levels/levelMap';
@@ -79,6 +82,9 @@ function summaryRow(level: LevelData, r: DifficultyReport): (string | number)[] 
     level.id,
     `${level.rows}×${level.cols}`,
     r.exact.arrows,
+    pct(r.exact.density),
+    r.exact.meanLength.toFixed(1),
+    r.exact.largestEmptySquare,
     r.exact.initialFree,
     pct(r.exact.blockedShare),
     r.exact.depth,
@@ -96,7 +102,7 @@ function summaryRow(level: LevelData, r: DifficultyReport): (string | number)[] 
 }
 
 const SUMMARY_HEADERS = [
-  '#', 'grid', 'arrows', 'free', 'blocked', 'depth', 'links', 'far', 'wrong/move', 'score', 'category',
+  '#', 'grid', 'arrows', 'fill', 'len', 'gap', 'free', 'blocked', 'depth', 'links', 'far', 'wrong/move', 'score', 'category',
   'win rand', 'win near', 'chain', 'decoys', 'risk',
 ];
 
@@ -109,7 +115,7 @@ function details(level: LevelData, r: DifficultyReport): string {
     ...levelToMap(level).map((row) => `  ${row}`),
     '',
     'Exact',
-    `  arrows ${e.arrows}, density ${pct(e.density)}, turns ${e.turns}`,
+    `  arrows ${e.arrows}, density ${pct(e.density)}, mean length ${e.meanLength.toFixed(1)}, largest empty square ${e.largestEmptySquare}, turns ${e.turns}`,
     `  free at start ${e.initialFree} (${pct(1 - e.blockedShare)}), blocked ${pct(e.blockedShare)}`,
     `  blocking links ${e.blockingRelations} (max ${e.maxBlockers} on one line, ${e.longRangeBlocks} long-range)`,
     `  depth ${e.depth}, waves [${e.waves.join(', ')}]`,
@@ -145,7 +151,8 @@ function analyze(args: Args): void {
   }
   const rows = LEVELS.map((l) => summaryRow(l, analyzeDifficulty(l)));
   console.log(table(SUMMARY_HEADERS, rows));
-  console.log('\nSearch model: links = blocking relations; far = blockers 3+ cells away; wrong/move = blocked taps per move by a random tapper; score/category = 0–100 search score.');
+  console.log('\nLayout: fill = share of cells covered by arrows; len = mean arrow length; gap = side of the largest empty square.');
+  console.log('Search model: links = blocking relations; far = blockers 3+ cells away; wrong/move = blocked taps per move by a random tapper; score/category = 0–100 search score.');
   console.log('Lives model: win rand / win near = share of simulated runs finishing within 3 lives (random / near-sighted tapper);');
   console.log('  chain = arrows cleared by chain reactions per random run; decoys = arrows that look free but are blocked; risk = 0–100 failure risk.');
   console.log('All figures are heuristic estimates from simulated strategies, not measurements of human players.');
@@ -177,15 +184,23 @@ function validate(): void {
   console.log(`\nAll ${LEVELS.length} levels are valid and solvable.`);
 }
 
-function levelFile(level: LevelData, note: string): string {
-  const rows = levelToMap(level).map((row) => `  '${row}',`);
+function levelFile(level: LevelData, note: string, revision?: number): string {
+  if (revision === undefined) {
+    const rows = levelToMap(level).map((row) => `  '${row}',`);
+    return [`import { levelFromMap } from './levelMap';`, ``, `/** Level ${level.id} — ${note} */`, `export default levelFromMap(${level.id}, [`, ...rows, `]);`, ``].join('\n');
+  }
+  const rows = levelToMap(level).map((row) => `    '${row}',`);
   return [
     `import { levelFromMap } from './levelMap';`,
     ``,
     `/** Level ${level.id} — ${note} */`,
-    `export default levelFromMap(${level.id}, [`,
+    `export default levelFromMap(`,
+    `  ${level.id},`,
+    `  [`,
     ...rows,
-    `]);`,
+    `  ],`,
+    `  { revision: ${revision} },`,
+    `);`,
     ``,
   ].join('\n');
 }
@@ -243,7 +258,10 @@ function generate(args: Args): void {
 
 interface PlanEntry {
   readonly id: number;
-  readonly size: number;
+  /** Square board (older plans); `rows`/`cols` win when given. */
+  readonly size?: number;
+  readonly rows?: number;
+  readonly cols?: number;
   readonly arrows: readonly [number, number];
   readonly length: number;
   readonly turns: number;
@@ -252,6 +270,29 @@ interface PlanEntry {
   readonly seeds: readonly number[];
   /** Most arrows free at the start (optional). */
   readonly maxFree?: number;
+  /** Accepted dependency depth range (optional). */
+  readonly depth?: readonly [number, number];
+  readonly minLength?: number;
+  readonly lengthWeight?: number;
+  readonly minDensity?: number;
+  readonly maxEmptySquare?: number;
+  /**
+   * Use the fill-first generator (levelgen/fillLevel.ts): the board is covered
+   * with paths first, then made solvable. Gives near-full coverage.
+   */
+  readonly fill?: boolean;
+  /** Fill mode: lowest accepted share of covered cells (default 0.97). */
+  readonly minCoverage?: number;
+  /** Fill mode: lowest accepted average arrow length. */
+  readonly minMeanLength?: number;
+  /** Fill mode: highest share of arrows shorter than minLength. */
+  readonly maxShortShare?: number;
+  /** Fill mode: longest straight run before an arrow must turn. */
+  readonly maxStraight?: number;
+  /** Fill mode: partitions tried per seed (default 60). */
+  readonly attempts?: number;
+  /** Layout revision written into the file (see LevelData.revision). */
+  readonly revision?: number;
   readonly note?: string;
 }
 
@@ -260,8 +301,12 @@ function plan(args: Args): void {
   const file = path.resolve(typeof args.plan === 'string' ? args.plan : 'tools/level-plan.json');
   const entries = JSON.parse(fs.readFileSync(file, 'utf8')) as PlanEntry[];
   const force = args.force === true;
+  const only = typeof args.only === 'string' ? new Set(args.only.split(',').map(Number)) : null;
   const known: LevelData[] = [...LEVELS];
   for (const entry of entries) {
+    if (only && !only.has(entry.id)) continue;
+    const rows = entry.rows ?? entry.size ?? fail(`Level ${entry.id}: no rows/size`);
+    const cols = entry.cols ?? entry.size ?? fail(`Level ${entry.id}: no cols/size`);
     const target = path.resolve('src/levels', `level${String(entry.id).padStart(2, '0')}.ts`);
     const existing = LEVELS.find((l) => l.id === entry.id);
     if (existing && !force) {
@@ -271,9 +316,30 @@ function plan(args: Args): void {
     const started = Date.now();
     let made: { level: LevelData; report: DifficultyReport; seed: number; attempt: number } | null = null;
     for (const seed of entry.seeds) {
-      const result = generateLevel({
-        rows: entry.size,
-        cols: entry.size,
+      const result = entry.fill
+        ? fillLevel({
+            rows,
+            cols,
+            minScore: entry.score[0],
+            maxScore: entry.score[1],
+            seed,
+            id: entry.id,
+            depth: entry.depth,
+            maxInitialFree: entry.maxFree,
+            minLength: entry.minLength,
+            maxLength: entry.length,
+            maxTurns: entry.turns,
+            turnChance: entry.bend,
+            minCoverage: entry.minCoverage,
+            minMeanLength: entry.minMeanLength,
+            maxShortShare: entry.maxShortShare,
+            maxStraight: entry.maxStraight,
+            attempts: entry.attempts,
+            avoid: known.filter((l) => l.id !== entry.id),
+          })
+        : generateLevel({
+        rows,
+        cols,
         minScore: entry.score[0],
         maxScore: entry.score[1],
         seed,
@@ -286,21 +352,32 @@ function plan(args: Args): void {
         workBudget: 900,
         avoid: known.filter((l) => l.id !== entry.id),
         maxInitialFree: entry.maxFree,
+        minLength: entry.minLength,
+        lengthWeight: entry.lengthWeight,
+        minDensity: entry.minDensity,
+        maxEmptySquare: entry.maxEmptySquare,
       });
+      const depth = result.ok ? result.report.exact.depth : 0;
+      if (result.ok && entry.depth && (depth < entry.depth[0] || depth > entry.depth[1])) {
+        console.log(`Level ${entry.id}: seed ${seed} depth ${depth} outside ${entry.depth.join('–')}`);
+        continue;
+      }
       if (result.ok) {
         made = { level: result.level, report: result.report, seed, attempt: result.attempt };
         break;
       }
-      console.log(`Level ${entry.id}: seed ${seed} failed (${result.reason.split('(')[0].trim()})`);
+      console.log(`Level ${entry.id}: seed ${seed} failed (${result.reason.split('. Try')[0]})`);
     }
     if (!made) fail(`Level ${entry.id}: no seed produced a level; adjust the plan`);
     const { level, report, seed, attempt } = made;
+    const stale = known.findIndex((l) => l.id === level.id);
+    if (stale >= 0) known.splice(stale, 1); // later entries must differ from the new layout, not the old one
     known.push(level);
-    const note = `generated from tools/level-plan.json (seed ${seed}, attempt ${attempt}), score ${report.score} (${report.category}).`;
+    const note = `${entry.note ? `${entry.note}, ` : ''}generated from tools/level-plan.json (seed ${seed}, attempt ${attempt}), score ${report.score} (${report.category}).`;
     if (fs.existsSync(target) && !force) fail(`${target} already exists; use --force to replace it`);
-    fs.writeFileSync(target, levelFile(level, note));
+    fs.writeFileSync(target, levelFile(level, note, entry.revision));
     console.log(
-      `Level ${entry.id}: ${entry.size}×${entry.size}, ${level.arrows.length} arrows, score ${report.score}, depth ${report.exact.depth}, free at start ${report.exact.initialFree} (${((Date.now() - started) / 1000).toFixed(1)} s) → ${path.relative(process.cwd(), target)}`,
+      `Level ${entry.id}: ${rows}×${cols}, ${level.arrows.length} arrows, score ${report.score}, depth ${report.exact.depth}, free ${report.exact.initialFree}, density ${Math.round(report.exact.density * 100)}%, mean length ${report.exact.meanLength.toFixed(1)}, empty square ${report.exact.largestEmptySquare} (${((Date.now() - started) / 1000).toFixed(1)} s) → ${path.relative(process.cwd(), target)}`,
     );
   }
 }

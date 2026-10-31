@@ -52,3 +52,97 @@ export function slicePolyline(points: readonly Point[], from: number, to: number
   }
   return out;
 }
+
+/** A point that can be overwritten in place (reused between frames). */
+export interface MutablePoint {
+  x: number;
+  y: number;
+}
+
+/**
+ * A polyline with its cumulative lengths precomputed, so slicing it every
+ * animation frame costs a binary search and a few writes instead of
+ * re-measuring every segment and allocating new arrays.
+ */
+export class MeasuredPolyline {
+  /** Distance along the line at each point (cumulative[0] = 0). */
+  private readonly cumulative: number[];
+  readonly length: number;
+
+  constructor(readonly points: readonly Point[]) {
+    this.cumulative = [0];
+    for (let i = 1; i < points.length; i++) {
+      this.cumulative.push(this.cumulative[i - 1] + Math.hypot(points[i].x - points[i - 1].x, points[i].y - points[i - 1].y));
+    }
+    this.length = this.cumulative[this.cumulative.length - 1] ?? 0;
+  }
+
+  /** Index of the segment containing distance `d` (clamped to the line). */
+  private segmentAt(d: number): number {
+    let lo = 1;
+    let hi = this.points.length - 1;
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1;
+      if (this.cumulative[mid] < d) lo = mid + 1;
+      else hi = mid;
+    }
+    return lo;
+  }
+
+  /** Writes the point at distance `d` into `out` and returns it. */
+  pointAt(d: number, out: MutablePoint): MutablePoint {
+    const p = this.points;
+    if (p.length === 1 || d <= 0) {
+      out.x = p[0].x;
+      out.y = p[0].y;
+      return out;
+    }
+    const i = this.segmentAt(Math.min(d, this.length));
+    const a = p[i - 1];
+    const b = p[i];
+    const len = this.cumulative[i] - this.cumulative[i - 1];
+    const t = len === 0 ? 0 : Math.min(1, Math.max(0, (d - this.cumulative[i - 1]) / len));
+    out.x = a.x + (b.x - a.x) * t;
+    out.y = a.y + (b.y - a.y) * t;
+    return out;
+  }
+
+  /**
+   * Writes the part between distances `from` and `to` into `out`, reusing
+   * (and growing) its point objects, and returns how many points it wrote.
+   * Gives the same points as slicePolyline().
+   */
+  sliceInto(from: number, to: number, out: MutablePoint[]): number {
+    if (this.points.length < 2) return 0;
+    const start = Math.max(0, from);
+    const end = Math.min(this.length, to);
+    if (end < start) return 0;
+    let n = 0;
+    n = this.writeAt(start, out, n);
+    for (let i = this.segmentAt(start); i < this.points.length && this.cumulative[i] < end; i++) {
+      // Interior vertices, skipping repeats left by zero-length segments.
+      if (this.cumulative[i] > start && this.cumulative[i] > this.cumulative[i - 1]) n = write(out, n, this.points[i].x, this.points[i].y);
+    }
+    return this.writeAt(end, out, n);
+  }
+
+  /** Writes the point at distance `d` as out[n]; returns n + 1. */
+  private writeAt(d: number, out: MutablePoint[], n: number): number {
+    const i = this.segmentAt(d);
+    const a = this.points[i - 1];
+    const b = this.points[i];
+    const len = this.cumulative[i] - this.cumulative[i - 1];
+    const t = len === 0 ? 0 : Math.min(1, Math.max(0, (d - this.cumulative[i - 1]) / len));
+    return write(out, n, a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t);
+  }
+}
+
+/** Sets out[n] (reusing the object, or adding one) and returns n + 1. */
+function write(out: MutablePoint[], n: number, x: number, y: number): number {
+  if (out.length <= n) out.push({ x, y });
+  else {
+    out[n].x = x;
+    out[n].y = y;
+  }
+  return n + 1;
+}

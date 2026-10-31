@@ -111,7 +111,31 @@ describe('layoutSimilarity', () => {
       })),
     };
     expect(layoutSimilarity(mirrored, level)).toBe(1);
-    expect(layoutSimilarity(LEVELS[3], LEVELS[4])).toBeLessThan(0.6);
+    expect(layoutSimilarity(LEVELS[1], LEVELS[2])).toBeLessThan(0.6);
+  });
+
+  it('recognises mirror images and turned copies of tall rectangular boards', () => {
+    const tall = LEVELS[19]; // 15 × 11
+    const flipped: LevelData = {
+      ...tall,
+      arrows: tall.arrows.map((a) => ({
+        ...a,
+        cells: a.cells.map((c) => ({ row: tall.rows - 1 - c.row, col: c.col })),
+        direction: a.direction === 'up' ? 'down' : a.direction === 'down' ? 'up' : a.direction,
+      })),
+    };
+    expect(layoutSimilarity(flipped, tall)).toBe(1);
+    const turned: LevelData = {
+      ...tall,
+      rows: tall.cols,
+      cols: tall.rows,
+      arrows: tall.arrows.map((a) => ({
+        ...a,
+        cells: a.cells.map((c) => ({ row: c.col, col: c.row })),
+        direction: ({ up: 'left', left: 'up', down: 'right', right: 'down' } as const)[a.direction],
+      })),
+    };
+    expect(layoutSimilarity(turned, tall)).toBe(1);
   });
 });
 

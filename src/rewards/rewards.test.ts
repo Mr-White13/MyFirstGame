@@ -280,7 +280,7 @@ describe('integration with records', () => {
     const { rewards, records } = setup();
     const summary: AttemptSummary = {
       levelId: 1, revision: LEVELS[0].revision ?? 1, outcome: 'won', timeMs: 20_000, uncountedTimeMs: 20_000,
-      moves: 5, stars: 3, directClears: 4, autoClears: 1, longestChain: 1, mistakes: 0,
+      moves: 5, stars: 3, directClears: 4, autoClears: 1, cascadeClears: 0, longestChain: 1, mistakes: 0,
     };
     const { records: next } = applyAttempt(records, summary, LEVELS.length);
     records.progress = next.progress;

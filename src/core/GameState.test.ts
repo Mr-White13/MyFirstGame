@@ -138,7 +138,7 @@ describe('chain reactions', () => {
 
   it('is deterministic', () => {
     const play = () => {
-      const state = new GameState(cascade);
+      const state = new GameState(cascade, { clock: () => 0 });
       return [state.tryMove('x'), state.tryMove('y'), state.tryMove('z'), state.snapshot()];
     };
     expect(play()).toEqual(play());
@@ -227,6 +227,9 @@ describe('restart and level changes', () => {
       moves: 0,
       directClears: 0,
       autoClears: 0,
+      cascadeClears: 0,
+      streak: 0,
+      streakAt: null,
       longestChain: 0,
       mistakes: 0,
       lives: 3,
@@ -236,7 +239,7 @@ describe('restart and level changes', () => {
       won: false,
       stars: 0,
     });
-    expect([state.rows, state.cols]).toEqual([9, 9]);
+    expect([state.rows, state.cols]).toEqual([LEVELS[8].rows, LEVELS[8].cols]);
   });
 
   it('notifies subscribers on mistakes, moves, restarts and level changes', () => {
@@ -261,7 +264,10 @@ describe('restart and level changes', () => {
 describe('all levels', () => {
   it.each(LEVELS.map((l) => [l.id, l] as const))('level %i can be won flawlessly for 3 stars', (_id, level) => {
     const state = new GameState(level);
-    for (const id of findSolution(level)!) expect(state.tryMove(id).kind).toBe('cleared');
-    expect(state.snapshot()).toMatchObject({ won: true, stars: 3, moves: level.arrows.length, autoClears: 0 });
+    // Cascades may clear some arrows of the solution order before their turn: skip those.
+    for (const id of findSolution(level)!) if (state.getArrows().some((a) => a.id === id)) expect(state.tryMove(id).kind).toBe('cleared');
+    const s = state.snapshot();
+    expect(s).toMatchObject({ won: true, stars: 3, autoClears: 0 });
+    expect(s.moves + s.cascadeClears).toBe(level.arrows.length);
   });
 });

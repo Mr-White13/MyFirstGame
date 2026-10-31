@@ -21,7 +21,7 @@ export interface DeviceSupport {
   readonly audio: boolean;
 }
 
-type SwitchKey = 'music' | 'sfx' | 'haptics' | 'showTimer' | 'confirmRestart';
+type SwitchKey = 'music' | 'sfx' | 'haptics' | 'showTimer' | 'confirmRestart' | 'showRecap';
 
 const THEME_HINTS: Record<GameSettings['theme'], string> = {
   dark: 'The original look: dark navy with cyan and purple neon.',
@@ -44,6 +44,7 @@ export class SettingsScreen {
     haptics: requireElement('set-haptics'),
     showTimer: requireElement('set-timer'),
     confirmRestart: requireElement('set-confirm-restart'),
+    showRecap: requireElement('set-recap'),
   };
   private readonly musicVolume = requireElement<HTMLInputElement>('set-music-volume');
   private readonly sfxVolume = requireElement<HTMLInputElement>('set-sfx-volume');

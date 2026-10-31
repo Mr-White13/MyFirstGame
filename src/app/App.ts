@@ -3,7 +3,8 @@ import type { GameState } from '../core/GameState';
 import type { LevelData } from '../core/types';
 import { withAvatar, withCountry, withNickname, type PlayerProfile, type ProfileStorage } from '../profile/Profile';
 import { addPlayTime, type AttemptOutcome, type PlayerStats, type StatsStorage } from '../profile/Stats';
-import { completedCount, isCompleted, isUnlocked, type Progress } from '../progress/Progress';
+import { completedCount, isCompleted, type Progress } from '../progress/Progress';
+import { canPlayLevel, isTestPlay } from '../progress/testUnlock';
 import type { ArrowData } from '../core/types';
 import { ENERGY_PER_CHALLENGE, MAX_DAILY_POINTS, type DailyChallenge } from '../league/challenges';
 import { collectedIn, points } from '../league/League';
@@ -12,6 +13,8 @@ import { LEAGUE_UNLOCK_LEVEL, type LeagueService } from '../league/LeagueService
 import type { LeagueScreen } from '../ui/LeagueScreen';
 import { noticeKind, noticeText, type LeagueResultDialog } from '../ui/LeagueResultDialog';
 import type { ProgressStorage } from '../progress/ProgressStorage';
+import { addDayPlayTime, recordDayAttempt, type DailyLog, type DailyLogStorage } from '../recap/DailyLog';
+import type { RecapRecords } from '../recap/insights';
 import type { GameScene } from '../scenes/GameScene';
 import type { CompleteDialog } from '../ui/CompleteDialog';
 import { RESET_SETTINGS, RESTART_LEVEL, type ConfirmDialog } from '../ui/ConfirmDialog';
@@ -20,6 +23,7 @@ import type { GameLayout } from '../ui/GameLayout';
 import type { GameOverDialog } from '../ui/GameOverDialog';
 import type { HomeScreen } from '../ui/HomeScreen';
 import type { Hud } from '../ui/Hud';
+import type { ThemePicker } from '../ui/ThemePicker';
 import type { LevelSelect } from '../ui/LevelSelect';
 import type { AvatarPicker, CountryPicker } from '../ui/Pickers';
 import type { ProfileScreen } from '../ui/ProfileScreen';
@@ -42,6 +46,8 @@ export interface AppParts {
   readonly storage: ProgressStorage;
   readonly profileStorage: ProfileStorage;
   readonly statsStorage: StatsStorage;
+  /** Per-day statistics for the startup recap. */
+  readonly dailyLogStorage: DailyLogStorage;
   readonly state: GameState;
   readonly scene: GameScene;
   readonly game: Phaser.Game;
@@ -50,6 +56,8 @@ export interface AppParts {
   readonly levelSelect: LevelSelect;
   readonly profileScreen: ProfileScreen;
   readonly hud: Hud;
+  /** The HUD's theme picker (pauses the level timer while open). */
+  readonly themePicker: ThemePicker;
   readonly gameLayout: GameLayout;
   readonly completeDialog: CompleteDialog;
   readonly confirmDialog: ConfirmDialog;
@@ -86,7 +94,10 @@ export class App {
   private progress: Progress;
   private profile: PlayerProfile;
   private stats: PlayerStats;
+  private dailyLog: DailyLog;
   private navigating = false;
+  /** The startup splash / recap covering Home: Back answers it and league notices wait for it. */
+  private intro: { back: () => void } | null = null;
   private readonly history = new NavigationHistory();
   private readonly attempt = new AttemptTracker();
   private clockTimer = 0;
@@ -97,6 +108,8 @@ export class App {
   private challenge: DailyChallenge | null = null;
   /** True while the open attempt is a challenge: it never touches level progress or statistics. */
   private attemptIsChallenge = false;
+  /** True while the open attempt is a test play (a level opened only by the testing flag): nothing is recorded. */
+  private attemptIsTestPlay = false;
   /** Energy Points of the current challenge already collected when this attempt began. */
   private attemptStartCollected = 0;
   private lastChallenge: { timeMs: number; newPoints: number } | null = null;
@@ -113,6 +126,7 @@ export class App {
     this.progress = parts.storage.load();
     this.profile = parts.profileStorage.load();
     this.stats = parts.statsStorage.load();
+    this.dailyLog = parts.dailyLogStorage.load();
   }
 
   /** Wires up the UI callbacks and shows the Home screen. */
@@ -143,6 +157,9 @@ export class App {
     this.parts.league.subscribe(() => this.renderLeague());
     this.parts.state.onRemove((arrow) => this.handleRemoved(arrow));
     this.settleLeague();
+
+    // Pins the first tracked day, so later summaries know which days are complete.
+    this.parts.dailyLogStorage.save(this.dailyLog);
 
     this.renderAll();
     // The game loop only needs to run while its screen is visible; sleeping saves
@@ -251,7 +268,7 @@ export class App {
   /** Starts a level from scratch. Locked or unknown levels are ignored. */
   openLevel(levelId: number): Promise<void> {
     const level = this.parts.levels[levelId - 1];
-    if (!level || !isUnlocked(this.progress, levelId)) return Promise.resolve();
+    if (!level || !canPlayLevel(this.progress, levelId, this.parts.levels.length)) return Promise.resolve();
     return this.navigate(async () => {
       this.endAttempt('abandoned'); // a previous attempt still open counts as abandoned
       this.hideEndDialogs();
@@ -321,6 +338,14 @@ export class App {
   handleLevelSolved(): void {
     const summary = this.attempt.finish('won', this.parts.state.snapshot());
     if (!summary) return;
+    if (this.attemptIsTestPlay) {
+      // Testing flag only: show the result, record nothing (see progress/testUnlock.ts).
+      this.lastCompletion = { unlocked: null, newBestStars: false, newBestTime: false, bestTimeMs: summary.timeMs, timeMs: summary.timeMs };
+      this.parts.hud.setTime(summary.timeMs);
+      this.parts.toast.show('Test play: this result is not saved', 2200);
+      this.parts.feedback({ type: 'complete' });
+      return;
+    }
     if (this.attemptIsChallenge && this.challenge) {
       // A challenge never touches level progress, best times or statistics.
       const today = this.parts.dayClock.refresh();
@@ -336,6 +361,7 @@ export class App {
     this.stats = records.stats;
     this.parts.storage.save(this.progress);
     this.parts.statsStorage.save(this.stats);
+    this.logAttempt(summary);
     this.parts.rewards.afterAttempt(this.parts.dayClock.today, summary.longestChain);
     this.lastCompletion = completion && {
       unlocked: completion.unlocked,
@@ -384,6 +410,7 @@ export class App {
       stars: snapshot.stars,
       directClears: snapshot.directClears,
       autoClears: snapshot.autoClears,
+      cascadeClears: snapshot.cascadeClears,
       mistakes: snapshot.mistakes,
       timeMs: c.timeMs,
       bestTimeMs: c.bestTimeMs,
@@ -453,8 +480,42 @@ export class App {
     if (this.parts.settings.reset()) this.parts.toast.show('Settings reset');
   }
 
+  /** The HUD theme picker opened or closed: choosing a theme isn't play time. */
+  themePickerOpened(): void {
+    this.attempt.timer.pause('picker');
+  }
+
+  themePickerClosed(): void {
+    this.attempt.timer.resume('picker');
+  }
+
   comingSoon(feature: string): void {
     this.parts.toast.show(`${feature}: coming soon`);
+  }
+
+  // ------------------------------------------------------------ startup intro
+
+  /** The studio splash (and recap) now cover Home. `back` is what Back / Escape do meanwhile. */
+  beginIntro(back: () => void): void {
+    this.intro = { back };
+  }
+
+  /** Home is uncovered: anything that waited (a league result) may show now. */
+  endIntro(): void {
+    this.intro = null;
+    this.showLeagueNotice();
+  }
+
+  /** The player's own saved records, as the recap reads them. */
+  get recapRecords(): RecapRecords {
+    return {
+      progress: this.progress,
+      levels: this.parts.levels,
+      stats: this.stats,
+      daily: this.parts.rewards.current.daily,
+      log: this.dailyLog,
+      today: this.parts.dayClock.refresh(),
+    };
   }
 
   /** Read-only views for debugging and tests. */
@@ -508,11 +569,18 @@ export class App {
   }
 
   private recordEnded(summary: AttemptSummary | null): void {
-    if (!summary || this.attemptIsChallenge) return; // challenges keep their own records
+    if (!summary || this.attemptIsChallenge || this.attemptIsTestPlay) return; // challenges keep their own records; test plays none
     const { records } = applyAttempt({ progress: this.progress, stats: this.stats }, summary, this.parts.levels.length);
     this.stats = records.stats; // a failed or abandoned attempt never changes progress
     this.parts.statsStorage.save(this.stats);
+    this.logAttempt(summary);
     this.parts.rewards.afterAttempt(this.parts.dayClock.today, summary.longestChain);
+  }
+
+  /** Splits the same attempt the lifetime statistics just counted by the day it ended on. */
+  private logAttempt(summary: AttemptSummary): void {
+    this.dailyLog = recordDayAttempt(this.dailyLog, this.parts.dayClock.refresh(), summary);
+    this.parts.dailyLogStorage.save(this.dailyLog);
   }
 
   private renderAll(): void {
@@ -545,6 +613,7 @@ export class App {
   private beginAttempt(): void {
     const level = this.parts.state;
     this.attemptIsChallenge = this.challenge !== null;
+    this.attemptIsTestPlay = !this.challenge && isTestPlay(this.progress, level.levelId);
     this.attemptStartCollected = this.challenge ? collectedIn(this.parts.league.current, this.challenge) : 0;
     this.lastChallenge = null;
     this.attempt.begin(level.levelId, this.parts.levels[level.levelId - 1]?.revision ?? 1);
@@ -611,7 +680,7 @@ export class App {
   private showLeagueNotice(): void {
     const { league: service, leagueResult, screens, toast, feedback } = this.parts;
     const notice = service.current.notice;
-    if (!notice || this.navigating || screens.active === 'game' || leagueResult.isOpen) return;
+    if (!notice || this.navigating || this.intro || screens.active === 'game' || leagueResult.isOpen) return;
     const kind = noticeKind(notice);
     if (kind === 'retained') {
       toast.show(noticeText(notice), 3200);
@@ -664,6 +733,7 @@ export class App {
   }
 
   private hideEndDialogs(): void {
+    this.parts.themePicker.close();
     this.parts.completeDialog.hide();
     this.parts.gameOverDialog.hide();
   }
@@ -710,9 +780,11 @@ export class App {
     if (hidden) {
       this.attempt.timer.pause('hidden');
       const played = this.attempt.checkpoint();
-      if (played > 0 && !this.attemptIsChallenge) {
+      if (played > 0 && !this.attemptIsChallenge && !this.attemptIsTestPlay) {
         this.stats = addPlayTime(this.stats, played);
         this.parts.statsStorage.save(this.stats);
+        this.dailyLog = addDayPlayTime(this.dailyLog, this.parts.dayClock.refresh(), played);
+        this.parts.dailyLogStorage.save(this.dailyLog);
       }
     } else {
       this.attempt.timer.resume('hidden');
@@ -750,9 +822,11 @@ export class App {
    * to their own buttons, as before.
    */
   handleBack(system = true): boolean {
-    const { confirmDialog, completeDialog, gameOverDialog, avatarPicker, countryPicker, profileScreen, screens, dailyDialog, leagueResult } = this.parts;
+    const { confirmDialog, completeDialog, gameOverDialog, avatarPicker, countryPicker, profileScreen, screens, dailyDialog, leagueResult, themePicker } = this.parts;
     if (this.navigating) return true; // a transition is running: ignore, don't exit
-    if (confirmDialog.isOpen) confirmDialog.close(false);
+    if (this.intro) this.intro.back(); // the splash ignores it; the recap takes it as Skip
+    else if (themePicker.isOpen) themePicker.close();
+    else if (confirmDialog.isOpen) confirmDialog.close(false);
     else if (dailyDialog.isOpen) dailyDialog.close();
     else if (leagueResult.isOpen) leagueResult.close();
     else if (avatarPicker.isOpen) avatarPicker.close();

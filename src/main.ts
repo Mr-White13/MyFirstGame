@@ -1,5 +1,7 @@
 import './style.css';
 import { App } from './app/App';
+import { runIntro } from './app/Intro';
+import { sessionStore, StudioSplash } from './branding/StudioSplash';
 import { Feedback, type FeedbackEvent } from './app/Feedback';
 import { AudioManager } from './audio/AudioManager';
 import { GameState } from './core/GameState';
@@ -18,6 +20,8 @@ import { LEVELS } from './levels';
 import { ProfileStorage } from './profile/Profile';
 import { StatsStorage } from './profile/Stats';
 import { ProgressStorage } from './progress/ProgressStorage';
+import { DailyLogStorage } from './recap/DailyLog';
+import { pickInsight, RecapStorage } from './recap/insights';
 import { Appearance } from './settings/Appearance';
 import { SettingsStore } from './settings/Settings';
 import { GameScene } from './scenes/GameScene';
@@ -31,8 +35,10 @@ import { Hud } from './ui/Hud';
 import { LevelSelect } from './ui/LevelSelect';
 import { AvatarPicker, CountryPicker } from './ui/Pickers';
 import { ProfileScreen } from './ui/ProfileScreen';
+import { RecapDialog } from './ui/RecapDialog';
 import { Screens } from './ui/Screens';
 import { SettingsScreen } from './ui/SettingsScreen';
+import { ThemePicker } from './ui/ThemePicker';
 import { Toast } from './ui/Toast';
 
 // Settings first: the theme and motion preferences must be in place before anything draws.
@@ -75,6 +81,13 @@ const scene = new GameScene(state, {
   },
 });
 hud.onResetView(() => scene.resetView());
+// Theme changes apply at once (the board just redraws); the level timer pauses while the picker is open.
+const themePicker = new ThemePicker({
+  onOpen: () => app?.themePickerOpened(),
+  onClose: () => app?.themePickerClosed(),
+  onPick: (theme) => settings.update({ theme }),
+  current: () => settings.current.theme,
+});
 const completeDialog = new CompleteDialog({
   onNext: () => app?.nextLevel(),
   onReplay: () => app?.restartLevel(),
@@ -147,6 +160,7 @@ app = new App({
   storage: new ProgressStorage(LEVELS.length),
   profileStorage: new ProfileStorage(),
   statsStorage: new StatsStorage(),
+  dailyLogStorage: new DailyLogStorage(() => dayClock.today),
   state,
   scene,
   game,
@@ -155,6 +169,7 @@ app = new App({
   levelSelect: new LevelSelect(LEVELS),
   profileScreen,
   hud,
+  themePicker,
   gameLayout,
   completeDialog,
   confirmDialog: new ConfirmDialog(),
@@ -173,6 +188,22 @@ app = new App({
   achievementsScreen,
 });
 app.start();
+
+// Cold launch: the Mr. White Games splash (already on screen from index.html),
+// then optionally one recap insight, then Home, which is ready underneath.
+const recapDialog = new RecapDialog();
+const recapStorage = new RecapStorage();
+app.beginIntro(() => recapDialog.close('skip'));
+void runIntro({
+  splash: new StudioSplash(document.getElementById('studio-splash'), { reducedMotion: appearance.current.reducedMotion, session: sessionStore() }),
+  recap: recapDialog,
+  recapEnabled: () => settings.current.showRecap,
+  nextInsight: () => {
+    const picked = pickInsight(app!.recapRecords, recapStorage.load().next);
+    if (picked) recapStorage.save({ next: picked.next });
+    return picked?.insight ?? null;
+  },
+}).finally(() => app!.endIntro());
 
 // Hidden performance overlay for real devices (Settings: tap Version 5 times).
 const diagnostics = new Diagnostics(game, () => {

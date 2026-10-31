@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { GameState } from '../core/GameState';
 import { validateLevel } from '../core/levelValidation';
@@ -5,6 +6,7 @@ import { findSolution } from '../core/solver';
 import type { ArrowData, MoveResult } from '../core/types';
 import { addDays, DayClock, dayKey } from '../daily/dayKey';
 import { LEVELS } from '../levels';
+import { REVISION_2_LAYOUTS, STEP_12_LEVELS, STEP_13_LEVELS } from '../levels/archive';
 import { levelFromMap } from '../levels/levelMap';
 import { createProfile, PROFILE_KEY, ProfileStorage } from '../profile/Profile';
 import { createStats, STATS_KEY, StatsStorage } from '../profile/Stats';
@@ -75,11 +77,54 @@ describe('daily challenges', () => {
   it('never uses the same layout twice in a day, and only levels with 10+ arrows', () => {
     expect(challengePool(LEVELS, 1).map((l) => l.id)).toEqual([4, 5, 6, 7, 8, 9, 10]); // the original pool
     const pool = challengePool(LEVELS).map((l) => l.id);
-    expect(pool).toEqual([4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]); // current: up to 12×12
+    expect(challengePool(LEVELS, 2).map((l) => l.id)).toEqual([4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]); // before the rebalance
+    expect(challengePool(LEVELS, 3).map((l) => l.id)).toEqual([6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]); // Step 12
+    expect(challengePool(LEVELS, 4).map((l) => l.id)).toEqual([5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]); // Step 13
+    expect(pool).toEqual([4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]); // current: full-coverage boards up to 11 × 15
     for (let i = 0; i < 400; i++) {
       const set = dailyChallenges(addDays('2026-01-01', i), LEVELS);
       expect(new Set(set.map((c) => c.sourceLevelId)).size).toBe(3);
       for (const c of set) expect(pool).toContain(c.sourceLevelId);
+    }
+  });
+
+  it('keeps the Step 13 layouts exactly (recovered from the Step 13 build)', () => {
+    // Arrow counts and revisions as published in the Step 13 level table.
+    expect(STEP_13_LEVELS.map((l) => l.id)).toEqual(Array.from({ length: 18 }, (_, i) => i + 4));
+    expect(STEP_13_LEVELS.map((l) => l.arrows.length)).toEqual([9, 10, 14, 14, 15, 15, 17, 19, 21, 22, 21, 23, 21, 25, 25, 25, 26, 23]);
+    expect(STEP_13_LEVELS.map((l) => l.revision)).toEqual([...Array(7).fill(4), ...Array(11).fill(2)]);
+    for (const l of STEP_13_LEVELS) expect(() => validateLevel(l)).not.toThrow();
+  });
+
+  it('pools 1–4 draw only from frozen layouts, never from the current levels', () => {
+    for (const version of [1, 2]) {
+      const pool = challengePool(LEVELS, version);
+      for (const id of [4, 5, 6, 7, 8, 9, 10]) expect(pool.find((l) => l.id === id)).toBe(REVISION_2_LAYOUTS.get(id));
+    }
+    for (const version of [1, 2, 3, 4]) {
+      for (const l of challengePool(LEVELS, version)) {
+        expect(LEVELS).not.toContain(l);
+        expect(() => validateLevel(l)).not.toThrow();
+      }
+    }
+    const step12 = challengePool(LEVELS, 3);
+    expect(step12.every((l) => STEP_12_LEVELS.includes(l))).toBe(true);
+    expect(STEP_12_LEVELS.map((l) => l.revision ?? 1)).toEqual([3, 3, 3, 3, 3, 3, 3, ...Array(10).fill(1)]);
+    for (const l of challengePool(LEVELS)) expect(l).toBe(LEVELS[l.id - 1]);
+  });
+
+  it('days that began before an update keep exactly the same challenges and Energy Arrows (golden copy)', () => {
+    const golden: Record<string, { id: string; energy: string[]; arrows: string }[]> = JSON.parse(
+      readFileSync(new URL('./pools.golden.json', import.meta.url), 'utf8'),
+    );
+    for (const [key, expected] of Object.entries(golden)) {
+      const [pool, day] = key.split('/');
+      const actual = dailyChallenges(day, LEVELS, Number(pool)).map((c) => ({
+        id: c.id,
+        energy: [...c.energyArrowIds],
+        arrows: c.level.arrows.map((a) => `${a.id}${a.direction[0]}${a.cells.map((x) => x.row + '.' + x.col).join('/')}`).join(' '),
+      }));
+      expect(actual, key).toEqual(expected);
     }
   });
 
@@ -105,8 +150,8 @@ describe('daily challenges', () => {
         expect(() => validateLevel(c.level)).not.toThrow();
         expect(findSolution(c.level)).toEqual(findSolution(source));
         // The same taps (including mistakes and chains) give exactly the same results.
-        const a = new GameState(source);
-        const b = new GameState(c.level);
+        const a = new GameState(source, { clock: () => 0 });
+        const b = new GameState(c.level, { clock: () => 0 });
         const taps = [...source.arrows].reverse().map((x) => x.id);
         for (const id of [...taps, ...taps]) expect(strip(b.tryMove(id))).toEqual(strip(a.tryMove(id)));
         expect(b.snapshot()).toEqual(a.snapshot());

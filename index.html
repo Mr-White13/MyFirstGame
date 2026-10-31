@@ -31,6 +31,11 @@
         root.setAttribute('data-theme', theme);
         root.setAttribute('data-motion', reduce ? 'reduce' : 'full');
         root.setAttribute('data-effects', effects);
+        // The studio splash plays once per cold launch: a reload in the same
+        // session (or WebView) skips it. Must agree with src/branding/StudioSplash.ts.
+        try {
+          if (sessionStorage.getItem('neon-escape.splash-shown') === '1') root.setAttribute('data-splash', 'skip');
+        } catch (e) {}
         var colors = { dark: '#101522', light: '#e9eef6', colorful: '#130f26' };
         document.getElementById('theme-color').setAttribute('content', colors[theme]);
       })();
@@ -76,10 +81,25 @@
       <symbol id="icon-calendar" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5" /><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4" /><path d="M9.5 14.5l1.8 1.8 3.4-3.4" /></symbol>
       <symbol id="icon-credit" viewBox="0 0 24 24"><path d="M12 3l7.8 4.5v9L12 21l-7.8-4.5v-9z" /><path d="M12.8 7.5L9.5 12.5h3l-.8 4 3.3-5h-3z" /></symbol>
       <symbol id="icon-fit" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" /><rect x="8.5" y="8.5" width="7" height="7" rx="1.5" /></symbol>
+      <!-- Mr. White Games studio mark: an M and its mirror image, a W, across a dotted line. -->
+      <symbol id="mw-mark" viewBox="0 0 120 120">
+        <g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M28 52V22l32 22 32-22v30" pathLength="1" />
+          <path d="M28 68v30l32-22 32 22V68" pathLength="1" opacity="0.5" />
+        </g>
+        <path d="M14 60h92" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-dasharray="0 11.5" opacity="0.55" />
+      </symbol>
       <symbol id="icon-star" viewBox="0 0 24 24">
         <path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z" />
       </symbol>
     </svg>
+
+    <!-- Mr. White Games startup splash: shown at first paint, removed by src/branding/StudioSplash.ts. -->
+    <div class="studio-splash" id="studio-splash" role="img" aria-label="Mr. White Games">
+      <svg class="studio-splash__mark" aria-hidden="true"><use href="#mw-mark" /></svg>
+      <span class="studio-splash__name" aria-hidden="true">MR. WHITE GAMES</span>
+      <span class="studio-splash__hint" aria-hidden="true">Tap to skip</span>
+    </div>
 
     <div class="ambient" aria-hidden="true">
       <span></span><span></span><span></span><span></span><span></span><span></span>
@@ -181,6 +201,7 @@
             <div class="meter"><div class="meter__fill" id="progress-fill"></div></div>
           </div>
         </header>
+        <p class="levels__testing" id="levels-testing" hidden>Testing build: every level is open. Levels you haven't unlocked are test plays and aren't saved.</p>
         <ol class="level-grid" id="level-grid" aria-label="Levels"></ol>
         <footer class="levels__footer">
           <button type="button" class="btn btn--primary" id="btn-continue">Play</button>
@@ -203,9 +224,35 @@
                   <svg class="icon" aria-hidden="true"><use href="#icon-clock" /></svg><span id="hud-time">00:00</span>
                 </span>
               </div>
-              <button type="button" class="icon-btn icon-btn--restart" id="btn-restart" aria-label="Restart level">
-                <svg class="icon" aria-hidden="true"><use href="#icon-restart" /></svg>
-              </button>
+              <div class="hud__actions">
+                <button type="button" class="icon-btn" id="btn-theme" aria-label="Theme" aria-haspopup="dialog" aria-expanded="false" aria-controls="theme-popover">
+                  <svg class="icon" aria-hidden="true"><use href="#icon-palette" /></svg>
+                </button>
+                <button type="button" class="icon-btn icon-btn--restart" id="btn-restart" aria-label="Restart level">
+                  <svg class="icon" aria-hidden="true"><use href="#icon-restart" /></svg>
+                </button>
+              </div>
+            </div>
+            <!-- In-game theme picker: opens under the palette button; the timer is paused while it is open. -->
+            <div class="theme-popover surface" id="theme-popover" role="dialog" aria-label="Theme" hidden>
+              <div class="theme-picker theme-picker--compact" role="radiogroup" aria-label="Theme">
+                <button type="button" class="theme-option theme-option--dark" role="radio" data-theme-choice="dark" aria-checked="false">
+                  <span class="theme-option__swatch" aria-hidden="true"><i></i><i></i><i></i></span>
+                  <span class="theme-option__name">Dark Neon</span>
+                </button>
+                <button type="button" class="theme-option theme-option--light" role="radio" data-theme-choice="light" aria-checked="false">
+                  <span class="theme-option__swatch" aria-hidden="true"><i></i><i></i><i></i></span>
+                  <span class="theme-option__name">Light</span>
+                </button>
+                <button type="button" class="theme-option theme-option--colorful" role="radio" data-theme-choice="colorful" aria-checked="false">
+                  <span class="theme-option__swatch" aria-hidden="true"><i></i><i></i><i></i></span>
+                  <span class="theme-option__name">Colorful</span>
+                </button>
+                <button type="button" class="theme-option theme-option--system" role="radio" data-theme-choice="system" aria-checked="false">
+                  <span class="theme-option__swatch" aria-hidden="true"><i></i><i></i><i></i></span>
+                  <span class="theme-option__name">System</span>
+                </button>
+              </div>
             </div>
             <div class="hud__stats">
               <div class="hearts" id="hud-hearts" role="img" aria-label="3 lives left">
@@ -214,6 +261,9 @@
                 <svg class="heart" aria-hidden="true"><use href="#icon-heart" /></svg>
               </div>
               <div class="hud__meter meter" aria-hidden="true"><div class="meter__fill" id="hud-progress"></div></div>
+              <span class="momentum" id="hud-momentum" role="img" aria-label="Streak: 0 of 3 quick taps" title="3 successful taps in a row, each within 1.5 s: up to 3 free arrows leave on their own">
+                <i></i><i></i><i></i><b class="momentum__bonus" id="hud-bonus" aria-hidden="true"></b>
+              </span>
               <div class="stat stat--end">
                 <span class="stat__label">Left</span>
                 <span class="stat__value" id="hud-remaining" aria-live="polite">0</span>
@@ -227,6 +277,8 @@
               <span class="hud__points">Today <strong id="hud-points">0</strong>/12</span>
             </div>
           </header>
+          <!-- Catches the tap that closes the theme picker, so it never reaches the board. -->
+          <div class="theme-backdrop" id="theme-backdrop" hidden></div>
           <div class="board-slot" id="board-slot" role="img" aria-label="Puzzle board">
             <button type="button" class="icon-btn icon-btn--small view-reset" id="btn-reset-view" aria-label="Reset zoom" hidden>
               <svg class="icon" aria-hidden="true"><use href="#icon-fit" /></svg>
@@ -455,6 +507,13 @@
               </span>
               <input type="checkbox" class="switch" role="switch" id="set-confirm-restart" />
             </label>
+            <label class="setting setting--switch">
+              <span class="setting__text">
+                <span class="setting__label">Player recap</span>
+                <span class="setting__hint">One fact from your own records when the game starts</span>
+              </span>
+              <input type="checkbox" class="switch" role="switch" id="set-recap" />
+            </label>
           </section>
 
           <section class="settings-group surface" aria-labelledby="settings-about">
@@ -463,6 +522,10 @@
             </h2>
             <dl class="about">
               <div><dt>Version</dt><dd id="settings-version">–</dd></div>
+              <div class="about__studio">
+                <dt>Studio</dt>
+                <dd><svg class="about__mark" aria-hidden="true"><use href="#mw-mark" /></svg>Mr. White Games</dd>
+              </div>
               <div>
                 <dt>Credits</dt>
                 <dd>Game design, code, art, sound effects and music are original to NEON ESCAPE. Sounds and music are synthesised in code. Built with Phaser 3, TypeScript and Vite.</dd>
@@ -725,6 +788,20 @@
             <button type="button" class="btn btn--ghost btn--small" id="btn-confirm-cancel">Keep playing</button>
             <button type="button" class="btn btn--warning btn--small" id="btn-confirm-ok">Leave</button>
           </div>
+        </div>
+      </div>
+
+      <!-- Startup recap: one fact from the player's own records, after the studio splash. -->
+      <div class="overlay overlay--recap" id="recap-dialog" role="dialog" aria-modal="true" aria-labelledby="recap-eyebrow" aria-describedby="recap-text" hidden>
+        <div class="card recap">
+          <button type="button" class="btn btn--ghost btn--small recap__skip" id="btn-recap-skip">Skip</button>
+          <span class="eyebrow recap__eyebrow" id="recap-eyebrow">Your recap</span>
+          <h2 class="recap__title" id="recap-title"></h2>
+          <p class="recap__text" id="recap-text"></p>
+          <button type="button" class="btn btn--primary" id="btn-recap-continue">
+            <svg class="icon" aria-hidden="true"><use href="#icon-next" /></svg>
+            Continue
+          </button>
         </div>
       </div>
     </div>

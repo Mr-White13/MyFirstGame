@@ -16,7 +16,15 @@
     </style>
 
 
+    <!--
+      Launch window: a plain studio-dark screen with no logo (also no app icon on
+      Android 12+), so the only branded splash is the web one (Mr. White Games),
+      which starts on the same colour. No double splash.
+    -->
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
-        <item name="android:background">@drawable/splash</item>
+        <item name="android:background">@color/launch_background</item>
+        <item name="windowSplashScreenBackground">@color/launch_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/launch_blank</item>
+        <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
     </style>
 </resources>

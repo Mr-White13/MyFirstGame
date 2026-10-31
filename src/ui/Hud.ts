@@ -1,5 +1,5 @@
 import { formatClock } from '../core/time';
-import type { GameSnapshot } from '../core/types';
+import { BONUS_MAX, STREAK_TAPS, STREAK_WINDOW_MS, type GameSnapshot } from '../core/types';
 import { requireElement } from './dom';
 
 /**
@@ -36,6 +36,9 @@ export class Hud {
   private readonly backButton = requireElement<HTMLButtonElement>('btn-back');
   private readonly restartButton = requireElement<HTMLButtonElement>('btn-restart');
   private readonly time = requireElement('hud-time');
+  private readonly momentum = requireElement('hud-momentum');
+  private readonly bonus = requireElement('hud-bonus');
+  private streakTimer: ReturnType<typeof setTimeout> | undefined;
   private readonly timer = requireElement('hud-timer');
   private shownTime = '';
   private last?: GameSnapshot;
@@ -50,6 +53,7 @@ export class Hud {
     this.restartButton.disabled = snapshot.moves === 0 && snapshot.mistakes === 0;
 
     this.renderHearts(snapshot.lives, sameRun && this.last !== undefined && snapshot.lives < this.last.lives);
+    this.renderStreak(snapshot, sameRun ? this.last : undefined);
     if (sameRun && this.last && snapshot.remaining < this.last.remaining) this.tick(this.remaining);
     this.last = snapshot;
   }
@@ -127,6 +131,42 @@ export class Hud {
     });
     this.hearts.setAttribute('aria-label', `${lives} ${lives === 1 ? 'life' : 'lives'} left`);
     this.hearts.classList.toggle('hearts--last', lives === 1);
+  }
+
+  /**
+   * Streak progress: one pip per successful tap in the current streak. The
+   * pips drain over STREAK_WINDOW_MS (CSS) and go out when the window has
+   * passed, which is when the next tap would start a new streak. When a bonus
+   * fires, the pips flash and "+N" floats up beside them.
+   */
+  private renderStreak(snapshot: GameSnapshot, previous: GameSnapshot | undefined): void {
+    clearTimeout(this.streakTimer);
+    const pips = [...this.momentum.children] as HTMLElement[];
+    const light = (count: number) => pips.forEach((pip, index) => pip.classList.toggle('momentum__pip--on', index < count));
+    light(snapshot.streak);
+    this.momentum.classList.remove('momentum--timing');
+    if (snapshot.streak > 0) {
+      void this.momentum.offsetWidth; // restart the drain animation
+      this.momentum.classList.add('momentum--timing');
+      this.streakTimer = setTimeout(() => {
+        light(0);
+        this.momentum.classList.remove('momentum--timing');
+      }, STREAK_WINDOW_MS);
+    }
+    const earned = previous ? snapshot.cascadeClears - previous.cascadeClears : 0;
+    if (earned > 0) {
+      this.bonus.textContent = `+${earned}`;
+      this.tick(this.bonus);
+      this.momentum.classList.remove('momentum--burst');
+      void this.momentum.offsetWidth;
+      this.momentum.classList.add('momentum--burst');
+    }
+    this.momentum.setAttribute(
+      'aria-label',
+      earned > 0
+        ? `Streak bonus: ${earned} arrows cleared`
+        : `Streak: ${snapshot.streak} of ${STREAK_TAPS} quick taps (up to ${BONUS_MAX} bonus clears)`,
+    );
   }
 
   private tick(el: HTMLElement): void {

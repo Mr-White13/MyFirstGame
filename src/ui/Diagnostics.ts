@@ -1,4 +1,5 @@
-import type Phaser from 'phaser';
+import Phaser from 'phaser';
+import { FrameStats } from './frameStats';
 
 const KEY = 'neon-escape.debug';
 
@@ -22,13 +23,27 @@ function setDiagnostics(on: boolean): void {
 
 /**
  * A tiny performance overlay for checking real devices: frames per second
- * (Phaser's measured rate), arrows on the board and the current zoom. Hidden
- * unless diagnostics are switched on (tap Version in Settings five times).
- * Updates twice a second; costs nothing while off.
+ * (Phaser's measured rate), frame times over the last half second (average
+ * and worst interval, share of frames over 20 ms, CPU work per frame), arrows
+ * on the board and the current zoom. Hidden unless diagnostics are switched
+ * on (tap Version in Settings five times). Costs nothing while off.
  */
 export class Diagnostics {
   private readonly element: HTMLElement;
   private timer = 0;
+  private readonly stats = new FrameStats();
+  private frameStart = 0;
+  private lastFrame = 0;
+  private readonly onPreStep = () => {
+    const now = performance.now();
+    if (this.lastFrame > 0) this.pendingInterval = now - this.lastFrame;
+    this.lastFrame = now;
+    this.frameStart = now;
+  };
+  private pendingInterval = 0;
+  private readonly onPostRender = () => {
+    if (this.pendingInterval > 0) this.stats.add(this.pendingInterval, performance.now() - this.frameStart);
+  };
 
   constructor(
     private readonly game: Phaser.Game,
@@ -54,10 +69,14 @@ export class Diagnostics {
   private start(): void {
     this.element.hidden = false;
     window.clearInterval(this.timer);
+    this.game.events.off(Phaser.Core.Events.PRE_STEP, this.onPreStep).on(Phaser.Core.Events.PRE_STEP, this.onPreStep);
+    this.game.events.off(Phaser.Core.Events.POST_RENDER, this.onPostRender).on(Phaser.Core.Events.POST_RENDER, this.onPostRender);
     const update = () => {
       const fps = Math.round(this.game.loop.actualFps);
       const running = this.game.loop.running;
-      this.element.textContent = `${running ? `${fps} fps` : 'idle'} · ${this.describe()}`;
+      const f = this.stats.take();
+      const times = f ? ` · ${f.avg.toFixed(1)}/${f.worst.toFixed(0)} ms · ${Math.round(f.slowShare * 100)}% >20 ms · cpu ${f.work.toFixed(1)} ms` : '';
+      this.element.textContent = `${running ? `${fps} fps` : 'idle'}${times} · ${this.describe()}`;
     };
     update();
     this.timer = window.setInterval(update, 500);
@@ -65,6 +84,9 @@ export class Diagnostics {
 
   private stop(): void {
     window.clearInterval(this.timer);
+    this.game.events.off(Phaser.Core.Events.PRE_STEP, this.onPreStep);
+    this.game.events.off(Phaser.Core.Events.POST_RENDER, this.onPostRender);
+    this.lastFrame = 0;
     this.element.hidden = true;
   }
 }

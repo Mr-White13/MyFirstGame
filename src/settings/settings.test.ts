@@ -87,6 +87,7 @@ describe('settings model', () => {
       haptics: true,
       showTimer: true,
       confirmRestart: true,
+      showRecap: true,
     });
     expect(DEFAULT_SETTINGS.musicVolume).toBeLessThan(DEFAULT_SETTINGS.sfxVolume); // music low by default
     expect(Object.isFrozen(DEFAULT_SETTINGS)).toBe(true);
@@ -373,5 +374,45 @@ describe('gameplay preferences', () => {
   it('leave-level confirmation is unchanged and independent of the restart setting', () => {
     expect(hasProgress(started, true)).toBe(true);
     expect(hasProgress(untouched, true)).toBe(false);
+  });
+});
+
+describe('player recap setting', () => {
+  it('is on by default, also for settings saved before it existed', () => {
+    expect(createSettings().showRecap).toBe(true);
+    const old = JSON.stringify({ version: 1, theme: 'light', showTimer: false });
+    expect(readSettings(old).value).toMatchObject({ theme: 'light', showTimer: false, showRecap: true });
+  });
+
+  it('can be turned off and stays off after a restart', () => {
+    const store = new MemoryStore();
+    new SettingsStore(store).update({ showRecap: false });
+    expect(new SettingsStore(store).current.showRecap).toBe(false);
+    expect(withSettings(createSettings(), { showRecap: 'no' } as never).showRecap).toBe(true);
+  });
+
+  it('comes back on with Reset settings', () => {
+    const settings = new SettingsStore(new MemoryStore());
+    settings.update({ showRecap: false });
+    settings.reset();
+    expect(settings.current.showRecap).toBe(true);
+  });
+});
+
+describe('borderless dotted board', () => {
+  it('draws arrows straight on the page colour in every theme (no frame or well)', () => {
+    for (const p of Object.values(PALETTES)) {
+      expect(p.well).toBe(p.background);
+      expect(p).not.toHaveProperty('frame');
+      expect(p).not.toHaveProperty('surface');
+    }
+  });
+
+  it('keeps the grid dots subtle but visible', () => {
+    for (const p of Object.values(PALETTES)) {
+      expect(p.dotAlpha).toBeGreaterThan(0.15);
+      expect(p.dotAlpha).toBeLessThan(0.5);
+      expect(p.dots).not.toBe(p.background);
+    }
   });
 });

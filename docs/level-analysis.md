@@ -282,7 +282,7 @@ counted. A run "finishes within 3 lives" if it needed at most two mistakes.
 These are simple scripted strategies. A careful player who follows each arrow's whole line
 makes **no** mistakes on any level, so real players will do far better than either strategy.
 
-### Current levels
+### Levels at the time (revision 2; superseded, see section 8)
 
 | Level | Search score | Random: mistakes | Random: finishes | Near-sighted: mistakes | Near-sighted: finishes | Chain clears (random) | Deceptive arrows | Risk |
 |---|---|---|---|---|---|---|---|---|
@@ -311,3 +311,102 @@ makes **no** mistakes on any level, so real players will do far better than eith
   in levels 6–7, or to move a forgiving level between 5 and 6.
 - **The generator** still targets the search score. Its refinement calls skip the lives model,
   for speed. Check new levels with `npm run levels:analyze -- --level N`, which shows both models.
+
+---
+
+## 8. Step 13: redesign of Levels 4–30
+
+Levels 1–3 are unchanged. Levels 4–30 were regenerated from `tools/level-plan.json` with the
+`levels:plan` tool (Levels 4–10 → revision 4, Levels 11–30 → revision 2). Earlier sections
+describe older layouts.
+
+### Goals and how they are enforced
+
+| Goal | Generator setting | Checked by |
+| --- | --- | --- |
+| Use the board, no large empty regions | `minDensity` 0.74, `maxEmptySquare` 2 (new layout metrics `density`, `largestEmptySquare`) | `levels.test.ts`: fill ≥ 74 %, no empty 3×3 |
+| Long, winding arrows over short ones | `minLength` 3, `lengthWeight` 0.6, `length` 8–11, `turns` 3–4 | every arrow ≥ 3 cells, mean ≥ 4.2, most arrows bend |
+| Blocking, not counting | score and `depth` ranges, `maxFree` | more blocking links than arrows; free share ≤ ~1/3 |
+| Portrait boards for phones | `rows` > `cols`, up to 17 × 12 | grid shape test; `fitBoardSlot` tests |
+| Gradual curve with spikes at 10, 20, 30 | non-overlapping score ranges; spikes at higher score, deeper chains, 1–3 free arrows | score never drops between spikes; spike ≥ previous + 3 and deeper; next level drops back |
+| Distinct | near-duplicate check against every level, now including mirror images and 90° turns of rectangular boards | similarity ≤ 0.6 for every pair |
+
+### Results (from `npm run levels:analyze`)
+
+| Level | Grid | Arrows | Fill | Mean length | Free | Depth | Score |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 4 | 9×7 | 9 | 79% | 5.6 | 3 | 5 | 38 |
+| 5 | 10×7 | 10 | 74% | 5.2 | 3 | 6 | 43 |
+| 6 | 10×8 | 14 | 75% | 4.3 | 2 | 8 | 48 |
+| 7 | 11×8 | 14 | 75% | 4.7 | 3 | 8 | 51 |
+| 8 | 11×8 | 15 | 75% | 4.4 | 3 | 9 | 53 |
+| 9 | 12×9 | 15 | 77% | 5.5 | 3 | 9 | 53 |
+| **10** | 12×9 | 17 | 77% | 4.9 | 1 | **15** | **62** |
+| 11 | 12×9 | 19 | 74% | 4.2 | 3 | 11 | 56 |
+| 12 | 13×9 | 21 | 79% | 4.4 | 4 | 10 | 56 |
+| 13 | 13×10 | 22 | 76% | 4.5 | 4 | 10 | 58 |
+| 14 | 13×10 | 21 | 75% | 4.6 | 3 | 11 | 58 |
+| 15 | 14×10 | 23 | 76% | 4.6 | 4 | 12 | 58 |
+| 16 | 14×10 | 21 | 75% | 5.0 | 4 | 12 | 60 |
+| 17 | 14×11 | 25 | 74% | 4.6 | 5 | 14 | 61 |
+| 18 | 15×11 | 25 | 75% | 4.9 | 3 | 14 | 63 |
+| 19 | 15×11 | 25 | 75% | 4.9 | 5 | 13 | 63 |
+| **20** | 15×11 | 26 | 75% | 4.7 | 2 | **18** | **67** |
+| 21 | 15×11 | 23 | 76% | 5.4 | 4 | 16 | 63 |
+| 22 | 15×12 | 27 | 75% | 5.0 | 3 | 15 | 64 |
+| 23 | 16×12 | 31 | 74% | 4.6 | 6 | 13 | 64 |
+| 24 | 16×12 | 28 | 75% | 5.1 | 5 | 14 | 65 |
+| 25 | 16×12 | 31 | 75% | 4.6 | 4 | 16 | 65 |
+| 26 | 16×12 | 29 | 74% | 4.9 | 6 | 17 | 66 |
+| 27 | 17×12 | 30 | 75% | 5.1 | 6 | 18 | 66 |
+| 28 | 17×12 | 29 | 75% | 5.2 | 6 | 15 | 66 |
+| 29 | 17×12 | 33 | 75% | 4.7 | 6 | 17 | 66 |
+| **30** | 17×12 | 30 | 75% | 5.1 | 3 | **19** | **69** |
+
+### Cascades and these numbers
+
+Step 13 also added cascades (see README, "Cascades"): after three clean moves in a row, up to two
+arrows the next move unblocks leave automatically. The search score ignores them; the lives
+model plays the real rules, so its simulated players benefit from cascades a little. Cascades
+never change solvability (they only remove arrows that are already free).
+
+### Limitations
+
+- The score still saturates in the high 60s, so late levels are separated mainly by depth and
+  board size. Depth is not monotonic level by level (only the score curve is enforced).
+- Spikes are defined by the heuristic score, depth and opening size. They have not been
+  playtested.
+- Regenerating from the plan from scratch may pick different seeds, because each level avoids
+  near-duplicates of whatever levels exist at that time.
+
+---
+
+## 9. Step 14: full-coverage Levels 4–30
+
+Levels 4–30 were regenerated with the fill-first generator (`src/levelgen/fillLevel.ts`,
+plan entries with `"fill": true`): Levels 4–10 → revision 5, Levels 11–30 → revision 3.
+Levels 1–3 are unchanged. Section 8 describes the Step 13 layouts, which are kept in
+`src/levels/archive/step13/` for Daily League pool 4.
+
+### Coverage before and after
+
+| Levels | Step 13 coverage | Step 14 coverage |
+| --- | --- | --- |
+| 4–10 | 74–79 % | 100 % |
+| 11–20 | 74–79 % | 100 % |
+| 21–30 | 74–76 % | 100 % (Level 29: 99.5 %, one stranded cell) |
+
+### Why full coverage works with these rules
+
+An arrow is free when its exit line is empty. On a fully covered board that is only true for an
+arrow whose head is on the edge pointing out, so a full board is solvable exactly when its
+"who blocks whom" graph has no cycle. The generator covers the board with paths first, then
+breaks cycles by flipping a head (the same path, pointing the other way) or, rarely, splitting
+an arrow in two. Neither changes coverage. The price is a few 2-cell arrows (≤ 12 % per level)
+and openings that are easy to see; depth (up to 18 layers on Level 30) carries the difficulty.
+
+### Curve
+
+Scores rise without a dip between spikes (40 → 54, 56 → 64, 64 → 68), with spikes at Level 10
+(62, depth 13), Level 20 (68, depth 15) and Level 30 (73, depth 18). The analysis plays bonus
+clears as a quick player (every streak counts).

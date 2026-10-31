@@ -1,20 +1,19 @@
 import { levelFromMap } from './levelMap';
 
-/**
- * Level 5 — a tight board: only three arrows are free at the start and most
- * steps offer one or two moves, so a quick visual sweep no longer works.
- * Drafted with the level generator (seed 308), reviewed for readability.
- */
+/** Level 5 — generated from tools/level-plan.json (seed 550, attempt 1), score 43 (Medium). */
 export default levelFromMap(
   5,
   [
-    '.  c  c  g  a^ .  .',
-    'b^ c  .  g  a  .  d',
-    'b  cv .  g  a  .  dv',
-    'e^ f< f  gv h< h  .',
-    'e  .  i^ .  .  .  k',
-    'e  .  i  j< j  j  k',
-    'e  .  i  i  .  .  kv',
+    'a  a> b  b  b  b  b>',
+    'a  c  c  c  c> e  e',
+    'a  c  h  h  d  d> ev',
+    'a  c  k  h  d  f^ j',
+    'a  c  k  h  f  f  j',
+    'g^ c  k  h  h  h> j',
+    'g  i^ k  n  n  n  jv',
+    'g  i  k  k  k> n  n',
+    'g  i  l  l  l  l> n',
+    'g  m< m  m  m  m  nv',
   ],
-  { revision: 2 },
+  { revision: 5 },
 );

@@ -1,6 +1,7 @@
 import { createRandom, mixSeed, type Random } from '../core/random';
 import type { LevelData } from '../core/types';
 import type { DayKey } from '../daily/dayKey';
+import { REVISION_2_LAYOUTS, STEP_12_LEVELS, STEP_13_LEVELS } from '../levels/archive';
 
 /** Challenges per competition day. */
 export const CHALLENGES_PER_DAY = 3;
@@ -19,12 +20,35 @@ export const MIN_CHALLENGE_ARROWS = 10;
  * 1: levels 4–10 (the original ten levels).
  * 2: levels with 10+ arrows on boards up to 12×12 (levels 4–20): daily
  *    challenges stay quick and playable without zooming.
+ * 3: the same rule after levels 1–10 were rebalanced (Step 12: levels 6–20).
+ * 4: the Step 13 redesign: 10+ arrows on boards up to 11 columns and 15 rows
+ *    (tall portrait boards), so challenges still fit a phone without zooming.
+ * 5: the same rule on the Step 14 full-coverage levels (levels 4–21).
+ *
+ * Pools 1–4 draw from frozen copies of the layouts they were defined on
+ * (levels/archive), never from the current levels, so a day that began
+ * before a redesign keeps its exact layouts and Energy Arrow ids.
  */
-export const CHALLENGE_POOLS: Readonly<Record<number, (level: LevelData) => boolean>> = {
-  1: (l) => l.id <= 10 && l.arrows.length >= MIN_CHALLENGE_ARROWS,
-  2: (l) => l.arrows.length >= MIN_CHALLENGE_ARROWS && Math.max(l.rows, l.cols) <= 12,
+export interface ChallengePoolVersion {
+  readonly eligible: (level: LevelData) => boolean;
+  /** Frozen layouts this version draws from, in id order; the current levels when absent. */
+  readonly source?: readonly LevelData[];
+}
+
+const atLeastTen = (l: LevelData) => l.arrows.length >= MIN_CHALLENGE_ARROWS;
+const phoneSized = (l: LevelData) => atLeastTen(l) && l.cols <= 11 && l.rows <= 15;
+const maxTwelve = (l: LevelData) => atLeastTen(l) && Math.max(l.rows, l.cols) <= 12;
+const byId = (a: LevelData, b: LevelData) => a.id - b.id;
+const REVISION_2 = [...REVISION_2_LAYOUTS.values()].sort(byId);
+
+export const CHALLENGE_POOLS: Readonly<Record<number, ChallengePoolVersion>> = {
+  1: { eligible: (l) => l.id <= 10 && atLeastTen(l), source: REVISION_2 },
+  2: { eligible: maxTwelve, source: [...REVISION_2, ...STEP_12_LEVELS.filter((l) => l.id > 10)] },
+  3: { eligible: maxTwelve, source: STEP_12_LEVELS },
+  4: { eligible: phoneSized, source: STEP_13_LEVELS },
+  5: { eligible: phoneSized },
 };
-export const CURRENT_POOL = 2;
+export const CURRENT_POOL = 5;
 export const isPoolVersion = (v: unknown): v is number => typeof v === 'number' && v in CHALLENGE_POOLS;
 
 /** One of the day's three Daily League challenges. */
@@ -58,8 +82,8 @@ function shuffled<T>(items: readonly T[], random: Random): T[] {
 
 /** The levels a pool version draws from. */
 export function challengePool(levels: readonly LevelData[], pool = CURRENT_POOL): LevelData[] {
-  const eligible = CHALLENGE_POOLS[pool] ?? CHALLENGE_POOLS[CURRENT_POOL];
-  return levels.filter(eligible);
+  const { eligible, source } = CHALLENGE_POOLS[pool] ?? CHALLENGE_POOLS[CURRENT_POOL];
+  return (source ?? levels).filter(eligible);
 }
 
 /**

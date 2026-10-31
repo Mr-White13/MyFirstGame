@@ -29,6 +29,8 @@ export class Screens {
     if (this.current === name) return Promise.resolve();
     const first = this.current === null;
     this.current = name;
+    // For page-wide CSS that depends on the screen (the ambient grid is hidden behind the borderless board).
+    document.documentElement.setAttribute('data-screen', name);
     for (const [key, el] of Object.entries(this.screens) as [ScreenName, HTMLElement][]) {
       const active = key === name;
       el.classList.toggle('screen--active', active);

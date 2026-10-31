@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import type { Cell } from '../core/types';
 import { arrowStyleFor, type ArrowStyle } from './arrowStyle';
+import { PADDING_IN_CELLS } from './boardFit';
 
 /** Pixel geometry of the board inside the canvas. All values are in game (device) pixels. */
 export interface BoardLayout {
@@ -32,8 +33,7 @@ export interface Rect {
   readonly height: number;
 }
 
-/** Board padding around the grid, in cells. Leaves room for the arrow halo at the edges. */
-export const PADDING_IN_CELLS = 0.3;
+export { PADDING_IN_CELLS } from './boardFit';
 
 /**
  * Fits the largest square-celled board into `frame`, centred. The frame is

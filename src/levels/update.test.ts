@@ -59,7 +59,7 @@ describe('updating from 10 to 30 levels', () => {
     let progress = new ProgressStorage(LEVELS.length, store).load();
     const won = (levelId: number): AttemptSummary => ({
       levelId, revision: LEVELS[levelId - 1].revision ?? 1, outcome: 'won', timeMs: 40_000, uncountedTimeMs: 40_000,
-      moves: 10, stars: 3, directClears: 10, autoClears: 0, longestChain: 0, mistakes: 0,
+      moves: 10, stars: 3, directClears: 10, autoClears: 0, cascadeClears: 0, longestChain: 0, mistakes: 0,
     });
     for (let id = 11; id <= 29; id++) {
       const { records, completion } = applyAttempt({ progress, stats: createStats() }, won(id), LEVELS.length);
@@ -129,5 +129,107 @@ describe('Daily League across a game update', () => {
     const reread = readLeague(JSON.stringify({ version: 1, ...fresh })).value;
     expect(reread.current?.pool).toBe(CURRENT_POOL);
     expect(readLeague(JSON.stringify({ version: 1, ...fresh, current: { ...fresh.current, pool: 99 } })).value.current?.pool).toBe(1);
+  });
+});
+
+describe('rebalancing levels 2–10 (revision 2 → 3)', () => {
+  /** A save written before the rebalance: levels 1–10 cleared on the revision-2 layouts. */
+  function revision2Save(): string {
+    const completed: Record<number, unknown> = {};
+    for (let id = 1; id <= 10; id++) {
+      completed[id] = { bestMoves: 12, revision: id === 1 ? 1 : 2, bestStars: 3, bestMistakes: 0, bestTimeMs: 15_000 };
+    }
+    return JSON.stringify({ version: 4, highestUnlocked: 11, completed });
+  }
+
+  it('keeps every completion, unlock and historical record from the old layouts', () => {
+    const store = new MemoryStore();
+    store.setItem(STORAGE_KEY, revision2Save());
+    const progress = new ProgressStorage(LEVELS.length, store).load();
+    expect(isUnlocked(progress, 11)).toBe(true);
+    for (let id = 1; id <= 10; id++) {
+      expect(progress.completed[id]).toMatchObject({ revision: id === 1 ? 1 : 2, bestStars: 3, bestTimeMs: 15_000 });
+    }
+    expect(totalStars(progress, LEVELS.length)).toBe(30);
+  });
+
+  it('starts fresh records on the new layout instead of comparing with the old one', () => {
+    const store = new MemoryStore();
+    store.setItem(STORAGE_KEY, revision2Save());
+    const progress = new ProgressStorage(LEVELS.length, store).load();
+    const result = recordCompletion(progress, 5, { moves: 9, stars: 2, mistakes: 1, timeMs: 60_000 }, LEVELS.length, LEVELS[4].revision);
+    expect(LEVELS[4].revision).toBe(5); // redesigned again in Steps 13 and 14
+    expect(result.firstClear).toBe(false); // still counted as a replay
+    expect(result.newBestTime).toBe(true); // slower than the old record, but a new layout
+    expect(result.progress.completed[5]).toEqual({ bestMoves: 9, revision: 5, bestStars: 2, bestMistakes: 1, bestTimeMs: 60_000 });
+    expect(result.progress.highestUnlocked).toBe(11);
+    // Level 1 is unchanged: its record is still compared.
+    const again = recordCompletion(progress, 1, { moves: 9, stars: 2, mistakes: 1, timeMs: 60_000 }, LEVELS.length, LEVELS[0].revision ?? 1);
+    expect(again.progress.completed[1]).toMatchObject({ bestStars: 3, bestTimeMs: 15_000 });
+  });
+});
+
+describe('Step 13 redesign of Levels 4–30', () => {
+  /** A save written by Step 12: all 30 levels done (2–10 at revision 3, 11–30 at revision 1). */
+  function step12Save(): string {
+    const completed: Record<number, unknown> = {};
+    for (let id = 1; id <= 30; id++) {
+      const revision = id === 1 ? 1 : id <= 10 ? 3 : 1;
+      completed[id] = { bestMoves: 10, revision, bestStars: id % 2 ? 3 : 2, bestMistakes: id % 2 ? 0 : 1, bestTimeMs: 30_000 + id };
+    }
+    return JSON.stringify({ version: 4, highestUnlocked: 30, completed });
+  }
+
+  it('keeps every completion, unlock, star and time from the old layouts', () => {
+    const store = new MemoryStore();
+    store.setItem(STORAGE_KEY, step12Save());
+    const progress = new ProgressStorage(LEVELS.length, store).load();
+    expect(progress.highestUnlocked).toBe(30);
+    for (let id = 1; id <= 30; id++) expect(progress.completed[id]).toMatchObject({ bestStars: id % 2 ? 3 : 2, bestTimeMs: 30_000 + id });
+    expect(totalStars(progress, LEVELS.length)).toBe(75);
+  });
+
+  it('compares results only on unchanged layouts (1–3); redesigned ones start fresh records', () => {
+    const store = new MemoryStore();
+    store.setItem(STORAGE_KEY, step12Save());
+    const progress = new ProgressStorage(LEVELS.length, store).load();
+    const slow = { moves: 12, stars: 1, mistakes: 2, timeMs: 99_000 };
+    for (const id of [1, 2, 3]) {
+      const r = recordCompletion(progress, id, slow, LEVELS.length, LEVELS[id - 1].revision ?? 1);
+      expect(r.progress.completed[id].bestTimeMs, `level ${id}`).toBe(30_000 + id); // the old best still stands
+    }
+    for (const id of [4, 10, 11, 20, 30]) {
+      const r = recordCompletion(progress, id, slow, LEVELS.length, LEVELS[id - 1].revision ?? 1);
+      expect(r.progress.completed[id], `level ${id}`).toMatchObject({ bestTimeMs: 99_000, bestStars: 1, revision: LEVELS[id - 1].revision });
+      expect(r.firstClear).toBe(false);
+    }
+  });
+});
+
+describe('Step 14 full-coverage redesign of Levels 4–30', () => {
+  /** A save written by Step 13: Levels 4–10 at revision 4 and 11–30 at revision 2. */
+  function step13Save(): string {
+    const completed: Record<number, unknown> = {};
+    for (let id = 1; id <= 30; id++) {
+      const revision = id === 1 ? 1 : id <= 3 ? 3 : id <= 10 ? 4 : 2;
+      completed[id] = { bestMoves: 10, revision, bestStars: 3, bestMistakes: 0, bestTimeMs: 40_000 + id };
+    }
+    return JSON.stringify({ version: 4, highestUnlocked: 30, completed });
+  }
+
+  it('keeps every completion, unlock and record, and starts fresh records only on the new layouts', () => {
+    const store = new MemoryStore();
+    store.setItem(STORAGE_KEY, step13Save());
+    const progress = new ProgressStorage(LEVELS.length, store).load();
+    expect(progress.highestUnlocked).toBe(30);
+    expect(totalStars(progress, LEVELS.length)).toBe(90);
+    const slow = { moves: 12, stars: 1, mistakes: 2, timeMs: 99_000 };
+    for (const id of [1, 2, 3]) {
+      expect(recordCompletion(progress, id, slow, LEVELS.length, LEVELS[id - 1].revision ?? 1).progress.completed[id].bestTimeMs).toBe(40_000 + id);
+    }
+    for (const id of [4, 10, 11, 20, 30]) {
+      const r = recordCompletion(progress, id, slow, LEVELS.length, LEVELS[id - 1].revision ?? 1);
+      expect(r.progress.completed[id], `level ${id}`).toMatchObject({ bestTimeMs: 99_000, revision: LEVELS[id - 1].revision });
+    }
   });
 });

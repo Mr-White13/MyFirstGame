@@ -62,6 +62,14 @@ export interface GenerateOptions {
    * many easy first moves; capping this keeps their opening a real search.
    */
   readonly maxInitialFree?: number;
+  /** Shortest arrow placed, in cells (default 1). Longer minimums give fewer, longer, winding arrows. */
+  readonly minLength?: number;
+  /** How strongly placement prefers longer arrows (default 0.05 per cell). */
+  readonly lengthWeight?: number;
+  /** Lowest share of cells covered by arrows (0..1): no large unused areas. */
+  readonly minDensity?: number;
+  /** Largest allowed square of empty cells (side length). */
+  readonly maxEmptySquare?: number;
 }
 
 export type GenerateResult =
@@ -108,7 +116,11 @@ export function generateLevel(options: GenerateOptions): GenerateResult {
     score < options.minScore ? options.minScore - score : score > options.maxScore ? score - options.maxScore : 0;
   // Too many free arrows at the start counts as distance from the target too, so refinement can fix it.
   const freeGap = (report: DifficultyReport) => Math.max(0, report.exact.initialFree - (options.maxInitialFree ?? Infinity)) * 2;
-  const gapFor = (report: DifficultyReport) => scoreGap(report.score) + freeGap(report);
+  // Layout targets count as distance too: density in 2-percent steps, each extra row of empty square.
+  const layoutGap = (report: DifficultyReport) =>
+    Math.max(0, Math.ceil(((options.minDensity ?? 0) - report.exact.density) * 50)) +
+    Math.max(0, report.exact.largestEmptySquare - (options.maxEmptySquare ?? Infinity)) * 2;
+  const gapFor = (report: DifficultyReport) => scoreGap(report.score) + freeGap(report) + layoutGap(report);
   const nearMisses: { level: LevelData; report: DifficultyReport; attempt: number; gap: number }[] = [];
   const isNovel = (level: LevelData) =>
     !options.avoid?.some((other) => layoutSimilarity(level, other) > (options.similarityLimit ?? 0.6));
@@ -180,7 +192,7 @@ function failure(reason: string, attempts: number, closestScore: number | null):
 // ---------------------------------------------------------------- refinement
 
 /** Valid, solvable and readable: no arrows that read as one, none that touch themselves. */
-function isPlayable(level: LevelData): boolean {
+export function isPlayable(level: LevelData): boolean {
   try {
     validateLevel(level);
   } catch {
@@ -226,7 +238,8 @@ function mutate(
     // A crowded board rejects most random walks, so give each edit a few tries.
     let fresh: ArrowData | null = null;
     for (let tries = 0; tries < 25 && !fresh; tries++) {
-      fresh = randomArrow(random, level.rows, level.cols, maxLength, maxTurns, occupied, '#new', options.turnChance);
+      const made = randomArrow(random, level.rows, level.cols, maxLength, maxTurns, occupied, '#new', options.turnChance);
+      if (made && made.cells.length >= (options.minLength ?? 1)) fresh = made;
     }
     if (!fresh) return null;
     arrows = [...arrows, fresh];
@@ -265,7 +278,7 @@ function buildCandidate(
         i % 2 === 0
           ? randomArrow(random, rows, cols, maxLength, maxTurns, occupied, `#${placed.length}`, options.turnChance)
           : headFirstArrow(random, rows, cols, maxLength, maxTurns, occupied, `#${placed.length}`, options.turnChance);
-      if (!candidate || !exitIsClear(candidate, rows, cols, occupied)) continue;
+      if (!candidate || candidate.cells.length < (options.minLength ?? 1) || !exitIsClear(candidate, rows, cols, occupied)) continue;
       if (countAmbiguousJoins({ id: 0, rows, cols, arrows: [...placed, candidate] }) > 0) continue;
 
       const blocked = new Set<number>();
@@ -280,7 +293,7 @@ function buildCandidate(
       // arrow "in play" for future placements.
       const exitRoom = Math.min(rayCells(candidate, rows, cols).length, 4);
       const value =
-        (newlyBlocked * 4 + blocked.size + exitRoom * 0.5) * greed + random() + candidate.cells.length * 0.05;
+        (newlyBlocked * 4 + blocked.size + exitRoom * 0.5) * greed + random() + candidate.cells.length * (options.lengthWeight ?? 0.05);
       if (!best || value > best.value) best = { arrow: candidate, blocked, value };
     }
     if (!best) break; // the board is full enough that nothing else fits
@@ -302,7 +315,7 @@ function buildCandidate(
 }
 
 /** Gives arrows ids a, b, c… (then a0, b0…) in reading order (by head position) so maps stay easy to read. */
-function relabel(level: LevelData): LevelData {
+export function relabel(level: LevelData): LevelData {
   const ordered = [...level.arrows].sort((a, b) => {
     const ha = a.cells[a.cells.length - 1];
     const hb = b.cells[b.cells.length - 1];
@@ -451,10 +464,10 @@ function exitIsClear(arrow: ArrowData, rows: number, cols: number, occupied: Rea
 export function layoutSimilarity(a: LevelData, b: LevelData): number {
   if (a.rows * a.cols !== b.rows * b.cols) return 0;
   const tokensB = tokens(b.arrows);
-  const square = a.rows === a.cols && b.rows === b.cols && a.rows === b.rows;
-  const variants = square ? symmetries(a) : a.rows === b.rows ? [a.arrows] : [];
+  // Rotations and mirror images that give b's shape (a tall board can match a wide one turned sideways).
+  const variants = symmetries(a).filter((v) => v.rows === b.rows && v.cols === b.cols);
   let best = 0;
-  for (const arrows of variants) {
+  for (const { arrows } of variants) {
     const tokensA = tokens(arrows);
     let shared = 0;
     tokensA.forEach((t) => tokensB.has(t) && shared++);
@@ -471,20 +484,25 @@ function tokens(arrows: readonly ArrowData[]): Set<string> {
 }
 
 /** All 8 rotations/reflections of a square level's arrows. */
-function symmetries(level: LevelData): ArrowData[][] {
-  const n = level.rows - 1;
-  const maps: ((c: Cell) => Cell)[] = [
-    (c) => c,
-    (c) => ({ row: c.col, col: n - c.row }),
-    (c) => ({ row: n - c.row, col: n - c.col }),
-    (c) => ({ row: n - c.col, col: c.row }),
-    (c) => ({ row: c.row, col: n - c.col }),
-    (c) => ({ row: n - c.row, col: c.col }),
-    (c) => ({ row: c.col, col: c.row }),
-    (c) => ({ row: n - c.col, col: n - c.row }),
+/** The level under the 8 rotations and mirror images, with the board shape each one gives. */
+function symmetries(level: LevelData): { rows: number; cols: number; arrows: ArrowData[] }[] {
+  const R = level.rows - 1;
+  const C = level.cols - 1;
+  const same = { rows: level.rows, cols: level.cols };
+  const turned = { rows: level.cols, cols: level.rows };
+  const maps: [(c: Cell) => Cell, { rows: number; cols: number }][] = [
+    [(c) => c, same],
+    [(c) => ({ row: c.col, col: R - c.row }), turned],
+    [(c) => ({ row: R - c.row, col: C - c.col }), same],
+    [(c) => ({ row: C - c.col, col: c.row }), turned],
+    [(c) => ({ row: c.row, col: C - c.col }), same],
+    [(c) => ({ row: R - c.row, col: c.col }), same],
+    [(c) => ({ row: c.col, col: c.row }), turned],
+    [(c) => ({ row: C - c.col, col: R - c.row }), turned],
   ];
-  return maps.map((map) =>
-    level.arrows.map((a) => {
+  return maps.map(([map, shape]) => ({
+    ...shape,
+    arrows: level.arrows.map((a) => {
       const head = a.cells[a.cells.length - 1];
       const ahead = step(head, a.direction);
       const h = map(head);
@@ -494,5 +512,5 @@ function symmetries(level: LevelData): ArrowData[][] {
       )!;
       return { id: a.id, direction, cells: a.cells.map(map) };
     }),
-  );
+  }));
 }

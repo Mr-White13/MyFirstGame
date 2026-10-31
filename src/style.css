@@ -553,20 +553,21 @@ body.is-navigating #app {
   outline: none;
 }
 
-/* HUD + board slot as one centred group. Only the buttons take pointer input;
-   every other tap falls through to the canvas underneath. */
+/* Portrait: a compact HUD pinned to the top, the board centred in all the
+   height left below it (tall boards use it). Only the buttons take pointer
+   input; every other tap falls through to the canvas underneath. */
 .game-ui {
   position: absolute;
   inset: 0;
   display: grid;
-  grid-template-rows: auto auto;
-  align-content: center;
+  grid-template-rows: auto minmax(0, 1fr);
+  align-items: center;
   justify-items: center;
-  row-gap: 14px;
+  row-gap: 10px;
   column-gap: 20px;
   padding:
-    max(env(safe-area-inset-top), 12px) calc(10px + env(safe-area-inset-right))
-    calc(max(env(safe-area-inset-bottom), 12px) + 3vh) calc(10px + env(safe-area-inset-left));
+    max(env(safe-area-inset-top), 8px) calc(8px + env(safe-area-inset-right))
+    max(env(safe-area-inset-bottom), 12px) calc(8px + env(safe-area-inset-left));
   pointer-events: none;
 }
 
@@ -583,15 +584,26 @@ body.is-navigating #app {
 .hud {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  width: var(--board-width, 100%);
-  max-width: 100%;
+  gap: 6px;
+  width: min(100%, 620px);
+  align-self: start;
+}
+
+.hud {
+  position: relative; /* anchors the theme popover */
 }
 
 .hud__bar {
   display: grid;
-  grid-template-columns: 44px 1fr 44px;
+  grid-template-columns: minmax(44px, 1fr) auto minmax(44px, 1fr);
   align-items: center;
+  column-gap: 8px;
+}
+
+.hud__actions {
+  display: flex;
+  gap: 6px;
+  justify-self: end;
 }
 
 .hud__heading {
@@ -624,11 +636,11 @@ body.is-navigating #app {
 
 .hud__stats {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr auto auto;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   margin: 0;
-  padding: 9px 14px;
+  padding: 6px 12px;
   background: rgb(var(--surface-rgb) / 0.86);
   border: 1px solid var(--line);
   border-radius: var(--r-md);
@@ -2096,14 +2108,13 @@ body.is-navigating #app {
     margin-top: 8px;
   }
   .game-ui {
-    row-gap: 10px;
-    padding-bottom: max(env(safe-area-inset-bottom), 10px);
-  }
-  .hud {
-    gap: 8px;
+    row-gap: 8px;
   }
   .hud__stats {
-    padding: 7px 12px;
+    padding: 5px 10px;
+  }
+  .hud__level {
+    font-size: 1.1rem;
   }
 }
 
@@ -2144,6 +2155,7 @@ body.is-navigating #app {
   }
   .hud {
     width: 100%;
+    align-self: center;
   }
 
   .screen--levels {
@@ -2454,13 +2466,15 @@ body.is-navigating #app {
   text-align: center;
 }
 
-.theme-option input:checked ~ .theme-option__swatch {
+.theme-option input:checked ~ .theme-option__swatch,
+.theme-option[aria-checked='true'] .theme-option__swatch {
   border-color: var(--cyan);
   box-shadow: 0 0 0 2px rgb(var(--cyan-rgb) / 0.3);
 }
 
 /* The selected theme also gets a check badge, so it isn't marked by colour alone. */
-.theme-option input:checked ~ .theme-option__swatch::after {
+.theme-option input:checked ~ .theme-option__swatch::after,
+.theme-option[aria-checked='true'] .theme-option__swatch::after {
   content: '';
   position: absolute;
   top: -7px;
@@ -2471,7 +2485,8 @@ body.is-navigating #app {
   background: var(--cyan) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4L18 8.5'/%3E%3C/svg%3E") center / 13px no-repeat;
 }
 
-.theme-option input:checked ~ .theme-option__name {
+.theme-option input:checked ~ .theme-option__name,
+.theme-option[aria-checked='true'] .theme-option__name {
   color: var(--text);
   font-weight: 800;
 }
@@ -2601,6 +2616,11 @@ body.is-navigating #app {
 }
 
 /* ---------- Theme details ---------- */
+
+/* Gameplay: the board is borderless, so the ambient grid would read as board lines. Motes stay. */
+:root[data-screen='game'] .ambient {
+  background-image: none;
+}
 
 /* Light: the ambient grid and motes would read as dirt on a bright page; keep them faint. */
 :root[data-theme='light'] .ambient {
@@ -3840,6 +3860,64 @@ body.is-navigating #app {
   display: none;
 }
 
+/* In-game theme picker: a compact card under the HUD's palette button. */
+.theme-popover {
+  position: absolute;
+  top: 52px;
+  right: 0;
+  z-index: 6;
+  width: min(340px, calc(100vw - 24px));
+  background: var(--surface);
+  padding: 12px;
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow);
+  pointer-events: auto;
+  transform-origin: top right;
+  animation: theme-popover-in 160ms var(--ease-out);
+}
+
+.theme-popover[hidden],
+.theme-backdrop[hidden] {
+  display: none;
+}
+
+@keyframes theme-popover-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+}
+
+:root[data-motion='reduce'] .theme-popover {
+  animation: none;
+}
+
+/* Plain buttons in the HUD (not the radio-input version used on the Settings screen). */
+.theme-picker--compact .theme-option {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  min-height: 44px;
+}
+
+.theme-picker--compact .theme-option__swatch {
+  height: 40px;
+}
+
+.theme-option:focus-visible .theme-option__swatch {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.theme-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  pointer-events: auto;
+}
+
 /* Developer diagnostics overlay (Settings: tap Version five times). */
 .diagnostics {
   position: fixed;
@@ -3856,4 +3934,263 @@ body.is-navigating #app {
 
 .diagnostics[hidden] {
   display: none;
+}
+
+/* ---------- Mr. White Games startup splash (src/branding/StudioSplash.ts) ---------- */
+
+/* Always on the studio's dark background, whatever the theme: it continues the
+   Android launch colour (#101522) without a flash. Timing comes from
+   DEFAULT_SPLASH_TIMING in StudioSplash.ts (set as custom properties; the
+   fallbacks below are the same values, used before the script runs). */
+.studio-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: #101522;
+  color: #f4f7fb;
+  transition:
+    opacity var(--splash-fade, 700ms) ease-in-out,
+    transform var(--splash-fade, 700ms) ease-in;
+}
+
+.studio-splash[hidden],
+:root[data-splash='skip'] .studio-splash {
+  display: none;
+}
+
+.studio-splash--leaving {
+  opacity: 0;
+  transform: scale(1.02);
+  pointer-events: none;
+}
+
+.studio-splash--skipped {
+  transition-duration: var(--splash-skip-fade, 250ms);
+}
+
+/* Reveal: the M and W draw in over most of the reveal, then the glow breathes once during the hold. */
+.studio-splash__mark {
+  width: 104px;
+  height: 104px;
+  overflow: visible;
+  /* Inherited by the mark's M and W strokes: they draw in from start to end. */
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 1;
+  filter: drop-shadow(0 0 10px rgb(39 221 245 / 0.35));
+  animation:
+    studio-draw calc(var(--splash-reveal, 1300ms) * 0.8) cubic-bezier(0.45, 0, 0.2, 1) 150ms forwards,
+    studio-glow 1600ms ease-in-out var(--splash-reveal, 1300ms) 1;
+}
+
+.studio-splash__name {
+  font-family: var(--font-display);
+  font-size: 0.86rem;
+  font-weight: 800;
+  letter-spacing: 0.42em;
+  margin-right: -0.42em; /* keeps the tracked text optically centred */
+  opacity: 0;
+  animation: studio-name 650ms ease-out calc(var(--splash-reveal, 1300ms) * 0.5) forwards;
+}
+
+.studio-splash__hint {
+  position: absolute;
+  bottom: max(env(safe-area-inset-bottom), 28px);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: rgb(244 247 251 / 0.45);
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+
+.studio-splash--ready .studio-splash__hint {
+  opacity: 1;
+}
+
+@keyframes studio-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes studio-glow {
+  50% {
+    filter: drop-shadow(0 0 16px rgb(39 221 245 / 0.55));
+  }
+}
+
+@keyframes studio-name {
+  from {
+    opacity: 0;
+    letter-spacing: 0.6em;
+  }
+  to {
+    opacity: 0.9;
+    letter-spacing: 0.42em;
+  }
+}
+
+/* Reduced motion: the finished mark and name at once; no drawing, tracking, glow, scale or fade. */
+:root[data-motion='reduce'] .studio-splash {
+  transition: none;
+  transform: none;
+}
+
+:root[data-motion='reduce'] .studio-splash__mark {
+  animation: none;
+  stroke-dashoffset: 0;
+}
+
+:root[data-motion='reduce'] .studio-splash__name {
+  animation: none;
+  opacity: 0.9;
+}
+
+/* Studio row in Settings → Information. */
+.about__studio dd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.about__mark {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  color: var(--text);
+}
+
+/* ---------- Startup recap (src/ui/RecapDialog.ts) ---------- */
+
+.recap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.recap__skip {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.recap__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.recap__text {
+  margin: 0 0 8px;
+  max-width: 28ch;
+  font-size: 1rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+/* Testing flag (src/progress/testUnlock.ts): locked levels that can be opened anyway. */
+.levels__testing {
+  margin: 0;
+  padding: 6px 10px;
+  border-radius: var(--r-sm);
+  border: 1px dashed rgb(var(--orange-rgb) / 0.6);
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.levels__testing[hidden] {
+  display: none;
+}
+
+.level-tile--test {
+  border: 1px dashed rgb(var(--muted-rgb) / 0.45);
+  background: rgb(var(--surface-rgb) / 0.55);
+  box-shadow: none;
+  color: var(--text-muted);
+}
+
+/* Streak progress in the HUD (src/ui/Hud.ts): three pips, lit one per quick successful tap.
+   They drain over the 1.5 s window; a bonus flashes them and floats "+N". */
+.momentum {
+  position: relative;
+  display: flex;
+  gap: 3px;
+  align-items: center;
+}
+
+.momentum i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1.5px solid rgb(var(--muted-rgb) / 0.45);
+  transition: background-color 160ms ease, border-color 160ms ease, opacity 160ms ease;
+}
+
+.momentum i.momentum__pip--on {
+  background: var(--green);
+  border-color: var(--green);
+}
+
+.momentum--timing i.momentum__pip--on {
+  animation: streak-drain 1.5s linear forwards;
+}
+
+@keyframes streak-drain {
+  from { opacity: 1; }
+  to { opacity: 0.35; }
+}
+
+.momentum--burst i {
+  animation: streak-burst 520ms var(--ease-out);
+}
+
+@keyframes streak-burst {
+  0% { background: var(--green); border-color: var(--green); box-shadow: 0 0 0 rgb(var(--green-rgb) / 0); }
+  35% { background: var(--green); border-color: var(--green); box-shadow: 0 0 8px rgb(var(--green-rgb) / 0.9); transform: scale(1.35); }
+  100% { box-shadow: 0 0 0 rgb(var(--green-rgb) / 0); transform: scale(1); }
+}
+
+.momentum__bonus {
+  position: absolute;
+  right: -2px;
+  top: -14px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--green);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.momentum__bonus.is-ticking {
+  animation: bonus-float 900ms var(--ease-out);
+}
+
+@keyframes bonus-float {
+  0% { opacity: 0; transform: translateY(4px); }
+  25% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-8px); }
+}
+
+:root[data-motion='reduce'] .momentum--timing i.momentum__pip--on,
+:root[data-motion='reduce'] .momentum--burst i {
+  animation: none;
+}
+
+:root[data-motion='reduce'] .momentum__bonus.is-ticking {
+  animation: bonus-fade 900ms linear;
+}
+
+@keyframes bonus-fade {
+  0%, 70% { opacity: 1; }
+  100% { opacity: 0; }
 }

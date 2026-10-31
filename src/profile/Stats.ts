@@ -40,6 +40,8 @@ export interface AttemptStats {
   readonly outcome: AttemptOutcome;
   readonly directClears: number;
   readonly autoClears: number;
+  /** Normal arrows cleared by cascades (counted in arrowsCleared, not in chainClears). Missing = 0. */
+  readonly cascadeClears?: number;
   readonly mistakes: number;
   /**
    * Play time not yet added to the totals. Long attempts are checkpointed
@@ -68,7 +70,7 @@ export function recordAttempt(stats: PlayerStats, attempt: AttemptStats): Player
     failedRuns: stats.failedRuns + (attempt.outcome === 'failed' ? 1 : 0),
     flawlessRuns: stats.flawlessRuns + (won && attempt.mistakes === 0 ? 1 : 0),
     playTimeMs: stats.playTimeMs + Math.max(0, attempt.uncountedTimeMs),
-    arrowsCleared: stats.arrowsCleared + attempt.directClears + attempt.autoClears,
+    arrowsCleared: stats.arrowsCleared + attempt.directClears + attempt.autoClears + (attempt.cascadeClears ?? 0),
     chainClears: stats.chainClears + attempt.autoClears,
   };
 }

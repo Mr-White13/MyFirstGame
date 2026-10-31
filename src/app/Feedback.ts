@@ -8,6 +8,8 @@ export type FeedbackEvent =
   | { readonly type: 'release' }
   /** A red arrow released automatically; `index` is its place in the chain (0 = first). */
   | { readonly type: 'chain'; readonly index: number }
+  /** A normal arrow cleared by a cascade; `index` is its place in the cascade (0 = first). */
+  | { readonly type: 'cascade'; readonly index: number }
   /** A tap on a blocked arrow: a collision that costs a life, or a free nudge of an arrow that is already red. */
   | { readonly type: 'blocked'; readonly lifeLost: boolean }
   /** The last arrow is off the board. */
@@ -61,6 +63,10 @@ export class Feedback {
         this.sound.play('chain', { step: event.index });
         // One pulse for the whole chain, not one per arrow.
         if (event.index === 0) this.haptics.play('chain');
+        return;
+      case 'cascade':
+        this.sound.play('chain', { step: event.index + 1 });
+        if (event.index === 0) this.haptics.play('release');
         return;
       case 'blocked':
         if (event.lifeLost) {

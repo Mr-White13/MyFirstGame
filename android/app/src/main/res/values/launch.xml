@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Matches the web splash and the Dark Neon page colour (#101522). -->
+    <color name="launch_background">#101522</color>
+</resources>
