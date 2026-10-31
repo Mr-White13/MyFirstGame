@@ -75,6 +75,7 @@
       <symbol id="icon-trophy" viewBox="0 0 24 24"><path d="M7.5 4.5h9v4.5a4.5 4.5 0 0 1-9 0z" /><path d="M7.5 6.5H5a2.5 2.5 0 0 0 2.6 3M16.5 6.5H19a2.5 2.5 0 0 1-2.6 3" /><path d="M12 13.5v3.5M8.5 20h7M10 17h4" /></symbol>
       <symbol id="icon-calendar" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5" /><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4" /><path d="M9.5 14.5l1.8 1.8 3.4-3.4" /></symbol>
       <symbol id="icon-credit" viewBox="0 0 24 24"><path d="M12 3l7.8 4.5v9L12 21l-7.8-4.5v-9z" /><path d="M12.8 7.5L9.5 12.5h3l-.8 4 3.3-5h-3z" /></symbol>
+      <symbol id="icon-fit" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" /><rect x="8.5" y="8.5" width="7" height="7" rx="1.5" /></symbol>
       <symbol id="icon-star" viewBox="0 0 24 24">
         <path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z" />
       </symbol>
@@ -226,7 +227,11 @@
               <span class="hud__points">Today <strong id="hud-points">0</strong>/12</span>
             </div>
           </header>
-          <div class="board-slot" id="board-slot" role="img" aria-label="Puzzle board"></div>
+          <div class="board-slot" id="board-slot" role="img" aria-label="Puzzle board">
+            <button type="button" class="icon-btn icon-btn--small view-reset" id="btn-reset-view" aria-label="Reset zoom" hidden>
+              <svg class="icon" aria-hidden="true"><use href="#icon-fit" /></svg>
+            </button>
+          </div>
         </div>
       </section>
 
@@ -423,6 +428,13 @@
               </span>
               <input type="checkbox" class="switch" role="switch" id="set-haptics" aria-describedby="haptics-hint" />
             </label>
+            <div class="setting setting--test">
+              <button type="button" class="btn btn--ghost btn--small" id="btn-test-vibration">
+                <svg class="icon" aria-hidden="true"><use href="#icon-vibrate" /></svg>
+                Test vibration
+              </button>
+              <p class="setting__hint" id="vibration-test-status" role="status" aria-live="polite"></p>
+            </div>
           </section>
 
           <section class="settings-group surface" aria-labelledby="settings-gameplay">

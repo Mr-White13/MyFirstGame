@@ -1,23 +1,40 @@
 import { describe, expect, it } from 'vitest';
 import { Feedback, starDelays, type FeedbackEvent } from '../app/Feedback';
 import type { SoundId } from '../audio/sounds';
-import { HAPTIC_PATTERNS, Haptics, webVibrationBackend, type HapticId, type HapticsBackend } from './Haptics';
+import {
+  effectDuration,
+  HAPTIC_EFFECTS,
+  Haptics,
+  TEST_EFFECT,
+  toWebPattern,
+  webVibrationBackend,
+  type HapticEffect,
+  type HapticId,
+  type HapticsBackend,
+} from './Haptics';
 
 function recorder(supported = true) {
-  const calls: (number | readonly number[])[] = [];
-  const backend: HapticsBackend = { supported, vibrate: (p) => calls.push(p) };
-  return { calls, backend };
+  const calls: { effect: HapticEffect; label: string }[] = [];
+  let stops = 0;
+  const backend: HapticsBackend = {
+    kind: supported ? 'native' : 'none',
+    supported,
+    play: (effect, label) => calls.push({ effect, label }),
+    stop: () => void stops++,
+    test: async () => ({ status: 'sent' }),
+  };
+  return { calls, backend, stops: () => stops };
 }
 
 describe('haptics', () => {
-  it('vibrates when enabled and supported', () => {
+  it('plays the named effect when enabled and supported', () => {
     const { calls, backend } = recorder();
     const haptics = new Haptics(() => true, backend, () => 0);
     expect(haptics.play('release')).toBe(true);
-    expect(calls).toEqual([HAPTIC_PATTERNS.release]);
+    expect(calls).toEqual([{ effect: HAPTIC_EFFECTS.release, label: 'release' }]);
   });
 
-  it('respects the player preference, read live', () => {
+  it('respects the Vibration setting, read live', () => {
     const { calls, backend } = recorder();
     let enabled = false;
     let t = 0;
@@ -29,13 +46,14 @@ describe('haptics', () => {
     expect(calls).toHaveLength(1);
   });
 
-  it('does nothing on devices without vibration', () => {
+  it('does nothing on devices without vibration, and says so in the test', async () => {
     const { calls, backend } = recorder(false);
     const haptics = new Haptics(() => true, backend);
     expect(haptics.supported).toBe(false);
     expect(haptics.play('complete')).toBe(false);
     haptics.stop();
     expect(calls).toHaveLength(0);
+    expect(await haptics.test()).toEqual({ status: 'unsupported' });
   });
 
   it('never buzzes continuously: rapid repeats are dropped', () => {
@@ -49,26 +67,54 @@ describe('haptics', () => {
     expect(calls.length).toBe(1);
   });
 
-  it('keeps every pattern short', () => {
-    for (const pattern of Object.values(HAPTIC_PATTERNS)) {
-      const total = typeof pattern === 'number' ? pattern : pattern.reduce((a, b) => a + b, 0);
-      expect(total).toBeLessThanOrEqual(250);
-    }
+  it('stops a vibration in progress (background, setting off)', () => {
+    const r = recorder();
+    new Haptics(() => true, r.backend).stop();
+    expect(r.stops()).toBe(1);
   });
 
-  it('web backend: missing API, no user activation and throwing calls are all harmless', () => {
+  it('uses pulses long enough to feel, and never long buzzes', () => {
+    for (const [id, effect] of Object.entries(HAPTIC_EFFECTS)) {
+      expect(effect.timings.length, id).toBe(effect.amplitudes.length);
+      const strongest = Math.max(...effect.timings.filter((_, i) => effect.amplitudes[i] > 0));
+      expect(strongest, id).toBeGreaterThanOrEqual(30); // the old 8 ms pulses were too short to feel
+      expect(effectDuration(effect), id).toBeLessThanOrEqual(350);
+      for (const a of effect.amplitudes) expect(a >= 0 && a <= 255, id).toBe(true);
+    }
+    expect(effectDuration(TEST_EFFECT)).toBeGreaterThanOrEqual(300);
+  });
+
+  it('converts effects to Web Vibration patterns', () => {
+    expect(toWebPattern({ timings: [32], amplitudes: [140] })).toEqual([32]);
+    expect(toWebPattern({ timings: [45, 60, 45], amplitudes: [230, 0, 230] })).toEqual([45, 60, 45]);
+    expect(toWebPattern({ timings: [20, 30, 40], amplitudes: [100, 200, 0] })).toEqual([50, 40]); // merged
+    expect(toWebPattern({ timings: [10, 30], amplitudes: [0, 255] })).toEqual([0, 10, 30]); // starts with a pause
+  });
+
+  it('runs the diagnostic even when the Vibration setting is off', async () => {
+    let tested = 0;
+    const backend: HapticsBackend = { kind: 'native', supported: true, play: () => undefined, stop: () => undefined, test: async () => (tested++, { status: 'sent' }) };
+    const haptics = new Haptics(() => false, backend);
+    expect(await haptics.test()).toEqual({ status: 'sent' });
+    expect(tested).toBe(1);
+  });
+
+  it('web backend: missing API, no user activation and throwing calls are all harmless', async () => {
     expect(webVibrationBackend({}).supported).toBe(false);
+    expect(webVibrationBackend({}).kind).toBe('none');
     expect(webVibrationBackend(undefined).supported).toBe(false);
-    expect(() => webVibrationBackend({}).vibrate(10)).not.toThrow();
+    expect(() => webVibrationBackend({}).play(HAPTIC_EFFECTS.release, 'release')).not.toThrow();
+    expect(await webVibrationBackend({}).test(TEST_EFFECT)).toMatchObject({ status: 'unsupported' });
 
     const calls: unknown[] = [];
     const inactive = webVibrationBackend({ vibrate: (p) => (calls.push(p), true), userActivation: { hasBeenActive: false } });
-    inactive.vibrate(10);
+    inactive.play(HAPTIC_EFFECTS.release, 'release');
     expect(calls).toHaveLength(0);
 
     const active = webVibrationBackend({ vibrate: (p) => (calls.push(p), true), userActivation: { hasBeenActive: true } });
-    active.vibrate([10, 20, 10]);
-    expect(calls).toEqual([[10, 20, 10]]);
+    active.play(HAPTIC_EFFECTS.lifeLost, 'lifeLost');
+    expect(calls).toEqual([[45, 60, 45]]);
+    expect(await active.test(TEST_EFFECT)).toEqual({ status: 'sent' });
 
     const throwing = webVibrationBackend({
       vibrate: () => {
@@ -76,7 +122,8 @@ describe('haptics', () => {
       },
     });
     expect(throwing.supported).toBe(true);
-    expect(() => throwing.vibrate(10)).not.toThrow();
+    expect(() => throwing.play(HAPTIC_EFFECTS.release, 'release')).not.toThrow();
+    expect(await throwing.test(TEST_EFFECT)).toMatchObject({ status: 'failed' });
   });
 });
 

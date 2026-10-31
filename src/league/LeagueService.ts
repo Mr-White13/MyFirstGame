@@ -2,7 +2,7 @@ import type { LevelData } from '../core/types';
 import type { DayKey } from '../daily/dayKey';
 import type { Transaction } from '../rewards/Wallet';
 import { browserStorage, parseObject, SafeStore, type KeyValueStore, type SaveStatus } from '../storage/SafeStore';
-import { dailyChallenges, type DailyChallenge } from './challenges';
+import { CURRENT_POOL, dailyChallenges, type DailyChallenge } from './challenges';
 import {
   acknowledge,
   collect,
@@ -53,7 +53,7 @@ export class LeagueService {
   private readonly safe: SafeStore<LeagueState>;
   private state: LeagueState;
   private readonly listeners = new Set<(state: LeagueState) => void>();
-  private cache?: { day: DayKey; challenges: DailyChallenge[] };
+  private cache?: { day: DayKey; pool: number; challenges: DailyChallenge[] };
 
   constructor(
     private readonly levels: readonly LevelData[],
@@ -68,9 +68,14 @@ export class LeagueService {
     return this.state;
   }
 
-  /** The day's three challenges (deterministic, cached per day). */
+  /**
+   * The day's three challenges (deterministic, cached per day), from the pool
+   * version that day's competition started with.
+   */
   challenges(day: DayKey): DailyChallenge[] {
-    if (this.cache?.day !== day) this.cache = { day, challenges: dailyChallenges(day, this.levels) };
+    const c = this.state.current;
+    const pool = c && c.date === day ? c.pool : CURRENT_POOL;
+    if (this.cache?.day !== day || this.cache.pool !== pool) this.cache = { day, pool, challenges: dailyChallenges(day, this.levels, pool) };
     return this.cache.challenges;
   }
 

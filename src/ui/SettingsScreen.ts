@@ -9,6 +9,10 @@ export interface SettingsActions {
   /** The effects slider was let go: play a sample at the new volume. */
   onPreviewSfx(): void;
   onReset(): void;
+  /** Plays one strong test vibration; resolves with a short message for the player. */
+  onTestVibration(): Promise<string>;
+  /** Hidden developer switch: five taps on Version. Returns a short status message. */
+  onToggleDiagnostics(): string;
 }
 
 /** What the device can do, so the screen can explain controls that won't have an effect here. */
@@ -57,9 +61,32 @@ export class SettingsScreen {
     private readonly support: DeviceSupport,
     version: string,
   ) {
-    requireElement('settings-version').textContent = version;
+    const versionEl = requireElement('settings-version');
+    versionEl.textContent = version;
+    let taps = 0;
+    let tapTimer = 0;
+    versionEl.addEventListener('click', () => {
+      taps++;
+      window.clearTimeout(tapTimer);
+      tapTimer = window.setTimeout(() => (taps = 0), 1500);
+      if (taps >= 5) {
+        taps = 0;
+        versionEl.textContent = `${version} · ${actions.onToggleDiagnostics()}`;
+        window.setTimeout(() => (versionEl.textContent = version), 2500);
+      }
+    });
     requireElement('btn-settings-back').addEventListener('click', () => actions.onBack());
     requireElement('btn-reset-settings').addEventListener('click', () => actions.onReset());
+    const testButton = requireElement<HTMLButtonElement>('btn-test-vibration');
+    const testStatus = requireElement('vibration-test-status');
+    testButton.addEventListener('click', () => {
+      testButton.disabled = true;
+      testStatus.textContent = 'Vibrating…';
+      void actions
+        .onTestVibration()
+        .then((message) => (testStatus.textContent = message))
+        .finally(() => setTimeout(() => (testButton.disabled = false), 600));
+    });
 
     for (const name of ['theme', 'motion', 'effects'] as const) {
       this.radios(name).forEach((radio) =>
@@ -77,6 +104,8 @@ export class SettingsScreen {
     this.sfxVolume.addEventListener('change', () => actions.onPreviewSfx());
 
     if (!support.vibration) {
+      testButton.disabled = true;
+      testStatus.textContent = 'Not available on this device.';
       this.switches.haptics.disabled = true;
       this.hapticsHint.textContent = "This browser can't vibrate. It works in Chrome on Android phones.";
     }

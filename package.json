@@ -18,7 +18,8 @@
     "android:sync": "npm run build && cap sync android",
     "android:open": "cap open android",
     "android:apk": "npm run android:sync && node scripts/android-apk.mjs",
-    "android:run": "npm run android:sync && cap run android"
+    "android:run": "npm run android:sync && cap run android",
+    "levels:plan": "npm run levels:build --silent && node .tools/levels.mjs plan"
   },
   "dependencies": {
     "@capacitor/android": "^8.6.0",

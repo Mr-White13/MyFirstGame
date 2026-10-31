@@ -1,7 +1,9 @@
 import Phaser from 'phaser';
 import type { GameState } from '../core/GameState';
-import { ARROW_STYLE } from '../render/theme';
 import { ArrowView } from '../render/ArrowView';
+import { GestureTracker, type GestureEvent } from '../render/gestures';
+import { chooseArrow, hitOptions } from '../render/hitTest';
+import { BoardViewport, maxZoomFor } from '../render/viewport';
 import { BoardRenderer } from '../render/BoardRenderer';
 import { FxLayer } from '../render/FxLayer';
 import { cellAtPoint, computeBoardLayout, sameLayout, type BoardLayout, type Rect } from '../render/layout';
@@ -31,12 +33,16 @@ export interface GameSceneOptions {
   onLevelFailed: () => void;
   /** Sound and haptic cues for what the player sees: releases, collisions, chain reactions. */
   onFeedback?: (event: FeedbackEvent) => void;
+  /** The view changed: `zoomed` (show a reset control) and whether this board can zoom at all. */
+  onViewChange?: (zoomed: boolean, zoomable: boolean) => void;
 }
 
-/** How far outside an arrow's body a tap still counts, in cells. */
-const TAP_TOLERANCE = 0.45;
-/** Sliding a held finger this far (in cells) from the arrow cancels the tap. */
+/** Sliding a held finger this far (in cells, or 1.6× the tap tolerance) from the arrow cancels the tap. */
 const CANCEL_DISTANCE = 0.8;
+/** A press turns into a pan after this much movement (CSS pixels), when zoomed. */
+const PAN_THRESHOLD_CSS = 10;
+/** Mouse-wheel zoom per notch (desktop). */
+const WHEEL_STEP = 1.15;
 /** Pause between the board's win effect starting and the dialog appearing. */
 const WIN_DIALOG_DELAY = 600;
 /** Pause between the failure effect starting and the Game Over dialog. */
@@ -59,6 +65,11 @@ const INTRO_SPREAD_MS = 280;
  * - Win and Game Over are triggered only after the sequence has finished.
  * - Restart, level change and resize cancel the sequence; the board is then
  *   re-synced from GameState, which is always the source of truth.
+ *
+ * Zoom (large boards only): pinch with two fingers or use the mouse wheel;
+ * drag one finger to pan while zoomed. Two-finger gestures and pans never
+ * press or release an arrow (see render/gestures.ts). Restart keeps the
+ * current view; a new level, a resize or leaving the level fits the board again.
  */
 export class GameScene extends Phaser.Scene {
   private board!: BoardRenderer;
@@ -73,6 +84,8 @@ export class GameScene extends Phaser.Scene {
   /** Set once the win or Game Over sequence has started; no more input after that. */
   private ended = false;
   private endTimer?: Phaser.Time.TimerEvent;
+  private readonly viewport = new BoardViewport();
+  private readonly gestures = new GestureTracker(PAN_THRESHOLD_CSS * Math.min(window.devicePixelRatio || 1, 3), () => this.viewport.zoomed);
 
   constructor(
     private readonly state: GameState,
@@ -90,11 +103,18 @@ export class GameScene extends Phaser.Scene {
     this.board.playEntrance();
     this.buildArrows();
 
-    this.input.on(Phaser.Input.Events.POINTER_DOWN, this.handlePointerDown, this);
-    this.input.on(Phaser.Input.Events.POINTER_MOVE, this.handlePointerMove, this);
-    this.input.on(Phaser.Input.Events.POINTER_UP, this.handlePointerUp, this);
-    this.input.on(Phaser.Input.Events.POINTER_UP_OUTSIDE, this.releasePress, this);
-    this.input.on(Phaser.Input.Events.GAME_OUT, this.releasePress, this);
+    this.configureView();
+
+    this.input.on(Phaser.Input.Events.POINTER_DOWN, (p: Phaser.Input.Pointer) => this.handleGestures(this.gestures.down(p.id, p.x, p.y)));
+    this.input.on(Phaser.Input.Events.POINTER_MOVE, (p: Phaser.Input.Pointer) => this.handleGestures(this.gestures.move(p.id, p.x, p.y)));
+    this.input.on(Phaser.Input.Events.POINTER_UP, (p: Phaser.Input.Pointer) => this.handleGestures(this.gestures.up(p.id, p.x, p.y)));
+    this.input.on(Phaser.Input.Events.POINTER_UP_OUTSIDE, (p: Phaser.Input.Pointer) => this.handleGestures(this.gestures.up(p.id, p.x, p.y)));
+    this.input.on(Phaser.Input.Events.GAME_OUT, () => this.cancelGestures());
+    this.input.on(Phaser.Input.Events.POINTER_WHEEL, (p: Phaser.Input.Pointer, _over: unknown, _dx: number, dy: number) => {
+      if (dy === 0 || !this.viewport.zoomable) return;
+      this.viewport.zoomAt({ x: p.x, y: p.y }, this.viewport.zoom * Math.pow(WHEEL_STEP, -Math.sign(dy)));
+      this.applyView();
+    });
     this.scale.on(Phaser.Scale.Events.RESIZE, this.handleResize, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.scale.off(Phaser.Scale.Events.RESIZE, this.handleResize, this);
@@ -127,23 +147,35 @@ export class GameScene extends Phaser.Scene {
     this.leaving.forEach((v) => v.refreshTheme());
   }
 
-  /** Restarts the current level. Safe to call at any time, including mid-animation. */
+  /** Restarts the current level. Safe to call at any time, including mid-animation. Keeps the current zoom. */
   restartLevel(): void {
     this.state.reset();
-    this.rebuild();
+    this.rebuild(true);
   }
 
-  /** Switches to another level, replacing every arrow and resizing the board for its grid. */
+  /** Switches to another level, replacing every arrow and resizing the board for its grid. The view is fitted. */
   loadLevel(level: LevelData): void {
     this.state.load(level);
-    this.rebuild();
+    this.rebuild(false);
+  }
+
+  /** Back to the fitted view (the Reset zoom control, and leaving a level). */
+  resetView(): void {
+    this.cancelGestures();
+    if (!this.board) return;
+    this.viewport.reset();
+    this.applyView();
   }
 
   /** Resets visuals and interaction state to match the (freshly reset) game state. */
-  private rebuild(): void {
+  private rebuild(keepView: boolean): void {
     if (!this.board) return; // scene not created yet; create() will build from the fresh state
-    this.layout = this.computeLayout(); // the grid size may have changed
+    this.cancelGestures();
+    const next = this.computeLayout(); // the grid size may have changed
+    const sameBoard = sameLayout(this.layout, next);
+    this.layout = next;
     this.board.setLayout(this.layout);
+    if (!keepView || !sameBoard) this.configureView();
     this.endTimer?.remove();
     this.endTimer = undefined;
     this.ended = false;
@@ -176,30 +208,61 @@ export class GameScene extends Phaser.Scene {
 
   // ---------------------------------------------------------------- input
 
-  private handlePointerDown(pointer: Phaser.Input.Pointer): void {
+  /** Applies what the gesture tracker made of the pointer events. Coordinates are canvas (screen) pixels. */
+  private handleGestures(events: readonly GestureEvent[]): void {
+    for (const e of events) {
+      switch (e.type) {
+        case 'press':
+          this.press(e.x, e.y);
+          break;
+        case 'drag':
+          if (this.pressed) {
+            const w = this.viewport.screenToWorld(e);
+            if (this.pressed.distanceTo(w.x, w.y) > this.cancelDistance()) this.releasePress();
+          }
+          break;
+        case 'cancelPress':
+          this.releasePress();
+          break;
+        case 'release':
+          this.release(e.x, e.y);
+          break;
+        case 'pan':
+          if (this.viewport.zoomed) {
+            this.viewport.panBy(e.dx, e.dy);
+            this.applyView();
+          }
+          break;
+        case 'pinch':
+          if (this.viewport.zoomable) {
+            this.viewport.zoomAt({ x: e.centerX, y: e.centerY }, this.viewport.zoom * e.scale);
+            this.applyView();
+          }
+          break;
+      }
+    }
+  }
+
+  private press(x: number, y: number): void {
     if (this.ended || !this.state.isPlaying) return;
     this.releasePress();
     // Pressing is allowed while another arrow is still leaving; the move itself
     // is decided on release, by which time the board is usually free again.
-    const view = this.pickArrow(pointer.x, pointer.y);
+    const w = this.viewport.screenToWorld({ x, y });
+    const view = this.pickArrow(w.x, w.y);
     if (!view) return;
     this.pressed = view;
     view.setPressed(true);
   }
 
-  private handlePointerMove(pointer: Phaser.Input.Pointer): void {
-    if (this.pressed && this.pressed.distanceTo(pointer.x, pointer.y) > this.layout.cellSize * CANCEL_DISTANCE) {
-      this.releasePress();
-    }
-  }
-
-  private handlePointerUp(pointer: Phaser.Input.Pointer): void {
+  private release(x: number, y: number): void {
     const view = this.pressed;
     if (!view) return;
     this.releasePress();
     // Locked, finished or stale taps never reach GameState, so they can't cost a life.
     if (this.sequencer.busy || this.ended || !this.state.isPlaying || !this.views.has(view.data.id)) return;
-    if (view.distanceTo(pointer.x, pointer.y) > this.layout.cellSize * CANCEL_DISTANCE) return;
+    const w = this.viewport.screenToWorld({ x, y });
+    if (view.distanceTo(w.x, w.y) > this.cancelDistance()) return;
     this.attemptMove(view);
   }
 
@@ -208,27 +271,30 @@ export class GameScene extends Phaser.Scene {
     this.pressed = undefined;
   }
 
+  private cancelGestures(): void {
+    this.gestures.cancel();
+    this.releasePress();
+  }
+
+  private cancelDistance(): number {
+    return Math.max(this.layout.cellSize * CANCEL_DISTANCE, this.hitOptions().tolerance * 1.6);
+  }
+
+  private hitOptions() {
+    return hitOptions(this.layout.cellSize, this.layout.pxPerCss, this.viewport.zoom);
+  }
+
   /**
-   * Finds the arrow under a point. Occupied cells win outright; otherwise the
-   * nearest arrow body within a small tolerance is used, which covers the
-   * arrowhead (it pokes into the next cell) and slightly missed taps.
+   * Finds the arrow under a point (world pixels). See render/hitTest.ts: an
+   * occupied cell wins outright; otherwise the clearly nearest arrow within
+   * a fingertip-sized tolerance, and nothing when two are about as close.
    */
   private pickArrow(x: number, y: number): ArrowView | undefined {
     const cell = cellAtPoint(this.layout, x, y);
-    if (cell) {
-      const id = this.state.arrowIdAt(cell.row, cell.col);
-      if (id !== undefined) return this.views.get(id);
-    }
-    let best: ArrowView | undefined;
-    let bestDistance = this.layout.cellSize * TAP_TOLERANCE;
-    for (const view of this.views.values()) {
-      const d = view.distanceTo(x, y);
-      if (d < bestDistance) {
-        best = view;
-        bestDistance = d;
-      }
-    }
-    return best;
+    const owner = cell ? this.state.arrowIdAt(cell.row, cell.col) : undefined;
+    const hits = [...this.views.values()].map((v) => ({ id: v.data.id, distance: v.distanceTo(x, y) }));
+    const id = chooseArrow(owner, hits, this.hitOptions());
+    return id === undefined ? undefined : this.views.get(id);
   }
 
   // ---------------------------------------------------------------- moves
@@ -268,7 +334,7 @@ export class GameScene extends Phaser.Scene {
         // Slide until the tip meets the edge of the blocker's cell: the free
         // cells ahead plus the gap between the resting tip and its cell edge.
         const cell = this.layout.cellSize;
-        const travel = result.freePath.length * cell + (0.5 - ARROW_STYLE.tipOffset) * cell;
+        const travel = result.freePath.length * cell + (0.5 - this.layout.style.tipOffset) * cell;
         return [
           {
             run: (done) =>
@@ -361,6 +427,7 @@ export class GameScene extends Phaser.Scene {
   private applyLayout(layout: BoardLayout): void {
     this.layout = layout;
     this.board.setLayout(this.layout);
+    this.configureView(); // a new size or orientation: fit the board again
     this.fx.clear();
     // Pixel paths of arrows mid-exit are stale now; they are already gone
     // logically, so just drop them. Resting arrows re-fit and cancel any bump.
@@ -373,7 +440,32 @@ export class GameScene extends Phaser.Scene {
   }
 
   private computeLayout(): BoardLayout {
-    return computeBoardLayout(this.boardFrame(), this.state.rows, this.state.cols);
+    return computeBoardLayout(this.boardFrame(), this.state.rows, this.state.cols, this.pxPerCss());
+  }
+
+  /** Canvas pixels per CSS pixel (the canvas renders at device resolution). */
+  private pxPerCss(): number {
+    const width = this.game.canvas.getBoundingClientRect().width;
+    return width > 0 ? this.scale.width / width : 1;
+  }
+
+  /** Sets the zoom limits for the current board and fits it. */
+  private configureView(): void {
+    const l = this.layout;
+    const slot: Rect = { x: l.x, y: l.y, width: l.width, height: l.height };
+    this.viewport.configure({ x: 0, y: 0, width: this.scale.width, height: this.scale.height }, slot, maxZoomFor(l.cellSize, l.pxPerCss));
+    this.applyView();
+  }
+
+  /** Points the Phaser camera at the viewport's transform: screen = view.x + (world − scroll) × zoom. */
+  private applyView(): void {
+    const cam = this.cameras.main;
+    const v = this.viewport.view;
+    cam.setViewport(v.x, v.y, v.width, v.height);
+    cam.setOrigin(0, 0);
+    cam.setZoom(this.viewport.zoom);
+    cam.setScroll(this.viewport.scroll.x, this.viewport.scroll.y);
+    this.options.onViewChange?.(this.viewport.zoomed, this.viewport.zoomable);
   }
 
   /** The board slot's rectangle in canvas (device) pixels; the whole canvas if the slot isn't laid out. */

@@ -5,7 +5,7 @@ import type { FxLayer } from './FxLayer';
 import { cellCenter, gridBounds, type BoardLayout, type Point } from './layout';
 import { decorationScale, reducedMotion } from './motion';
 import { distanceToPolyline, polylineLength, slicePolyline } from './polyline';
-import { ARROW_STYLE, arrowColor, lighten, mixColors, palette } from './theme';
+import { arrowColor, lighten, mixColors, palette } from './theme';
 
 export interface ExitCallbacks {
   /** The tail has crossed the grid edge: the board is free again. */
@@ -167,7 +167,7 @@ export class ArrowView {
         // A short white-green flash at launch, settling into success green.
         const flash = Math.max(0, 1 - tween.elapsed / 140);
         this.color = flash > 0 ? mixColors(p.success, lighten(launchColor, 0.4), flash) : p.success;
-        this.trail = Math.min(this.offset, cell * ARROW_STYLE.trailLength * decoration);
+        this.trail = Math.min(this.offset, cell * this.layout.style.trailLength * decoration);
 
         // Sparks where the head breaks through the edge of the grid.
         if (!headOut) {
@@ -352,10 +352,10 @@ export class ArrowView {
     const points: Point[] = [];
     if (centres.length === 1) {
       // A single-cell arrow still needs a visible shaft behind its head.
-      points.push({ x: head.x - v.dCol * cellSize * ARROW_STYLE.stubLength, y: head.y - v.dRow * cellSize * ARROW_STYLE.stubLength });
+      points.push({ x: head.x - v.dCol * cellSize * this.layout.style.stubLength, y: head.y - v.dRow * cellSize * this.layout.style.stubLength });
     }
-    points.push(...roundCorners(centres, cellSize * ARROW_STYLE.cornerRadius));
-    const tip = { x: head.x + v.dCol * cellSize * ARROW_STYLE.tipOffset, y: head.y + v.dRow * cellSize * ARROW_STYLE.tipOffset };
+    points.push(...roundCorners(centres, cellSize * this.layout.style.cornerRadius));
+    const tip = { x: head.x + v.dCol * cellSize * this.layout.style.tipOffset, y: head.y + v.dRow * cellSize * this.layout.style.tipOffset };
     points.push(tip);
     this.restPath = points;
     this.bodyLength = polylineLength(points);
@@ -374,9 +374,9 @@ export class ArrowView {
 
     const tip = segment[segment.length - 1];
     const v = DIRECTION_VECTORS[this.data.direction];
-    const headLength = cell * ARROW_STYLE.headLength;
-    const halfWidth = cell * ARROW_STYLE.headHalfWidth;
-    const bodyWidth = cell * ARROW_STYLE.bodyWidth;
+    const headLength = cell * this.layout.style.headLength;
+    const halfWidth = cell * this.layout.style.headHalfWidth;
+    const bodyWidth = cell * this.layout.style.bodyWidth;
     const color = this.pressed ? lighten(this.color, 0.35) : this.color;
     const haloBoost = this.pressed ? 1.6 : 1;
 
@@ -399,7 +399,7 @@ export class ArrowView {
     // Glow: opaque rings pre-blended with the board colour. Translucent strokes
     // would double up where segments and joints overlap, and a shader glow is
     // too expensive on phones, so this fakes it at no cost.
-    for (const [extra, strength] of ARROW_STYLE.halo) {
+    for (const [extra, strength] of this.layout.style.halo) {
       const haloColor = mixColors(p.well, color, Math.min(1, strength * haloBoost * p.glow));
       const grow = cell * extra;
       this.strokeRounded(g, shaft, bodyWidth + grow, haloColor);
@@ -411,7 +411,7 @@ export class ArrowView {
     // A thin bright core line gives the "neon tube" look without extra glow.
     // Energy Arrows get a gold core instead of a white one, while resting.
     const resting = this.color === this.baseColor && !this.activated;
-    this.strokeRounded(g, shaft, cell * ARROW_STYLE.coreWidth, this.data.energy && resting ? p.energy : lighten(color, p.core));
+    if (this.layout.style.coreWidth > 0) this.strokeRounded(g, shaft, cell * this.layout.style.coreWidth, this.data.energy && resting ? p.energy : lighten(color, p.core));
     // Activated arrows are cut into a dashed tube, so they differ from the
     // others by shape as well as by colour (colour-blind players, any theme).
     if (this.activated && this.color === this.baseColor) this.cutDashes(g, shaft, bodyWidth, mixColors(p.well, color, 0.2));
@@ -421,15 +421,15 @@ export class ArrowView {
     g.fillStyle(p.well, 1);
     g.fillCircle(tail.x, tail.y, bodyWidth * 0.2);
     // Energy marker: a gold diamond with a dark rim on the body, kept when the arrow turns red.
-    if (this.data.energy) this.drawEnergyMarker(g, shaft, bodyWidth, p.energy, p.well);
+    if (this.data.energy) this.drawEnergyMarker(g, shaft, p.energy, p.well);
   }
 
   /** A small diamond halfway along the shaft (behind the head, so the direction stays readable). */
-  private drawEnergyMarker(g: Phaser.GameObjects.Graphics, shaft: readonly Point[], bodyWidth: number, color: number, rim: number): void {
+  private drawEnergyMarker(g: Phaser.GameObjects.Graphics, shaft: readonly Point[], color: number, rim: number): void {
     const length = polylineLength(shaft);
     const at = slicePolyline(shaft, length * 0.45, length * 0.45)[0] ?? shaft[0];
     if (!at) return;
-    const r = bodyWidth * 0.95;
+    const r = this.layout.cellSize * this.layout.style.markerSize;
     const diamond = (size: number) => [
       { x: at.x, y: at.y - size },
       { x: at.x + size, y: at.y },
@@ -447,8 +447,8 @@ export class ArrowView {
   /** Short gaps across the body at regular spacing along it. */
   private cutDashes(g: Phaser.GameObjects.Graphics, shaft: readonly Point[], bodyWidth: number, color: number): void {
     const cell = this.layout.cellSize;
-    const gap = cell * ARROW_STYLE.activatedGap;
-    const spacing = cell * ARROW_STYLE.activatedSpacing;
+    const gap = cell * this.layout.style.activatedGap;
+    const spacing = cell * this.layout.style.activatedSpacing;
     const length = polylineLength(shaft);
     g.lineStyle(bodyWidth * 1.08, color, 1);
     for (let d = spacing * 0.6; d + gap < length; d += spacing) {
@@ -474,8 +474,8 @@ export class ArrowView {
     const ty = tip.y + v.dRow * forward;
     const baseX = tx - v.dCol * length;
     const baseY = ty - v.dRow * length;
-    const notchX = baseX + v.dCol * length * ARROW_STYLE.headNotch;
-    const notchY = baseY + v.dRow * length * ARROW_STYLE.headNotch;
+    const notchX = baseX + v.dCol * length * this.layout.style.headNotch;
+    const notchY = baseY + v.dRow * length * this.layout.style.headNotch;
     g.fillStyle(color, 1);
     g.fillPoints(
       [

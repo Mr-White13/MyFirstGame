@@ -1,6 +1,6 @@
 import { daysBetween, isDayKey, addDays, type DayKey } from '../daily/dayKey';
 import type { Transaction } from '../rewards/Wallet';
-import { CHALLENGES_PER_DAY, collectionKey, MAX_DAILY_POINTS, type DailyChallenge } from './challenges';
+import { CHALLENGES_PER_DAY, collectionKey, CURRENT_POOL, isPoolVersion, MAX_DAILY_POINTS, type DailyChallenge } from './challenges';
 import { BRONZE, LEAGUE_REWARDS, LEAGUES, leagueTransactionIds, PROTECTED_INACTIVE_DAYS, TOP_TIER, league } from './leagues';
 
 /**
@@ -20,6 +20,11 @@ export interface Competition {
   readonly completed: readonly number[];
   /** True once the all-three-challenges bonus was queued for this date. */
   readonly sweepRewarded: boolean;
+  /**
+   * Layout pool version this day's challenges come from (see challenges.ts).
+   * Days saved before pools were versioned have none and use pool 1.
+   */
+  readonly pool: number;
 }
 
 export type DayOutcome = 'promoted' | 'retained' | 'relegated' | 'inactive';
@@ -214,7 +219,7 @@ export function settle(state: LeagueState, today: DayKey, unlocked: boolean): { 
   }
 
   // 3. Today's competition.
-  const current: Competition = { date: today, startTier: tier, collected: [], completed: [], sweepRewarded: false };
+  const current: Competition = { date: today, startTier: tier, collected: [], completed: [], sweepRewarded: false, pool: CURRENT_POOL };
 
   // Only results worth telling: a played day, or a league change.
   let notice = state.notice;
@@ -320,7 +325,15 @@ function readCompetition(v: unknown): Competition | null {
   if (!isDayKey(c.date) || !isTier(c.startTier)) return null;
   const strings = (x: unknown) => (Array.isArray(x) ? [...new Set(x.filter((s): s is string => typeof s === 'string' && s.startsWith(`${c.date}:`)))] : []);
   const completed = Array.isArray(c.completed) ? [...new Set(c.completed.filter((n): n is number => isCount(n) && n >= 1 && n <= CHALLENGES_PER_DAY))].sort() : [];
-  return { date: c.date, startTier: c.startTier, collected: strings(c.collected).slice(0, MAX_DAILY_POINTS), completed, sweepRewarded: c.sweepRewarded === true };
+  return {
+    date: c.date,
+    startTier: c.startTier,
+    collected: strings(c.collected).slice(0, MAX_DAILY_POINTS),
+    completed,
+    sweepRewarded: c.sweepRewarded === true,
+    // Saved before pools existed: that day was built from the original pool.
+    pool: isPoolVersion(c.pool) ? c.pool : 1,
+  };
 }
 
 function readEntry(v: unknown): HistoryEntry | null {

@@ -2,7 +2,19 @@ import { arrow, DIRECTION_VECTORS } from '../core/Arrow';
 import type { ArrowData, Direction, LevelData } from '../core/types';
 
 const HEAD_MARKS: Readonly<Record<string, Direction>> = { '^': 'up', v: 'down', '<': 'left', '>': 'right' };
-const TOKEN = /^([a-zA-Z])([\^v<>])?$/;
+/** An arrow label: one letter, optionally followed by one digit (a, B, a1, Z9…). */
+const TOKEN = /^([a-zA-Z][0-9]?)([\^v<>])?$/;
+const LETTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+/** Labels available in a map: 52 single letters, then 52 × 10 letter+digit labels. */
+export const MAX_MAP_ARROWS = LETTERS.length * 11;
+
+/** The label of the `index`-th arrow: a…z, A…Z, then a0…Z0, a1…Z1, … */
+export function arrowLabel(index: number): string {
+  if (index < 0 || index >= MAX_MAP_ARROWS) throw new Error(`no map label for arrow #${index}`);
+  if (index < LETTERS.length) return LETTERS[index];
+  const k = index - LETTERS.length;
+  return LETTERS[k % LETTERS.length] + String(Math.floor(k / LETTERS.length));
+}
 
 /**
  * Builds a level from a readable text map, so each level file shows the
@@ -10,8 +22,9 @@ const TOKEN = /^([a-zA-Z])([\^v<>])?$/;
  *
  * - One string per row, cells separated by whitespace.
  * - `.` is an empty cell.
- * - A letter is a body cell of the arrow with that letter (case-sensitive).
- * - A letter followed by `^ v < >` marks that arrow's head and direction.
+ * - A label is a body cell of the arrow with that label (case-sensitive): a
+ *   letter, or a letter and one digit (`a1`) for boards with more than 52 arrows.
+ * - A label followed by `^ v < >` marks that arrow's head and direction.
  *
  * ```
  * levelFromMap(1, [
@@ -72,15 +85,16 @@ const MARK_FOR: Readonly<Record<Direction, string>> = { up: '^', down: 'v', left
  * current order.
  */
 export function levelToMap(level: LevelData): string[] {
-  const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  if (level.arrows.length > letters.length) throw new Error(`Level ${level.id}: too many arrows for a text map`);
+  if (level.arrows.length > MAX_MAP_ARROWS) throw new Error(`Level ${level.id}: too many arrows for a text map`);
   const grid: string[][] = Array.from({ length: level.rows }, () => Array.from({ length: level.cols }, () => '.'));
   level.arrows.forEach((a, i) => {
+    const label = arrowLabel(i);
     a.cells.forEach((c, k) => {
-      grid[c.row][c.col] = letters[i] + (k === a.cells.length - 1 ? MARK_FOR[a.direction] : '');
+      grid[c.row][c.col] = label + (k === a.cells.length - 1 ? MARK_FOR[a.direction] : '');
     });
   });
-  return grid.map((row) => row.map((token) => token.padEnd(2)).join(' ').trimEnd());
+  const width = level.arrows.length > LETTERS.length ? 3 : 2;
+  return grid.map((row) => row.map((token) => token.padEnd(width)).join(' ').trimEnd());
 }
 
 function traceArrow(

@@ -73,8 +73,9 @@ describe('daily challenges', () => {
   });
 
   it('never uses the same layout twice in a day, and only levels with 10+ arrows', () => {
+    expect(challengePool(LEVELS, 1).map((l) => l.id)).toEqual([4, 5, 6, 7, 8, 9, 10]); // the original pool
     const pool = challengePool(LEVELS).map((l) => l.id);
-    expect(pool).toEqual([4, 5, 6, 7, 8, 9, 10]);
+    expect(pool).toEqual([4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]); // current: up to 12×12
     for (let i = 0; i < 400; i++) {
       const set = dailyChallenges(addDays('2026-01-01', i), LEVELS);
       expect(new Set(set.map((c) => c.sourceLevelId)).size).toBe(3);

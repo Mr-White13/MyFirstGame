@@ -10,6 +10,23 @@ export const MAX_DAILY_POINTS = CHALLENGES_PER_DAY * ENERGY_PER_CHALLENGE;
 /** Only layouts with at least this many arrows are used, so Energy Arrows stay a minority. */
 export const MIN_CHALLENGE_ARROWS = 10;
 
+/**
+ * Versions of the layout pool. A competition day remembers the version it
+ * started with, so a game update that adds levels never changes the
+ * challenges of a day already in progress (and the Energy Arrows already
+ * collected keep matching). The new pool applies from the next day.
+ *
+ * 1: levels 4–10 (the original ten levels).
+ * 2: levels with 10+ arrows on boards up to 12×12 (levels 4–20): daily
+ *    challenges stay quick and playable without zooming.
+ */
+export const CHALLENGE_POOLS: Readonly<Record<number, (level: LevelData) => boolean>> = {
+  1: (l) => l.id <= 10 && l.arrows.length >= MIN_CHALLENGE_ARROWS,
+  2: (l) => l.arrows.length >= MIN_CHALLENGE_ARROWS && Math.max(l.rows, l.cols) <= 12,
+};
+export const CURRENT_POOL = 2;
+export const isPoolVersion = (v: unknown): v is number => typeof v === 'number' && v in CHALLENGE_POOLS;
+
 /** One of the day's three Daily League challenges. */
 export interface DailyChallenge {
   /** Stable id: `<date>:<number>:L<source level>`, the same on every refresh. */
@@ -39,9 +56,10 @@ function shuffled<T>(items: readonly T[], random: Random): T[] {
   return out;
 }
 
-/** Curated levels big enough to host four Energy Arrows (levels 4–10 today). */
-export function challengePool(levels: readonly LevelData[]): LevelData[] {
-  return levels.filter((l) => l.arrows.length >= MIN_CHALLENGE_ARROWS);
+/** The levels a pool version draws from. */
+export function challengePool(levels: readonly LevelData[], pool = CURRENT_POOL): LevelData[] {
+  const eligible = CHALLENGE_POOLS[pool] ?? CHALLENGE_POOLS[CURRENT_POOL];
+  return levels.filter(eligible);
 }
 
 /**
@@ -53,8 +71,8 @@ export function challengePool(levels: readonly LevelData[]): LevelData[] {
  * level's, and every Energy Arrow is collectible because every arrow leaves
  * the board in a solved level.
  */
-export function dailyChallenges(day: DayKey, levels: readonly LevelData[]): DailyChallenge[] {
-  const pool = challengePool(levels);
+export function dailyChallenges(day: DayKey, levels: readonly LevelData[], poolVersion = CURRENT_POOL): DailyChallenge[] {
+  const pool = challengePool(levels, poolVersion);
   if (pool.length < CHALLENGES_PER_DAY) throw new Error(`Need ${CHALLENGES_PER_DAY} levels with ${MIN_CHALLENGE_ARROWS}+ arrows for daily challenges`);
   const random = createRandom(daySeed(day));
   const picked = shuffled(pool, random)

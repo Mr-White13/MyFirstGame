@@ -4,7 +4,7 @@ A 2D arrow-clearing puzzle game for mobile, built with **Phaser 3**, **TypeScrip
 
 Tap an arrow to send it flying off the board in the direction it points. It can only leave if nothing is in its way. Clear every arrow to finish the level.
 
-It opens on a **Home** screen with your local **player profile** (nickname, avatar, country) and lifetime **statistics**. Every level is **timed**, with personal bests. A **Settings** screen offers four visual themes, reduced motion and effects options, synthesised sound effects and ambient music, vibration and gameplay preferences. A **daily check-in** with a 7-day reward cycle, login streaks, **Energy Credits** and **12 achievements** reward coming back. After Level 10, the **Daily League** offers three daily challenges with collectible **Energy Arrows** and a six-tier league (Bronze to Neon Elite) based on transparent, offline daily targets. The game has **10 hand-made levels** that grow from a 5-arrow tutorial to dense 9×9 boards. It includes a level select screen, unlockable progression and progress saved in the browser.
+It opens on a **Home** screen with your local **player profile** (nickname, avatar, country) and lifetime **statistics**. Every level is **timed**, with personal bests. A **Settings** screen offers four visual themes, reduced motion and effects options, synthesised sound effects and ambient music, vibration and gameplay preferences. A **daily check-in** with a 7-day reward cycle, login streaks, **Energy Credits** and **12 achievements** reward coming back. After Level 10, the **Daily League** offers three daily challenges with collectible **Energy Arrows** and a six-tier league (Bronze to Neon Elite) based on transparent, offline daily targets. The game has **30 levels**: 10 hand-made ones that grow from a 5-arrow tutorial to dense 9×9 boards, then 20 larger generated and reviewed levels up to 16×16, with thin adaptive arrows and pinch-zoom. It includes a level select screen, unlockable progression and progress saved in the browser.
 
 ## Requirements
 
@@ -43,6 +43,7 @@ Optionally, in Chrome's menu choose **Add to Home screen** to play full-screen w
 | `npm run levels:validate` | Check every level: valid, solvable, readable, not a near-duplicate |
 | `npm run levels:generate` | Generate candidate levels offline (see "Level tools" below) |
 | `npm run levels` | Same as `levels:validate` |
+| `npm run levels:plan` | Regenerate the planned levels from `tools/level-plan.json` (see "Level tools") |
 | `npm run android:apk` | Build a debug APK of the Android app (see "Android app") |
 | `npm run android:sync` / `android:open` / `android:run` | Copy the web build into the Android project / open it in Android Studio / run it on a phone or emulator |
 
@@ -71,7 +72,7 @@ NEON ESCAPE also runs as an installed Android app. [Capacitor](https://capacitor
 | Full screen | Immersive: status and navigation bars are hidden and appear briefly when you swipe from an edge (`MainActivity.java`). The page is edge-to-edge and the existing CSS safe-area padding keeps the UI clear of the notch and gesture area (`SystemBars.insetsHandling: "native"` in `capacitor.config.json`). |
 | Back button / gesture | Follows the game: closes the open dialog or picker, cancels nickname editing, answers an end-of-level dialog as "Levels"/"League", leaves a level (asking "Leave level?" if an attempt would be lost), or goes to the previous screen. On Home it sends the app to the background (like the Home button) instead of closing it. Escape on desktop works as before. |
 | Background | Pausing the app pauses the level timer (play time is saved), fades the music and suspends audio, and stops vibration. Resuming continues the timer, resumes audio, and checks for a new day (daily reward, league settlement). Uses the native pause/resume events as well as the page's own visibility events. |
-| Vibration | Native, through `@capacitor/haptics` (`src/native/nativeApp.ts`), with the same short patterns as the browser. Android's WebView doesn't reliably support the web Vibration API, so the browser backend isn't used in the app. The Vibration setting works the same way. |
+| Vibration | Native, through the app's own `NeonHaptics` plugin (`android/.../NeonHapticsPlugin.java`, used by `src/native/nativeApp.ts`). It plays waveforms with set strengths as **game/media vibration**. The stock `@capacitor/haptics` remains as a fallback. See "Vibration on Android" below. |
 | Audio | The same synthesised Web Audio. As in Chrome, it starts after your first tap. |
 | Saved data | `localStorage` inside the app's private WebView storage: progress, profile, statistics, settings, daily rewards, achievements and league all work as in the browser. The app's data is separate from Chrome's (your browser progress doesn't move to the phone), and it is deleted if the app is uninstalled. Updating the app over the old one keeps it. |
 | No | ads, accounts, network calls or backend. The only permissions are `INTERNET` (Capacitor's default, unused by the game) and `VIBRATE`. |
@@ -122,7 +123,55 @@ Or in Android Studio: `npm run android:open`, wait for "Gradle sync" to finish (
 6. Turn on airplane mode: everything still works.
 7. Rotate the phone: the game stays in portrait.
 
-**Tested so far:** on the Android emulator (Android 17 / API 37, WebView Chrome 145): immersive full screen, Back in dialogs, levels and on Home, pause/resume of the timer and audio, native vibration calls, and saved data surviving a force-close. **Not yet tested on a physical phone.** Once, on the emulator, Android delivered an extra Back event right after the app resumed, which opened "Leave level?" (nothing is lost; tap Keep playing). It didn't reproduce; if it happens on a phone, report it.
+**Tested so far:** on the Android emulator (Android 17 / API 37, WebView Chrome 145): immersive full screen, Back in dialogs, levels and on Home, pause/resume of the timer and audio, vibration requests (checked in Android's vibration history), a 16×16 level, and saved data surviving a force-close. Physical-phone testing is up to you; see "Vibration on Android" for what to check. Once, on the emulator, Android delivered an extra Back event right after the app resumed, which opened "Leave level?" (nothing is lost; tap Keep playing). It didn't reproduce; if it happens on a phone, report it.
+
+### Vibration on Android
+
+**What was wrong (first APK):** the game sent 8–30 ms vibrations through the stock Capacitor Haptics plugin, which sets no usage. Android's vibration history on the emulator showed them as `usage: TOUCH, 8ms`. Two problems:
+- Pulses that short are often too weak to feel.
+- *Touch* vibrations follow the phone's **touch feedback / "Vibration feedback"** switch, which many phones have off. Then every vibration is silently dropped.
+
+**What changed:**
+- The app has its own small native plugin that vibrates as **media/game** usage (Android 13+: `USAGE_MEDIA`; older: `USAGE_GAME`), so it follows the **media vibration** intensity instead of touch feedback.
+- Effects are stronger, with set strengths (amplitude 0–255):
+
+| Event | Effect |
+| --- | --- |
+| Arrow released | 32 ms at 140 (light tick) |
+| Chain reaction | 36 ms at 170, once per chain |
+| Blocked collision | 48 ms at 220 |
+| Heart lost | 45 · pause 60 · 45 ms at 230 |
+| Level complete | 40 · 70 · 40 · 70 · 90 ms, rising to 255 |
+| Reward / achievement | 35 · 50 · 60 ms |
+| League promotion | 50 · 60 · 50 · 60 · 120 ms |
+| Settings test | 400 ms at 255 |
+
+On the emulator the new requests appear as `usage: MEDIA`, for example `Step=32ms(amplitude=0.55)`, status `finished`.
+
+**Test it on your phone:**
+1. Rebuild and install over the old app: `npm run android:apk`, then copy `android/app/build/outputs/apk/debug/app-debug.apk` to the phone and install (progress is kept).
+2. Settings → Feedback → **Test vibration**. You should feel a clear 0.4 s buzz. The message says the request was *sent*; it can't know whether you felt it.
+3. Play a level: releases tick lightly, collisions and lost hearts are stronger, and a completed level gives a short pattern.
+4. **If you feel nothing:** Android Settings → **Sound & vibration → Vibration & haptics**. Make sure vibration is on and **media vibration** (some phones: "Media" or "Multimedia") isn't at zero. Also check Battery saver, Do not disturb and silent mode, some of which mute vibrations.
+5. **Collect evidence if it still doesn't work.** With USB debugging on, run each command below. Send me the output of both, plus the phone model and Android version.
+
+```bash
+adb logcat -c
+```
+
+Then press Test vibration, and run:
+
+```bash
+adb logcat -d | findstr "\[haptics\]"
+```
+
+```bash
+adb shell dumpsys vibrator_manager
+```
+
+The first shows what the app asked for and whether Android accepted it: `native=true NeonHaptics=true`, device info, then `resolved` or `rejected`. The second, under "Recent vibrations", shows whether Android actually played it (`finished`) or ignored it (for example `ignored_for_settings`).
+
+On macOS/Linux use `grep` instead of `findstr`. For more detail during normal play, turn on diagnostics (Settings: tap Version five times); every vibration is then logged.
 
 ### After changing the code
 
@@ -382,20 +431,14 @@ All audio goes through one `AudioManager` (`src/audio/`) with a **music bus** an
 
 ### Vibration (haptics)
 
-`src/haptics/Haptics.ts` uses the Web Vibration API (`navigator.vibrate`) behind a small `HapticsBackend` interface, so a native Capacitor Haptics backend can replace it later without changing game code.
+`src/haptics/Haptics.ts` defines one table of effects (durations plus strengths, see "Vibration on Android") and plays them through a backend: the native NeonHaptics plugin in the Android app, or the Web Vibration API (`navigator.vibrate`, durations only) in browsers.
 
-| Event | Pattern |
-| ----- | ------- |
-| Arrow released | 8 ms tick |
-| Blocked collision that costs a life | 30-50-30 ms double pulse |
-| Chain reaction | one 12 ms pulse per chain, not per arrow |
-| Level complete | 18-60-18-60-40 ms |
-
-- Every pattern is under 250 ms, and each has a minimum gap, so nothing buzzes continuously.
+- Every effect is at most 350 ms (pulses at least ~30 ms, so they can be felt), and each has a minimum gap, so nothing buzzes continuously.
 - Free nudges, button taps and decorative animations never vibrate.
 - Vibration is skipped before the first user interaction (Chrome ignores it then anyway), and when the switch is off. Turning it off or backgrounding the app cancels a pulse in progress.
 - **Browser support:** works in Chrome on Android. **Desktop Chrome** has the API but no vibration motor, so nothing happens. Safari and iOS have no Vibration API: there the switch is disabled with an explanation.
-- **No intensity setting:** the web API controls only duration, not strength, so a "haptic intensity" slider would do nothing. It is intentionally not offered.
+- **No intensity setting:** strength is fixed per effect (see "Vibration on Android"), and in browsers the Vibration API controls only duration. A user-facing intensity slider would behave differently on every device, so it is intentionally not offered.
+- **Test vibration** (Settings → Feedback) plays one strong 0.4 s vibration, even if Vibration is switched off, and reports whether the request was sent.
 
 ### Gameplay preferences
 
@@ -562,7 +605,8 @@ An Energy Arrow is an ordinary arrow with one extra property: in a Daily League 
 - **Gameplay** is the normal level screen: three lives, red arrows, chains, timer, restart, Game Over and retry. The HUD adds a gold strip: Energy Arrows collected in this challenge (0/4), your league, and today's points (0/12).
 - **Completing** a challenge shows stars, time, Energy Arrows collected, newly earned points and today's total, with **Next challenge** (or **League**), **Restart** and **League**.
 - **Separate records:** challenges never change level unlocks, stars, best times or the lifetime statistics on the Profile. Challenge numbers are tracked in the league record instead (challenges completed, Energy Points).
-- **Limited variety for now:** with only 10 curated levels, the pool is 7 layouts, so you'll recognise them. It will become more varied as more levels are added. The level generator is not used at runtime.
+- **Layout pool:** levels with 10+ arrows on boards up to 12×12 (Levels 4–20, 17 layouts), so daily challenges stay quick and playable without zooming. The level generator is not used at runtime.
+- **Game updates never change a day in progress.** Each competition day saves the pool version it started with (`CHALLENGE_POOLS` in `src/league/challenges.ts`). A day that began before this update (saved without a version) keeps the original pool (Levels 4–10) until midnight: the same three layouts and the same Energy Arrows. So arrows you already collected still count and can't be collected twice, and the daily maximum stays 12. The new pool applies from the next day.
 
 ### Energy Points and Energy Credits
 
@@ -701,9 +745,63 @@ sessionStorage.setItem('neon-backup', JSON.stringify(Object.fromEntries(Object.k
    const b = JSON.parse(sessionStorage.getItem('neon-backup')); Object.keys(localStorage).filter(k => k.startsWith('neon-escape')).forEach(k => localStorage.removeItem(k)); Object.entries(b).forEach(([k, v]) => localStorage.setItem(k, v)); location.reload();
    ```
 
+## Large boards: thin arrows, zoom and touch
+
+The game supports boards from 7×7 up to 20×20. Nothing in the rules, validation, rendering or level format assumes a size, and boards up to 20×20 are covered by tests. The permanent levels go up to 16×16; larger boards are possible but become hard to read on a phone.
+
+### Adaptive arrow thickness
+
+Arrows are drawn in proportion to the cell, and the proportions change with the board (`src/render/arrowStyle.ts`):
+
+| Board | Look |
+| --- | --- |
+| Up to 9×9 | The original thick neon tubes: two halo rings, bright core line, large notched heads |
+| 10×10 to 15×15 | Gradually thinner bodies, fainter glow, more compact heads |
+| 16×16 and up | Clean thin paths, one faint ring, small but clear arrowheads |
+
+- **Minimum sizes on screen:** bodies are never thinner than 2.5 CSS px and heads never narrower than 4 CSS px (capped at 30% of a cell, so neighbours never touch). The core line is dropped when it would be thinner than a pixel.
+- **Device pixel density** is taken into account: the canvas renders at device resolution and the minimums are in CSS pixels.
+- **What stays the same:** colours, rounded turns, themes, the gold Energy Arrow diamond (never smaller than the body) and the red dashed look of activated arrows.
+- The style is recomputed when the board size or the screen changes. Rules and collisions don't depend on it.
+
+### Touch: thin arrows stay easy to tap
+
+What you can tap is separate from what is drawn (`src/render/hitTest.ts`):
+
+1. A tap inside a cell an arrow occupies always selects that arrow.
+2. Otherwise the nearest arrow body counts if it is within a fingertip-sized radius: at least 22 CSS px on screen (about a 44 px target), at most 1.2 cells.
+3. If two arrows are about equally close (within 0.15 cell or 4 px), **nothing is selected**. A missed tap is better than moving the wrong arrow and losing a life. Tap again, or zoom in.
+
+Press-and-release is unchanged: an arrow lights up while your finger is on it, the move happens on release, and sliding away cancels it.
+
+### Zoom and pan
+
+Boards whose cells are smaller than about 44 CSS px on your screen can be zoomed (`src/render/viewport.ts`, `src/render/gestures.ts`). Smaller boards are unaffected.
+
+| Action | Phone | Desktop |
+| --- | --- | --- |
+| Zoom | Pinch with two fingers | Mouse wheel |
+| Move around | Drag one finger (while zoomed) | Drag (while zoomed) |
+| Back to the whole board | The **Reset zoom** button in the board's corner | Same |
+
+- **Limits:** from the fitted view up to the zoom where cells are about 44 CSS px, at most 4×. The board can't be dragged out of view.
+- **Two-finger gestures never move arrows.** A second finger cancels the press, and nothing is pressed again until all fingers are lifted. A drag that becomes a pan (10 px) also cancels the press.
+- **While zoomed** the board is drawn only inside its area, so it doesn't run under the HUD.
+- **When the view resets:** Restart keeps your zoom (same board). A new level, leaving the level, rotating the phone or resizing the window fits the board again.
+- A one-time tip ("pinch (or scroll) to zoom, drag to move") appears on the first zoomable board.
+- Taps are mapped from the screen through the zoom, so they hit the same arrow at any zoom (tested).
+
+### Performance
+
+- Arrows are redrawn only when they change (a press, an animation, a theme switch), not every frame. The grid and dots are drawn once per layout.
+- Effects come from fixed pools, and zoom/pan only moves the camera: nothing is re-rendered or allocated.
+- **Diagnostics overlay for real devices:** in Settings, tap **Version** five times. A small line at the bottom shows frames per second, arrows on the board, grid size, zoom and the vibration backend. Tap five times again to hide it. This also turns on detailed vibration logging.
+- **Measured so far:** Level 30 (16×16, 47 arrows) ran at about 37–39 fps on the Android emulator, which renders without a GPU. That isn't representative of a phone; check yours with the overlay.
+- **Known limits:** the difficulty and lives analysis run offline only (never in the game). Very dense 20×20 boards are supported but not used for levels, because they are hard to read on a phone even with zoom.
+
 ## Levels
 
-Ten curated levels with a steadily rising estimated difficulty. The full analysis, including the
+Thirty levels. Levels 1–10 are hand-designed, with a steadily rising estimated difficulty. The full analysis, including the
 original set, the redesign and an old-vs-new comparison, is in [docs/level-analysis.md](docs/level-analysis.md).
 
 | Level | Grid | Arrows | Free at start | Depth | Score | Category | Idea |
@@ -718,6 +816,48 @@ original set, the redesign and an old-vs-new comparison, is in [docs/level-analy
 | 8 | 8×8 | 18 | 2 | 11 | 57 | Medium–hard | Interlocking L-shapes mid-chain |
 | 9 | 9×9 | 20 | 4 | 12 | 59 | Hard | Dense board with long hooks |
 | 10 | 9×9 | 23 | 1 | 15 | 63 | Hard | First major challenge: one free arrow, fifteen-step chain |
+
+### Levels 11–30
+
+Generated offline from `tools/level-plan.json` (see "Level tools"), then checked by the tests:
+- valid and solvable;
+- readable (no arrow runs alongside itself, none reads as two joined arrows);
+- no near-duplicates of each other or of Levels 1–10 (including rotations and mirror images);
+- few free arrows at the start, and a long chain of moves.
+
+| Band | Levels | Boards | Character |
+| --- | --- | --- | --- |
+| A | 11–15 | 10×10 | Longer arrows (up to 7 cells) and more bends than before |
+| B | 16–20 | 11×11–12×12 | Denser blocking, longer chains (depth up to 18), few obvious first moves |
+| C | 21–25 | 13×13–15×15 | Many more arrows; zoom becomes useful on phones |
+| D | 26–30 | 15×15–16×16 | The largest boards, winding paths up to 9 cells, the deepest chains (19) |
+
+| Level | Grid | Arrows | Free at start | Depth | Score |
+| ----- | ---- | ------ | ------------- | ----- | ----- |
+| 11 | 10×10 | 19 | 5 | 13 | 58 |
+| 12 | 10×10 | 22 | 5 | 12 | 59 |
+| 13 | 10×10 | 20 | 4 | 13 | 59 |
+| 14 | 10×10 | 21 | 5 | 13 | 61 |
+| 15 | 10×10 | 27 | 3 | 12 | 60 |
+| 16 | 11×11 | 25 | 5 | 15 | 60 |
+| 17 | 11×11 | 29 | 5 | 15 | 63 |
+| 18 | 12×12 | 28 | 6 | 16 | 61 |
+| 19 | 12×12 | 31 | 6 | 13 | 62 |
+| 20 | 12×12 | 32 | 6 | 18 | 65 |
+| 21 | 13×13 | 35 | 7 | 15 | 63 |
+| 22 | 13×13 | 34 | 7 | 13 | 63 |
+| 23 | 14×14 | 37 | 7 | 17 | 65 |
+| 24 | 14×14 | 37 | 7 | 14 | 63 |
+| 25 | 15×15 | 37 | 8 | 15 | 65 |
+| 26 | 15×15 | 40 | 8 | 17 | 63 |
+| 27 | 15×15 | 42 | 8 | 18 | 66 |
+| 28 | 16×16 | 40 | 9 | 15 | 65 |
+| 29 | 16×16 | 42 | 9 | 19 | 67 |
+| 30 | 16×16 | 47 | 9 | 19 | 67 |
+
+The average score rises band by band (59.4 → 62.4 → 63.8 → 65.6), and every later band has deeper chains. **Limitation:** the 0–100 score saturates in the high 60s, because its parts cap at 6 layers of depth, 20 arrows and 2 wrong taps per move. So it can't separate a hard 12×12 from a hard 16×16. Bigger boards are harder mainly through scanning load and longer chains, shown by "Depth" and the arrow count. Changing the formula would re-score and reorder Levels 1–10, so it was left as is.
+
+**Progression:** players keep every unlock, star and best time. Anyone who finished Level 10 can play Level 11 right away (unlocks are repaired to match completions), and the "game complete" screen now appears after Level 30. Totals become 30 levels and 90 stars. The cosmetic ranks keep their thresholds (Grid Master at 27★), and Puzzle Veteran still means 10 completed levels (now worded "Complete 10 different levels").
 
 ### How difficulty works
 
@@ -746,6 +886,7 @@ count. The only real challenge is **finding an arrow that can escape**, again an
 ├── capacitor.config.json  Android app id, name and web folder (Capacitor)
 ├── android/               Native Android project (Capacitor); MainActivity.java = immersive full screen
 ├── scripts/android-apk.mjs Debug APK build used by `npm run android:apk`
+├── tools/level-plan.json  How Levels 11–30 were generated (`npm run levels:plan`)
 ├── docs/level-analysis.md  Difficulty analysis of the levels (old vs new)
 ├── tools/                 Level CLI (analyze, validate, generate) and its build config
 ├── tsconfig.json
@@ -817,7 +958,7 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     │   └── Stats.ts           Lifetime counters per attempt, stats storage
     │
     ├── native/
-    │   └── nativeApp.ts       Android app only: Back button, pause/resume, native vibration (no-op in browsers)
+    │   └── nativeApp.ts       Android app only: Back button, pause/resume, native vibration via NeonHaptics (no-op in browsers)
     │
     ├── storage/
     │   └── SafeStore.ts       One versioned localStorage record: backups, newer-save protection
@@ -827,7 +968,11 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     │   └── ProgressStorage.ts localStorage save format, migration, backups and safe loading
     │
     ├── render/            Phaser drawing, no game rules
-    │   ├── theme.ts           Semantic board palettes per theme, arrow proportions, contrast helpers
+    │   ├── theme.ts           Semantic board palettes per theme, contrast helpers
+    │   ├── arrowStyle.ts      Adaptive arrow proportions by board size and screen density
+    │   ├── hitTest.ts         Which arrow a tap means (fingertip tolerance, no guessing on ties)
+    │   ├── viewport.ts        Zoom/pan transform for large boards
+    │   ├── gestures.ts        Press, release, pan and pinch from raw pointers
     │   ├── layout.ts          Board geometry fitted into the board slot, grid bounds, pixel ↔ cell mapping
     │   ├── polyline.ts        Polyline length, slicing and point distance (animation, hit testing)
     │   ├── BoardRenderer.ts   Board frame, recessed play area, grid; entrance and win-wave effects
@@ -914,6 +1059,8 @@ npm run levels:generate -- --size 8 --min 50 --max 56 --seed 42
 | `--length N` | 5 | Longest arrow, in cells |
 | `--turns N` | 2 | Most turns per arrow (0 = straight only) |
 | `--attempts N` | 300 | Attempts before giving up with a clear message |
+| `--bend P` | 0.35 | Chance of turning at each step (0..1): higher gives more winding arrows |
+| `--budget N` | 1200 | Most difficulty analyses per level: bounds the run time, deterministically |
 | `--id N` | next free | Level id in the output |
 | `--out PATH` | — | Also write the level file there (never overwrites) |
 
@@ -933,6 +1080,19 @@ The output shows the map, every metric, and a ready-to-paste level file.
    one-arrow edits, kept only when the level stays valid and readable and moves toward the range.
 5. **Fail clearly.** After the attempt budget, it stops with the closest score it reached and
    suggestions for what to change.
+
+### Generator improvements (Step 11)
+
+- **Large grids:** arrows past the 52nd get letter+digit labels (`a0`, `b0`, …, up to 572 arrows), and the text map widens its columns.
+- **Denser boards:** half the candidate arrows are now built from the head backwards, from a cell whose exit line is already clear, so crowded boards still find room. Candidates per arrow scale with the board size.
+- **Shapes:** long straight arrows, L-shapes, wide U-shapes and winding paths with several bends. A real readability rule replaces the old "never two turns in a row": an arrow may never run alongside an earlier part of itself (`isSelfTouching`), so tight U's and spirals that read as blobs are rejected. Wide ones are allowed.
+- **Openings:** `maxInitialFree` caps how many arrows are free at the start, so large boards don't open with a dozen easy moves.
+- **Bounded:** `workBudget` limits the expensive difficulty analyses (deterministic, unlike a time limit). A 16×16 level takes 1–4 s.
+- **Reproducible:** same options and seed give the same level (tested on large grids too).
+
+### Generating a series: `levels:plan`
+
+`tools/level-plan.json` lists each planned level: size, arrow range, longest arrow, turns, bend chance, score range, opening cap and seeds. `npm run levels:plan` generates the listed levels in order, each avoiding near-duplicates of every level before it. For each, the first seed that produces an acceptable level wins, and it writes `src/levels/levelNN.ts`. Levels already in the game are skipped unless you pass `--force`. Levels 11–30 were made this way in about 45 s and then reviewed; the plan file documents exactly how.
 
 ### Adding a level
 

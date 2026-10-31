@@ -92,6 +92,7 @@ export class App {
   private clockTimer = 0;
   /** True while the app is hidden or in the background (browser tab or Android app). */
   private background = false;
+  private zoomHintShown = false;
   /** The Daily League challenge being played, or null for a regular level. */
   private challenge: DailyChallenge | null = null;
   /** True while the open attempt is a challenge: it never touches level progress or statistics. */
@@ -483,6 +484,7 @@ export class App {
     return this.navigate(async () => {
       this.endAttempt('abandoned'); // leaving gameplay: the timer can't keep running
       this.stopClock();
+      this.parts.scene.resetView(); // no leftover zoom or half-finished gesture
       this.hideEndDialogs();
       this.renderAll();
       this.history.go(screen);
@@ -664,6 +666,13 @@ export class App {
   private hideEndDialogs(): void {
     this.parts.completeDialog.hide();
     this.parts.gameOverDialog.hide();
+  }
+
+  /** Once per session, on the first board that can be zoomed: how to zoom. */
+  zoomHint(): void {
+    if (this.zoomHintShown || this.parts.screens.active !== 'game') return;
+    this.zoomHintShown = true;
+    this.parts.toast.show('Tip: pinch (or scroll) to zoom, drag to move', 2600);
   }
 
   private async navigate(action: () => Promise<void>): Promise<void> {

@@ -1,7 +1,7 @@
 import { App as CapacitorApp } from '@capacitor/app';
-import { Capacitor } from '@capacitor/core';
-import { Haptics } from '@capacitor/haptics';
-import type { HapticsBackend } from '../haptics/Haptics';
+import { Capacitor, registerPlugin } from '@capacitor/core';
+import { Haptics as CapacitorHaptics } from '@capacitor/haptics';
+import type { HapticEffect, HapticsBackend, HapticTestResult } from '../haptics/Haptics';
 
 /**
  * The few places where the installed Android app (Capacitor) differs from
@@ -14,28 +14,87 @@ export function isNativeApp(): boolean {
   return Capacitor.isNativePlatform();
 }
 
+/** The app's own native plugin (android/.../NeonHapticsPlugin.java). */
+export interface NeonHapticsPlugin {
+  vibrate(options: { timings: number[]; amplitudes: number[] }): Promise<void>;
+  cancel(): Promise<void>;
+  info(): Promise<{ hasVibrator: boolean; hasAmplitudeControl: boolean; touchFeedback: number; sdk: number }>;
+}
+
+const NeonHaptics = registerPlugin<NeonHapticsPlugin>('NeonHaptics');
+
 /**
- * Vibration through the native Haptics plugin. The patterns are the same as
- * in the browser (on, off, on … in ms): each "on" step becomes one native
- * vibration at the right moment. Android's WebView does not reliably support
- * \`navigator.vibrate\`, so the app uses this instead.
+ * Diagnostic logging for haptics. Failures are always logged; every call is
+ * logged when debugging is on (dev server, or `localStorage['neon-escape.debug'] = '1'`).
+ * In a debug APK these lines appear in `adb logcat` under "Capacitor/Console".
  */
-export function nativeHapticsBackend(): HapticsBackend {
-  let timers: ReturnType<typeof setTimeout>[] = [];
+function debugOn(): boolean {
+  try {
+    return import.meta.env.DEV || localStorage.getItem('neon-escape.debug') === '1';
+  } catch {
+    return import.meta.env.DEV;
+  }
+}
+
+export function hapticsLog(message: string, always = false): void {
+  if (always || debugOn()) console.info(`[haptics] ${message}`);
+}
+
+/**
+ * Native vibration for the Android app. Uses the app's NeonHaptics plugin,
+ * which vibrates as game/media vibration (Android otherwise treats short
+ * vibrations as touch feedback, which many phones have switched off). If that
+ * plugin is missing, falls back to the stock Capacitor Haptics plugin.
+ */
+export function nativeHapticsBackend(
+  plugin: NeonHapticsPlugin = NeonHaptics,
+  available: () => boolean = () => Capacitor.isPluginAvailable('NeonHaptics'),
+): HapticsBackend {
+  const call = (effect: HapticEffect, label: string, always: boolean): Promise<HapticTestResult> => {
+    if (!available()) {
+      // Older native build without the local plugin: one stock vibration of the effect's length.
+      const duration = Math.min(400, Math.max(40, effect.timings.reduce((a, b) => a + b, 0)));
+      hapticsLog(`NeonHaptics missing; Capacitor Haptics.vibrate(${duration}) for ${label}`, always);
+      return CapacitorHaptics.vibrate({ duration }).then(
+        () => ({ status: 'sent' as const, detail: 'fallback' }),
+        (e: unknown) => {
+          hapticsLog(`Capacitor Haptics.vibrate rejected for ${label}: ${String(e)}`, true);
+          return { status: 'failed' as const, detail: String(e) };
+        },
+      );
+    }
+    const options = { timings: [...effect.timings], amplitudes: [...effect.amplitudes] };
+    return plugin.vibrate(options).then(
+      () => {
+        hapticsLog(`NeonHaptics.vibrate(${label}) resolved`, always);
+        return { status: 'sent' as const };
+      },
+      (e: unknown) => {
+        hapticsLog(`NeonHaptics.vibrate(${label}) rejected: ${String((e as Error)?.message ?? e)}`, true);
+        return { status: 'failed' as const, detail: String((e as Error)?.message ?? e) };
+      },
+    );
+  };
+
   return {
+    kind: 'native',
     supported: true,
-    vibrate(pattern) {
-      timers.forEach(clearTimeout);
-      timers = [];
-      const steps = typeof pattern === 'number' ? [pattern] : pattern;
-      let at = 0;
-      steps.forEach((ms, i) => {
-        if (i % 2 === 0 && ms > 0) {
-          const duration = Math.min(ms, 250); // never a long buzz, whatever the pattern says
-          timers.push(setTimeout(() => void Haptics.vibrate({ duration }).catch(() => undefined), at));
+    play: (effect, label) => void call(effect, label, false),
+    stop: () => {
+      if (available()) void plugin.cancel().catch(() => undefined);
+    },
+    test: async (effect) => {
+      hapticsLog(`test: native=${isNativeApp()} NeonHaptics=${available()} CapacitorHaptics=${Capacitor.isPluginAvailable('Haptics')}`, true);
+      if (available()) {
+        try {
+          const info = await plugin.info();
+          hapticsLog(`device: ${JSON.stringify(info)}`, true);
+          if (!info.hasVibrator) return { status: 'unsupported', detail: 'no vibrator' };
+        } catch (e) {
+          hapticsLog(`info() failed: ${String(e)}`, true);
         }
-        at += Math.max(0, ms);
-      });
+      }
+      return call(effect, 'test', true);
     },
   };
 }
