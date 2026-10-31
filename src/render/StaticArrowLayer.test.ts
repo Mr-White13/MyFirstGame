@@ -85,6 +85,37 @@ describe('resting-arrow cache', () => {
     expect(a.graphics.visible).toBe(true);
   });
 
+  it('B1: does not rebuild on every frame while an arrow is pressed, flashing or tweening', () => {
+    const { scene, parent, drawn } = fakeScene();
+    const layer = new StaticArrowLayer(scene as never, parent as never);
+    layer.setLayout(layout);
+    const a = fakeView('a');
+    const pressed = fakeView('pressed', false);
+    const views = new Map([['a', a], ['pressed', pressed]]);
+    layer.update(views, 0);
+    const rebuilds = drawn.length;
+    for (let frame = 1; frame <= 60; frame++) layer.update(views, frame * 16);
+    expect(drawn.length).toBe(rebuilds); // nothing changed: no rebuild
+    expect([a.graphics.visible, pressed.graphics.visible]).toEqual([false, true]);
+  });
+
+  it('still rebuilds when a cached arrow leaves the board list while another is live', () => {
+    const { scene, parent, drawn } = fakeScene();
+    const layer = new StaticArrowLayer(scene as never, parent as never);
+    layer.setLayout(layout);
+    const a = fakeView('a');
+    const b = fakeView('b');
+    const pressed = fakeView('pressed', false);
+    const views = new Map([['a', a], ['b', b], ['pressed', pressed]]);
+    layer.update(views, 0);
+    const rebuilds = drawn.length;
+    views.delete('b'); // removed while still marked static (e.g. a release that hasn't started animating)
+    layer.update(views, 16);
+    expect(drawn.length).toBe(rebuilds + 1);
+    expect(drawn.at(-1)).toEqual([a.graphics]);
+    expect(b.graphics.visible).toBe(true);
+  });
+
   it('clear() (restart, level change) shows every arrow live again', () => {
     const { scene, parent } = fakeScene();
     const layer = new StaticArrowLayer(scene as never, parent as never);
