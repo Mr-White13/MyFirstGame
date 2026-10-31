@@ -3,8 +3,8 @@ import { LEVELS } from '../levels';
 import { createProgress } from '../progress/Progress';
 import { createStats } from '../profile/Stats';
 import { Rewards, REWARDS_KEY } from '../rewards/Rewards';
-import type { KeyValueStore } from '../storage/SafeStore';
 import { LEAGUE_KEY, LeagueService } from './LeagueService';
+import { MemoryStore } from '../testing/memoryStore';
 
 /**
  * League credits travel to the wallet through an outbox (see LeagueService).
@@ -16,20 +16,6 @@ import { LEAGUE_KEY, LeagueService } from './LeagueService';
 
 const DAY = '2026-10-31';
 const TX = { id: 'league:test-credit', amount: 50 };
-
-class MemoryStore implements KeyValueStore {
-  readonly data = new Map<string, string>();
-  failSet: string | null = null;
-
-  getItem(key: string): string | null {
-    return this.data.get(key) ?? null;
-  }
-
-  setItem(key: string, value: string): void {
-    if (key === this.failSet) throw new Error('quota');
-    this.data.set(key, value);
-  }
-}
 
 function setup(store: MemoryStore) {
   store.data.set(LEAGUE_KEY, JSON.stringify({ version: 1, tier: 0, lastDay: DAY, outbox: [TX] }));
@@ -54,13 +40,13 @@ describe('league credit outbox', () => {
   it('a failed Rewards save keeps the transaction in the outbox, but (B4) the retry drops it without saving the wallet', () => {
     const store = new MemoryStore();
     const { rewards, league, savedWallet, savedOutbox } = setup(store);
-    store.failSet = REWARDS_KEY;
+    store.failWrites = (key) => key === REWARDS_KEY;
     league.flush();
     expect(rewards.credits).toBe(50); // applied in memory
     expect(savedWallet()).toBeNull();
     expect(league.current.outbox).toEqual([TX]);
 
-    store.failSet = null;
+    store.failWrites = false;
     league.flush(); // earn() reports a duplicate, grant() says true
     expect(league.current.outbox).toEqual([]);
     expect(savedOutbox()).toEqual([]);

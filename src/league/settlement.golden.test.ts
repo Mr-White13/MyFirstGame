@@ -3,9 +3,9 @@ import { GameState } from '../core/GameState';
 import { findSolution } from '../core/solver';
 import { addDays } from '../daily/dayKey';
 import { LEVELS } from '../levels';
-import type { KeyValueStore } from '../storage/SafeStore';
 import { golden, plain } from '../testing/golden';
 import { LeagueService } from './LeagueService';
+import { MemoryStore } from '../testing/memoryStore';
 
 /**
  * A scripted 45-day season through the live LeagueService (settling, Energy
@@ -13,12 +13,6 @@ import { LeagueService } from './LeagueService';
  * credit delivery), starting from a save made on pool 4. The golden file
  * records the settle status and the saved state after every day.
  */
-
-class MemoryStore implements KeyValueStore {
-  readonly data = new Map<string, string>();
-  getItem = (key: string) => this.data.get(key) ?? null;
-  setItem = (key: string, value: string) => void this.data.set(key, value);
-}
 
 const START = '2026-10-19'; // the day the saved pool-4 competition began
 /** Challenges finished each day (0–3); on a 0 day the first one is only half played. */

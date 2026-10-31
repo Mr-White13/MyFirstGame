@@ -13,7 +13,6 @@ import { createStats, STATS_KEY, StatsStorage } from '../profile/Stats';
 import { createProgress, recordCompletion } from '../progress/Progress';
 import { STORAGE_KEY as PROGRESS_KEY, ProgressStorage } from '../progress/ProgressStorage';
 import { REWARDS_KEY, Rewards } from '../rewards/Rewards';
-import type { KeyValueStore } from '../storage/SafeStore';
 import { challengePool, CHALLENGES_PER_DAY, dailyChallenges, ENERGY_PER_CHALLENGE, MAX_DAILY_POINTS, type DailyChallenge } from './challenges';
 import {
   applyInactivity,
@@ -28,18 +27,7 @@ import {
 } from './League';
 import { BRONZE, LEAGUE_REWARDS, LEAGUES, TOP_TIER } from './leagues';
 import { LEAGUE_KEY, LEAGUE_VERSION, LeagueService, readLeague } from './LeagueService';
-
-class MemoryStore implements KeyValueStore {
-  readonly data = new Map<string, string>();
-  writes: string[] = [];
-  getItem(key: string): string | null {
-    return this.data.get(key) ?? null;
-  }
-  setItem(key: string, value: string): void {
-    this.writes.push(key);
-    this.data.set(key, value);
-  }
-}
+import { MemoryStore } from '../testing/memoryStore';
 
 const DAY = '2026-10-31';
 const TIER = { bronze: 0, silver: 1, gold: 2, platinum: 3, diamond: 4, elite: 5 };

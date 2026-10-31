@@ -4,6 +4,7 @@ import { collect, settle } from '../league/League';
 import { readLeague } from '../league/LeagueService';
 import { LEVELS } from '../levels';
 import { arrowLabel, levelFromMap } from '../levels/levelMap';
+import { firstFreeArrow } from '../testing/play';
 import { GameState } from './GameState';
 import { BONUS_CLEARS, BONUS_COOLDOWN, STREAK_TAPS, STREAK_WINDOW_MS, type MoveResult } from './types';
 
@@ -23,24 +24,10 @@ const cleared = (r: MoveResult) => {
   return r;
 };
 const ids = (removals: readonly { arrowId: string }[]) => removals.map((r) => r.arrowId);
-const STEP = { up: [-1, 0], down: [1, 0], left: [0, -1], right: [0, 1] } as const;
-
-/** The first normal arrow (level order) whose way out is clear: what a careful player would tap. */
-function freeArrow(state: GameState): string | undefined {
-  return state.getArrows().find((a) => {
-    if (state.isActivated(a.id)) return false;
-    const [dr, dc] = STEP[a.direction];
-    const head = a.cells[a.cells.length - 1];
-    for (let r = head.row + dr, c = head.col + dc; r >= 0 && c >= 0 && r < state.rows && c < state.cols; r += dr, c += dc) {
-      if (state.arrowIdAt(r, c) !== undefined) return false;
-    }
-    return true;
-  })?.id;
-}
 
 /** Taps free arrows (in level order) at the given times; returns each tap's bonus clears. */
 function play(state: GameState, times: readonly number[]): string[][] {
-  return times.map((at) => ids(cleared(state.tryMove(freeArrow(state)!, at)).cascade));
+  return times.map((at) => ids(cleared(state.tryMove(firstFreeArrow(state)!, at)).cascade));
 }
 
 /** `n` taps, `gap` ms apart, starting at `from`. */
@@ -83,7 +70,7 @@ describe('streak bonus: frequency', () => {
     const cooldowns: number[] = [];
     const s2 = new GameState(big);
     for (const at of taps(6, 100)) {
-      s2.tryMove(freeArrow(s2)!, at);
+      s2.tryMove(firstFreeArrow(s2)!, at);
       cooldowns.push(s2.snapshot().bonusCooldown);
     }
     expect(cooldowns).toEqual([0, 0, 0, 0, 8, 7]);
@@ -179,7 +166,7 @@ describe('streak bonus: eligibility and resets', () => {
   it('is deterministic for the same taps at the same times', () => {
     const run = () => {
       const s = new GameState(big);
-      return taps(14, 150).map((at) => s.tryMove(freeArrow(s)!, at));
+      return taps(14, 150).map((at) => s.tryMove(firstFreeArrow(s)!, at));
     };
     expect(run()).toEqual(run());
   });
@@ -197,7 +184,7 @@ describe('streak bonus: records and rewards', () => {
   it('a won level counts every arrow once: taps + chain + bonus', () => {
     const state = new GameState(big);
     let t = 0;
-    for (let id = freeArrow(state); id && state.isPlaying; id = freeArrow(state)) state.tryMove(id, (t += 100));
+    for (let id = firstFreeArrow(state); id && state.isPlaying; id = firstFreeArrow(state)) state.tryMove(id, (t += 100));
     const s = state.snapshot();
     expect(s.won).toBe(true);
     expect(s.cascadeClears).toBe(2 * BONUS_CLEARS); // taps 5 and 13 earned a bonus; the cooldown was not over again before the end
@@ -218,7 +205,7 @@ describe('streak bonus: records and rewards', () => {
         if (result.status === 'awarded') awarded++;
       });
       let t = 0;
-      for (let id = freeArrow(state); id && state.isPlaying; id = freeArrow(state)) state.tryMove(id, (t += 200));
+      for (let id = firstFreeArrow(state); id && state.isPlaying; id = firstFreeArrow(state)) state.tryMove(id, (t += 200));
       expect(state.isWon).toBe(true);
       bonuses += state.snapshot().cascadeClears;
       expect(awarded).toBe(challenge.energyArrowIds.length);

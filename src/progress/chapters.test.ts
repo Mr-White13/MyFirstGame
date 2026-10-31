@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { NavigationHistory } from '../app/Navigation';
 import { LEVELS } from '../levels';
-import type { KeyValueStore } from '../storage/SafeStore';
 import {
   CHAPTER_SIZE,
   chapterCount,
@@ -19,16 +18,7 @@ import {
 } from './chapters';
 import { createProgress, recordCompletion, type LevelRecord, type Progress } from './Progress';
 import { ProgressStorage, STORAGE_KEY } from './ProgressStorage';
-
-class MemoryStore implements KeyValueStore {
-  readonly data = new Map<string, string>();
-  getItem(key: string): string | null {
-    return this.data.get(key) ?? null;
-  }
-  setItem(key: string, value: string): void {
-    this.data.set(key, value);
-  }
-}
+import { MemoryStore } from '../testing/memoryStore';
 
 const record = (stars: number | null, timeMs: number | null, revision = 1): LevelRecord => ({ bestMoves: 10, revision, bestStars: stars, bestMistakes: stars === null ? null : 3 - stars, bestTimeMs: timeMs });
 

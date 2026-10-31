@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { AttemptTracker } from '../app/AttemptTracker';
 import { SettingsStore, type ThemeChoice } from '../settings/Settings';
-import type { KeyValueStore } from '../storage/SafeStore';
 import { ThemePicker } from './ThemePicker';
+import { MemoryStore } from '../testing/memoryStore';
 
 type Listener = (event: { target: unknown; preventDefault(): void }) => void;
 
@@ -38,16 +38,6 @@ function fakeElement(dataset: Record<string, string> = {}): FakeElement {
     querySelectorAll: () => el.children,
   };
   return el;
-}
-
-class MemoryStore implements KeyValueStore {
-  readonly data = new Map<string, string>();
-  getItem(key: string): string | null {
-    return this.data.get(key) ?? null;
-  }
-  setItem(key: string, value: string): void {
-    this.data.set(key, value);
-  }
 }
 
 let elements: Map<string, FakeElement>;
