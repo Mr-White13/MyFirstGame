@@ -5,6 +5,8 @@ import { countryName, flagEmoji } from '../profile/countries';
 import { rankFor, validateNickname, type PlayerProfile } from '../profile/Profile';
 import type { PlayerStats } from '../profile/Stats';
 import { completedCount, MAX_STARS, perfectLevels, totalStars, type Progress } from '../progress/Progress';
+import { league } from '../league/leagues';
+import type { LeagueState } from '../league/League';
 import { requireElement } from './dom';
 
 export interface ProfileActions {
@@ -103,6 +105,16 @@ export class ProfileScreen {
     this.setText('profile-tracked-since', `Runs counted since ${since}. "Levels cleared" includes replays.`);
 
     this.records.replaceChildren(...this.levels.map((level) => this.recordRow(level, progress)));
+  }
+
+  /** League standing and lifetime league numbers (Energy Points are separate from Energy Credits). */
+  renderLeague(state: LeagueState): void {
+    this.setText('stat-league', league(state.tier).name);
+    this.setText('stat-league-best', league(state.highestTier).name);
+    this.setText('stat-points', state.lifetime.points);
+    this.setText('stat-challenges', state.lifetime.challengesCompleted);
+    this.setText('stat-promotions', state.lifetime.promotions);
+    this.setText('stat-relegations', state.lifetime.relegations);
   }
 
   renderRewards(r: ProfileRewards): void {

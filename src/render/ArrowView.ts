@@ -147,6 +147,8 @@ export class ArrowView {
     let headOut = false;
 
     const tip = this.restPath[this.restPath.length - 1];
+    // A collected Energy Arrow sends out a gold ring (decoration only: the point was awarded when the rules removed it).
+    if (this.data.energy) this.fx.ring(tip.x, tip.y, p.energy, cell, 0.2, 0.95, 380);
     if (options.auto) {
       this.fx.ring(tip.x, tip.y, p.chain, cell, 0.15, 0.75, 320);
       this.fx.burst(tip.x, tip.y, v.dCol, v.dRow, p.chain, cell, 5, 1.4);
@@ -407,7 +409,9 @@ export class ArrowView {
     this.strokeRounded(g, shaft, bodyWidth, color);
     this.fillHead(g, tip, v, headLength, halfWidth, color, 0);
     // A thin bright core line gives the "neon tube" look without extra glow.
-    this.strokeRounded(g, shaft, cell * ARROW_STYLE.coreWidth, lighten(color, p.core));
+    // Energy Arrows get a gold core instead of a white one, while resting.
+    const resting = this.color === this.baseColor && !this.activated;
+    this.strokeRounded(g, shaft, cell * ARROW_STYLE.coreWidth, this.data.energy && resting ? p.energy : lighten(color, p.core));
     // Activated arrows are cut into a dashed tube, so they differ from the
     // others by shape as well as by colour (colour-blind players, any theme).
     if (this.activated && this.color === this.baseColor) this.cutDashes(g, shaft, bodyWidth, mixColors(p.well, color, 0.2));
@@ -416,6 +420,28 @@ export class ArrowView {
     const tail = shaft[0] ?? segment[0];
     g.fillStyle(p.well, 1);
     g.fillCircle(tail.x, tail.y, bodyWidth * 0.2);
+    // Energy marker: a gold diamond with a dark rim on the body, kept when the arrow turns red.
+    if (this.data.energy) this.drawEnergyMarker(g, shaft, bodyWidth, p.energy, p.well);
+  }
+
+  /** A small diamond halfway along the shaft (behind the head, so the direction stays readable). */
+  private drawEnergyMarker(g: Phaser.GameObjects.Graphics, shaft: readonly Point[], bodyWidth: number, color: number, rim: number): void {
+    const length = polylineLength(shaft);
+    const at = slicePolyline(shaft, length * 0.45, length * 0.45)[0] ?? shaft[0];
+    if (!at) return;
+    const r = bodyWidth * 0.95;
+    const diamond = (size: number) => [
+      { x: at.x, y: at.y - size },
+      { x: at.x + size, y: at.y },
+      { x: at.x, y: at.y + size },
+      { x: at.x - size, y: at.y },
+    ];
+    g.fillStyle(rim, 1);
+    g.fillPoints(diamond(r * 1.3), true);
+    g.fillStyle(color, 1);
+    g.fillPoints(diamond(r), true);
+    g.fillStyle(rim, 0.85);
+    g.fillPoints(diamond(r * 0.35), true);
   }
 
   /** Short gaps across the body at regular spacing along it. */

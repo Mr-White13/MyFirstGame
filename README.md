@@ -4,7 +4,7 @@ A 2D arrow-clearing puzzle game for mobile, built with **Phaser 3**, **TypeScrip
 
 Tap an arrow to send it flying off the board in the direction it points. It can only leave if nothing is in its way. Clear every arrow to finish the level.
 
-It opens on a **Home** screen with your local **player profile** (nickname, avatar, country) and lifetime **statistics**. Every level is **timed**, with personal bests. A **Settings** screen offers four visual themes, reduced motion and effects options, synthesised sound effects and ambient music, vibration and gameplay preferences. A **daily check-in** with a 7-day reward cycle, login streaks, **Energy Credits** and **12 achievements** reward coming back. The game has **10 hand-made levels** that grow from a 5-arrow tutorial to dense 9×9 boards. It includes a level select screen, unlockable progression and progress saved in the browser.
+It opens on a **Home** screen with your local **player profile** (nickname, avatar, country) and lifetime **statistics**. Every level is **timed**, with personal bests. A **Settings** screen offers four visual themes, reduced motion and effects options, synthesised sound effects and ambient music, vibration and gameplay preferences. A **daily check-in** with a 7-day reward cycle, login streaks, **Energy Credits** and **12 achievements** reward coming back. After Level 10, the **Daily League** offers three daily challenges with collectible **Energy Arrows** and a six-tier league (Bronze to Neon Elite) based on transparent, offline daily targets. The game has **10 hand-made levels** that grow from a 5-arrow tutorial to dense 9×9 boards. It includes a level select screen, unlockable progression and progress saved in the browser.
 
 ## Requirements
 
@@ -117,6 +117,7 @@ The game opens on **Home**:
 - **Header:** Settings, your **Energy Credits** balance (opens Daily rewards), and your avatar and nickname, which open the Profile.
 - **Play card:** the next level to play, a big **Play / Continue / Play again** button, your level progress and your total stars.
 - **Daily card:** your login streak and today's reward: a green **Claim +N** when it's ready, otherwise "Claimed today · Tomorrow +N" and a **Rewards** button. See "Daily rewards, streaks and achievements".
+- **League card:** your league crest and today's Energy Points (or "Unlocks after Level 10" with your progress). Opens the League screen.
 - **Menu:** **Levels**, **Profile**, **Awards** (achievements, with *n*/12) and **Settings**. The old "Events" and "Daily activity (coming soon)" placeholders were replaced by these.
 
 Other screens:
@@ -168,7 +169,7 @@ Everything is local: no account, no backend, nothing leaves the device.
 
 ### Saved data
 
-Five separate keys in `localStorage`, each versioned and loaded with the same safety rules (`src/storage/SafeStore.ts`):
+Six separate keys in `localStorage`, each versioned and loaded with the same safety rules (`src/storage/SafeStore.ts`):
 
 | Key | Contents | Version |
 | --- | -------- | ------- |
@@ -177,6 +178,7 @@ Five separate keys in `localStorage`, each versioned and loaded with the same sa
 | `neon-escape.stats` | Lifetime counters and `trackedSince` | 1 |
 | `neon-escape.settings` | Theme, motion, effects, audio, vibration and gameplay options (see "Settings") | 1 |
 | `neon-escape.rewards` | Daily check-in, Energy Credits wallet, achievements (see "How rewards are saved") | 1 |
+| `neon-escape.league` | Daily League: tier, today's Energy Points, history, milestones (see "How league data is saved") | 1 |
 
 ```json
 { "version": 4, "highestUnlocked": 4, "completed": {
@@ -426,6 +428,166 @@ All of this is **one** record, `neon-escape.rewards` (version 1), separate from 
 9. **Corruption:** set `neon-escape.rewards` to `{oops` and refresh. Rewards start fresh, the bad value is kept in `neon-escape.rewards.backup`, and levels, stars, times and settings are untouched.
 10. **Preferences:** with Reduced motion on, claims show no pop or float; with Sound off, no sounds; with Vibration off, no pulses. In the Light theme the calendar and cards follow the theme.
 
+## Daily League
+
+After you complete **Level 10**, the **Daily League** opens: three challenges every day with collectible **Energy Arrows**, and a league tier that moves with your daily score. Before that, Home and the League screen show "Unlocks after Level 10" with your progress. No competition exists and no points can be earned while it is locked, and normal progression is unchanged.
+
+### Energy Arrows
+
+An Energy Arrow is an ordinary arrow with one extra property: in a Daily League challenge, removing it earns **1 Energy Point**.
+
+- **Same rules:** it moves, blocks, turns red, chains and costs lives exactly like any other arrow. The rules never read the flag (`ArrowData.energy`), and a test plays the same taps on a challenge and its source level and gets identical results.
+- **Look:** the arrow keeps its normal colour, gets a **gold core line** and a **gold diamond marker** on its body (behind the head, so the direction stays readable), and sends out a gold ring when it leaves. When it is tapped while blocked, it turns red and dashed like any activated arrow but keeps its gold diamond. Gold is never red, and it follows the themes (darker gold in Light).
+- **When the point counts:** the moment the rules remove the arrow, whether you tapped it or a chain reaction released it, not when an animation ends. `GameState.onRemove` reports each removal; the league records it and saves immediately. The gold ring and the "zap" sound are only the visual and audio echo of that.
+
+### Daily League challenges
+
+- **Three a day**, labelled *Daily 1/3, 2/3, 3/3* (they are not numbered levels).
+- **Layouts:** reused unchanged from the curated levels with 10+ arrows (levels 4–10). The date (`YYYY-MM-DD`) seeds a fixed generator that picks three different layouts (ordered by level, so challenge 1 is the easiest of the three) and four different arrows in each to be Energy Arrows. The same date always gives the same challenges; different dates almost always differ.
+- **Ids** are stable: `2026-10-31:2:L6` = 31 Oct, challenge 2, layout of level 6. Each Energy Arrow is collected under `<challenge id>/<arrow id>`.
+- **All four are always collectible**, because solving a level removes every arrow (tested for each challenge).
+- **Gameplay** is the normal level screen: three lives, red arrows, chains, timer, restart, Game Over and retry. The HUD adds a gold strip: Energy Arrows collected in this challenge (0/4), your league, and today's points (0/12).
+- **Completing** a challenge shows stars, time, Energy Arrows collected, newly earned points and today's total, with **Next challenge** (or **League**), **Restart** and **League**.
+- **Separate records:** challenges never change level unlocks, stars, best times or the lifetime statistics on the Profile. Challenge numbers are tracked in the league record instead (challenges completed, Energy Points).
+- **Limited variety for now:** with only 10 curated levels, the pool is 7 layouts, so you'll recognise them. It will become more varied as more levels are added. The level generator is not used at runtime.
+
+### Energy Points and Energy Credits
+
+| | Energy Points | Energy Credits |
+| --- | --- | --- |
+| Earned from | Energy Arrows in Daily League challenges | Daily rewards, achievements, league milestones |
+| Resets | Every competition day | Never |
+| Used for | League promotion and relegation | Kept for future cosmetics and hints (no shop yet) |
+| Stored in | `neon-escape.league` | `neon-escape.rewards` (wallet) |
+
+They are never converted into each other.
+
+### Points per day
+
+- Up to **12** a day (3 challenges × 4 Energy Arrows).
+- Each Energy Arrow pays **once per challenge per day**. Replays, restarts and Game Over keep what you've collected and never pay the same arrow again.
+- Points belong to the day of the challenge. If midnight passes during a challenge, it stops earning (a short notice says so) and today's challenges are new.
+
+### League tiers and targets
+
+The targets are **personal and offline**. They compare your own score with fixed numbers, **not with other players**. There are no other players, rankings or leaderboards yet.
+
+| League | Promote if the day's score is at least | Relegate if a played day's score is below |
+| --- | --- | --- |
+| Bronze | 5 | never |
+| Silver | 7 | 2 |
+| Gold | 9 | 3 |
+| Platinum | 10 | 4 |
+| Diamond | 11 | 5 |
+| Neon Elite | top league | 6 |
+
+All numbers live in `src/league/leagues.ts` for later balancing. Everyone starts in Bronze. Each league has an original vector crest (one chevron per tier above Bronze, a bolt for Neon Elite). The league is independent of the cosmetic star rank (Rookie … Grid Master), which is unchanged.
+
+- **Promotion** (score ≥ target) moves up one league; otherwise **relegation** (score < threshold) moves down one; anything in between keeps the league.
+- At most **one league change per day**. Bronze can't drop and Neon Elite can't rise.
+
+### Taking part and inactivity
+
+- You **take part** in a day by earning at least 1 Energy Point. That day is scored with the table above.
+- A day **without points**, whether the game was opened or not, is an **inactive day**.
+- **Protected day:** the first inactive day in a row (after a day with points, or after the league opened) changes nothing.
+- Each **further consecutive inactive day** moves you down one league, never below Bronze. Earning a point resets the count, so the next missed day is protected again.
+
+**Example:** in Gold, you skip Monday (protected, still Gold) and Tuesday (moved to Silver). On Wednesday you score 3: Silver kept, and the protection is back.
+
+### Daily settlement
+
+- A competition belongs to one **local calendar date** (the same `dayKey` as daily rewards). A new one starts when the date changes.
+- The previous day is **settled the next time the game runs**: at start, on return from the background, or when midnight passes while it's open (`DayClock`). The app never has to be open at midnight.
+- **Several days away** are settled at once: the last played day is scored, then the missed days are applied with the protection rule. A run of missed days is one history entry ("3 days · No points").
+- **Idempotent:** settling again on the same day (refresh, reopen) changes nothing. Points never carry over: each new day starts at 0.
+- **Clock moved back** to before the last day seen: nothing is settled and no points can be earned until that date has passed (the League screen explains this). **Clock moved forward** can't be detected offline and counts as missed days. Month and year ends and daylight-saving days are ordinary single days (tested).
+
+### Results
+
+After settlement, what changed is shown **once**:
+- **Promotion:** a dialog with the new crest, a short rise animation, a fanfare and a vibration (all following the motion, sound and vibration settings).
+- **Moving down:** a neutral dialog ("Now in Silver … earn points to climb back").
+- **League kept:** a short toast only.
+- Several settled days are **summarised in one message**. It never interrupts a level. Dismissing it records that it was seen, so it never shows again.
+
+### League screen
+
+Open it from the **league card on Home** (badge, today's points and the next target, or the locked progress). It shows:
+- your crest, league and today's points;
+- a **progress bar** from 0 to 12 with the promotion and relegation marks, and what you still need;
+- challenges completed (0/3) and Energy Arrows collected (0/12);
+- the **three challenge cards** with Play / Continue / Replay, gold pips for collected arrows, and a check when done;
+- the rules and the full targets table (your league highlighted);
+- the **last 10 days**: date, points, outcome and any league change.
+
+The **Profile** has a Daily League card: current and highest league, lifetime Energy Points, challenges completed, promotions and relegations.
+
+### League credits
+
+Modest Energy Credits for milestones (configurable in `LEAGUE_REWARDS`):
+
+| Milestone | Credits | Paid |
+| --- | --- | --- |
+| First promotion | 25 | once ever |
+| First time reaching Silver / Gold / Platinum / Diamond / Neon Elite | 20 / 30 / 40 / 50 / 75 | once per league, ever: dropping and climbing back pays nothing |
+| All three challenges in one day | 15 | once per date |
+
+### How league data is saved
+
+`neon-escape.league` (version 1) is separate from every other save:
+
+```json
+{ "version": 1, "tier": 1, "highestTier": 2, "inactiveStreak": 0, "lastDay": "2026-10-31",
+  "current": { "date": "2026-10-31", "startTier": 1, "completed": [1],
+               "collected": ["2026-10-31:1:L4/a", "2026-10-31:1:L4/b"], "sweepRewarded": false },
+  "history": [{ "date": "2026-10-30", "days": 1, "points": 7, "challenges": 2,
+                "startTier": 0, "endTier": 1, "outcome": "promoted" }],
+  "lifetime": { "points": 41, "promotions": 2, "relegations": 1, "challengesCompleted": 9 },
+  "milestones": ["league:first-promotion", "league:highest:silver"],
+  "outbox": [], "notice": null }
+```
+
+- **Every point is saved immediately**, in the same write as the collection key that prevents paying it twice. Settlement writes the settled history, the new day and the result in one write.
+- **Credits cross two records safely.** The league can't write the wallet in the same `setItem`, so it uses an **outbox**:
+  1. The league saves the owed transaction (with a stable id such as `league:first-promotion`).
+  2. The wallet applies it, refusing ids it has already applied.
+  3. Only then is it removed from the outbox.
+
+  If the app stops between the steps, the next start finishes the delivery, and the credit is never lost or paid twice (tested with a simulated crash).
+- **Validation** is the same as for every save (`SafeStore`): bad tiers, dates, counts, keys and transactions are dropped or repaired, the daily score is capped at 12, corrupted data is backed up to `neon-escape.league.backup`, a save from a newer version is never overwritten, and without storage the league works for the session.
+- **Nothing else is touched:** level progress, stars, best times, profile, statistics, settings, daily check-ins, achievements and existing credits (tested).
+- **Not tamper-proof:** as with all local saves, anyone can edit `localStorage`, and the device clock can be changed. Fair competition between real players will need a server.
+
+### Testing the league manually in Chrome
+
+Back up your save first, and restore it afterwards, so testing never mixes with your real progress. In the DevTools console:
+
+```js
+// Back up every NEON ESCAPE key (survives reloads in this tab).
+sessionStorage.setItem('neon-backup', JSON.stringify(Object.fromEntries(Object.keys(localStorage).filter(k => k.startsWith('neon-escape')).map(k => [k, localStorage.getItem(k)]))));
+```
+
+1. **Unlock for testing:** mark levels 1–10 as completed, then reload. Home shows a Bronze league card.
+   ```js
+   const completed = {}; for (let i = 1; i <= 10; i++) completed[i] = { bestMoves: 10, revision: 1, bestStars: 2, bestMistakes: 1, bestTimeMs: 60000 };
+   localStorage.setItem('neon-escape.progress', JSON.stringify({ version: 4, highestUnlocked: 10, completed })); location.reload();
+   ```
+2. **Play:** Home → league card → Challenge 1. Gold-marked arrows are Energy Arrows. Clear one: the HUD shows 1/4 and Today 1/12. Restart: the count stays. Lose all lives: the points stay. Finish: the dialog shows the Energy Arrows and new points. Replay: "+0 new points".
+3. **Chain collection:** tap a blocked Energy Arrow (it turns red and dashed, keeping its gold diamond), clear what blocks it, and it leaves by itself and still counts.
+4. **Next day / promotion:** move today's competition back one day, then reload. With 5+ points in Bronze you get "Promoted to Silver!", +45 credits (first promotion + Silver), and a history entry. Reload again: no repeat.
+   ```js
+   const r = JSON.parse(localStorage.getItem('neon-escape.league')); const y = '2026-10-30'; // the day before today
+   r.lastDay = y; r.current = { ...r.current, date: y, collected: ['a','b','c','d','e','f'].map(id => `${y}:1:L4/${id}`) };
+   localStorage.setItem('neon-escape.league', JSON.stringify(r)); location.reload();
+   ```
+5. **Missed days:** set `lastDay` and `current.date` three or more days back with `collected: []`, then reload. The first day is protected and each later one moves you down, with a single summary.
+6. **Clock moved back:** set `lastDay` and `current.date` to tomorrow, then reload. The League screen explains that points resume later.
+7. **Restore your real data:**
+   ```js
+   const b = JSON.parse(sessionStorage.getItem('neon-backup')); Object.keys(localStorage).filter(k => k.startsWith('neon-escape')).forEach(k => localStorage.removeItem(k)); Object.entries(b).forEach(([k, v]) => localStorage.setItem(k, v)); location.reload();
+   ```
+
 ## Levels
 
 Ten curated levels with a steadily rising estimated difficulty. The full analysis, including the
@@ -507,6 +669,12 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     │   ├── dayKey.ts          Local day ids, day arithmetic, DayClock (new-day detection), daily objectives
     │   └── Daily.ts           Check-in, streaks, 7-day reward cycle, claims, calendar view
     │
+    ├── league/            Daily League (rules only, no Phaser or DOM)
+    │   ├── leagues.ts         Tiers, thresholds, inactivity and credit configuration, crest SVG
+    │   ├── challenges.ts      Deterministic daily challenges and Energy Arrow placement
+    │   ├── League.ts          Collection, completion, settlement, inactivity, validation (pure)
+    │   └── LeagueService.ts   Saved record, settlement calls, credit outbox
+    │
     ├── rewards/           Energy Credits and achievements
     │   ├── Rewards.ts         One saved record (daily + wallet + achievements); atomic claims
     │   ├── Wallet.ts          Energy Credits: validated, de-duplicated transactions
@@ -553,8 +721,10 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     │   └── MoveSequencer.ts Plays one action's animations in order; input lock with cancel tokens
     │
     └── ui/                DOM views, no game rules
-        ├── Screens.ts         Switches between Home, Levels, Game, Profile, Settings and Achievements
+        ├── Screens.ts         Switches between Home, Levels, Game, Profile, Settings, Achievements and League
         ├── DailyDialog.ts     Daily rewards calendar and claim animation
+        ├── LeagueScreen.ts    League standing, progress, challenges, rules, history
+        ├── LeagueResultDialog.ts Promotion / relegation result, shown once
         ├── AchievementsScreen.ts Achievement cards, progress and summary
         ├── SettingsScreen.ts  Settings controls (switches, segmented controls, sliders)
         ├── HomeScreen.ts      Start screen: identity, next level, progress, menu
@@ -678,6 +848,6 @@ layout aren't compared with the new one.
 
 ## Not in this prototype
 
-Capacitor/Android packaging, in-game level generation (the generator is an offline developer tool), hints, power-ups, a shop, leagues, accounts, ads and monetisation are intentionally left out. Energy Credits cannot be bought.
+Capacitor/Android packaging, in-game level generation (the generator is an offline developer tool), hints, power-ups, a shop, online leagues or leaderboards, accounts, ads and monetisation are intentionally left out. Energy Credits cannot be bought.
 
 **About scoring:** the star rating (lives left) is the measure of skill. The move counter is kept for compatibility. It counts arrows you cleared by tapping, so it equals the arrow count minus chain-reaction releases, and it isn't used for ratings.

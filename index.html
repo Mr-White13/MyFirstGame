@@ -139,6 +139,15 @@
           </button>
         </section>
 
+        <button type="button" class="league-card surface" id="btn-home-league">
+          <span class="league-card__badge" id="home-league-badge" aria-hidden="true"></span>
+          <span class="league-card__info">
+            <span class="league-card__name" id="home-league-name">Daily League</span>
+            <span class="league-card__status" id="home-league-status">Unlocks after Level 10</span>
+          </span>
+          <span class="league-card__meter meter" aria-hidden="true"><span class="meter__fill" id="home-league-fill"></span></span>
+        </button>
+
         <nav class="home__nav" aria-label="Main menu">
           <button type="button" class="nav-tile" id="btn-home-levels">
             <svg class="icon" aria-hidden="true"><use href="#icon-grid" /></svg><span>Levels</span>
@@ -188,7 +197,7 @@
                 <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
               </button>
               <div class="hud__heading">
-                <h1 class="hud__level">Level <span id="hud-level">1</span></h1>
+                <h1 class="hud__level"><span id="hud-title">Level</span> <span id="hud-level">1</span></h1>
                 <span class="hud__timer" id="hud-timer" role="timer" aria-label="Level time">
                   <svg class="icon" aria-hidden="true"><use href="#icon-clock" /></svg><span id="hud-time">00:00</span>
                 </span>
@@ -208,6 +217,13 @@
                 <span class="stat__label">Left</span>
                 <span class="stat__value" id="hud-remaining" aria-live="polite">0</span>
               </div>
+            </div>
+            <div class="hud__league" id="hud-league" hidden>
+              <span class="hud__energy" id="hud-energy-wrap">
+                <svg class="icon" aria-hidden="true"><use href="#icon-bolt" /></svg><strong id="hud-energy">0</strong>/4
+              </span>
+              <span class="hud__league-name" id="hud-league-name">Bronze</span>
+              <span class="hud__points">Today <strong id="hud-points">0</strong>/12</span>
             </div>
           </header>
           <div class="board-slot" id="board-slot" role="img" aria-label="Puzzle board"></div>
@@ -266,6 +282,18 @@
               <div><dt>Chain reactions</dt><dd id="stat-chains">0</dd></div>
             </dl>
             <p class="card-note" id="profile-tracked-since"></p>
+          </section>
+
+          <section class="profile__card surface" aria-labelledby="profile-league-title">
+            <h2 class="card-heading" id="profile-league-title">Daily League</h2>
+            <dl class="stat-grid">
+              <div><dt>Current league</dt><dd id="stat-league">Bronze</dd></div>
+              <div><dt>Highest league</dt><dd id="stat-league-best">Bronze</dd></div>
+              <div><dt>Energy Points (lifetime)</dt><dd id="stat-points">0</dd></div>
+              <div><dt>Challenges completed</dt><dd id="stat-challenges">0</dd></div>
+              <div><dt>Promotions</dt><dd id="stat-promotions">0</dd></div>
+              <div><dt>Relegations</dt><dd id="stat-relegations">0</dd></div>
+            </dl>
           </section>
 
           <section class="profile__card surface" aria-labelledby="profile-rewards-title">
@@ -461,6 +489,86 @@
         </div>
       </section>
 
+      <!-- Daily League -->
+      <section class="screen screen--league" id="screen-league" aria-labelledby="league-title">
+        <header class="topbar">
+          <button type="button" class="icon-btn" id="btn-league-back" aria-label="Back">
+            <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
+          </button>
+          <h1 class="topbar__title" id="league-title">Daily League</h1>
+          <span class="topbar__spacer" aria-hidden="true"></span>
+        </header>
+        <div class="league__scroll">
+          <section class="league-hero surface" aria-label="Current league">
+            <span class="league-hero__badge" id="league-badge" aria-hidden="true"></span>
+            <div class="league-hero__info">
+              <span class="eyebrow">Current league</span>
+              <strong class="league-hero__name" id="league-name">Bronze</strong>
+              <span class="league-hero__points"><svg class="icon" aria-hidden="true"><use href="#icon-bolt" /></svg><strong id="league-points">0</strong> / 12 Energy Points today</span>
+            </div>
+          </section>
+
+          <section class="league-locked surface" id="league-locked" hidden>
+            <svg class="icon league-locked__icon" aria-hidden="true"><use href="#icon-lock" /></svg>
+            <h2 class="league-locked__title">Unlocks after Level 10</h2>
+            <p class="league-locked__text">Complete all 10 levels to play three Daily League challenges every day and collect Energy Arrows.</p>
+            <div class="meter"><div class="meter__fill" id="league-unlock-fill"></div></div>
+            <span class="league-locked__count"><strong id="league-unlock-count">0</strong> / 10 levels</span>
+          </section>
+
+          <section class="league-progress surface" id="league-progress" aria-labelledby="league-progress-title">
+            <h2 class="card-heading" id="league-progress-title">Progress today</h2>
+            <div class="league-meter" id="league-meter" role="img">
+              <div class="league-meter__fill" id="league-meter-fill"></div>
+              <span class="league-meter__mark league-meter__mark--down" id="league-mark-down"></span>
+              <span class="league-meter__mark league-meter__mark--up" id="league-mark-up"></span>
+            </div>
+            <p class="league-progress__targets" id="league-targets"></p>
+            <div class="league-progress__counts">
+              <span>Challenges <strong id="league-challenges">0</strong> / 3</span>
+              <span>Energy Arrows <strong id="league-arrows">0</strong> / 12</span>
+            </div>
+            <p class="setting__note" id="league-day-note" hidden></p>
+          </section>
+
+          <section aria-labelledby="league-challenges-title">
+            <h2 class="card-heading league__heading" id="league-challenges-title">Daily challenges</h2>
+            <ol class="challenge-list" id="league-challenge-list"></ol>
+          </section>
+
+          <section class="league-rules surface" aria-labelledby="league-rules-title">
+            <h2 class="card-heading" id="league-rules-title">How the league works</h2>
+            <ul class="league-rules__list">
+              <li>Each day has 3 challenges with 4 Energy Arrows each. Clearing an Energy Arrow, by tapping it or by a chain reaction, earns 1 Energy Point, once per arrow per day: up to 12.</li>
+              <li>When a new day starts, the previous day is scored against your league's targets. Reach the promotion target to move up one league; score below the relegation threshold to move down one. Anything in between keeps your league.</li>
+              <li>You take part in a day by earning at least 1 point. The first day in a row without points is forgiven; each further one moves you down one league, never below Bronze.</li>
+              <li>These are personal, offline targets. There are no other players in this league yet, and no rankings.</li>
+            </ul>
+            <table class="league-table">
+              <caption class="visually-hidden">League targets</caption>
+              <thead><tr><th scope="col">League</th><th scope="col">Promote at</th><th scope="col">Relegate below</th></tr></thead>
+              <tbody id="league-table-body"></tbody>
+            </table>
+          </section>
+
+          <section class="league-history surface" aria-labelledby="league-history-title">
+            <h2 class="card-heading" id="league-history-title">Recent days</h2>
+            <ol class="league-history__list" id="league-history"></ol>
+          </section>
+        </div>
+      </section>
+
+      <!-- League result -->
+      <div class="overlay" id="league-result" role="dialog" aria-modal="true" aria-labelledby="league-result-title" aria-describedby="league-result-text" hidden>
+        <div class="card card--league">
+          <div class="league-result__badge" id="league-result-badge" aria-hidden="true"></div>
+          <p class="card__eyebrow" id="league-result-eyebrow">Daily League</p>
+          <h2 class="card__title" id="league-result-title">Promoted!</h2>
+          <p class="card__detail" id="league-result-text"></p>
+          <button type="button" class="btn btn--primary" id="btn-league-result-ok">Continue</button>
+        </div>
+      </div>
+
       <!-- Daily rewards -->
       <div class="overlay" id="daily-dialog" role="dialog" aria-modal="true" aria-labelledby="daily-title" hidden>
         <div class="card card--picker card--daily">
@@ -496,7 +604,13 @@
           </div>
           <p class="stars__caption" id="complete-lives"></p>
           <p class="card__detail" id="complete-detail"></p>
-          <dl class="run-stats run-stats--two">
+          <dl class="run-stats run-stats--two" id="complete-challenge-stats" hidden>
+            <div class="run-stats__time"><dt>Time</dt><dd id="complete-challenge-time">0.0 s</dd></div>
+            <div class="run-stats__energy"><dt>Energy Arrows</dt><dd id="complete-energy">0 / 4</dd></div>
+            <div><dt>New points</dt><dd id="complete-new-points">+0</dd></div>
+            <div><dt>Today</dt><dd id="complete-today">0 / 12</dd></div>
+          </dl>
+          <dl class="run-stats run-stats--two" id="complete-level-stats">
             <div class="run-stats__time"><dt>Time</dt><dd id="complete-time">0.0 s</dd></div>
             <div><dt>Personal best</dt><dd id="complete-best-time">–</dd></div>
             <div><dt>Arrows cleared</dt><dd><span id="complete-arrows">0</span><small id="complete-chain"></small></dd></div>
@@ -509,7 +623,7 @@
           </div>
           <div class="card__actions">
             <button type="button" class="btn btn--solid" id="btn-next">
-              Next level
+              <span id="btn-next-label">Next level</span>
               <svg class="icon" aria-hidden="true"><use href="#icon-next" /></svg>
             </button>
             <button type="button" class="btn btn--solid" id="btn-play-from-start" hidden>
@@ -523,7 +637,7 @@
               </button>
               <button type="button" class="btn btn--ghost btn--small" id="btn-levels">
                 <svg class="icon" aria-hidden="true"><use href="#icon-grid" /></svg>
-                Levels
+                <span id="btn-levels-label">Levels</span>
               </button>
             </div>
           </div>
@@ -550,7 +664,7 @@
             </button>
             <button type="button" class="btn btn--ghost btn--small" id="btn-gameover-levels">
               <svg class="icon" aria-hidden="true"><use href="#icon-grid" /></svg>
-              Levels
+              <span id="btn-gameover-levels-label">Levels</span>
             </button>
           </div>
         </div>

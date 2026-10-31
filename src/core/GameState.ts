@@ -52,6 +52,7 @@ export class GameState {
   /** Position of each arrow in the level data: the deterministic chain order. */
   private order = new Map<string, number>();
   private readonly listeners = new Set<Listener>();
+  private readonly removeListeners = new Set<(arrow: ArrowData, auto: boolean) => void>();
   private readonly validate: boolean;
   private readonly startingLives: number;
   private status: LevelStatus = 'playing';
@@ -155,6 +156,7 @@ export class GameState {
     }
 
     this.remove(arrow);
+    this.removeListeners.forEach((l) => l(arrow, false));
     this.directClears++;
     const chain = this.resolveChain();
     this.autoClears += chain.length;
@@ -181,6 +183,16 @@ export class GameState {
       won,
       stars: won ? this.lives : 0,
     };
+  }
+
+  /**
+   * Calls `listener` for every arrow the rules remove, at the moment it is
+   * removed (before any animation): the tapped arrow first (`auto` false), then
+   * each chain release (`auto` true). Used for collectibles; rules ignore it.
+   */
+  onRemove(listener: (arrow: ArrowData, auto: boolean) => void): () => void {
+    this.removeListeners.add(listener);
+    return () => this.removeListeners.delete(listener);
   }
 
   /** Subscribes to state changes; the listener is called immediately. Returns an unsubscribe function. */
@@ -213,6 +225,7 @@ export class GameState {
         const check = checkExitPath(this.grid, arrow);
         if (check.clear) {
           this.remove(arrow);
+          this.removeListeners.forEach((l) => l(arrow, true));
           released = { arrowId: arrow.id, exitPath: check.path };
           break;
         }

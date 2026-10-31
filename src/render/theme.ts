@@ -34,6 +34,8 @@ export interface CanvasPalette {
   readonly success: number;
   /** Chain-reaction releases. */
   readonly chain: number;
+  /** Energy Arrows' gold accent (core line and marker). Never red. */
+  readonly energy: number;
   /** Strength of the halo around arrows and the frame (1 = the original neon). */
   readonly glow: number;
   /** How far the arrow's core line is lightened towards white (the "neon tube"). */
@@ -56,6 +58,7 @@ const DARK: CanvasPalette = {
   warning: 0xff9f43,
   success: 0x48f5a5,
   chain: 0xa855f7,
+  energy: 0xffd23f,
   glow: 1,
   core: 0.5,
 };
@@ -76,6 +79,7 @@ const LIGHT: CanvasPalette = {
   warning: 0xc25e00,
   success: 0x0d8a55,
   chain: 0x7c3aed,
+  energy: 0xa86f00,
   glow: 0.55,
   core: 0.32,
 };
@@ -101,6 +105,7 @@ const COLORFUL: CanvasPalette = {
   warning: 0xffe066,
   success: 0x48f5a5,
   chain: 0xd38bff,
+  energy: 0xffd23f,
   glow: 1,
   core: 0.5,
 };
