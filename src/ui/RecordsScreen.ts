@@ -1,7 +1,8 @@
 import { formatPrecise } from '../core/time';
 import type { LevelData } from '../core/types';
-import { chapterCount, chapterOf, chapterSummary, clampChapter, currentChapter, queryRecords, type RecordEntry, type RecordsQuery } from '../progress/chapters';
+import { chapterCount, chapterOf, chapterSummary, clampChapter, queryRecords, type RecordEntry, type RecordsQuery } from '../progress/chapters';
 import type { Progress } from '../progress/Progress';
+import { chapterMeta, shownChapter } from './chapterNav';
 import { requireElement, starIcons } from './dom';
 
 
@@ -38,7 +39,7 @@ export class RecordsScreen {
   }
 
   private get shownChapter(): number {
-    return this.chapter ?? (this.progress ? currentChapter(this.progress, this.levels.length) : 1);
+    return shownChapter(this.chapter, this.progress, this.levels.length);
   }
 
   render(progress: Progress): void {
@@ -78,7 +79,7 @@ export class RecordsScreen {
     this.meta.textContent =
       page.chapter === null
         ? `${page.matches} matching ${page.matches === 1 ? 'level' : 'levels'}`
-        : `Levels ${summary.first}–${summary.last} · ${summary.completed}/${summary.levels} done · ${summary.stars}/${summary.maxStars} ★`;
+        : chapterMeta(summary);
     this.prev.disabled = page.chapter === null || page.chapter <= 1;
     this.next.disabled = page.chapter === null || page.chapter >= chapterCount(count);
     this.note.textContent =

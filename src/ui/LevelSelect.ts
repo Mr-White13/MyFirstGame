@@ -2,6 +2,7 @@ import type { LevelData } from '../core/types';
 import { chapterCount, chapterOf, chapterSummary, chapterTiles, clampChapter, currentChapter, type LevelTile } from '../progress/chapters';
 import { completedCount, MAX_STARS, nextLevelToPlay, totalStars, type Progress } from '../progress/Progress';
 import { UNLOCK_ALL_LEVELS_FOR_TESTING } from '../progress/testUnlock';
+import { chapterMeta, shownChapter } from './chapterNav';
 import { requireElement, starIcons, svgIcon } from './dom';
 
 /**
@@ -54,8 +55,7 @@ export class LevelSelect {
 
   /** The chapter currently shown. */
   get shownChapter(): number {
-    const count = this.levels.length;
-    return this.chapter ?? (this.progress ? currentChapter(this.progress, count) : 1);
+    return shownChapter(this.chapter, this.progress, this.levels.length);
   }
 
   render(progress: Progress): void {
@@ -101,7 +101,7 @@ export class LevelSelect {
     const chapters = chapterCount(levelCount);
     const summary = chapterSummary(progress, chapter, levelCount);
     this.chapterTitle.textContent = `Chapter ${chapter}`;
-    this.chapterMeta.textContent = `Levels ${summary.first}–${summary.last} · ${summary.completed}/${summary.levels} done · ${summary.stars}/${summary.maxStars} ★`;
+    this.chapterMeta.textContent = chapterMeta(summary);
     this.prevButton.disabled = chapter <= 1;
     this.nextButton.disabled = chapter >= chapters;
     this.currentButton.disabled = chapter === currentChapter(progress, levelCount);
