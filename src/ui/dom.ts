@@ -62,6 +62,13 @@ export class Overlay {
     focusTarget?.focus({ preventScroll: true });
   }
 
+  /** Calls `handler` when the dimmed backdrop itself (not the card on it) is clicked. */
+  onBackdropClick(handler: () => void): void {
+    this.element.addEventListener('click', (event) => {
+      if (event.target === this.element) handler();
+    });
+  }
+
   hide(): void {
     cancelAnimationFrame(this.frame);
     clearTimeout(this.hideTimer);

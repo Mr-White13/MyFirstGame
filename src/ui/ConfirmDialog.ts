@@ -46,9 +46,7 @@ export class ConfirmDialog {
     this.okButton.addEventListener('click', () => this.close(true));
     this.cancelButton.addEventListener('click', () => this.close(false));
     // Tapping the dimmed backdrop counts as "keep playing".
-    this.overlay.element.addEventListener('click', (event) => {
-      if (event.target === this.overlay.element) this.close(false);
-    });
+    this.overlay.onBackdropClick(() => this.close(false));
   }
 
   get isOpen(): boolean {

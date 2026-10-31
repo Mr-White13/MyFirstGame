@@ -23,9 +23,7 @@ export class DailyDialog {
   constructor(onClaim: () => void) {
     this.claimButton.addEventListener('click', () => onClaim());
     requireElement('btn-daily-close').addEventListener('click', () => this.close());
-    this.overlay.element.addEventListener('click', (event) => {
-      if (event.target === this.overlay.element) this.close();
-    });
+    this.overlay.onBackdropClick(() => this.close());
   }
 
   get isOpen(): boolean {
