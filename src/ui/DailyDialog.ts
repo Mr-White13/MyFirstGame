@@ -1,8 +1,7 @@
 import { calendar, claimStatus, nextReward, type DailyClaim, type DailyState } from '../daily/Daily';
 import type { DayKey } from '../daily/dayKey';
-import { Overlay, prefersReducedMotion, requireElement } from './dom';
+import { Overlay, prefersReducedMotion, requireElement, svgIcon } from './dom';
 
-const SVG_NS = 'http://www.w3.org/2000/svg';
 const COUNT_UP_MS = 600;
 
 /**
@@ -58,12 +57,7 @@ export class DailyDialog {
         const name = document.createElement('span');
         name.className = 'daily-day__name';
         name.textContent = d.status === 'today' ? 'Today' : `Day ${d.day}`;
-        const icon = document.createElementNS(SVG_NS, 'svg');
-        icon.setAttribute('class', 'daily-day__icon');
-        icon.setAttribute('aria-hidden', 'true');
-        const use = document.createElementNS(SVG_NS, 'use');
-        use.setAttribute('href', d.status === 'claimed' ? '#icon-check' : '#icon-credit');
-        icon.append(use);
+        const icon = svgIcon(d.status === 'claimed' ? 'icon-check' : 'icon-credit', 'daily-day__icon');
         const amount = document.createElement('span');
         amount.className = 'daily-day__amount';
         amount.textContent = `+${d.credits}`;

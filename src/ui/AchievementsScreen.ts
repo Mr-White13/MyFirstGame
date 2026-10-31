@@ -1,23 +1,12 @@
 import type { AchievementCategory, AchievementView } from '../rewards/Achievements';
-import { requireElement } from './dom';
+import { requireElement, svgIcon } from './dom';
 
-const SVG_NS = 'http://www.w3.org/2000/svg';
 
 const GROUPS: readonly { category: AchievementCategory; title: string }[] = [
   { category: 'gameplay', title: 'Gameplay' },
   { category: 'performance', title: 'Performance' },
   { category: 'daily', title: 'Daily activity' },
 ];
-
-function icon(name: string, className: string): SVGSVGElement {
-  const svg = document.createElementNS(SVG_NS, 'svg');
-  svg.setAttribute('class', className);
-  svg.setAttribute('aria-hidden', 'true');
-  const use = document.createElementNS(SVG_NS, 'use');
-  use.setAttribute('href', `#${name}`);
-  svg.append(use);
-  return svg;
-}
 
 const formatDay = (day: string) => {
   const [y, m, d] = day.split('-').map(Number);
@@ -67,8 +56,8 @@ export class AchievementsScreen {
 
     const badge = document.createElement('span');
     badge.className = 'achievement__badge';
-    badge.append(icon(a.icon, 'achievement__icon'));
-    if (!unlocked) badge.append(icon('icon-lock', 'achievement__lock'));
+    badge.append(svgIcon(a.icon, 'achievement__icon'));
+    if (!unlocked) badge.append(svgIcon('icon-lock', 'achievement__lock'));
 
     const body = document.createElement('div');
     body.className = 'achievement__body';
@@ -83,7 +72,7 @@ export class AchievementsScreen {
     if (unlocked) {
       const done = document.createElement('p');
       done.className = 'achievement__done';
-      done.append(icon('icon-check', 'achievement__check'), `Unlocked${view.unlockedOn ? ` ${formatDay(view.unlockedOn)}` : ''}`);
+      done.append(svgIcon('icon-check', 'achievement__check'), `Unlocked${view.unlockedOn ? ` ${formatDay(view.unlockedOn)}` : ''}`);
       body.append(done);
     } else if (a.target > 1) {
       const row = document.createElement('div');
@@ -108,7 +97,7 @@ export class AchievementsScreen {
     const reward = document.createElement('span');
     reward.className = 'achievement__reward';
     reward.setAttribute('aria-label', `Reward: ${a.reward} Energy Credits${unlocked ? ', received' : ''}`);
-    reward.append(icon('icon-credit', 'icon'), `+${a.reward}`);
+    reward.append(svgIcon('icon-credit', 'icon'), `+${a.reward}`);
 
     li.append(badge, body, reward);
     li.setAttribute('aria-label', `${a.title}, ${unlocked ? 'unlocked' : `locked, ${progress} of ${a.target}`}`);
