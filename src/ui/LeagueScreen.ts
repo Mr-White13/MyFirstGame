@@ -1,9 +1,8 @@
 import type { DailyChallenge } from '../league/challenges';
 import type { HistoryEntry } from '../league/League';
 import { league, leagueBadgeSvg, LEAGUES } from '../league/leagues';
-import { requireElement } from './dom';
+import { requireElement, svgIcon } from './dom';
 
-const SVG_NS = 'http://www.w3.org/2000/svg';
 
 export interface ChallengeCardView {
   readonly challenge: DailyChallenge;
@@ -24,16 +23,6 @@ export interface LeagueView {
   readonly history: readonly HistoryEntry[];
   /** The device date is earlier than a day already played: nothing counts until it passes. */
   readonly clockBack: boolean;
-}
-
-function icon(name: string, className = 'icon'): SVGSVGElement {
-  const svg = document.createElementNS(SVG_NS, 'svg');
-  svg.setAttribute('class', className);
-  svg.setAttribute('aria-hidden', 'true');
-  const use = document.createElementNS(SVG_NS, 'use');
-  use.setAttribute('href', `#${name}`);
-  svg.append(use);
-  return svg;
 }
 
 const formatDay = (day: string) => {
@@ -147,7 +136,7 @@ export class LeagueScreen {
     pips.className = 'challenge__pips';
     pips.setAttribute('aria-label', `${c.collected} of ${v.perChallenge} Energy Arrows collected`);
     for (let i = 0; i < v.perChallenge; i++) {
-      const pip = icon('icon-bolt', `challenge__pip${i < c.collected ? ' is-collected' : ''}`);
+      const pip = svgIcon('icon-bolt', `challenge__pip${i < c.collected ? ' is-collected' : ''}`);
       pips.append(pip);
     }
     body.append(title, meta, pips);
@@ -159,7 +148,7 @@ export class LeagueScreen {
     button.textContent = !v.unlocked ? 'Locked' : c.completed ? 'Replay' : c.collected > 0 ? 'Continue' : 'Play';
     button.setAttribute('aria-label', `${button.textContent}: challenge ${c.challenge.number}`);
     button.addEventListener('click', () => this.onPlay(c.challenge.number));
-    if (c.completed) num.replaceChildren(icon('icon-check', 'challenge__check'));
+    if (c.completed) num.replaceChildren(svgIcon('icon-check', 'challenge__check'));
     li.append(num, body, button);
     return li;
   }

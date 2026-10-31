@@ -1,10 +1,9 @@
 import { formatPrecise } from '../core/time';
 import type { LevelData } from '../core/types';
 import { chapterCount, chapterOf, chapterSummary, clampChapter, currentChapter, queryRecords, type RecordEntry, type RecordsQuery } from '../progress/chapters';
-import { MAX_STARS, type Progress } from '../progress/Progress';
-import { requireElement } from './dom';
+import type { Progress } from '../progress/Progress';
+import { requireElement, starIcons } from './dom';
 
-const SVG_NS = 'http://www.w3.org/2000/svg';
 
 /**
  * Personal records, one page at a time: a chapter of 20 levels (previous /
@@ -113,15 +112,7 @@ export class RecordsScreen {
     const stars = document.createElement('span');
     stars.className = 'record__stars';
     const earned = entry.bestStars ?? 0;
-    for (let i = 0; i < MAX_STARS; i++) {
-      const svg = document.createElementNS(SVG_NS, 'svg');
-      svg.setAttribute('class', i < earned ? 'star-mini star-mini--earned' : 'star-mini');
-      svg.setAttribute('aria-hidden', 'true');
-      const use = document.createElementNS(SVG_NS, 'use');
-      use.setAttribute('href', '#icon-spark');
-      svg.append(use);
-      stars.append(svg);
-    }
+    stars.append(...starIcons(earned));
     if (entry.olderLayout) item.title = 'Set on an earlier layout of this level';
     item.setAttribute(
       'aria-label',

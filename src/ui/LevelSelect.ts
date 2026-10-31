@@ -2,19 +2,7 @@ import type { LevelData } from '../core/types';
 import { chapterCount, chapterOf, chapterSummary, chapterTiles, clampChapter, currentChapter, type LevelTile } from '../progress/chapters';
 import { completedCount, MAX_STARS, nextLevelToPlay, totalStars, type Progress } from '../progress/Progress';
 import { UNLOCK_ALL_LEVELS_FOR_TESTING } from '../progress/testUnlock';
-import { requireElement } from './dom';
-
-const SVG_NS = 'http://www.w3.org/2000/svg';
-
-function icon(name: string, className: string): SVGSVGElement {
-  const svg = document.createElementNS(SVG_NS, 'svg');
-  svg.setAttribute('class', className);
-  svg.setAttribute('aria-hidden', 'true');
-  const use = document.createElementNS(SVG_NS, 'use');
-  use.setAttribute('href', `#icon-${name}`);
-  svg.append(use);
-  return svg;
-}
+import { requireElement, starIcons, svgIcon } from './dom';
 
 /**
  * Level selection screen: overall progress, one chapter of level tiles at a
@@ -124,10 +112,7 @@ export class LevelSelect {
   private starRow(earned: number): HTMLSpanElement {
     const row = document.createElement('span');
     row.className = 'level-tile__stars';
-    for (let i = 0; i < MAX_STARS; i++) {
-      const star = icon('spark', i < earned ? 'star-mini star-mini--earned' : 'star-mini');
-      row.append(star);
-    }
+    row.append(...starIcons(earned));
     return row;
   }
 
@@ -168,8 +153,8 @@ export class LevelSelect {
       meta.textContent = `${level.rows}×${level.cols}`;
     }
     button.append(number, meta);
-    if (state === 'locked') button.append(icon('lock', 'level-tile__mark'));
-    else if (completed) button.append(icon('check', 'level-tile__mark'));
+    if (state === 'locked') button.append(svgIcon('icon-lock', 'level-tile__mark'));
+    else if (completed) button.append(svgIcon('icon-check', 'level-tile__mark'));
 
     const item = document.createElement('li');
     item.append(button);

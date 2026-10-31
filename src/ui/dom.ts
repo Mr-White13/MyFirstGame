@@ -1,3 +1,4 @@
+import { MAX_STARS } from '../progress/Progress';
 import { reducedMotion } from '../render/motion';
 
 export function requireElement<T extends HTMLElement>(id: string): T {
@@ -8,6 +9,24 @@ export function requireElement<T extends HTMLElement>(id: string): T {
 
 /** The resolved reduced-motion preference (player setting, or the device's when set to Auto). */
 export const prefersReducedMotion = (): boolean => reducedMotion();
+
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+/** An inline icon, `<svg class aria-hidden><use href="#symbolId"/></svg>`, showing a symbol from index.html. */
+export function svgIcon(symbolId: string, className: string): SVGSVGElement {
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('class', className);
+  svg.setAttribute('aria-hidden', 'true');
+  const use = document.createElementNS(SVG_NS, 'use');
+  use.setAttribute('href', `#${symbolId}`);
+  svg.append(use);
+  return svg;
+}
+
+/** MAX_STARS small stars with the first `earned` lit (level tiles and record rows). */
+export function starIcons(earned: number): SVGSVGElement[] {
+  return Array.from({ length: MAX_STARS }, (_, i) => svgIcon('icon-spark', i < earned ? 'star-mini star-mini--earned' : 'star-mini'));
+}
 
 /** Must match the landscape media query in style.css. */
 export const LANDSCAPE_QUERY = '(orientation: landscape) and (max-height: 520px)';
