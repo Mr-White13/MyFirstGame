@@ -27,6 +27,7 @@ import type { ThemePicker } from '../ui/ThemePicker';
 import type { LevelSelect } from '../ui/LevelSelect';
 import type { AvatarPicker, CountryPicker } from '../ui/Pickers';
 import type { ProfileScreen } from '../ui/ProfileScreen';
+import type { RecordsScreen } from '../ui/RecordsScreen';
 import type { SettingsStore } from '../settings/Settings';
 import { claimStatus, cycleDay, nextReward, rewardForDay } from '../daily/Daily';
 import type { DayClock } from '../daily/dayKey';
@@ -55,6 +56,7 @@ export interface AppParts {
   readonly home: HomeScreen;
   readonly levelSelect: LevelSelect;
   readonly profileScreen: ProfileScreen;
+  readonly recordsScreen: RecordsScreen;
   readonly hud: Hud;
   /** The HUD's theme picker (pauses the level timer while open). */
   readonly themePicker: ThemePicker;
@@ -184,6 +186,12 @@ export class App {
 
   showProfile(): Promise<void> {
     return this.showMenuScreen('profile');
+  }
+
+  /** The full personal records list, opened from Profile (starts at the current chapter). */
+  showRecords(): Promise<void> {
+    this.parts.recordsScreen.reset();
+    return this.showMenuScreen('records');
   }
 
   showSettings(): Promise<void> {
@@ -587,6 +595,7 @@ export class App {
     this.parts.home.render(this.profile, this.progress);
     this.parts.levelSelect.render(this.progress);
     this.parts.profileScreen.render(this.profile, this.progress, this.stats);
+    this.parts.recordsScreen.render(this.progress);
     this.renderRewards();
     this.renderLeague();
   }

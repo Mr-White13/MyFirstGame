@@ -4259,3 +4259,152 @@ body.is-navigating #app {
   0%, 70% { opacity: 1; }
   100% { opacity: 0; }
 }
+
+/* ---------- Chapters (level select and records) ---------- */
+
+.chapter-nav {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.records__controls .chapter-nav {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  margin-top: 0;
+}
+
+.chapter-nav__info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  text-align: center;
+}
+
+.chapter-nav__title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.chapter-nav__meta {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.chapter-nav__next .icon {
+  transform: scaleX(-1);
+}
+
+.chapter-nav .icon-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* ---------- Personal records ---------- */
+
+.profile__records {
+  margin-top: 12px;
+}
+
+.screen--records {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 12px;
+  padding:
+    max(env(safe-area-inset-top), 14px) calc(var(--gutter) + env(safe-area-inset-right))
+    0 calc(var(--gutter) + env(safe-area-inset-left));
+}
+
+.screen--records .topbar {
+  max-width: 480px;
+  justify-self: center;
+}
+
+.records__body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 480px;
+  justify-self: center;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 2px 2px max(env(safe-area-inset-bottom), 24px);
+  scrollbar-width: none;
+}
+
+.records__controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+}
+
+.records__search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  min-height: 44px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  background: rgb(var(--muted-rgb) / 0.06);
+}
+
+.records__search .icon {
+  width: 18px;
+  height: 18px;
+  color: var(--text-muted);
+  flex: none;
+}
+
+.records__search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 1rem; /* 16 px: no zoom-on-focus in mobile browsers */
+  outline: none;
+}
+
+.records__search:focus-within {
+  border-color: var(--cyan);
+}
+
+.records__note {
+  margin: 0 4px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.records__note:empty {
+  display: none;
+}
+
+#records-list {
+  padding: 4px 14px;
+}
+
+.record__status {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-faint);
+}
+
+/* A best set on an earlier layout of the level: kept, and marked (the note explains the mark). */
+.record--older .record__level::after {
+  content: ' *';
+  color: var(--text-faint);
+}

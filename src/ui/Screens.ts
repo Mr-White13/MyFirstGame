@@ -14,6 +14,7 @@ export class Screens {
     levels: requireElement('screen-levels'),
     game: requireElement('screen-game'),
     profile: requireElement('screen-profile'),
+    records: requireElement('screen-records'),
     settings: requireElement('screen-settings'),
     achievements: requireElement('screen-achievements'),
     league: requireElement('screen-league'),
