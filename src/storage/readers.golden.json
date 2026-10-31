@@ -1,0 +1,2054 @@
+{
+ "progress": {
+  "missing": {
+   "value": {
+    "highestUnlocked": 1,
+    "completed": {}
+   },
+   "status": "empty"
+  },
+  "empty string": {
+   "value": {
+    "highestUnlocked": 1,
+    "completed": {}
+   },
+   "status": "corrupt"
+  },
+  "not JSON": {
+   "value": {
+    "highestUnlocked": 1,
+    "completed": {}
+   },
+   "status": "corrupt"
+  },
+  "JSON null": {
+   "value": {
+    "highestUnlocked": 1,
+    "completed": {}
+   },
+   "status": "corrupt"
+  },
+  "JSON array": {
+   "value": {
+    "highestUnlocked": 1,
+    "completed": {}
+   },
+   "status": "corrupt"
+  },
+  "JSON number": {
+   "value": {
+    "highestUnlocked": 1,
+    "completed": {}
+   },
+   "status": "corrupt"
+  },
+  "JSON string": {
+   "value": {
+    "highestUnlocked": 1,
+    "completed": {}
+   },
+   "status": "corrupt"
+  },
+  "empty object": {
+   "value": {
+    "highestUnlocked": 1,
+    "completed": {}
+   },
+   "status": "corrupt"
+  },
+  "version 0": {
+   "value": {
+    "highestUnlocked": 1,
+    "completed": {}
+   },
+   "status": "corrupt"
+  },
+  "version as text": {
+   "value": {
+    "highestUnlocked": 1,
+    "completed": {}
+   },
+   "status": "corrupt"
+  },
+  "fractional version": {
+   "value": {
+    "highestUnlocked": 1,
+    "completed": {}
+   },
+   "status": "corrupt"
+  },
+  "negative version": {
+   "value": {
+    "highestUnlocked": 1,
+    "completed": {}
+   },
+   "status": "corrupt"
+  },
+  "own version, no fields": {
+   "value": {
+    "highestUnlocked": 1,
+    "completed": {}
+   },
+   "status": "current"
+  },
+  "next version (newer)": {
+   "value": {
+    "highestUnlocked": 1,
+    "completed": {}
+   },
+   "status": "newer"
+  },
+  "far future version": {
+   "value": {
+    "highestUnlocked": 1,
+    "completed": {}
+   },
+   "status": "newer"
+  },
+  "v1 move counts only": {
+   "value": {
+    "highestUnlocked": 4,
+    "completed": {
+     "1": {
+      "bestMoves": 5,
+      "revision": 1,
+      "bestStars": null,
+      "bestMistakes": null,
+      "bestTimeMs": null
+     },
+     "2": {
+      "bestMoves": 9,
+      "revision": 1,
+      "bestStars": null,
+      "bestMistakes": null,
+      "bestTimeMs": null
+     },
+     "3": {
+      "bestMoves": 7,
+      "revision": 1,
+      "bestStars": null,
+      "bestMistakes": null,
+      "bestTimeMs": null
+     }
+    }
+   },
+   "status": "migrated"
+  },
+  "v2 with revisions": {
+   "value": {
+    "highestUnlocked": 3,
+    "completed": {
+     "1": {
+      "bestMoves": 5,
+      "revision": 1,
+      "bestStars": null,
+      "bestMistakes": null,
+      "bestTimeMs": null
+     },
+     "2": {
+      "bestMoves": 4,
+      "revision": 2,
+      "bestStars": null,
+      "bestMistakes": null,
+      "bestTimeMs": null
+     }
+    }
+   },
+   "status": "migrated"
+  },
+  "v3 with stars": {
+   "value": {
+    "highestUnlocked": 5,
+    "completed": {
+     "1": {
+      "bestMoves": 5,
+      "revision": 1,
+      "bestStars": 3,
+      "bestMistakes": 0,
+      "bestTimeMs": null
+     },
+     "2": {
+      "bestMoves": 4,
+      "revision": 3,
+      "bestStars": 2,
+      "bestMistakes": 1,
+      "bestTimeMs": null
+     },
+     "4": {
+      "bestMoves": 9,
+      "revision": 5,
+      "bestStars": null,
+      "bestMistakes": null,
+      "bestTimeMs": null
+     }
+    }
+   },
+   "status": "migrated"
+  },
+  "v4 current": {
+   "value": {
+    "highestUnlocked": 7,
+    "completed": {
+     "1": {
+      "bestMoves": 5,
+      "revision": 1,
+      "bestStars": 3,
+      "bestMistakes": 0,
+      "bestTimeMs": 4210
+     },
+     "6": {
+      "bestMoves": 20,
+      "revision": 5,
+      "bestStars": 1,
+      "bestMistakes": 2,
+      "bestTimeMs": 61000.5
+     }
+    }
+   },
+   "status": "current"
+  },
+  "v4 bad entries dropped or defaulted": {
+   "value": {
+    "highestUnlocked": 7,
+    "completed": {
+     "5": {
+      "bestMoves": 3,
+      "revision": 1,
+      "bestStars": null,
+      "bestMistakes": null,
+      "bestTimeMs": null
+     },
+     "6": {
+      "bestMoves": 3,
+      "revision": 1,
+      "bestStars": 2,
+      "bestMistakes": null,
+      "bestTimeMs": null
+     }
+    }
+   },
+   "status": "current"
+  },
+  "v4 completions above the level count (B6)": {
+   "value": {
+    "highestUnlocked": 30,
+    "completed": {
+     "29": {
+      "bestMoves": 30,
+      "revision": 1,
+      "bestStars": 3,
+      "bestMistakes": 0,
+      "bestTimeMs": 1000
+     }
+    }
+   },
+   "status": "current"
+  },
+  "v4 unlocks behind completions": {
+   "value": {
+    "highestUnlocked": 10,
+    "completed": {
+     "9": {
+      "bestMoves": 12,
+      "revision": 1,
+      "bestStars": 2,
+      "bestMistakes": 1,
+      "bestTimeMs": 9000
+     }
+    }
+   },
+   "status": "current"
+  },
+  "v4 completed not an object": {
+   "value": {
+    "highestUnlocked": 3,
+    "completed": {}
+   },
+   "status": "current"
+  }
+ },
+ "settings": {
+  "missing": {
+   "value": {
+    "theme": "dark",
+    "motion": "auto",
+    "effects": "normal",
+    "muted": false,
+    "music": true,
+    "sfx": true,
+    "musicVolume": 0.35,
+    "sfxVolume": 0.7,
+    "haptics": true,
+    "showTimer": true,
+    "confirmRestart": true,
+    "showRecap": true
+   },
+   "status": "empty"
+  },
+  "empty string": {
+   "value": {
+    "theme": "dark",
+    "motion": "auto",
+    "effects": "normal",
+    "muted": false,
+    "music": true,
+    "sfx": true,
+    "musicVolume": 0.35,
+    "sfxVolume": 0.7,
+    "haptics": true,
+    "showTimer": true,
+    "confirmRestart": true,
+    "showRecap": true
+   },
+   "status": "corrupt"
+  },
+  "not JSON": {
+   "value": {
+    "theme": "dark",
+    "motion": "auto",
+    "effects": "normal",
+    "muted": false,
+    "music": true,
+    "sfx": true,
+    "musicVolume": 0.35,
+    "sfxVolume": 0.7,
+    "haptics": true,
+    "showTimer": true,
+    "confirmRestart": true,
+    "showRecap": true
+   },
+   "status": "corrupt"
+  },
+  "JSON null": {
+   "value": {
+    "theme": "dark",
+    "motion": "auto",
+    "effects": "normal",
+    "muted": false,
+    "music": true,
+    "sfx": true,
+    "musicVolume": 0.35,
+    "sfxVolume": 0.7,
+    "haptics": true,
+    "showTimer": true,
+    "confirmRestart": true,
+    "showRecap": true
+   },
+   "status": "corrupt"
+  },
+  "JSON array": {
+   "value": {
+    "theme": "dark",
+    "motion": "auto",
+    "effects": "normal",
+    "muted": false,
+    "music": true,
+    "sfx": true,
+    "musicVolume": 0.35,
+    "sfxVolume": 0.7,
+    "haptics": true,
+    "showTimer": true,
+    "confirmRestart": true,
+    "showRecap": true
+   },
+   "status": "corrupt"
+  },
+  "JSON number": {
+   "value": {
+    "theme": "dark",
+    "motion": "auto",
+    "effects": "normal",
+    "muted": false,
+    "music": true,
+    "sfx": true,
+    "musicVolume": 0.35,
+    "sfxVolume": 0.7,
+    "haptics": true,
+    "showTimer": true,
+    "confirmRestart": true,
+    "showRecap": true
+   },
+   "status": "corrupt"
+  },
+  "JSON string": {
+   "value": {
+    "theme": "dark",
+    "motion": "auto",
+    "effects": "normal",
+    "muted": false,
+    "music": true,
+    "sfx": true,
+    "musicVolume": 0.35,
+    "sfxVolume": 0.7,
+    "haptics": true,
+    "showTimer": true,
+    "confirmRestart": true,
+    "showRecap": true
+   },
+   "status": "corrupt"
+  },
+  "empty object": {
+   "value": {
+    "theme": "dark",
+    "motion": "auto",
+    "effects": "normal",
+    "muted": false,
+    "music": true,
+    "sfx": true,
+    "musicVolume": 0.35,
+    "sfxVolume": 0.7,
+    "haptics": true,
+    "showTimer": true,
+    "confirmRestart": true,
+    "showRecap": true
+   },
+   "status": "corrupt"
+  },
+  "version 0": {
+   "value": {
+    "theme": "dark",
+    "motion": "auto",
+    "effects": "normal",
+    "muted": false,
+    "music": true,
+    "sfx": true,
+    "musicVolume": 0.35,
+    "sfxVolume": 0.7,
+    "haptics": true,
+    "showTimer": true,
+    "confirmRestart": true,
+    "showRecap": true
+   },
+   "status": "corrupt"
+  },
+  "version as text": {
+   "value": {
+    "theme": "dark",
+    "motion": "auto",
+    "effects": "normal",
+    "muted": false,
+    "music": true,
+    "sfx": true,
+    "musicVolume": 0.35,
+    "sfxVolume": 0.7,
+    "haptics": true,
+    "showTimer": true,
+    "confirmRestart": true,
+    "showRecap": true
+   },
+   "status": "corrupt"
+  },
+  "fractional version": {
+   "value": {
+    "theme": "dark",
+    "motion": "auto",
+    "effects": "normal",
+    "muted": false,
+    "music": true,
+    "sfx": true,
+    "musicVolume": 0.35,
+    "sfxVolume": 0.7,
+    "haptics": true,
+    "showTimer": true,
+    "confirmRestart": true,
+    "showRecap": true
+   },
+   "status": "corrupt"
+  },
+  "negative version": {
+   "value": {
+    "theme": "dark",
+    "motion": "auto",
+    "effects": "normal",
+    "muted": false,
+    "music": true,
+    "sfx": true,
+    "musicVolume": 0.35,
+    "sfxVolume": 0.7,
+    "haptics": true,
+    "showTimer": true,
+    "confirmRestart": true,
+    "showRecap": true
+   },
+   "status": "corrupt"
+  },
+  "own version, no fields": {
+   "value": {
+    "theme": "dark",
+    "motion": "auto",
+    "effects": "normal",
+    "muted": false,
+    "music": true,
+    "sfx": true,
+    "musicVolume": 0.35,
+    "sfxVolume": 0.7,
+    "haptics": true,
+    "showTimer": true,
+    "confirmRestart": true,
+    "showRecap": true
+   },
+   "status": "current"
+  },
+  "next version (newer)": {
+   "value": {
+    "theme": "dark",
+    "motion": "auto",
+    "effects": "normal",
+    "muted": false,
+    "music": true,
+    "sfx": true,
+    "musicVolume": 0.35,
+    "sfxVolume": 0.7,
+    "haptics": true,
+    "showTimer": true,
+    "confirmRestart": true,
+    "showRecap": true
+   },
+   "status": "newer"
+  },
+  "far future version": {
+   "value": {
+    "theme": "dark",
+    "motion": "auto",
+    "effects": "normal",
+    "muted": false,
+    "music": true,
+    "sfx": true,
+    "musicVolume": 0.35,
+    "sfxVolume": 0.7,
+    "haptics": true,
+    "showTimer": true,
+    "confirmRestart": true,
+    "showRecap": true
+   },
+   "status": "newer"
+  },
+  "v1 every field": {
+   "value": {
+    "theme": "colorful",
+    "motion": "reduce",
+    "effects": "low",
+    "muted": true,
+    "music": false,
+    "sfx": false,
+    "musicVolume": 0.2,
+    "sfxVolume": 1,
+    "haptics": false,
+    "showTimer": false,
+    "confirmRestart": false,
+    "showRecap": false
+   },
+   "status": "current"
+  },
+  "v1 partial": {
+   "value": {
+    "theme": "light",
+    "motion": "auto",
+    "effects": "normal",
+    "muted": false,
+    "music": true,
+    "sfx": true,
+    "musicVolume": 0.35,
+    "sfxVolume": 0.7,
+    "haptics": true,
+    "showTimer": true,
+    "confirmRestart": true,
+    "showRecap": true
+   },
+   "status": "current"
+  },
+  "v1 invalid values": {
+   "value": {
+    "theme": "dark",
+    "motion": "auto",
+    "effects": "normal",
+    "muted": false,
+    "music": true,
+    "sfx": true,
+    "musicVolume": 1,
+    "sfxVolume": 0,
+    "haptics": true,
+    "showTimer": true,
+    "confirmRestart": true,
+    "showRecap": true
+   },
+   "status": "current"
+  },
+  "v1 odd volumes": {
+   "value": {
+    "theme": "dark",
+    "motion": "auto",
+    "effects": "normal",
+    "muted": false,
+    "music": true,
+    "sfx": true,
+    "musicVolume": 0.35,
+    "sfxVolume": 0.7,
+    "haptics": true,
+    "showTimer": true,
+    "confirmRestart": true,
+    "showRecap": true
+   },
+   "status": "current"
+  },
+  "v1 system theme": {
+   "value": {
+    "theme": "system",
+    "motion": "full",
+    "effects": "off",
+    "muted": false,
+    "music": true,
+    "sfx": true,
+    "musicVolume": 0.35,
+    "sfxVolume": 0.7,
+    "haptics": true,
+    "showTimer": true,
+    "confirmRestart": true,
+    "showRecap": true
+   },
+   "status": "current"
+  }
+ },
+ "profile": {
+  "missing": {
+   "value": {
+    "nickname": "Player",
+    "avatar": "bot",
+    "country": null
+   },
+   "status": "empty"
+  },
+  "empty string": {
+   "value": {
+    "nickname": "Player",
+    "avatar": "bot",
+    "country": null
+   },
+   "status": "corrupt"
+  },
+  "not JSON": {
+   "value": {
+    "nickname": "Player",
+    "avatar": "bot",
+    "country": null
+   },
+   "status": "corrupt"
+  },
+  "JSON null": {
+   "value": {
+    "nickname": "Player",
+    "avatar": "bot",
+    "country": null
+   },
+   "status": "corrupt"
+  },
+  "JSON array": {
+   "value": {
+    "nickname": "Player",
+    "avatar": "bot",
+    "country": null
+   },
+   "status": "corrupt"
+  },
+  "JSON number": {
+   "value": {
+    "nickname": "Player",
+    "avatar": "bot",
+    "country": null
+   },
+   "status": "corrupt"
+  },
+  "JSON string": {
+   "value": {
+    "nickname": "Player",
+    "avatar": "bot",
+    "country": null
+   },
+   "status": "corrupt"
+  },
+  "empty object": {
+   "value": {
+    "nickname": "Player",
+    "avatar": "bot",
+    "country": null
+   },
+   "status": "corrupt"
+  },
+  "version 0": {
+   "value": {
+    "nickname": "Player",
+    "avatar": "bot",
+    "country": null
+   },
+   "status": "corrupt"
+  },
+  "version as text": {
+   "value": {
+    "nickname": "Player",
+    "avatar": "bot",
+    "country": null
+   },
+   "status": "corrupt"
+  },
+  "fractional version": {
+   "value": {
+    "nickname": "Player",
+    "avatar": "bot",
+    "country": null
+   },
+   "status": "newer"
+  },
+  "negative version": {
+   "value": {
+    "nickname": "Player",
+    "avatar": "bot",
+    "country": null
+   },
+   "status": "corrupt"
+  },
+  "own version, no fields": {
+   "value": {
+    "nickname": "Player",
+    "avatar": "bot",
+    "country": null
+   },
+   "status": "current"
+  },
+  "next version (newer)": {
+   "value": {
+    "nickname": "Player",
+    "avatar": "bot",
+    "country": null
+   },
+   "status": "newer"
+  },
+  "far future version": {
+   "value": {
+    "nickname": "Player",
+    "avatar": "bot",
+    "country": null
+   },
+   "status": "newer"
+  },
+  "v1 valid": {
+   "value": {
+    "nickname": "Neo",
+    "avatar": "bot",
+    "country": "RO"
+   },
+   "status": "current"
+  },
+  "v1 messy nickname": {
+   "value": {
+    "nickname": "Player",
+    "avatar": "bot",
+    "country": null
+   },
+   "status": "current"
+  },
+  "v1 empty nickname": {
+   "value": {
+    "nickname": "Player",
+    "avatar": "bot",
+    "country": null
+   },
+   "status": "current"
+  }
+ },
+ "stats": {
+  "missing": {
+   "value": {
+    "successfulRuns": 0,
+    "failedRuns": 0,
+    "flawlessRuns": 0,
+    "playTimeMs": 0,
+    "arrowsCleared": 0,
+    "chainClears": 0,
+    "trackedSince": "2026-10-31T09:30:00.000Z"
+   },
+   "status": "empty"
+  },
+  "empty string": {
+   "value": {
+    "successfulRuns": 0,
+    "failedRuns": 0,
+    "flawlessRuns": 0,
+    "playTimeMs": 0,
+    "arrowsCleared": 0,
+    "chainClears": 0,
+    "trackedSince": "2026-10-31T09:30:00.000Z"
+   },
+   "status": "corrupt"
+  },
+  "not JSON": {
+   "value": {
+    "successfulRuns": 0,
+    "failedRuns": 0,
+    "flawlessRuns": 0,
+    "playTimeMs": 0,
+    "arrowsCleared": 0,
+    "chainClears": 0,
+    "trackedSince": "2026-10-31T09:30:00.000Z"
+   },
+   "status": "corrupt"
+  },
+  "JSON null": {
+   "value": {
+    "successfulRuns": 0,
+    "failedRuns": 0,
+    "flawlessRuns": 0,
+    "playTimeMs": 0,
+    "arrowsCleared": 0,
+    "chainClears": 0,
+    "trackedSince": "2026-10-31T09:30:00.000Z"
+   },
+   "status": "corrupt"
+  },
+  "JSON array": {
+   "value": {
+    "successfulRuns": 0,
+    "failedRuns": 0,
+    "flawlessRuns": 0,
+    "playTimeMs": 0,
+    "arrowsCleared": 0,
+    "chainClears": 0,
+    "trackedSince": "2026-10-31T09:30:00.000Z"
+   },
+   "status": "corrupt"
+  },
+  "JSON number": {
+   "value": {
+    "successfulRuns": 0,
+    "failedRuns": 0,
+    "flawlessRuns": 0,
+    "playTimeMs": 0,
+    "arrowsCleared": 0,
+    "chainClears": 0,
+    "trackedSince": "2026-10-31T09:30:00.000Z"
+   },
+   "status": "corrupt"
+  },
+  "JSON string": {
+   "value": {
+    "successfulRuns": 0,
+    "failedRuns": 0,
+    "flawlessRuns": 0,
+    "playTimeMs": 0,
+    "arrowsCleared": 0,
+    "chainClears": 0,
+    "trackedSince": "2026-10-31T09:30:00.000Z"
+   },
+   "status": "corrupt"
+  },
+  "empty object": {
+   "value": {
+    "successfulRuns": 0,
+    "failedRuns": 0,
+    "flawlessRuns": 0,
+    "playTimeMs": 0,
+    "arrowsCleared": 0,
+    "chainClears": 0,
+    "trackedSince": "2026-10-31T09:30:00.000Z"
+   },
+   "status": "corrupt"
+  },
+  "version 0": {
+   "value": {
+    "successfulRuns": 0,
+    "failedRuns": 0,
+    "flawlessRuns": 0,
+    "playTimeMs": 0,
+    "arrowsCleared": 0,
+    "chainClears": 0,
+    "trackedSince": "2026-10-31T09:30:00.000Z"
+   },
+   "status": "corrupt"
+  },
+  "version as text": {
+   "value": {
+    "successfulRuns": 0,
+    "failedRuns": 0,
+    "flawlessRuns": 0,
+    "playTimeMs": 0,
+    "arrowsCleared": 0,
+    "chainClears": 0,
+    "trackedSince": "2026-10-31T09:30:00.000Z"
+   },
+   "status": "corrupt"
+  },
+  "fractional version": {
+   "value": {
+    "successfulRuns": 0,
+    "failedRuns": 0,
+    "flawlessRuns": 0,
+    "playTimeMs": 0,
+    "arrowsCleared": 0,
+    "chainClears": 0,
+    "trackedSince": "2026-10-31T09:30:00.000Z"
+   },
+   "status": "newer"
+  },
+  "negative version": {
+   "value": {
+    "successfulRuns": 0,
+    "failedRuns": 0,
+    "flawlessRuns": 0,
+    "playTimeMs": 0,
+    "arrowsCleared": 0,
+    "chainClears": 0,
+    "trackedSince": "2026-10-31T09:30:00.000Z"
+   },
+   "status": "corrupt"
+  },
+  "own version, no fields": {
+   "value": {
+    "successfulRuns": 0,
+    "failedRuns": 0,
+    "flawlessRuns": 0,
+    "arrowsCleared": 0,
+    "chainClears": 0,
+    "playTimeMs": 0,
+    "trackedSince": "2026-10-31T09:30:00.000Z"
+   },
+   "status": "current"
+  },
+  "next version (newer)": {
+   "value": {
+    "successfulRuns": 0,
+    "failedRuns": 0,
+    "flawlessRuns": 0,
+    "playTimeMs": 0,
+    "arrowsCleared": 0,
+    "chainClears": 0,
+    "trackedSince": "2026-10-31T09:30:00.000Z"
+   },
+   "status": "newer"
+  },
+  "far future version": {
+   "value": {
+    "successfulRuns": 0,
+    "failedRuns": 0,
+    "flawlessRuns": 0,
+    "playTimeMs": 0,
+    "arrowsCleared": 0,
+    "chainClears": 0,
+    "trackedSince": "2026-10-31T09:30:00.000Z"
+   },
+   "status": "newer"
+  },
+  "v1 valid": {
+   "value": {
+    "successfulRuns": 12,
+    "failedRuns": 3,
+    "flawlessRuns": 7,
+    "arrowsCleared": 400,
+    "chainClears": 21,
+    "playTimeMs": 123456.5,
+    "trackedSince": "2026-09-01T10:00:00.000Z"
+   },
+   "status": "current"
+  },
+  "v1 invalid counters": {
+   "value": {
+    "successfulRuns": 0,
+    "failedRuns": 0,
+    "flawlessRuns": 0,
+    "arrowsCleared": 0,
+    "chainClears": 0,
+    "playTimeMs": 0,
+    "trackedSince": "2026-10-31T09:30:00.000Z"
+   },
+   "status": "current"
+  }
+ },
+ "rewards": {
+  "missing": {
+   "value": {
+    "daily": {
+     "lastCheckIn": null,
+     "streak": 0,
+     "longestStreak": 0,
+     "daysPlayed": 0,
+     "lastClaim": null,
+     "claims": 0,
+     "claimedDays": [],
+     "history": []
+    },
+    "wallet": {
+     "credits": 0,
+     "earned": 0,
+     "applied": []
+    },
+    "achievements": {},
+    "bestChain": 0
+   },
+   "status": "empty"
+  },
+  "empty string": {
+   "value": {
+    "daily": {
+     "lastCheckIn": null,
+     "streak": 0,
+     "longestStreak": 0,
+     "daysPlayed": 0,
+     "lastClaim": null,
+     "claims": 0,
+     "claimedDays": [],
+     "history": []
+    },
+    "wallet": {
+     "credits": 0,
+     "earned": 0,
+     "applied": []
+    },
+    "achievements": {},
+    "bestChain": 0
+   },
+   "status": "corrupt"
+  },
+  "not JSON": {
+   "value": {
+    "daily": {
+     "lastCheckIn": null,
+     "streak": 0,
+     "longestStreak": 0,
+     "daysPlayed": 0,
+     "lastClaim": null,
+     "claims": 0,
+     "claimedDays": [],
+     "history": []
+    },
+    "wallet": {
+     "credits": 0,
+     "earned": 0,
+     "applied": []
+    },
+    "achievements": {},
+    "bestChain": 0
+   },
+   "status": "corrupt"
+  },
+  "JSON null": {
+   "value": {
+    "daily": {
+     "lastCheckIn": null,
+     "streak": 0,
+     "longestStreak": 0,
+     "daysPlayed": 0,
+     "lastClaim": null,
+     "claims": 0,
+     "claimedDays": [],
+     "history": []
+    },
+    "wallet": {
+     "credits": 0,
+     "earned": 0,
+     "applied": []
+    },
+    "achievements": {},
+    "bestChain": 0
+   },
+   "status": "corrupt"
+  },
+  "JSON array": {
+   "value": {
+    "daily": {
+     "lastCheckIn": null,
+     "streak": 0,
+     "longestStreak": 0,
+     "daysPlayed": 0,
+     "lastClaim": null,
+     "claims": 0,
+     "claimedDays": [],
+     "history": []
+    },
+    "wallet": {
+     "credits": 0,
+     "earned": 0,
+     "applied": []
+    },
+    "achievements": {},
+    "bestChain": 0
+   },
+   "status": "corrupt"
+  },
+  "JSON number": {
+   "value": {
+    "daily": {
+     "lastCheckIn": null,
+     "streak": 0,
+     "longestStreak": 0,
+     "daysPlayed": 0,
+     "lastClaim": null,
+     "claims": 0,
+     "claimedDays": [],
+     "history": []
+    },
+    "wallet": {
+     "credits": 0,
+     "earned": 0,
+     "applied": []
+    },
+    "achievements": {},
+    "bestChain": 0
+   },
+   "status": "corrupt"
+  },
+  "JSON string": {
+   "value": {
+    "daily": {
+     "lastCheckIn": null,
+     "streak": 0,
+     "longestStreak": 0,
+     "daysPlayed": 0,
+     "lastClaim": null,
+     "claims": 0,
+     "claimedDays": [],
+     "history": []
+    },
+    "wallet": {
+     "credits": 0,
+     "earned": 0,
+     "applied": []
+    },
+    "achievements": {},
+    "bestChain": 0
+   },
+   "status": "corrupt"
+  },
+  "empty object": {
+   "value": {
+    "daily": {
+     "lastCheckIn": null,
+     "streak": 0,
+     "longestStreak": 0,
+     "daysPlayed": 0,
+     "lastClaim": null,
+     "claims": 0,
+     "claimedDays": [],
+     "history": []
+    },
+    "wallet": {
+     "credits": 0,
+     "earned": 0,
+     "applied": []
+    },
+    "achievements": {},
+    "bestChain": 0
+   },
+   "status": "corrupt"
+  },
+  "version 0": {
+   "value": {
+    "daily": {
+     "lastCheckIn": null,
+     "streak": 0,
+     "longestStreak": 0,
+     "daysPlayed": 0,
+     "lastClaim": null,
+     "claims": 0,
+     "claimedDays": [],
+     "history": []
+    },
+    "wallet": {
+     "credits": 0,
+     "earned": 0,
+     "applied": []
+    },
+    "achievements": {},
+    "bestChain": 0
+   },
+   "status": "corrupt"
+  },
+  "version as text": {
+   "value": {
+    "daily": {
+     "lastCheckIn": null,
+     "streak": 0,
+     "longestStreak": 0,
+     "daysPlayed": 0,
+     "lastClaim": null,
+     "claims": 0,
+     "claimedDays": [],
+     "history": []
+    },
+    "wallet": {
+     "credits": 0,
+     "earned": 0,
+     "applied": []
+    },
+    "achievements": {},
+    "bestChain": 0
+   },
+   "status": "corrupt"
+  },
+  "fractional version": {
+   "value": {
+    "daily": {
+     "lastCheckIn": null,
+     "streak": 0,
+     "longestStreak": 0,
+     "daysPlayed": 0,
+     "lastClaim": null,
+     "claims": 0,
+     "claimedDays": [],
+     "history": []
+    },
+    "wallet": {
+     "credits": 0,
+     "earned": 0,
+     "applied": []
+    },
+    "achievements": {},
+    "bestChain": 0
+   },
+   "status": "newer"
+  },
+  "negative version": {
+   "value": {
+    "daily": {
+     "lastCheckIn": null,
+     "streak": 0,
+     "longestStreak": 0,
+     "daysPlayed": 0,
+     "lastClaim": null,
+     "claims": 0,
+     "claimedDays": [],
+     "history": []
+    },
+    "wallet": {
+     "credits": 0,
+     "earned": 0,
+     "applied": []
+    },
+    "achievements": {},
+    "bestChain": 0
+   },
+   "status": "corrupt"
+  },
+  "own version, no fields": {
+   "value": {
+    "daily": {
+     "lastCheckIn": null,
+     "streak": 0,
+     "longestStreak": 0,
+     "daysPlayed": 0,
+     "lastClaim": null,
+     "claims": 0,
+     "claimedDays": [],
+     "history": []
+    },
+    "wallet": {
+     "credits": 0,
+     "earned": 0,
+     "applied": []
+    },
+    "achievements": {},
+    "bestChain": 0
+   },
+   "status": "current"
+  },
+  "next version (newer)": {
+   "value": {
+    "daily": {
+     "lastCheckIn": null,
+     "streak": 0,
+     "longestStreak": 0,
+     "daysPlayed": 0,
+     "lastClaim": null,
+     "claims": 0,
+     "claimedDays": [],
+     "history": []
+    },
+    "wallet": {
+     "credits": 0,
+     "earned": 0,
+     "applied": []
+    },
+    "achievements": {},
+    "bestChain": 0
+   },
+   "status": "newer"
+  },
+  "far future version": {
+   "value": {
+    "daily": {
+     "lastCheckIn": null,
+     "streak": 0,
+     "longestStreak": 0,
+     "daysPlayed": 0,
+     "lastClaim": null,
+     "claims": 0,
+     "claimedDays": [],
+     "history": []
+    },
+    "wallet": {
+     "credits": 0,
+     "earned": 0,
+     "applied": []
+    },
+    "achievements": {},
+    "bestChain": 0
+   },
+   "status": "newer"
+  },
+  "v1 valid": {
+   "value": {
+    "daily": {
+     "lastCheckIn": "2026-10-30",
+     "streak": 3,
+     "longestStreak": 5,
+     "daysPlayed": 9,
+     "lastClaim": "2026-10-30",
+     "claims": 8,
+     "claimedDays": [
+      "2026-10-29",
+      "2026-10-30"
+     ],
+     "history": [
+      "2026-10-28",
+      "2026-10-29",
+      "2026-10-30"
+     ]
+    },
+    "wallet": {
+     "credits": 120,
+     "earned": 200,
+     "applied": [
+      "daily:2026-10-30",
+      "achievement:first-escape"
+     ]
+    },
+    "achievements": {
+     "first-escape": "2026-10-01"
+    },
+    "bestChain": 4
+   },
+   "status": "current"
+  },
+  "v1 weak day check and unknown achievements": {
+   "value": {
+    "daily": {
+     "lastCheckIn": null,
+     "streak": 0,
+     "longestStreak": 0,
+     "daysPlayed": 0,
+     "lastClaim": null,
+     "claims": 0,
+     "claimedDays": [],
+     "history": []
+    },
+    "wallet": {
+     "credits": 100,
+     "earned": 100,
+     "applied": [
+      "x",
+      "achievement:first-escape"
+     ]
+    },
+    "achievements": {
+     "first-escape": "2026-13-45"
+    },
+    "bestChain": 0
+   },
+   "status": "current"
+  },
+  "v1 broken daily": {
+   "value": {
+    "daily": {
+     "lastCheckIn": null,
+     "streak": 0,
+     "longestStreak": 0,
+     "daysPlayed": 0,
+     "lastClaim": "2026-10-02",
+     "claims": 2,
+     "claimedDays": [
+      "2026-10-01",
+      "2026-10-02"
+     ],
+     "history": []
+    },
+    "wallet": {
+     "credits": 0,
+     "earned": 0,
+     "applied": []
+    },
+    "achievements": {},
+    "bestChain": 0
+   },
+   "status": "current"
+  }
+ },
+ "league": {
+  "missing": {
+   "value": {
+    "tier": 0,
+    "highestTier": 0,
+    "inactiveStreak": 0,
+    "lastDay": null,
+    "current": null,
+    "history": [],
+    "lifetime": {
+     "points": 0,
+     "promotions": 0,
+     "relegations": 0,
+     "challengesCompleted": 0
+    },
+    "milestones": [],
+    "outbox": [],
+    "notice": null
+   },
+   "status": "empty"
+  },
+  "empty string": {
+   "value": {
+    "tier": 0,
+    "highestTier": 0,
+    "inactiveStreak": 0,
+    "lastDay": null,
+    "current": null,
+    "history": [],
+    "lifetime": {
+     "points": 0,
+     "promotions": 0,
+     "relegations": 0,
+     "challengesCompleted": 0
+    },
+    "milestones": [],
+    "outbox": [],
+    "notice": null
+   },
+   "status": "corrupt"
+  },
+  "not JSON": {
+   "value": {
+    "tier": 0,
+    "highestTier": 0,
+    "inactiveStreak": 0,
+    "lastDay": null,
+    "current": null,
+    "history": [],
+    "lifetime": {
+     "points": 0,
+     "promotions": 0,
+     "relegations": 0,
+     "challengesCompleted": 0
+    },
+    "milestones": [],
+    "outbox": [],
+    "notice": null
+   },
+   "status": "corrupt"
+  },
+  "JSON null": {
+   "value": {
+    "tier": 0,
+    "highestTier": 0,
+    "inactiveStreak": 0,
+    "lastDay": null,
+    "current": null,
+    "history": [],
+    "lifetime": {
+     "points": 0,
+     "promotions": 0,
+     "relegations": 0,
+     "challengesCompleted": 0
+    },
+    "milestones": [],
+    "outbox": [],
+    "notice": null
+   },
+   "status": "corrupt"
+  },
+  "JSON array": {
+   "value": {
+    "tier": 0,
+    "highestTier": 0,
+    "inactiveStreak": 0,
+    "lastDay": null,
+    "current": null,
+    "history": [],
+    "lifetime": {
+     "points": 0,
+     "promotions": 0,
+     "relegations": 0,
+     "challengesCompleted": 0
+    },
+    "milestones": [],
+    "outbox": [],
+    "notice": null
+   },
+   "status": "corrupt"
+  },
+  "JSON number": {
+   "value": {
+    "tier": 0,
+    "highestTier": 0,
+    "inactiveStreak": 0,
+    "lastDay": null,
+    "current": null,
+    "history": [],
+    "lifetime": {
+     "points": 0,
+     "promotions": 0,
+     "relegations": 0,
+     "challengesCompleted": 0
+    },
+    "milestones": [],
+    "outbox": [],
+    "notice": null
+   },
+   "status": "corrupt"
+  },
+  "JSON string": {
+   "value": {
+    "tier": 0,
+    "highestTier": 0,
+    "inactiveStreak": 0,
+    "lastDay": null,
+    "current": null,
+    "history": [],
+    "lifetime": {
+     "points": 0,
+     "promotions": 0,
+     "relegations": 0,
+     "challengesCompleted": 0
+    },
+    "milestones": [],
+    "outbox": [],
+    "notice": null
+   },
+   "status": "corrupt"
+  },
+  "empty object": {
+   "value": {
+    "tier": 0,
+    "highestTier": 0,
+    "inactiveStreak": 0,
+    "lastDay": null,
+    "current": null,
+    "history": [],
+    "lifetime": {
+     "points": 0,
+     "promotions": 0,
+     "relegations": 0,
+     "challengesCompleted": 0
+    },
+    "milestones": [],
+    "outbox": [],
+    "notice": null
+   },
+   "status": "corrupt"
+  },
+  "version 0": {
+   "value": {
+    "tier": 0,
+    "highestTier": 0,
+    "inactiveStreak": 0,
+    "lastDay": null,
+    "current": null,
+    "history": [],
+    "lifetime": {
+     "points": 0,
+     "promotions": 0,
+     "relegations": 0,
+     "challengesCompleted": 0
+    },
+    "milestones": [],
+    "outbox": [],
+    "notice": null
+   },
+   "status": "corrupt"
+  },
+  "version as text": {
+   "value": {
+    "tier": 0,
+    "highestTier": 0,
+    "inactiveStreak": 0,
+    "lastDay": null,
+    "current": null,
+    "history": [],
+    "lifetime": {
+     "points": 0,
+     "promotions": 0,
+     "relegations": 0,
+     "challengesCompleted": 0
+    },
+    "milestones": [],
+    "outbox": [],
+    "notice": null
+   },
+   "status": "corrupt"
+  },
+  "fractional version": {
+   "value": {
+    "tier": 0,
+    "highestTier": 0,
+    "inactiveStreak": 0,
+    "lastDay": null,
+    "current": null,
+    "history": [],
+    "lifetime": {
+     "points": 0,
+     "promotions": 0,
+     "relegations": 0,
+     "challengesCompleted": 0
+    },
+    "milestones": [],
+    "outbox": [],
+    "notice": null
+   },
+   "status": "newer"
+  },
+  "negative version": {
+   "value": {
+    "tier": 0,
+    "highestTier": 0,
+    "inactiveStreak": 0,
+    "lastDay": null,
+    "current": null,
+    "history": [],
+    "lifetime": {
+     "points": 0,
+     "promotions": 0,
+     "relegations": 0,
+     "challengesCompleted": 0
+    },
+    "milestones": [],
+    "outbox": [],
+    "notice": null
+   },
+   "status": "corrupt"
+  },
+  "own version, no fields": {
+   "value": {
+    "tier": 0,
+    "highestTier": 0,
+    "inactiveStreak": 0,
+    "lastDay": null,
+    "current": null,
+    "history": [],
+    "lifetime": {
+     "points": 0,
+     "promotions": 0,
+     "relegations": 0,
+     "challengesCompleted": 0
+    },
+    "milestones": [],
+    "outbox": [],
+    "notice": null
+   },
+   "status": "current"
+  },
+  "next version (newer)": {
+   "value": {
+    "tier": 0,
+    "highestTier": 0,
+    "inactiveStreak": 0,
+    "lastDay": null,
+    "current": null,
+    "history": [],
+    "lifetime": {
+     "points": 0,
+     "promotions": 0,
+     "relegations": 0,
+     "challengesCompleted": 0
+    },
+    "milestones": [],
+    "outbox": [],
+    "notice": null
+   },
+   "status": "newer"
+  },
+  "far future version": {
+   "value": {
+    "tier": 0,
+    "highestTier": 0,
+    "inactiveStreak": 0,
+    "lastDay": null,
+    "current": null,
+    "history": [],
+    "lifetime": {
+     "points": 0,
+     "promotions": 0,
+     "relegations": 0,
+     "challengesCompleted": 0
+    },
+    "milestones": [],
+    "outbox": [],
+    "notice": null
+   },
+   "status": "newer"
+  },
+  "v1 mid-competition": {
+   "value": {
+    "tier": 2,
+    "highestTier": 3,
+    "inactiveStreak": 0,
+    "lastDay": "2026-10-31",
+    "current": {
+     "date": "2026-10-31",
+     "startTier": 2,
+     "collected": [
+      "2026-10-31:1:L4/b",
+      "2026-10-31:1:L4/c"
+     ],
+     "completed": [
+      1
+     ],
+     "sweepRewarded": false,
+     "pool": 5
+    },
+    "history": [
+     {
+      "date": "2026-10-30",
+      "days": 1,
+      "points": 9,
+      "challenges": 3,
+      "startTier": 1,
+      "endTier": 2,
+      "outcome": "promoted"
+     }
+    ],
+    "lifetime": {
+     "points": 30,
+     "promotions": 2,
+     "relegations": 0,
+     "challengesCompleted": 7
+    },
+    "milestones": [
+     "reach:silver"
+    ],
+    "outbox": [
+     {
+      "id": "league:reach:gold",
+      "amount": 50
+     }
+    ],
+    "notice": {
+     "fromTier": 1,
+     "toTier": 2,
+     "daysSettled": 1,
+     "promotions": 1,
+     "relegations": 0,
+     "lastPlayed": {
+      "date": "2026-10-30",
+      "points": 9,
+      "outcome": "promoted"
+     }
+    }
+   },
+   "status": "current"
+  },
+  "v1 before pools existed": {
+   "value": {
+    "tier": 0,
+    "highestTier": 0,
+    "inactiveStreak": 0,
+    "lastDay": "2026-10-20",
+    "current": {
+     "date": "2026-10-20",
+     "startTier": 0,
+     "collected": [
+      "2026-10-20:2:L6/a"
+     ],
+     "completed": [
+      1,
+      3
+     ],
+     "sweepRewarded": false,
+     "pool": 1
+    },
+    "history": [],
+    "lifetime": {
+     "points": 0,
+     "promotions": 0,
+     "relegations": 0,
+     "challengesCompleted": 0
+    },
+    "milestones": [],
+    "outbox": [],
+    "notice": null
+   },
+   "status": "current"
+  },
+  "v1 unknown pool and bad tiers": {
+   "value": {
+    "tier": 0,
+    "highestTier": 0,
+    "inactiveStreak": 0,
+    "lastDay": "2026-10-25",
+    "current": null,
+    "history": [],
+    "lifetime": {
+     "points": 0,
+     "promotions": 0,
+     "relegations": 0,
+     "challengesCompleted": 0
+    },
+    "milestones": [],
+    "outbox": [
+     {
+      "id": "b",
+      "amount": 5
+     }
+    ],
+    "notice": null
+   },
+   "status": "current"
+  }
+ },
+ "dailyLog": {
+  "missing": {
+   "value": {
+    "since": "2026-10-31",
+    "days": {}
+   },
+   "status": "empty"
+  },
+  "empty string": {
+   "value": {
+    "since": "2026-10-31",
+    "days": {}
+   },
+   "status": "corrupt"
+  },
+  "not JSON": {
+   "value": {
+    "since": "2026-10-31",
+    "days": {}
+   },
+   "status": "corrupt"
+  },
+  "JSON null": {
+   "value": {
+    "since": "2026-10-31",
+    "days": {}
+   },
+   "status": "corrupt"
+  },
+  "JSON array": {
+   "value": {
+    "since": "2026-10-31",
+    "days": {}
+   },
+   "status": "corrupt"
+  },
+  "JSON number": {
+   "value": {
+    "since": "2026-10-31",
+    "days": {}
+   },
+   "status": "corrupt"
+  },
+  "JSON string": {
+   "value": {
+    "since": "2026-10-31",
+    "days": {}
+   },
+   "status": "corrupt"
+  },
+  "empty object": {
+   "value": {
+    "since": "2026-10-31",
+    "days": {}
+   },
+   "status": "corrupt"
+  },
+  "version 0": {
+   "value": {
+    "since": "2026-10-31",
+    "days": {}
+   },
+   "status": "corrupt"
+  },
+  "version as text": {
+   "value": {
+    "since": "2026-10-31",
+    "days": {}
+   },
+   "status": "corrupt"
+  },
+  "fractional version": {
+   "value": {
+    "since": "2026-10-31",
+    "days": {}
+   },
+   "status": "newer"
+  },
+  "negative version": {
+   "value": {
+    "since": "2026-10-31",
+    "days": {}
+   },
+   "status": "corrupt"
+  },
+  "own version, no fields": {
+   "value": {
+    "since": "2026-10-31",
+    "days": {}
+   },
+   "status": "corrupt"
+  },
+  "next version (newer)": {
+   "value": {
+    "since": "2026-10-31",
+    "days": {}
+   },
+   "status": "newer"
+  },
+  "far future version": {
+   "value": {
+    "since": "2026-10-31",
+    "days": {}
+   },
+   "status": "newer"
+  },
+  "v1 valid": {
+   "value": {
+    "since": "2026-10-01",
+    "days": {
+     "2026-10-30": {
+      "playMs": 60000.5,
+      "runs": 4,
+      "wins": 3,
+      "flawless": 1,
+      "arrows": 80
+     },
+     "2026-10-31": {
+      "playMs": 0,
+      "runs": 0,
+      "wins": 0,
+      "flawless": 0,
+      "arrows": 0
+     }
+    }
+   },
+   "status": "current"
+  },
+  "v1 bad days dropped": {
+   "value": {
+    "since": "2026-10-01",
+    "days": {}
+   },
+   "status": "current"
+  },
+  "v1 bad since": {
+   "value": {
+    "since": "2026-10-31",
+    "days": {}
+   },
+   "status": "corrupt"
+  }
+ },
+ "recap": {
+  "missing": {
+   "value": {
+    "next": 0
+   },
+   "status": "empty"
+  },
+  "empty string": {
+   "value": {
+    "next": 0
+   },
+   "status": "corrupt"
+  },
+  "not JSON": {
+   "value": {
+    "next": 0
+   },
+   "status": "corrupt"
+  },
+  "JSON null": {
+   "value": {
+    "next": 0
+   },
+   "status": "corrupt"
+  },
+  "JSON array": {
+   "value": {
+    "next": 0
+   },
+   "status": "corrupt"
+  },
+  "JSON number": {
+   "value": {
+    "next": 0
+   },
+   "status": "corrupt"
+  },
+  "JSON string": {
+   "value": {
+    "next": 0
+   },
+   "status": "corrupt"
+  },
+  "empty object": {
+   "value": {
+    "next": 0
+   },
+   "status": "corrupt"
+  },
+  "version 0": {
+   "value": {
+    "next": 0
+   },
+   "status": "corrupt"
+  },
+  "version as text": {
+   "value": {
+    "next": 0
+   },
+   "status": "corrupt"
+  },
+  "fractional version": {
+   "value": {
+    "next": 0
+   },
+   "status": "newer"
+  },
+  "negative version": {
+   "value": {
+    "next": 0
+   },
+   "status": "corrupt"
+  },
+  "own version, no fields": {
+   "value": {
+    "next": 0
+   },
+   "status": "current"
+  },
+  "next version (newer)": {
+   "value": {
+    "next": 0
+   },
+   "status": "newer"
+  },
+  "far future version": {
+   "value": {
+    "next": 0
+   },
+   "status": "newer"
+  },
+  "v1 valid": {
+   "value": {
+    "next": 3
+   },
+   "status": "current"
+  },
+  "v1 wraps around": {
+   "value": {
+    "next": 5
+   },
+   "status": "current"
+  },
+  "v1 invalid": {
+   "value": {
+    "next": 0
+   },
+   "status": "current"
+  }
+ }
+}
