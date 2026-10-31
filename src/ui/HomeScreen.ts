@@ -105,11 +105,6 @@ export class HomeScreen {
     this.starsTotal.textContent = String(levelCount * MAX_STARS);
   }
 
-  /**
-   * One compact daily card and two small numbers: the streak and today's
-   * reward state, the credits balance, and achievement progress. Play stays
-   * the main action; the card only asks for attention when a reward is ready.
-   */
   /** One row: the league badge and today's points, or how far the player is from unlocking it. */
   renderLeague(l: HomeLeague): void {
     const t = league(l.tier);
@@ -132,6 +127,11 @@ export class HomeScreen {
     this.leagueButton.setAttribute('aria-label', `${t.name} League: ${l.today} of ${l.maxToday} Energy Points today, ${goal}. Open the league.`);
   }
 
+  /**
+   * One compact daily card and two small numbers: the streak and today's
+   * reward state, the credits balance, and achievement progress. Play stays
+   * the main action; the card only asks for attention when a reward is ready.
+   */
   renderRewards(r: HomeRewards): void {
     this.credits.textContent = String(r.credits);
     this.creditsButton.setAttribute('aria-label', `Energy Credits: ${r.credits}. Open daily rewards`);

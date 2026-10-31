@@ -57,20 +57,6 @@ export function msUntilNextDay(now: Date): number {
   return Math.max(1000, next.getTime() - now.getTime());
 }
 
-/**
- * Something that can be done once per calendar day: today's daily reward
- * now, daily challenges or league goals later. Completion is stored as the
- * set of days on which it was done, so "already done today?" is one lookup
- * and a new day resets it without any timer.
- */
-export interface DailyObjective<Context> {
-  readonly id: string;
-  /** Shown to the player. */
-  readonly title: string;
-  /** True if the objective's condition is met (it may still need claiming). */
-  isMet(context: Context, day: DayKey): boolean;
-}
-
 /** True if `day` is among the recorded completion days. */
 export function doneOn(completedDays: readonly DayKey[], day: DayKey): boolean {
   return completedDays.includes(day);

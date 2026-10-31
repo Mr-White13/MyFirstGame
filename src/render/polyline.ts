@@ -1,13 +1,5 @@
 import type { Point } from './layout';
 
-export function polylineLength(points: readonly Point[]): number {
-  let total = 0;
-  for (let i = 1; i < points.length; i++) {
-    total += Math.hypot(points[i].x - points[i - 1].x, points[i].y - points[i - 1].y);
-  }
-  return total;
-}
-
 /** Shortest distance from `p` to any segment of the polyline. */
 export function distanceToPolyline(points: readonly Point[], p: Point): number {
   if (points.length === 1) return Math.hypot(p.x - points[0].x, p.y - points[0].y);

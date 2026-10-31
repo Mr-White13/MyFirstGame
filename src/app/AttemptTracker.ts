@@ -71,10 +71,6 @@ export class AttemptTracker {
     return this.current !== null;
   }
 
-  get levelId(): number | null {
-    return this.current?.levelId ?? null;
-  }
-
   /** A new attempt: timer back at 00:00, not yet counting. */
   begin(levelId: number, revision: number): void {
     this.current = { levelId, revision };

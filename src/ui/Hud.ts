@@ -2,11 +2,6 @@ import { formatClock } from '../core/time';
 import { BONUS_CLEARS, STREAK_TAPS, STREAK_WINDOW_MS, type GameSnapshot } from '../core/types';
 import { requireElement } from './dom';
 
-/**
- * In-game heads-up display: level title and timer, lives (three hearts), arrows left
- * with a progress meter, plus the back and restart buttons. Updates only when
- * the game state changes (never per frame); the visual easing is all CSS.
- */
 /** What the HUD shows during a Daily League challenge. */
 export interface ChallengeHud {
   /** 1..3 */
@@ -20,6 +15,11 @@ export interface ChallengeHud {
   readonly leagueName: string;
 }
 
+/**
+ * In-game heads-up display: level title and timer, lives (three hearts), arrows left
+ * with a progress meter, plus the back and restart buttons. Updates only when
+ * the game state changes (never per frame); the visual easing is all CSS.
+ */
 export class Hud {
   private readonly title = requireElement('hud-title');
   private readonly level = requireElement('hud-level');

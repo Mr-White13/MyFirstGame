@@ -1,7 +1,7 @@
 import { daysBetween, isDayKey, addDays, type DayKey } from '../daily/dayKey';
 import type { Transaction } from '../rewards/Wallet';
 import { CHALLENGES_PER_DAY, collectionKey, CURRENT_POOL, isPoolVersion, MAX_DAILY_POINTS, type DailyChallenge } from './challenges';
-import { BRONZE, LEAGUE_REWARDS, LEAGUES, leagueTransactionIds, PROTECTED_INACTIVE_DAYS, TOP_TIER, league } from './leagues';
+import { BRONZE, LEAGUE_REWARDS, leagueTransactionIds, PROTECTED_INACTIVE_DAYS, TOP_TIER, league } from './leagues';
 
 /**
  * The offline daily league: pure rules over a small record. One competition
@@ -401,5 +401,3 @@ export function readLeagueState(data: Record<string, unknown>): LeagueState {
     notice,
   };
 }
-
-export { LEAGUES };

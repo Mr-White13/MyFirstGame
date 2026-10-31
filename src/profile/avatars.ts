@@ -123,7 +123,3 @@ export function avatarSvg(id: AvatarId): string {
     ${def.art}
   </svg>`;
 }
-
-export function avatarName(id: AvatarId): string {
-  return (DEFS.find((d) => d.id === id) ?? DEFS[0]).name;
-}
