@@ -31,12 +31,14 @@ export interface HitOptions {
 /** Minimum touch radius on screen, in CSS pixels (≈ a 44 px target). */
 export const MIN_TOUCH_RADIUS_CSS = 22;
 /**
- * The nearest line must be this much nearer than the second (in cells, and
- * at least this many CSS px on screen); closer calls select nothing. Between
- * two parallel arrows that is a band of a quarter cell around the midline.
+ * The nearest line must be this much nearer than the second, in cells;
+ * closer calls select nothing. Between two parallel arrows that is a band
+ * of 0.15 cell around the midline. A share of the cell, never a minimum in
+ * screen pixels: on small cells (dense boards on a phone, not zoomed) a
+ * pixel minimum would swallow a large part of every cell and leave many
+ * taps selecting nothing.
  */
-const TIE_MARGIN_CELLS = 0.25;
-const TIE_MARGIN_CSS = 6;
+const TIE_MARGIN_CELLS = 0.15;
 
 /**
  * Tap tolerance and tie margin in world pixels, for a cell size in world
@@ -46,7 +48,7 @@ export function hitOptions(cellPx: number, pxPerCss: number, zoom = 1): HitOptio
   const fingertip = (MIN_TOUCH_RADIUS_CSS * pxPerCss) / Math.max(1, zoom);
   return {
     tolerance: Math.max(cellPx * 0.45, Math.min(fingertip, cellPx * 1.2)),
-    margin: Math.max(cellPx * TIE_MARGIN_CELLS, (TIE_MARGIN_CSS * pxPerCss) / Math.max(1, zoom)),
+    margin: cellPx * TIE_MARGIN_CELLS,
   };
 }
 
