@@ -113,6 +113,21 @@ describe('Hud markup coupling', () => {
     expect(byId('hud-bonus').className).toBe('momentum__bonus momentum__pip--on');
   });
 
+  it("shows a named level's name under the title, and hides it for other levels and challenges", () => {
+    const hud = new Hud((id) => (id === 31 ? 'THE IMPOSSIBLE GRID' : undefined));
+    const name = byId('hud-name');
+    expect(name.hidden).toBe(true);
+    hud.update(snapshot({ levelId: 31 }));
+    expect([name.hidden, name.textContent]).toEqual([false, 'THE IMPOSSIBLE GRID']);
+    hud.update(snapshot({ levelId: 30 }));
+    expect([name.hidden, name.textContent]).toEqual([true, '']);
+    hud.update(snapshot({ levelId: 31 }));
+    hud.setChallenge(CHALLENGE);
+    expect(name.hidden).toBe(true);
+    hud.setChallenge(null);
+    expect([name.hidden, name.textContent]).toEqual([false, 'THE IMPOSSIBLE GRID']);
+  });
+
   it('wires back, restart and reset view', () => {
     const hud = new Hud();
     const calls: string[] = [];

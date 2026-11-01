@@ -7,30 +7,41 @@ import { isSelfTouching, layoutSimilarity } from '../levelgen/generateLevel';
 import { getLevel, LEVEL_COUNT, LEVELS } from './index';
 import { arrowLabel, levelFromMap, levelToMap } from './levelMap';
 
+/**
+ * The curated campaign, Levels 1–30: the difficulty curve and layout rules
+ * below apply to these. Level 31 (THE IMPOSSIBLE GRID) is an experimental
+ * extreme level outside the curve, with its own checks in level31.test.ts.
+ */
+const CAMPAIGN = LEVELS.slice(0, 30);
 
 describe('level registry', () => {
-  it('has 30 levels with ids 1..30 in order', () => {
-    expect(LEVEL_COUNT).toBe(30);
-    expect(LEVELS.map((l) => l.id)).toEqual(Array.from({ length: 30 }, (_, i) => i + 1));
+  it('has 31 levels with ids 1..31 in order', () => {
+    expect(LEVEL_COUNT).toBe(31);
+    expect(LEVELS.map((l) => l.id)).toEqual(Array.from({ length: 31 }, (_, i) => i + 1));
   });
 
   it('looks levels up by id', () => {
     expect(getLevel(1)).toBe(LEVELS[0]);
     expect(getLevel(10)).toBe(LEVELS[9]);
     expect(getLevel(30)).toBe(LEVELS[29]);
+    expect(getLevel(31)).toBe(LEVELS[30]);
     expect(getLevel(0)).toBeUndefined();
-    expect(getLevel(31)).toBeUndefined();
+    expect(getLevel(32)).toBeUndefined();
   });
 
   it('keeps Levels 1–3 square and gives Levels 4–30 tall portrait boards', () => {
-    expect(LEVELS.slice(0, 3).map((l) => `${l.rows}x${l.cols}`)).toEqual(['7x7', '7x7', '7x7']);
-    for (const l of LEVELS.slice(3)) {
+    expect(CAMPAIGN.slice(0, 3).map((l) => `${l.rows}x${l.cols}`)).toEqual(['7x7', '7x7', '7x7']);
+    for (const l of CAMPAIGN.slice(3)) {
       expect(l.rows, `level ${l.id}`).toBeGreaterThan(l.cols);
       expect(l.cols).toBeLessThanOrEqual(12); // readable on a phone without zooming in most levels
       expect(l.rows).toBeLessThanOrEqual(17);
     }
     // Boards grow (never shrink) through the game.
     for (let i = 4; i < LEVELS.length; i++) expect(LEVELS[i].rows * LEVELS[i].cols).toBeGreaterThanOrEqual(LEVELS[i - 1].rows * LEVELS[i - 1].cols);
+  });
+
+  it('names only Level 31', () => {
+    expect(LEVELS.filter((l) => l.name !== undefined).map((l) => [l.id, l.name])).toEqual([[31, 'THE IMPOSSIBLE GRID']]);
   });
 });
 
@@ -52,10 +63,10 @@ describe.each(LEVELS.map((level) => [level.id, level] as const))('level %i', (_i
 });
 
 describe('difficulty curve', () => {
-  const stats = LEVELS.map((l) => analyzeLevel(l)!);
+  const stats = CAMPAIGN.map((l) => analyzeLevel(l)!);
   // Scores are a heuristic (see core/difficulty.ts); these checks keep the
   // curated order consistent with it, not a claim about human difficulty.
-  const reports = LEVELS.map((l) => analyzeDifficulty(l, { lives: false }));
+  const reports = CAMPAIGN.map((l) => analyzeDifficulty(l, { lives: false }));
   const score = (id: number) => reports[id - 1].score;
   const depth = (id: number) => reports[id - 1].exact.depth;
   const SPIKES = [10, 20, 30];
@@ -93,7 +104,7 @@ describe('difficulty curve', () => {
   });
 
   it('has no arrows that read as one (tail-to-tail joins)', () => {
-    expect(reports.map((r) => r.exact.ambiguousJoins)).toEqual(LEVELS.map(() => 0));
+    expect(reports.map((r) => r.exact.ambiguousJoins)).toEqual(CAMPAIGN.map(() => 0));
   });
 
   it('has no two levels that are near-duplicates', () => {
@@ -106,7 +117,8 @@ describe('difficulty curve', () => {
 
   it('marks redesigned layouts with a new revision', () => {
     // 1 unchanged; 2–3 as rebalanced in Step 12; 4–30 redesigned in Step 13 and again (full coverage) in Step 14.
-    expect(LEVELS.map((l) => l.revision ?? 1)).toEqual([1, 3, 3, ...Array(7).fill(5), ...Array(20).fill(3)]);
+    expect(CAMPAIGN.map((l) => l.revision ?? 1)).toEqual([1, 3, 3, ...Array(7).fill(5), ...Array(20).fill(3)]);
+    expect(LEVELS[30].revision).toBeUndefined(); // Level 31: its first layout
   });
 
   it('does not simply add arrows every level', () => {
@@ -128,7 +140,7 @@ describe('Levels 1–3 stay exactly as they were', () => {
 });
 
 describe('redesigned Levels 4–30', () => {
-  const redesigned = LEVELS.slice(3);
+  const redesigned = CAMPAIGN.slice(3);
   const reports = redesigned.map((l) => analyzeDifficulty(l, { lives: false }));
 
   it('cover the board: at least 97 % of cells, no empty square, and full coverage on almost every level', () => {
@@ -219,6 +231,11 @@ describe('levelFromMap', () => {
   it('keeps the revision option', () => {
     expect(levelFromMap(3, ['a> .'], { revision: 4 }).revision).toBe(4);
     expect(levelFromMap(3, ['a> .']).revision).toBeUndefined();
+  });
+
+  it('keeps the name option, and adds no name field without it', () => {
+    expect(levelFromMap(3, ['a> .'], { name: 'X' }).name).toBe('X');
+    expect('name' in levelFromMap(3, ['a> .'], { revision: 2 })).toBe(false);
   });
 
   it('rejects malformed maps with a helpful message', () => {

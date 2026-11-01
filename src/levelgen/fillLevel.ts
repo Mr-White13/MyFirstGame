@@ -65,6 +65,16 @@ export interface FillOptions {
   readonly attempts?: number;
   /** Head-flip edits used to steer the score per attempt (default 200). */
   readonly refineSteps?: number;
+  /** Flip/split rounds allowed to make a partition solvable and readable (default 400; large boards need more). */
+  readonly repairRounds?: number;
+  /**
+   * Head flips tried per attempt to lengthen the dependency chain before the
+   * score is measured (default 0: none). A flip is kept only if the level
+   * stays playable and its depth (waves) doesn't drop, with fewer free arrows
+   * at the start as the tie-break. Measured with clearInWaves alone, so it
+   * stays cheap on large boards, where analyzeDifficulty takes about a second.
+   */
+  readonly deepenSteps?: number;
   readonly avoid?: readonly LevelData[];
   readonly similarityLimit?: number;
 }
@@ -95,6 +105,7 @@ export function fillLevel(options: FillOptions): GenerateResult {
     if (!arrows) continue;
     let level = relabel({ id: options.id ?? 0, rows: options.rows, cols: options.cols, arrows });
     if (coverage(level) < minCoverage || tooShort(level) || !isPlayable(level) || !isNovel(level)) continue;
+    if (options.deepenSteps) level = relabel(deepen(level, random, options.deepenSteps));
 
     let report = analyzeDifficulty(asLoaded(level), SEARCH_ONLY);
     // Steer the score with head flips that keep the level solvable and readable.
@@ -161,7 +172,7 @@ function buildFilled(random: Random, o: FillOptions): ArrowData[] | null {
   arrows = arrows.map((a, i) => ({ ...a, id: `#${i}` }));
 
   // Repair until solvable and readable, keeping every cell covered.
-  for (let round = 0; round < 400; round++) {
+  for (let round = 0; round < (o.repairRounds ?? 400); round++) {
     const stuck = stuckArrows(o.rows, o.cols, arrows);
     const joins = stuck.length === 0 ? joinedArrows(o.rows, o.cols, arrows) : [];
     if (stuck.length === 0 && joins.length === 0) return consolidate(arrows, o, minLength, maxLength + 2, random);
@@ -408,6 +419,29 @@ function flipRandom(level: LevelData, random: Random): LevelData | null {
   const arrows = [...level.arrows];
   arrows[index] = flipped;
   return { ...level, arrows };
+}
+
+/**
+ * Lengthens the longest dependency chain with head flips (see
+ * FillOptions.deepenSteps). Edits that keep the same depth are kept too, so
+ * the search can drift across plateaus instead of stopping at the first one.
+ */
+function deepen(level: LevelData, random: Random, steps: number): LevelData {
+  // Depth first, then fewer arrows free at the start.
+  const measure = (l: LevelData) => {
+    const { waves, stuck } = clearInWaves(l);
+    return stuck.length > 0 ? -Infinity : waves.length * (l.arrows.length + 1) - waves[0].length;
+  };
+  let best = measure(level);
+  for (let i = 0; i < steps; i++) {
+    const edited = flipRandom(level, random);
+    if (!edited) continue;
+    const value = measure(edited);
+    if (value < best || !isPlayable(edited)) continue;
+    level = edited;
+    best = value;
+  }
+  return level;
 }
 
 /**
