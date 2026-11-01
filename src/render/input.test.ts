@@ -93,7 +93,21 @@ describe('tap selection with thin arrows', () => {
 
   it('never guesses on a tap right between two arrows, even inside an occupied cell', () => {
     expect(chooseArrow('B', hits(50, 20), options)).toBeUndefined();
-    expect(chooseArrow('A', hits(50, 18), options)).toBeUndefined();
+    expect(chooseArrow('A', hits(50, 19), options)).toBeUndefined();
+    expect(chooseArrow('A', hits(50, 18), options)).toBe('A'); // 0.2 cell nearer A: that is A
+  });
+
+  it('keeps the undecided band a small share of the cell on small, dense cells (phones, not zoomed)', () => {
+    // Level 31 fitted on a phone: 14.6 CSS px cells at a 2.625 device pixel ratio.
+    const cell = 14.6 * 2.625;
+    const phone = hitOptions(cell, 2.625, 1);
+    expect(phone.margin).toBeCloseTo(cell * 0.15);
+    // Two parallel arrows one cell apart; a tap 0.3 cell off A's line, towards B, still picks A.
+    const A2 = [{ x: 0, y: cell / 2 }, { x: 10 * cell, y: cell / 2 }];
+    const B2 = [{ x: 0, y: cell * 1.5 }, { x: 10 * cell, y: cell * 1.5 }];
+    const at = (y: number) => [{ id: 'A', distance: distanceToPolyline(A2, { x: 5 * cell, y }) }, { id: 'B', distance: distanceToPolyline(B2, { x: 5 * cell, y }) }];
+    expect(chooseArrow('A', at(cell * 0.8), phone)).toBe('A');
+    expect(chooseArrow('B', at(cell * 1.04), phone)).toBeUndefined(); // right on the border: no guess
   });
 
   it('falls back to the cell owner far from every line (outer corner of a big cell)', () => {
