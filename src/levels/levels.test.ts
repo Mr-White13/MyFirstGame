@@ -9,15 +9,16 @@ import { arrowLabel, levelFromMap, levelToMap } from './levelMap';
 
 /**
  * The curated campaign, Levels 1–30: the difficulty curve and layout rules
- * below apply to these. Level 31 (THE IMPOSSIBLE GRID) is an experimental
- * extreme level outside the curve, with its own checks in level31.test.ts.
+ * below apply to these. Levels 31–40 are experimental extreme levels outside
+ * the curve (31: THE IMPOSSIBLE GRID; 32–40: shaped boards), with their own
+ * checks in level31.test.ts and shapedLevels.test.ts.
  */
 const CAMPAIGN = LEVELS.slice(0, 30);
 
 describe('level registry', () => {
-  it('has 31 levels with ids 1..31 in order', () => {
-    expect(LEVEL_COUNT).toBe(31);
-    expect(LEVELS.map((l) => l.id)).toEqual(Array.from({ length: 31 }, (_, i) => i + 1));
+  it('has 40 levels with ids 1..40 in order', () => {
+    expect(LEVEL_COUNT).toBe(40);
+    expect(LEVELS.map((l) => l.id)).toEqual(Array.from({ length: 40 }, (_, i) => i + 1));
   });
 
   it('looks levels up by id', () => {
@@ -26,7 +27,8 @@ describe('level registry', () => {
     expect(getLevel(30)).toBe(LEVELS[29]);
     expect(getLevel(31)).toBe(LEVELS[30]);
     expect(getLevel(0)).toBeUndefined();
-    expect(getLevel(32)).toBeUndefined();
+    expect(getLevel(40)).toBe(LEVELS[39]);
+    expect(getLevel(41)).toBeUndefined();
   });
 
   it('keeps Levels 1–3 square and gives Levels 4–30 tall portrait boards', () => {
@@ -37,11 +39,12 @@ describe('level registry', () => {
       expect(l.rows).toBeLessThanOrEqual(17);
     }
     // Boards grow (never shrink) through the game.
-    for (let i = 4; i < LEVELS.length; i++) expect(LEVELS[i].rows * LEVELS[i].cols).toBeGreaterThanOrEqual(LEVELS[i - 1].rows * LEVELS[i - 1].cols);
+    for (let i = 4; i < 31; i++) expect(LEVELS[i].rows * LEVELS[i].cols).toBeGreaterThanOrEqual(LEVELS[i - 1].rows * LEVELS[i - 1].cols);
   });
 
-  it('names only Level 31', () => {
-    expect(LEVELS.filter((l) => l.name !== undefined).map((l) => [l.id, l.name])).toEqual([[31, 'THE IMPOSSIBLE GRID']]);
+  it('names only the experimental Levels 31–40', () => {
+    expect(LEVELS.filter((l) => l.name !== undefined).map((l) => l.id)).toEqual(Array.from({ length: 10 }, (_, i) => 31 + i));
+    expect(LEVELS[30].name).toBe('THE IMPOSSIBLE GRID');
   });
 });
 
@@ -118,7 +121,7 @@ describe('difficulty curve', () => {
   it('marks redesigned layouts with a new revision', () => {
     // 1 unchanged; 2–3 as rebalanced in Step 12; 4–30 redesigned in Step 13 and again (full coverage) in Step 14.
     expect(CAMPAIGN.map((l) => l.revision ?? 1)).toEqual([1, 3, 3, ...Array(7).fill(5), ...Array(20).fill(3)]);
-    expect(LEVELS[30].revision).toBeUndefined(); // Level 31: its first layout
+    expect(LEVELS.slice(30).map((l) => l.revision)).toEqual(Array(10).fill(undefined)); // Levels 31–40: their first layouts
   });
 
   it('does not simply add arrows every level', () => {

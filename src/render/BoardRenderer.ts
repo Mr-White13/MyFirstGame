@@ -16,7 +16,8 @@ const FAIL_WAVE_MS = 450;
 
 /**
  * Draws the board: borderless, just a subtle dot at every cell on the page
- * background. The grid's logical edges (collisions, exits, hit testing) are
+ * background (on a shaped board, only the cells inside its outline: see
+ * setOutline). The grid's logical edges (collisions, exits, hit testing) are
  * unchanged; only the frame, the recessed well and the grid lines are gone.
  * Also plays the board's entrance, the level-complete wave and the failure wave.
  *
@@ -32,6 +33,8 @@ export class BoardRenderer {
   /** 0..1 progress of the win (outwards) or failure (inwards) wave; 1 = finished. */
   private wave = 1;
   private waveTween?: Phaser.Tweens.Tween;
+  /** Cells that show a dot ("row,col"), or null for every cell. */
+  private outline: ReadonlySet<string> | null = null;
 
   constructor(private readonly scene: Phaser.Scene) {
     this.graphics = scene.add.graphics().setDepth(0);
@@ -42,6 +45,11 @@ export class BoardRenderer {
     this.stopEffects();
     this.graphics.setScale(1).setAlpha(1);
     this.draw();
+  }
+
+  /** Dots only on these cells ("row,col"), for a shaped board; null for all. Applied on the next draw. */
+  setOutline(cells: ReadonlySet<string> | null): void {
+    this.outline = cells;
   }
 
   /** Quick fade and settle when a level starts; never blocks input. */
@@ -129,6 +137,7 @@ export class BoardRenderer {
     const dot = Math.max(1, l.cellSize * 0.045);
     for (let r = 0; r < l.rows; r++) {
       for (let c = 0; c < l.cols; c++) {
+        if (this.outline && !this.outline.has(`${r},${c}`)) continue;
         let alpha = p.dotAlpha;
         let size = dot;
         let color = p.dots;

@@ -25,9 +25,9 @@ const report = analyzeDifficulty(level, { lives: false });
 const graph = dependencyGraph(level);
 
 describe('Level 31 — THE IMPOSSIBLE GRID', () => {
-  it('exists exactly once, as the last level, with its name', () => {
+  it('exists exactly once, right after the campaign, with its name', () => {
     expect(LEVELS.filter((l) => l.id === 31)).toHaveLength(1);
-    expect(LEVELS.at(-1)).toBe(level);
+    expect(LEVELS[30]).toBe(level);
     expect(level.name).toBe('THE IMPOSSIBLE GRID');
   });
 

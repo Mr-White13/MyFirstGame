@@ -103,6 +103,8 @@ export class GameScene extends Phaser.Scene {
   private ended = false;
   private endTimer?: Phaser.Time.TimerEvent;
   private readonly viewport = new BoardViewport();
+  /** A shaped level's cells ("row,col"): only they show board dots. Null for rectangular boards. */
+  private outline: ReadonlySet<string> | null = null;
   private readonly gestures = new GestureTracker(PAN_THRESHOLD_CSS * Math.min(window.devicePixelRatio || 1, 3), () => this.viewport.zoomed);
 
   constructor(
@@ -115,6 +117,7 @@ export class GameScene extends Phaser.Scene {
   create(): void {
     this.layout = this.computeLayout();
     this.board = new BoardRenderer(this);
+    this.board.setOutline(this.outline);
     this.board.setLayout(this.layout);
     this.arrowLayer = this.add.container(0, 0).setDepth(1);
     this.staticLayer = new StaticArrowLayer(this, this.arrowLayer);
@@ -177,6 +180,8 @@ export class GameScene extends Phaser.Scene {
   /** Switches to another level, replacing every arrow and resizing the board for its grid. The view is fitted. */
   loadLevel(level: LevelData): void {
     this.state.load(level);
+    this.outline = level.outline ? new Set(level.arrows.flatMap((a) => a.cells.map((c) => `${c.row},${c.col}`))) : null;
+    this.board?.setOutline(this.outline);
     this.rebuild(false);
   }
 

@@ -75,6 +75,12 @@ export interface FillOptions {
    * stays cheap on large boards, where analyzeDifficulty takes about a second.
    */
   readonly deepenSteps?: number;
+  /**
+   * A shaped board: only these cells are filled, one string per row with
+   * `#` for a cell inside the shape and `.` for one outside (see
+   * tools/shapes.ts). Coverage is then measured against the shape's cells.
+   */
+  readonly mask?: readonly string[];
   readonly avoid?: readonly LevelData[];
   readonly similarityLimit?: number;
 }
@@ -87,6 +93,9 @@ const SEARCH_ONLY = { lives: false } as const;
 export function fillLevel(options: FillOptions): GenerateResult {
   const attempts = options.attempts ?? 60;
   const minCoverage = options.minCoverage ?? 0.97;
+  // Cells that may hold arrows: the whole board, or the shape's cells.
+  const area = options.mask ? options.mask.join('').split('#').length - 1 : options.rows * options.cols;
+  const filled = (level: LevelData) => (coverage(level) * level.rows * level.cols) / area;
   const scoreGap = (r: DifficultyReport) =>
     r.score < options.minScore ? options.minScore - r.score : r.score > options.maxScore ? r.score - options.maxScore : 0;
   const depthGap = (r: DifficultyReport) =>
@@ -94,7 +103,7 @@ export function fillLevel(options: FillOptions): GenerateResult {
   const freeGap = (r: DifficultyReport) => Math.max(0, r.exact.initialFree - (options.maxInitialFree ?? Infinity));
   const gapFor = (r: DifficultyReport) => scoreGap(r) + depthGap(r) * 2 + freeGap(r) * 2;
   const tooShort = (level: LevelData) =>
-    coverage(level) * level.rows * level.cols < (options.minMeanLength ?? 0) * level.arrows.length ||
+    filled(level) * area < (options.minMeanLength ?? 0) * level.arrows.length ||
     level.arrows.filter((a) => a.cells.length < (options.minLength ?? 3)).length > (options.maxShortShare ?? 1) * level.arrows.length;
   const isNovel = (level: LevelData) => !options.avoid?.some((o) => layoutSimilarity(level, o) > (options.similarityLimit ?? 0.6));
   let closest: { gap: number; score: number } | null = null;
@@ -104,7 +113,7 @@ export function fillLevel(options: FillOptions): GenerateResult {
     const arrows = buildFilled(random, options);
     if (!arrows) continue;
     let level = relabel({ id: options.id ?? 0, rows: options.rows, cols: options.cols, arrows });
-    if (coverage(level) < minCoverage || tooShort(level) || !isPlayable(level) || !isNovel(level)) continue;
+    if (filled(level) < minCoverage || tooShort(level) || !isPlayable(level) || !isNovel(level)) continue;
     if (options.deepenSteps) level = relabel(deepen(level, random, options.deepenSteps));
 
     let report = analyzeDifficulty(asLoaded(level), SEARCH_ONLY);
@@ -150,7 +159,7 @@ export function coverage(level: LevelData): number {
 function buildFilled(random: Random, o: FillOptions): ArrowData[] | null {
   const minLength = o.minLength ?? 3;
   const maxLength = o.maxLength ?? 9;
-  const paths = partition(random, o.rows, o.cols, minLength, maxLength, o.maxTurns ?? 4, o.turnChance ?? 0.45, o.maxStraight ?? 4);
+  const paths = partition(random, o.rows, o.cols, minLength, maxLength, o.maxTurns ?? 4, o.turnChance ?? 0.45, o.maxStraight ?? 4, o.mask);
   mergeShort(paths, minLength, maxLength + 2, (o.maxTurns ?? 4) + 1);
   absorbSingles(paths);
 
@@ -248,9 +257,10 @@ function partition(
   maxTurns: number,
   turnChance: number,
   maxStraight: number,
+  mask?: readonly string[],
 ): Path[] {
   const free = new Set<string>();
-  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) free.add(cellKey({ row: r, col: c }));
+  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) if (!mask || mask[r][c] === '#') free.add(cellKey({ row: r, col: c }));
   const inside = (c: Cell) => c.row >= 0 && c.row < rows && c.col >= 0 && c.col < cols;
   const freeNeighbours = (c: Cell) => DIRS.map((d) => step(c, d)).filter((n) => inside(n) && free.has(cellKey(n))).length;
   const paths: Path[] = [];
