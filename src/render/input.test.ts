@@ -83,8 +83,22 @@ describe('tap selection with thin arrows', () => {
     expect(chooseArrow(undefined, hits(50, -5), options)).toBe('A'); // 15 px off a thin arrow still hits it
   });
 
-  it('a tap inside an occupied cell always selects that arrow', () => {
-    expect(chooseArrow('B', hits(50, 20), options)).toBe('B');
+  it('follows the drawn lines, not the cell grid: a tap just past the border next to A picks A', () => {
+    // y = 21 is in B's cell, but only 1 px past the border: about equally near both lines.
+    expect(chooseArrow('B', hits(50, 21), options)).toBeUndefined();
+    expect(chooseArrow('B', hits(50, 24), options)).toBe('B'); // clearly nearer B's line
+    // A turning arrow's line can be clearly nearer than the line of the cell's own arrow.
+    expect(chooseArrow('B', [{ id: 'A', distance: 2 }, { id: 'B', distance: 9 }], options)).toBe('A');
+  });
+
+  it('never guesses on a tap right between two arrows, even inside an occupied cell', () => {
+    expect(chooseArrow('B', hits(50, 20), options)).toBeUndefined();
+    expect(chooseArrow('A', hits(50, 18), options)).toBeUndefined();
+  });
+
+  it('falls back to the cell owner far from every line (outer corner of a big cell)', () => {
+    expect(chooseArrow('B', [{ id: 'A', distance: 60 }, { id: 'B', distance: 50 }], options)).toBe('B');
+    expect(chooseArrow(undefined, [{ id: 'A', distance: 60 }], options)).toBeUndefined();
   });
 
   it('selects the clearly nearer arrow', () => {
@@ -171,6 +185,30 @@ describe('zoom and pan transform', () => {
     v.zoomAt({ x: 400, y: 750 }, 2);
     expect(v.zoomed).toBe(false);
     expect(v.zoomable).toBe(false);
+  });
+
+  it('fills the whole board area when zoomed, not just the fitted board, and stays on the board', () => {
+    // A wide board on a phone: the fitted board leaves empty strips above and below it.
+    const area = { x: 50, y: 150, width: 700, height: 1400 };
+    const v = new BoardViewport();
+    v.configure(canvas, slot, 3, area);
+    v.zoomAt({ x: 400, y: 750 }, 2);
+    expect(v.view).toEqual(area);
+    // At 2×, 700 world px fill the area's 1400 px height: the whole board height, edge to edge.
+    v.panBy(0, 5000);
+    expect(v.worldToScreen({ x: 0, y: slot.y }).y).toBeCloseTo(area.y);
+    v.panBy(0, -9000);
+    expect(v.worldToScreen({ x: 0, y: slot.y + slot.height }).y).toBeCloseTo(area.y + area.height);
+    // At 1.5× the board is shorter than the area: centred in it, whatever the pan.
+    v.zoomAt({ x: 400, y: 750 }, 1.5);
+    v.panBy(0, 300);
+    const top = v.worldToScreen({ x: 0, y: slot.y }).y;
+    const bottom = v.worldToScreen({ x: 0, y: slot.y + slot.height }).y;
+    expect(top - area.y).toBeCloseTo(area.y + area.height - bottom);
+    // Taps still map to the right board point.
+    const p = { x: 300, y: 900 };
+    const back = v.worldToScreen(v.screenToWorld(p));
+    expect([back.x, back.y]).toEqual([expect.closeTo(p.x), expect.closeTo(p.y)]);
   });
 
   it('pan does nothing when fitted', () => {

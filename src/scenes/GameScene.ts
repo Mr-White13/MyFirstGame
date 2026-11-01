@@ -19,6 +19,11 @@ export interface GameSceneOptions {
    */
   boardSlot: HTMLElement;
   /**
+   * The board's whole part of the screen (client CSS pixels), which a zoomed
+   * board may fill (see BoardViewport). Defaults to the slot itself.
+   */
+  boardArea?: () => { left: number; top: number; width: number; height: number };
+  /**
    * Called exactly once per play-through, the moment the last arrow leaves the
    * grid. Use it for anything that must not be lost (saving progress).
    */
@@ -305,9 +310,10 @@ export class GameScene extends Phaser.Scene {
   }
 
   /**
-   * Finds the arrow under a point (world pixels). See render/hitTest.ts: an
-   * occupied cell wins outright; otherwise the clearly nearest arrow within
-   * a fingertip-sized tolerance, and nothing when two are about as close.
+   * Finds the arrow under a point (world pixels). See render/hitTest.ts: the
+   * arrow whose drawn line is clearly nearest, within a fingertip-sized
+   * tolerance; nothing when two are about as close; the cell's owner when
+   * no line is near.
    */
   private pickArrow(x: number, y: number): ArrowView | undefined {
     const cell = cellAtPoint(this.layout, x, y);
@@ -487,8 +493,21 @@ export class GameScene extends Phaser.Scene {
   private configureView(): void {
     const l = this.layout;
     const slot: Rect = { x: l.x, y: l.y, width: l.width, height: l.height };
-    this.viewport.configure({ x: 0, y: 0, width: this.scale.width, height: this.scale.height }, slot, maxZoomFor(l.cellSize, l.pxPerCss));
+    this.viewport.configure({ x: 0, y: 0, width: this.scale.width, height: this.scale.height }, slot, maxZoomFor(l.cellSize, l.pxPerCss), this.zoomArea(slot));
     this.applyView();
+  }
+
+  /** The zoom area in canvas pixels: the board's part of the screen, never smaller than the slot. */
+  private zoomArea(slot: Rect): Rect {
+    const canvas = this.game.canvas.getBoundingClientRect();
+    const area = this.options.boardArea?.();
+    if (!area || canvas.width === 0 || area.width === 0 || area.height === 0) return slot;
+    const ratio = this.scale.width / canvas.width;
+    const x = Math.min(slot.x, (area.left - canvas.left) * ratio);
+    const y = Math.min(slot.y, (area.top - canvas.top) * ratio);
+    const right = Math.max(slot.x + slot.width, (area.left + area.width - canvas.left) * ratio);
+    const bottom = Math.max(slot.y + slot.height, (area.top + area.height - canvas.top) * ratio);
+    return { x, y, width: right - x, height: bottom - y };
   }
 
   /** Points the Phaser camera at the viewport's transform: screen = view.x + (world − scroll) × zoom. */

@@ -28,7 +28,7 @@ import { GameScene } from './scenes/GameScene';
 import { CompleteDialog } from './ui/CompleteDialog';
 import { ConfirmDialog } from './ui/ConfirmDialog';
 import { requireElement } from './ui/dom';
-import { GameLayout } from './ui/GameLayout';
+import { boardArea, GameLayout } from './ui/GameLayout';
 import { GameOverDialog } from './ui/GameOverDialog';
 import { HomeScreen } from './ui/HomeScreen';
 import { Hud } from './ui/Hud';
@@ -69,8 +69,11 @@ state.subscribe((snapshot) => hud.update(snapshot));
 // The scene and the UI report back to the app, which is created right after them.
 let app: App | undefined;
 const boardSlot = requireElement('board-slot');
+const gameUi = requireElement('game-ui');
+const hudBar = requireElement('hud');
 const scene = new GameScene(state, {
   boardSlot,
+  boardArea: () => boardArea(gameUi, hudBar),
   onLevelSolved: () => app?.handleLevelSolved(),
   onCelebrationEnd: () => app?.handleCelebrationEnd(),
   onLevelLost: () => app?.handleLevelLost(),
@@ -136,7 +139,7 @@ const achievementsScreen = new AchievementsScreen(() => void app?.goBack());
 
 const game = createGame(requireElement('stage'), scene);
 // Sizes the board slot; the scene re-fits the board whenever the slot changes.
-const gameLayout = new GameLayout(requireElement('game-ui'), requireElement('hud'), boardSlot, () => scene.relayout());
+const gameLayout = new GameLayout(gameUi, hudBar, boardSlot, () => scene.relayout());
 
 app = new App({
   levels: LEVELS,

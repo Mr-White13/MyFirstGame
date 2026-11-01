@@ -9,23 +9,30 @@ const SNAP = 1.02;
  *
  * - Fitted (zoom 1): the camera shows the whole canvas, world = screen, so
  *   arrows can fly off past the board exactly as before.
- * - Zoomed: the camera draws only inside the board slot (the board's
- *   on-screen rectangle) and shows part of the board, magnified.
- *   screen = slot.x + (world − scroll) × zoom, and the scroll is clamped so
- *   the slot never shows anything outside the board.
+ * - Zoomed: the camera draws inside the zoom area (the board's whole part
+ *   of the screen: the fitted board plus the empty space around it, such as
+ *   the strips above and below a wide board on a phone) and shows part of
+ *   the board, magnified. screen = area.x + (world − scroll) × zoom. The
+ *   scroll is clamped to the board (the slot, in world pixels); along an
+ *   axis where the magnified board is smaller than the area, it is centred.
  */
 export class BoardViewport {
   private canvas: Rect = { x: 0, y: 0, width: 1, height: 1 };
   private slot: Rect = { x: 0, y: 0, width: 1, height: 1 };
+  private area: Rect = { x: 0, y: 0, width: 1, height: 1 };
   private max = 1;
   private z = 1;
   private sx = 0;
   private sy = 0;
 
-  /** Sets the canvas, the board slot (in canvas pixels) and the zoom limit, and fits the board. */
-  configure(canvas: Rect, slot: Rect, maxZoom: number): void {
+  /**
+   * Sets the canvas, the board slot, the zoom area (all in canvas pixels; the
+   * area defaults to the slot) and the zoom limit, and fits the board.
+   */
+  configure(canvas: Rect, slot: Rect, maxZoom: number, area: Rect = slot): void {
     this.canvas = canvas;
     this.slot = slot;
+    this.area = area;
     this.max = Math.max(1, maxZoom);
     this.reset();
   }
@@ -53,7 +60,7 @@ export class BoardViewport {
 
   /** The camera's viewport on the canvas. */
   get view(): Rect {
-    return this.zoomed ? this.slot : this.canvas;
+    return this.zoomed ? this.area : this.canvas;
   }
 
   reset(): void {
@@ -81,8 +88,8 @@ export class BoardViewport {
     }
     const world = this.screenToWorld(anchor);
     this.z = target;
-    this.sx = world.x - (anchor.x - this.slot.x) / target;
-    this.sy = world.y - (anchor.y - this.slot.y) / target;
+    this.sx = world.x - (anchor.x - this.area.x) / target;
+    this.sy = world.y - (anchor.y - this.area.y) / target;
     this.clamp();
   }
 
@@ -94,17 +101,17 @@ export class BoardViewport {
     this.clamp();
   }
 
-  /** Keeps the visible part of the world inside the board's slot area. */
+  /** Keeps the view on the board: no scrolling past its edges, and centred where it doesn't fill the area. */
   private clamp(): void {
     const s = this.slot;
-    const clampAxis = (scroll: number, start: number, size: number) => {
-      const visible = size / this.z;
+    const clampAxis = (scroll: number, start: number, size: number, viewSize: number) => {
+      const visible = viewSize / this.z;
       const min = start;
       const max = start + size - visible;
       return max < min ? start + (size - visible) / 2 : Math.min(max, Math.max(min, scroll));
     };
-    this.sx = clampAxis(this.sx, s.x, s.width);
-    this.sy = clampAxis(this.sy, s.y, s.height);
+    this.sx = clampAxis(this.sx, s.x, s.width, this.area.width);
+    this.sy = clampAxis(this.sy, s.y, s.height, this.area.height);
   }
 }
 
