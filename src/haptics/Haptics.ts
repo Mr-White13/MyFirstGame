@@ -15,10 +15,12 @@ export interface HapticEffect {
 /**
  * The game's effects. Every pulse is at least ~30 ms: shorter ones (the
  * first version used 8–12 ms) are below what many phone motors can make you
- * feel. Nothing lasts more than a third of a second, and nothing repeats.
+ * feel. The one exception is the arrow release, the most frequent cue: a
+ * soft 22 ms tick, short enough to feel light even on motors that ignore
+ * the strength. Nothing lasts more than a third of a second, and nothing repeats.
  */
 export const HAPTIC_EFFECTS: Readonly<Record<HapticId, HapticEffect>> = {
-  release: { timings: [32], amplitudes: [140] }, // a light tick
+  release: { timings: [22], amplitudes: [80] }, // a soft tick: every arrow the player sends off
   chain: { timings: [36], amplitudes: [170] }, // once per chain, not per arrow (see throttle)
   blocked: { timings: [48], amplitudes: [220] }, // a firmer bump
   lifeLost: { timings: [45, 60, 45], amplitudes: [230, 0, 230] }, // distinct double pulse
