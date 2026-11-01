@@ -77,11 +77,20 @@ describe('haptics', () => {
     for (const [id, effect] of Object.entries(HAPTIC_EFFECTS)) {
       expect(effect.timings.length, id).toBe(effect.amplitudes.length);
       const strongest = Math.max(...effect.timings.filter((_, i) => effect.amplitudes[i] > 0));
-      expect(strongest, id).toBeGreaterThanOrEqual(30); // the old 8 ms pulses were too short to feel
+      // The old 8 ms pulses were too short to feel; only the soft release tick goes below 30 ms.
+      expect(strongest, id).toBeGreaterThanOrEqual(id === 'release' ? 20 : 30);
       expect(effectDuration(effect), id).toBeLessThanOrEqual(350);
       for (const a of effect.amplitudes) expect(a >= 0 && a <= 255, id).toBe(true);
     }
     expect(effectDuration(TEST_EFFECT)).toBeGreaterThanOrEqual(300);
+  });
+
+  it('makes the arrow release the softest cue: shorter and gentler than a mistake or a chain', () => {
+    const { release, blocked, chain, lifeLost } = HAPTIC_EFFECTS;
+    for (const other of [blocked, chain, lifeLost]) {
+      expect(Math.max(...release.amplitudes)).toBeLessThan(Math.max(...other.amplitudes));
+      expect(effectDuration(release)).toBeLessThan(effectDuration(other));
+    }
   });
 
   it('converts effects to Web Vibration patterns', () => {
