@@ -9,12 +9,12 @@ import { canPlayLevel, isTestPlay, UNLOCK_ALL_LEVELS_FOR_TESTING } from './testU
 describe('testing flag: all levels playable', () => {
   const fresh = createProgress();
 
-  it('is on in this build and opens every level (all 31)', () => {
+  it('is on in this build and opens every level (all 40)', () => {
     expect(UNLOCK_ALL_LEVELS_FOR_TESTING).toBe(true);
     for (const level of LEVELS) expect(canPlayLevel(fresh, level.id, LEVELS.length)).toBe(true);
     expect(canPlayLevel(fresh, 0, LEVELS.length)).toBe(false);
-    expect(LEVELS.length).toBe(31);
-    expect(canPlayLevel(fresh, 32, LEVELS.length)).toBe(false);
+    expect(LEVELS.length).toBe(40);
+    expect(canPlayLevel(fresh, 41, LEVELS.length)).toBe(false);
   });
 
   it('with the flag off, the normal unlock rules apply unchanged', () => {

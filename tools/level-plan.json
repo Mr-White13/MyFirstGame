@@ -1684,5 +1684,294 @@
    3105
   ],
   "note": "THE IMPOSSIBLE GRID, an extreme complexity experiment: a dense 30×24 board whose dependency chain was lengthened with fillLevel deepenSteps"
+ },
+ {
+  "id": 32,
+  "name": "THE ARROWHEAD",
+  "shape": "arrowhead",
+  "rows": 36,
+  "cols": 28,
+  "fill": true,
+  "arrows": [
+   150,
+   260
+  ],
+  "length": 5,
+  "turns": 3,
+  "minLength": 3,
+  "minCoverage": 0.97,
+  "score": [
+   0,
+   100
+  ],
+  "attempts": 3,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 0,
+  "seeds": [
+   3201,
+   3202,
+   3203,
+   3204
+  ],
+  "note": "THE ARROWHEAD, a shaped extreme level: a 36×28 board filled only inside the arrowhead outline (tools/shapes.ts), chains lengthened with fillLevel deepenSteps"
+ },
+ {
+  "id": 33,
+  "name": "THE HOURGLASS",
+  "shape": "hourglass",
+  "rows": 38,
+  "cols": 30,
+  "fill": true,
+  "arrows": [
+   150,
+   260
+  ],
+  "length": 5,
+  "turns": 3,
+  "minLength": 3,
+  "minCoverage": 0.97,
+  "score": [
+   0,
+   100
+  ],
+  "attempts": 3,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 0,
+  "seeds": [
+   3301,
+   3302,
+   3303,
+   3304
+  ],
+  "note": "THE HOURGLASS, a shaped extreme level: a 38×30 board filled only inside the hourglass outline (tools/shapes.ts), chains lengthened with fillLevel deepenSteps"
+ },
+ {
+  "id": 34,
+  "name": "THE CROSSROADS",
+  "shape": "cross",
+  "rows": 38,
+  "cols": 30,
+  "fill": true,
+  "arrows": [
+   150,
+   260
+  ],
+  "length": 4,
+  "turns": 3,
+  "minLength": 3,
+  "minCoverage": 0.97,
+  "score": [
+   0,
+   100
+  ],
+  "attempts": 3,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 0,
+  "seeds": [
+   3401,
+   3402,
+   3403,
+   3404
+  ],
+  "note": "THE CROSSROADS, a shaped extreme level: a 38×30 board filled only inside the cross outline (tools/shapes.ts), chains lengthened with fillLevel deepenSteps"
+ },
+ {
+  "id": 35,
+  "name": "THE RING",
+  "shape": "ring",
+  "rows": 38,
+  "cols": 30,
+  "fill": true,
+  "arrows": [
+   150,
+   260
+  ],
+  "length": 5,
+  "turns": 3,
+  "minLength": 3,
+  "minCoverage": 0.97,
+  "score": [
+   0,
+   100
+  ],
+  "attempts": 3,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 0,
+  "seeds": [
+   3501,
+   3502,
+   3503,
+   3504
+  ],
+  "note": "THE RING, a shaped extreme level: a 38×30 board filled only inside the ring outline (tools/shapes.ts), chains lengthened with fillLevel deepenSteps"
+ },
+ {
+  "id": 36,
+  "name": "THE NEON HEART",
+  "shape": "heart",
+  "rows": 38,
+  "cols": 30,
+  "fill": true,
+  "arrows": [
+   150,
+   260
+  ],
+  "length": 4,
+  "turns": 3,
+  "minLength": 3,
+  "minCoverage": 0.97,
+  "score": [
+   0,
+   100
+  ],
+  "attempts": 3,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 0,
+  "seeds": [
+   3601,
+   3602,
+   3603,
+   3604
+  ],
+  "note": "THE NEON HEART, a shaped extreme level: a 38×30 board filled only inside the heart outline (tools/shapes.ts), chains lengthened with fillLevel deepenSteps"
+ },
+ {
+  "id": 37,
+  "name": "THE CROWN",
+  "shape": "crown",
+  "rows": 36,
+  "cols": 28,
+  "fill": true,
+  "arrows": [
+   150,
+   260
+  ],
+  "length": 5,
+  "turns": 3,
+  "minLength": 3,
+  "minCoverage": 0.97,
+  "score": [
+   0,
+   100
+  ],
+  "attempts": 3,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 0,
+  "seeds": [
+   3701,
+   3702,
+   3703,
+   3704
+  ],
+  "note": "THE CROWN, a shaped extreme level: a 36×28 board filled only inside the crown outline (tools/shapes.ts), chains lengthened with fillLevel deepenSteps"
+ },
+ {
+  "id": 38,
+  "name": "THE SHIELD",
+  "shape": "shield",
+  "rows": 36,
+  "cols": 28,
+  "fill": true,
+  "arrows": [
+   150,
+   260
+  ],
+  "length": 5,
+  "turns": 3,
+  "minLength": 3,
+  "minCoverage": 0.97,
+  "score": [
+   0,
+   100
+  ],
+  "attempts": 3,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 0,
+  "seeds": [
+   3801,
+   3802,
+   3803,
+   3804
+  ],
+  "note": "THE SHIELD, a shaped extreme level: a 36×28 board filled only inside the shield outline (tools/shapes.ts), chains lengthened with fillLevel deepenSteps"
+ },
+ {
+  "id": 39,
+  "name": "THE NEON PINE",
+  "shape": "tree",
+  "rows": 38,
+  "cols": 30,
+  "fill": true,
+  "arrows": [
+   150,
+   260
+  ],
+  "length": 4,
+  "turns": 3,
+  "minLength": 3,
+  "minCoverage": 0.97,
+  "score": [
+   0,
+   100
+  ],
+  "attempts": 3,
+  "repairRounds": 5000,
+  "deepen": 20000,
+  "refineSteps": 0,
+  "seeds": [
+   3901,
+   3902,
+   3903,
+   3904,
+   3905,
+   3906,
+   3907,
+   3908,
+   3909,
+   3910
+  ],
+  "note": "THE NEON PINE, a shaped extreme level: a 38×30 board filled only inside the tree outline (tools/shapes.ts), chains lengthened with fillLevel deepenSteps",
+  "depth": [
+   40,
+   200
+  ]
+ },
+ {
+  "id": 40,
+  "name": "THE FORTRESS",
+  "shape": "castle",
+  "rows": 36,
+  "cols": 28,
+  "fill": true,
+  "arrows": [
+   150,
+   260
+  ],
+  "length": 5,
+  "turns": 3,
+  "minLength": 3,
+  "minCoverage": 0.97,
+  "score": [
+   0,
+   100
+  ],
+  "attempts": 3,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 0,
+  "seeds": [
+   4001,
+   4002,
+   4003,
+   4004
+  ],
+  "note": "THE FORTRESS, a shaped extreme level: a 36×28 board filled only inside the castle outline (tools/shapes.ts), chains lengthened with fillLevel deepenSteps"
  }
 ]

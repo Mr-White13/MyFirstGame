@@ -36,6 +36,7 @@ import { fillLevel } from '../src/levelgen/fillLevel';
 import { generateLevel, layoutSimilarity } from '../src/levelgen/generateLevel';
 import { LEVELS } from '../src/levels';
 import { levelToMap } from '../src/levels/levelMap';
+import { shapeMask } from './shapes';
 
 type Args = Record<string, string | true>;
 
@@ -192,13 +193,13 @@ function validate(): void {
   console.log(`\nAll ${LEVELS.length} levels are valid and solvable.`);
 }
 
-function levelFile(level: LevelData, note: string, revision?: number, name?: string): string {
-  if (revision === undefined && name === undefined) {
+function levelFile(level: LevelData, note: string, revision?: number, name?: string, outline?: boolean): string {
+  if (revision === undefined && name === undefined && !outline) {
     const rows = levelToMap(level).map((row) => `  '${row}',`);
     return [`import { levelFromMap } from './levelMap';`, ``, `/** Level ${level.id} — ${note} */`, `export default levelFromMap(${level.id}, [`, ...rows, `]);`, ``].join('\n');
   }
   const rows = levelToMap(level).map((row) => `    '${row}',`);
-  const options = [revision === undefined ? '' : `revision: ${revision}`, name === undefined ? '' : `name: '${name}'`];
+  const options = [revision === undefined ? '' : `revision: ${revision}`, name === undefined ? '' : `name: '${name}'`, outline ? 'outline: true' : ''];
   return [
     `import { levelFromMap } from './levelMap';`,
     ``,
@@ -308,6 +309,8 @@ interface PlanEntry {
   readonly refineSteps?: number;
   /** Display name written into the level file (see LevelData.name). */
   readonly name?: string;
+  /** Fill mode: fill only this shape from tools/shapes.ts (the level then draws only its outline's cells). */
+  readonly shape?: string;
   /** Layout revision written into the file (see LevelData.revision). */
   readonly revision?: number;
   readonly note?: string;
@@ -355,6 +358,7 @@ function plan(args: Args): void {
             repairRounds: entry.repairRounds,
             deepenSteps: entry.deepen,
             refineSteps: entry.refineSteps,
+            mask: entry.shape === undefined ? undefined : shapeMask(entry.shape, rows, cols),
             avoid: known.filter((l) => l.id !== entry.id),
           })
         : generateLevel({
@@ -395,7 +399,7 @@ function plan(args: Args): void {
     known.push(level);
     const note = `${entry.note ? `${entry.note}, ` : ''}generated from tools/level-plan.json (seed ${seed}, attempt ${attempt}), score ${report.score} (${report.category}).`;
     if (fs.existsSync(target) && !force) fail(`${target} already exists; use --force to replace it`);
-    fs.writeFileSync(target, levelFile(level, note, entry.revision, entry.name));
+    fs.writeFileSync(target, levelFile(level, note, entry.revision, entry.name, entry.shape !== undefined));
     console.log(
       `Level ${entry.id}: ${rows}×${cols}, ${level.arrows.length} arrows, score ${report.score}, depth ${report.exact.depth}, free ${report.exact.initialFree}, density ${Math.round(report.exact.density * 100)}%, mean length ${report.exact.meanLength.toFixed(1)}, empty square ${report.exact.largestEmptySquare} (${((Date.now() - started) / 1000).toFixed(1)} s) → ${path.relative(process.cwd(), target)}`,
     );

@@ -30,12 +30,22 @@ import level28 from './level28';
 import level29 from './level29';
 import level30 from './level30';
 import level31 from './level31';
+import level32 from './level32';
+import level33 from './level33';
+import level34 from './level34';
+import level35 from './level35';
+import level36 from './level36';
+import level37 from './level37';
+import level38 from './level38';
+import level39 from './level39';
+import level40 from './level40';
 
 /**
  * Every playable level, in play order. Levels 1–3 are hand-designed;
  * 4–30 were generated offline from tools/level-plan.json and reviewed.
- * Level 31, THE IMPOSSIBLE GRID, is an experimental extreme level (30×24,
- * 173 arrows) from the same plan file; it is outside the 1–30 difficulty curve.
+ * Levels 31–40 are experimental extreme levels from the same plan file,
+ * outside the 1–30 difficulty curve: 31, THE IMPOSSIBLE GRID (30×24, 173
+ * arrows), then 32–40 on shaped boards (outlines from tools/shapes.ts).
  * Level ids must be 1..n matching their
  * position here (checked by the tests). To add a level, create `levelNN.ts`
  * with `levelFromMap(NN, [...])` and append it to this list.
@@ -72,6 +82,15 @@ export const LEVELS: readonly LevelData[] = [
   level29,
   level30,
   level31,
+  level32,
+  level33,
+  level34,
+  level35,
+  level36,
+  level37,
+  level38,
+  level39,
+  level40,
 ];
 
 export const LEVEL_COUNT = LEVELS.length;

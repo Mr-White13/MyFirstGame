@@ -33,6 +33,11 @@ export interface LevelData {
   readonly revision?: number;
   /** Display name of a special level (e.g. Level 31, "THE IMPOSSIBLE GRID"). Most levels have none. */
   readonly name?: string;
+  /**
+   * A shaped board (Levels 32–40): the cells holding an arrow at the start
+   * form a silhouette, and only those show the board's dots. Rules ignore it.
+   */
+  readonly outline?: boolean;
   readonly rows: number;
   readonly cols: number;
   readonly arrows: readonly ArrowData[];

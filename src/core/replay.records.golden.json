@@ -1476,7 +1476,7 @@
    "won",
    {
     "firstClear": true,
-    "unlocked": null,
+    "unlocked": 32,
     "newBestStars": true,
     "bestStars": 3,
     "newBestTime": true,
@@ -1511,11 +1511,443 @@
     "bestTimeMs": 22000,
     "previousBestTimeMs": 22000
    }
+  ],
+  [
+   32,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   32,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 33,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 37000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   32,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 21000,
+    "previousBestTimeMs": 37000
+   }
+  ],
+  [
+   32,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 21000,
+    "previousBestTimeMs": 21000
+   }
+  ],
+  [
+   33,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   33,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 34,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 36000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   33,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 20000,
+    "previousBestTimeMs": 36000
+   }
+  ],
+  [
+   33,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 20000,
+    "previousBestTimeMs": 20000
+   }
+  ],
+  [
+   34,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   34,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 35,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 35000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   34,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 19000,
+    "previousBestTimeMs": 35000
+   }
+  ],
+  [
+   34,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 19000,
+    "previousBestTimeMs": 19000
+   }
+  ],
+  [
+   35,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   35,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 36,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 34000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   35,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 18000,
+    "previousBestTimeMs": 34000
+   }
+  ],
+  [
+   35,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 18000,
+    "previousBestTimeMs": 18000
+   }
+  ],
+  [
+   36,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   36,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 37,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 33000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   36,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 17000,
+    "previousBestTimeMs": 33000
+   }
+  ],
+  [
+   36,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 17000,
+    "previousBestTimeMs": 17000
+   }
+  ],
+  [
+   37,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   37,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 38,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 32000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   37,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 16000,
+    "previousBestTimeMs": 32000
+   }
+  ],
+  [
+   37,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 16000,
+    "previousBestTimeMs": 16000
+   }
+  ],
+  [
+   38,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   38,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 39,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 31000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   38,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 15000,
+    "previousBestTimeMs": 31000
+   }
+  ],
+  [
+   38,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 15000,
+    "previousBestTimeMs": 15000
+   }
+  ],
+  [
+   39,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   39,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 40,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 30000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   39,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 14000,
+    "previousBestTimeMs": 30000
+   }
+  ],
+  [
+   39,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 14000,
+    "previousBestTimeMs": 14000
+   }
+  ],
+  [
+   40,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   40,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": null,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 29000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   40,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 13000,
+    "previousBestTimeMs": 29000
+   }
+  ],
+  [
+   40,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 13000,
+    "previousBestTimeMs": 13000
+   }
   ]
  ],
  "records": {
   "progress": {
-   "highestUnlocked": 31,
+   "highestUnlocked": 40,
    "completed": {
     "1": {
      "bestMoves": 5,
@@ -1733,15 +2165,78 @@
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 22000
+    },
+    "32": {
+     "bestMoves": 149,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 21000
+    },
+    "33": {
+     "bestMoves": 144,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 20000
+    },
+    "34": {
+     "bestMoves": 141,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 19000
+    },
+    "35": {
+     "bestMoves": 154,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 18000
+    },
+    "36": {
+     "bestMoves": 146,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 17000
+    },
+    "37": {
+     "bestMoves": 146,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 16000
+    },
+    "38": {
+     "bestMoves": 146,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 15000
+    },
+    "39": {
+     "bestMoves": 129,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 14000
+    },
+    "40": {
+     "bestMoves": 173,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 13000
     }
    }
   },
   "stats": {
-   "successfulRuns": 96,
-   "failedRuns": 28,
-   "flawlessRuns": 94,
-   "playTimeMs": 5611000,
-   "arrowsCleared": 2826,
+   "successfulRuns": 123,
+   "failedRuns": 37,
+   "flawlessRuns": 121,
+   "playTimeMs": 6520000,
+   "arrowsCleared": 7767,
    "chainClears": 4,
    "trackedSince": "2026-10-01T08:00:00.000Z"
   }
@@ -1750,11 +2245,11 @@
   "since": "2026-10-31",
   "days": {
    "2026-10-31": {
-    "playMs": 5611000,
-    "runs": 124,
-    "wins": 96,
-    "flawless": 94,
-    "arrows": 2826
+    "playMs": 6520000,
+    "runs": 160,
+    "wins": 123,
+    "flawless": 121,
+    "arrows": 7767
    }
   }
  }
