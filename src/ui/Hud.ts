@@ -23,6 +23,8 @@ export interface ChallengeHud {
 export class Hud {
   private readonly title = requireElement('hud-title');
   private readonly level = requireElement('hud-level');
+  /** A special level's name under the title (Level 31); hidden for other levels and challenges. */
+  private readonly name = requireElement('hud-name');
   private readonly league = requireElement('hud-league');
   private readonly energy = requireElement('hud-energy');
   private readonly energyWrap = requireElement('hud-energy-wrap');
@@ -43,9 +45,15 @@ export class Hud {
   private shownTime = '';
   private last?: GameSnapshot;
 
+  constructor(
+    /** The display name of a level, if it has one (see LevelData.name). */
+    private readonly levelName: (levelId: number) => string | undefined = () => undefined,
+  ) {}
+
   update(snapshot: GameSnapshot): void {
     const sameRun = this.last?.levelId === snapshot.levelId;
     if (!this.challenge) this.level.textContent = String(snapshot.levelId);
+    if (!sameRun) this.renderName(snapshot.levelId);
     this.remaining.textContent = String(snapshot.remaining);
     const cleared = snapshot.total === 0 ? 0 : (snapshot.total - snapshot.remaining) / snapshot.total;
     this.progress.style.transform = `scaleX(${cleared})`;
@@ -74,6 +82,7 @@ export class Hud {
   setChallenge(info: ChallengeHud | null): void {
     const before = this.challenge;
     this.challenge = info;
+    this.renderName(this.last?.levelId);
     this.league.hidden = info === null;
     this.backButton.setAttribute('aria-label', info ? 'Back to the league' : 'Back to levels');
     this.restartButton.setAttribute('aria-label', info ? 'Restart challenge' : 'Restart level');
@@ -98,6 +107,12 @@ export class Hud {
    */
   setTimerVisible(visible: boolean): void {
     this.timer.hidden = !visible;
+  }
+
+  private renderName(levelId: number | undefined): void {
+    const name = this.challenge || levelId === undefined ? undefined : this.levelName(levelId);
+    this.name.textContent = name ?? '';
+    this.name.hidden = name === undefined;
   }
 
   /** The Reset zoom control on the board: shown only while the board is zoomed in. */

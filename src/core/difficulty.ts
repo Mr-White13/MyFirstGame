@@ -296,6 +296,85 @@ function exactMetrics(level: LevelData): ExactMetrics {
   };
 }
 
+/**
+ * The blocking relations of a level seen as a graph: arrow A depends on B
+ * when B stands on A's exit line at the start. A solvable level's graph has
+ * no cycles, and an arrow's wave (see clearInWaves) is the length of the
+ * longest dependency chain starting at it.
+ */
+export interface DependencyGraph {
+  /** Dependencies (the same count as ExactMetrics.blockingRelations). */
+  readonly links: number;
+  /** Groups of arrows tied together by dependencies (either way); a free-standing arrow is its own group. */
+  readonly groups: number;
+  readonly largestGroup: number;
+  /** Most arrows waiting on one arrow (it stands on all their exit lines). */
+  readonly maxDependents: number;
+  /**
+   * One longest chain, in solving order: each arrow stands on the next one's
+   * exit line, so none can leave before the one before it. Its length is the depth.
+   */
+  readonly criticalPath: readonly string[];
+  /**
+   * Wave by wave (every free arrow cleared at once): the share of arrows still
+   * on the board that look free (the next cell is empty or off the board)
+   * but are blocked further along. Misleading arrows as play goes on.
+   */
+  readonly decoyShareByWave: readonly number[];
+}
+
+/** Dependency-graph measures for a level (see DependencyGraph). Linear in links plus waves × arrows. */
+export function dependencyGraph(level: LevelData): DependencyGraph {
+  const grid = placeAll(level);
+  const index = new Map(level.arrows.map((a, i) => [a.id, i]));
+  const blockers = level.arrows.map((a) => blockersOf(grid, a).map((b) => index.get(b.id)!));
+  const dependents = new Array<number>(level.arrows.length).fill(0);
+  blockers.forEach((list) => list.forEach((b) => dependents[b]++));
+
+  // Groups: union-find over the links.
+  const parent = level.arrows.map((_, i) => i);
+  const root = (i: number): number => (parent[i] === i ? i : (parent[i] = root(parent[i])));
+  blockers.forEach((list, i) => list.forEach((b) => (parent[root(i)] = root(b))));
+  const sizes = new Map<number, number>();
+  level.arrows.forEach((_, i) => sizes.set(root(i), (sizes.get(root(i)) ?? 0) + 1));
+
+  // Waves, with the decoy share at the start of each one.
+  const wave = new Array<number>(level.arrows.length).fill(0);
+  const decoyShareByWave: number[] = [];
+  let remaining = level.arrows.map((_, i) => i);
+  for (let w = 1; remaining.length > 0; w++) {
+    const checks = remaining.map((i) => checkExitPath(grid, level.arrows[i]));
+    const free = remaining.filter((_, k) => checks[k].clear);
+    if (free.length === 0) break;
+    const decoys = checks.filter((c) => !c.clear && c.path.length > 0).length;
+    decoyShareByWave.push(decoys / remaining.length);
+    free.forEach((i) => {
+      wave[i] = w;
+      grid.remove(level.arrows[i]);
+    });
+    remaining = remaining.filter((i) => wave[i] === 0);
+  }
+
+  // Walk back from an arrow of the last wave: each step to a blocker one wave earlier.
+  const criticalPath: string[] = [];
+  const depth = Math.max(0, ...wave);
+  let at = depth > 0 && remaining.length === 0 ? wave.indexOf(depth) : -1;
+  while (at >= 0) {
+    criticalPath.unshift(level.arrows[at].id);
+    const w = wave[at];
+    at = w > 1 ? blockers[at].find((b) => wave[b] === w - 1)! : -1;
+  }
+
+  return {
+    links: blockers.reduce((n, list) => n + list.length, 0),
+    groups: sizes.size,
+    largestGroup: Math.max(0, ...sizes.values()),
+    maxDependents: Math.max(0, ...dependents),
+    criticalPath,
+    decoyShareByWave,
+  };
+}
+
 /** Side of the largest all-empty square on the board (classic dynamic programming over cells). */
 export function largestEmptySquare(level: LevelData): number {
   const filled = new Set(level.arrows.flatMap((a) => a.cells.map(cellKey)));

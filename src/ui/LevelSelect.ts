@@ -141,7 +141,8 @@ export class LevelSelect {
             : bestStars === null
               ? 'completed, not yet rated'
               : `completed with ${bestStars} of ${MAX_STARS} stars`;
-    button.setAttribute('aria-label', `Level ${tile.id}, ${level.rows} by ${level.cols}, ${description}`);
+    button.setAttribute('aria-label', `Level ${tile.id}${level.name ? `, ${level.name}` : ''}, ${level.rows} by ${level.cols}, ${description}`);
+    if (level.name) button.title = level.name;
 
     const number = document.createElement('span');
     number.className = 'level-tile__number';

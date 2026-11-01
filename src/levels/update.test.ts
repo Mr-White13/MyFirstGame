@@ -43,7 +43,7 @@ describe('updating from 10 to 30 levels', () => {
     expect(isUnlocked(progress, 5)).toBe(false);
   });
 
-  it('completing Level 10 now unlocks Level 11, and Level 30 is the final level', () => {
+  it('completing Level 10 now unlocks Level 11, Level 30 unlocks Level 31, and Level 31 is the final level', () => {
     const store = new MemoryStore();
     store.setItem(STORAGE_KEY, tenLevelSave());
     let progress = new ProgressStorage(LEVELS.length, store).load();
@@ -51,15 +51,15 @@ describe('updating from 10 to 30 levels', () => {
       levelId, revision: LEVELS[levelId - 1].revision ?? 1, outcome: 'won', timeMs: 40_000, uncountedTimeMs: 40_000,
       moves: 10, stars: 3, directClears: 10, autoClears: 0, bonusClears: 0, longestChain: 0, mistakes: 0,
     });
-    for (let id = 11; id <= 29; id++) {
+    for (let id = 11; id <= 30; id++) {
       const { records, completion } = applyAttempt({ progress, stats: createStats() }, won(id), LEVELS.length);
       expect(completion?.unlocked).toBe(id + 1);
       progress = records.progress;
     }
-    const last = applyAttempt({ progress, stats: createStats() }, won(30), LEVELS.length);
+    const last = applyAttempt({ progress, stats: createStats() }, won(31), LEVELS.length);
     expect(last.completion?.unlocked).toBeNull(); // nothing after the final level
-    expect(LEVELS.at(-1)?.id).toBe(30); // the dialog's "game complete" variant triggers at levelCount
-    expect(recordCompletion(last.records.progress, 30, { moves: 1, stars: 1, mistakes: 2, timeMs: 1 }, LEVELS.length).unlocked).toBeNull();
+    expect(LEVELS.at(-1)?.id).toBe(31); // the dialog's "game complete" variant triggers at levelCount
+    expect(recordCompletion(last.records.progress, 31, { moves: 1, stars: 1, mistakes: 2, timeMs: 1 }, LEVELS.length).unlocked).toBeNull();
   });
 
   it('leaves rewards, achievements and settings untouched when progress is loaded with the new level count', () => {
@@ -174,7 +174,7 @@ describe('Step 13 redesign of Levels 4–30', () => {
     const store = new MemoryStore();
     store.setItem(STORAGE_KEY, step12Save());
     const progress = new ProgressStorage(LEVELS.length, store).load();
-    expect(progress.highestUnlocked).toBe(30);
+    expect(progress.highestUnlocked).toBe(31); // all 30 done: Level 31, added later, opens
     for (let id = 1; id <= 30; id++) expect(progress.completed[id]).toMatchObject({ bestStars: id % 2 ? 3 : 2, bestTimeMs: 30_000 + id });
     expect(totalStars(progress, LEVELS.length)).toBe(75);
   });
@@ -211,7 +211,7 @@ describe('Step 14 full-coverage redesign of Levels 4–30', () => {
     const store = new MemoryStore();
     store.setItem(STORAGE_KEY, step13Save());
     const progress = new ProgressStorage(LEVELS.length, store).load();
-    expect(progress.highestUnlocked).toBe(30);
+    expect(progress.highestUnlocked).toBe(31); // all 30 done: Level 31, added later, opens
     expect(totalStars(progress, LEVELS.length)).toBe(90);
     const slow = { moves: 12, stars: 1, mistakes: 2, timeMs: 99_000 };
     for (const id of [1, 2, 3]) {

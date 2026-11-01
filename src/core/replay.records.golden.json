@@ -1428,7 +1428,7 @@
    "won",
    {
     "firstClear": true,
-    "unlocked": null,
+    "unlocked": 31,
     "newBestStars": true,
     "bestStars": 3,
     "newBestTime": true,
@@ -1463,11 +1463,59 @@
     "bestTimeMs": 23000,
     "previousBestTimeMs": 23000
    }
+  ],
+  [
+   31,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   31,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": null,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 38000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   31,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 22000,
+    "previousBestTimeMs": 38000
+   }
+  ],
+  [
+   31,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 22000,
+    "previousBestTimeMs": 22000
+   }
   ]
  ],
  "records": {
   "progress": {
-   "highestUnlocked": 30,
+   "highestUnlocked": 31,
    "completed": {
     "1": {
      "bestMoves": 5,
@@ -1678,15 +1726,22 @@
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 23000
+    },
+    "31": {
+     "bestMoves": 139,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 22000
     }
    }
   },
   "stats": {
-   "successfulRuns": 93,
-   "failedRuns": 27,
-   "flawlessRuns": 91,
-   "playTimeMs": 5490000,
-   "arrowsCleared": 2306,
+   "successfulRuns": 96,
+   "failedRuns": 28,
+   "flawlessRuns": 94,
+   "playTimeMs": 5611000,
+   "arrowsCleared": 2826,
    "chainClears": 4,
    "trackedSince": "2026-10-01T08:00:00.000Z"
   }
@@ -1695,11 +1750,11 @@
   "since": "2026-10-31",
   "days": {
    "2026-10-31": {
-    "playMs": 5490000,
-    "runs": 120,
-    "wins": 93,
-    "flawless": 91,
-    "arrows": 2306
+    "playMs": 5611000,
+    "runs": 124,
+    "wins": 96,
+    "flawless": 94,
+    "arrows": 2826
    }
   }
  }

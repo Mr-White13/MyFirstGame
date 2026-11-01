@@ -1648,5 +1648,41 @@
   "revision": 3,
   "note": "difficulty spike",
   "maxShortShare": 0.12
+ },
+ {
+  "id": 31,
+  "name": "THE IMPOSSIBLE GRID",
+  "rows": 30,
+  "cols": 24,
+  "fill": true,
+  "arrows": [
+   150,
+   250
+  ],
+  "length": 6,
+  "turns": 3,
+  "minLength": 3,
+  "minCoverage": 1,
+  "score": [
+   0,
+   100
+  ],
+  "depth": [
+   50,
+   200
+  ],
+  "maxFree": 10,
+  "attempts": 3,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 0,
+  "seeds": [
+   3101,
+   3102,
+   3103,
+   3104,
+   3105
+  ],
+  "note": "THE IMPOSSIBLE GRID, an extreme complexity experiment: a dense 30×24 board whose dependency chain was lengthened with fillLevel deepenSteps"
  }
 ]

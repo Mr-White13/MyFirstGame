@@ -31,6 +31,8 @@ export interface LevelData {
    * compared with the new one. Defaults to 1.
    */
   readonly revision?: number;
+  /** Display name of a special level (e.g. Level 31, "THE IMPOSSIBLE GRID"). Most levels have none. */
+  readonly name?: string;
   readonly rows: number;
   readonly cols: number;
   readonly arrows: readonly ArrowData[];

@@ -29,7 +29,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { analyzeDifficulty, type DifficultyReport } from '../src/core/difficulty';
+import { analyzeDifficulty, dependencyGraph, type DifficultyReport } from '../src/core/difficulty';
 import { validateLevel } from '../src/core/levelValidation';
 import type { LevelData } from '../src/core/types';
 import { fillLevel } from '../src/levelgen/fillLevel';
@@ -109,8 +109,11 @@ const SUMMARY_HEADERS = [
 function details(level: LevelData, r: DifficultyReport): string {
   const e = r.exact;
   const s = r.estimated;
+  const g = dependencyGraph(level);
+  const lengths = new Map<number, number>();
+  level.arrows.forEach((a) => lengths.set(a.cells.length, (lengths.get(a.cells.length) ?? 0) + 1));
   return [
-    `Level ${level.id} — ${level.rows}×${level.cols} — score ${r.score} (${r.category})`,
+    `Level ${level.id}${level.name ? ` — ${level.name}` : ''} — ${level.rows}×${level.cols} — score ${r.score} (${r.category})`,
     '',
     ...levelToMap(level).map((row) => `  ${row}`),
     '',
@@ -120,6 +123,11 @@ function details(level: LevelData, r: DifficultyReport): string {
     `  blocking links ${e.blockingRelations} (max ${e.maxBlockers} on one line, ${e.longRangeBlocks} long-range)`,
     `  depth ${e.depth}, waves [${e.waves.join(', ')}]`,
     `  ambiguous joins ${e.ambiguousJoins}`,
+    `  arrow lengths ${[...lengths].sort(([a], [b]) => a - b).map(([n, count]) => `${n}: ${count}`).join(', ')}`,
+    "Dependency graph (A depends on B when B stands on A's exit line)",
+    `  ${g.groups} group(s), largest ${g.largestGroup} arrows; most arrows waiting on one arrow: ${g.maxDependents}`,
+    `  critical chain (${g.criticalPath.length}): ${g.criticalPath.join(' → ')}`,
+    `  decoys by wave (look free, blocked further on): [${g.decoyShareByWave.map(pct).join(', ')}]`,
     'Estimated (random-tapping player, fixed seed)',
     `  average choices ${fixed(s.averageChoices)}, average free share ${pct(s.averageFreeShare)}, bottleneck ${pct(s.bottleneckShare)}`,
     `  wrong taps per move ${fixed(s.wrongTapsPerMove)}`,
@@ -184,12 +192,13 @@ function validate(): void {
   console.log(`\nAll ${LEVELS.length} levels are valid and solvable.`);
 }
 
-function levelFile(level: LevelData, note: string, revision?: number): string {
-  if (revision === undefined) {
+function levelFile(level: LevelData, note: string, revision?: number, name?: string): string {
+  if (revision === undefined && name === undefined) {
     const rows = levelToMap(level).map((row) => `  '${row}',`);
     return [`import { levelFromMap } from './levelMap';`, ``, `/** Level ${level.id} — ${note} */`, `export default levelFromMap(${level.id}, [`, ...rows, `]);`, ``].join('\n');
   }
   const rows = levelToMap(level).map((row) => `    '${row}',`);
+  const options = [revision === undefined ? '' : `revision: ${revision}`, name === undefined ? '' : `name: '${name}'`];
   return [
     `import { levelFromMap } from './levelMap';`,
     ``,
@@ -199,7 +208,7 @@ function levelFile(level: LevelData, note: string, revision?: number): string {
     `  [`,
     ...rows,
     `  ],`,
-    `  { revision: ${revision} },`,
+    `  { ${options.filter(Boolean).join(', ')} },`,
     `);`,
     ``,
   ].join('\n');
@@ -291,6 +300,14 @@ interface PlanEntry {
   readonly maxStraight?: number;
   /** Fill mode: partitions tried per seed (default 60). */
   readonly attempts?: number;
+  /** Fill mode: flip/split rounds to make a partition solvable (default 400; large boards need more). */
+  readonly repairRounds?: number;
+  /** Fill mode: head flips tried to lengthen the dependency chain (fillLevel deepenSteps; default 0). */
+  readonly deepen?: number;
+  /** Fill mode: score-steering edits per attempt (default 200; each one is a full analysis, slow on large boards). */
+  readonly refineSteps?: number;
+  /** Display name written into the level file (see LevelData.name). */
+  readonly name?: string;
   /** Layout revision written into the file (see LevelData.revision). */
   readonly revision?: number;
   readonly note?: string;
@@ -335,6 +352,9 @@ function plan(args: Args): void {
             maxShortShare: entry.maxShortShare,
             maxStraight: entry.maxStraight,
             attempts: entry.attempts,
+            repairRounds: entry.repairRounds,
+            deepenSteps: entry.deepen,
+            refineSteps: entry.refineSteps,
             avoid: known.filter((l) => l.id !== entry.id),
           })
         : generateLevel({
@@ -375,7 +395,7 @@ function plan(args: Args): void {
     known.push(level);
     const note = `${entry.note ? `${entry.note}, ` : ''}generated from tools/level-plan.json (seed ${seed}, attempt ${attempt}), score ${report.score} (${report.category}).`;
     if (fs.existsSync(target) && !force) fail(`${target} already exists; use --force to replace it`);
-    fs.writeFileSync(target, levelFile(level, note, entry.revision));
+    fs.writeFileSync(target, levelFile(level, note, entry.revision, entry.name));
     console.log(
       `Level ${entry.id}: ${rows}×${cols}, ${level.arrows.length} arrows, score ${report.score}, depth ${report.exact.depth}, free ${report.exact.initialFree}, density ${Math.round(report.exact.density * 100)}%, mean length ${report.exact.meanLength.toFixed(1)}, empty square ${report.exact.largestEmptySquare} (${((Date.now() - started) / 1000).toFixed(1)} s) → ${path.relative(process.cwd(), target)}`,
     );

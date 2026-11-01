@@ -298,5 +298,15 @@
    "depth": 18,
    "maxBlockers": 9
   }
+ },
+ {
+  "id": 31,
+  "solution": "L1 K1 J1 S0 T0 U0 V0 W0 Z0 a a1 b b1 c c1 d1 g K h i j d e f j0 N0 k k2 C1 l B m n o o1 p q q2 p2 j2 o2 n2 m2 l2 b2 M1 c2 S1 d2 W1 e2 E1 T1 f2 X1 Y1 g2 h2 Z1 i2 a2 R1 Q1 I1 P1 H1 G1 F1 O1 N1 D1 U1 V1 B1 i1 r s t G u1 v1 w N x y1 k1 Y0 C0 B0 W X0 n1 s1 R0 j1 Q0 P0 M0 L0 e0 d0 c0 b0 r1 O0 q1 x0 V U T y0 Q C y J I P i0 v u A H v0 e1 w0 u0 m0 h0 l0 s0 z D E F L M A0 O R X Z f0 g0 S a0 Y k0 n0 o0 p0 q0 r0 F0 t0 z0 x1 w1 A1 z1 t1 l1 p1 I0 D0 H0 E0 G0 J0 K0 f1 g1 h1 m1",
+  "stats": {
+   "arrows": 173,
+   "initialFree": 7,
+   "depth": 55,
+   "maxBlockers": 16
+  }
  }
 ]

@@ -27,6 +27,30 @@ describe('fill-first level generator', () => {
     }
   });
 
+  it('deepenSteps lengthens the dependency chain and keeps the level playable; without it nothing changes', () => {
+    const options = { rows: 12, cols: 9, seed: 11, minScore: 0, maxScore: 100, attempts: 10, refineSteps: 0 } as const;
+    const plain = fillLevel(options);
+    const again = fillLevel({ ...options, deepenSteps: 0, repairRounds: 400 }); // the defaults, spelled out
+    const deep = fillLevel({ ...options, deepenSteps: 400 });
+    expect(plain.ok && again.ok && deep.ok).toBe(true);
+    if (!plain.ok || !again.ok || !deep.ok) return;
+    expect(again.level).toEqual(plain.level);
+    expect(deep.report.exact.depth).toBeGreaterThan(plain.report.exact.depth);
+    expect(() => validateLevel(deep.level)).not.toThrow();
+    expect(countAmbiguousJoins(deep.level)).toBe(0);
+    expect(coverage(deep.level)).toBe(coverage(plain.level)); // flips only: the same cells are covered
+  });
+
+  it('repairRounds lets large boards (25×25) be filled, which the default cannot', () => {
+    const options = { rows: 25, cols: 25, seed: 3101, minScore: 0, maxScore: 100, attempts: 1, refineSteps: 0, minLength: 3, maxLength: 6, maxTurns: 3 } as const;
+    expect(fillLevel(options).ok).toBe(false);
+    const big = fillLevel({ ...options, repairRounds: 5000 });
+    expect(big.ok).toBe(true);
+    if (!big.ok) return;
+    expect(findSolution(big.level)).not.toBeNull();
+    expect(coverage(big.level)).toBeGreaterThanOrEqual(0.97);
+  });
+
   it('is reproducible: the same options give the same level', () => {
     const make = () => fillLevel({ rows: 10, cols: 8, seed: 42, minScore: 0, maxScore: 100, attempts: 5 });
     const a = make();
