@@ -57,3 +57,23 @@ export class GameLayout {
     this.onChange();
   }
 }
+
+/**
+ * The board's whole part of the screen, in client (CSS) pixels: below the
+ * HUD in portrait, beside it in landscape, inside the safe-area padding.
+ * A zoomed board may use all of it (see BoardViewport), not just the fitted
+ * board's rectangle, which leaves empty strips around a wide board on a phone.
+ */
+export function boardArea(ui: HTMLElement, hud: HTMLElement): { left: number; top: number; width: number; height: number } {
+  const style = getComputedStyle(ui);
+  const px = (value: string) => parseFloat(value) || 0;
+  const box = ui.getBoundingClientRect();
+  const h = hud.getBoundingClientRect();
+  let left = box.left + px(style.paddingLeft);
+  let top = box.top + px(style.paddingTop);
+  const right = box.right - px(style.paddingRight);
+  const bottom = box.bottom - px(style.paddingBottom);
+  if (window.matchMedia(LANDSCAPE_QUERY).matches) left = Math.max(left, h.right + px(style.columnGap));
+  else top = Math.max(top, h.bottom + px(style.rowGap));
+  return { left, top, width: Math.max(0, right - left), height: Math.max(0, bottom - top) };
+}
