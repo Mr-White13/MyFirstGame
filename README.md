@@ -117,7 +117,7 @@ Or in Android Studio: `npm run android:open`, wait for "Gradle sync" to finish (
 ### What to test on the phone
 
 1. It starts full screen in portrait, with no white flash, and nothing hidden under the notch or the gesture bar.
-2. On a cold start the Mr. White Games splash plays once (about 3.7 s; tap to skip once the logo is shown), then the recap card (if you have records and it's on in Settings), then Home. Press Home and come back: no splash.
+2. On a cold start the Mr. White Games splash plays once (about 3.7 s; tap to skip once the logo is shown), then the recap screen (if you have records and it's on in Settings), then Home. Press Home and come back: no splash.
 3. Tap Play: the first tap starts the music (if enabled); arrows, sounds and vibration work. In the level, open the HUD's settings button: switch Music and Sound effects off and on, and try Vibration Off, Soft and Strong (Soft should feel clearly lighter). Settings → Feedback shows the same choice.
 4. Back: from a level it asks "Leave level?" (after a move), from Levels/Profile/Settings it goes back, it closes dialogs, and on Home it sends the app to the background.
 5. Press Home during a level, wait, and come back: the timer didn't run while away and the music resumes.
@@ -214,8 +214,9 @@ A new id is a different app on the phone: it installs next to the old one with e
 - `android/app/src/main/java/.../MainActivity.java`: immersive full screen.
 - `src/native/nativeApp.ts`: Back button, pause/resume and native vibration. It does nothing in the browser.
 - `scripts/android-apk.mjs`: the APK build behind `npm run android:apk`.
+- `scripts/generate-icons.py`: launcher icons and favicon from the logo (see "Studio splash and player recap").
 
-**Not yet:** app icon and splash screen (Capacitor defaults), release signing, store listing. Capacitor's CLI sends anonymous usage data; turn it off with `npx cap telemetry off`.
+**Not yet:** release signing, store listing. Capacitor's CLI sends anonymous usage data; turn it off with `npx cap telemetry off`.
 
 ## How to play
 
@@ -307,7 +308,7 @@ The completion dialog shows the time precisely (`24.6 s`, `1:35.2`) next to your
 
 ## Screens and progression
 
-On a cold launch the **Mr. White Games** splash plays first, optionally followed by one **recap** card (see "Studio splash and player recap"). The game then shows **Home**:
+On a cold launch the **Mr. White Games** splash plays first, optionally followed by the full-screen **recap** (see "Studio splash and player recap"). The game then shows **Home**:
 - **Header:** Settings, your **Energy Credits** balance (opens Daily rewards), and your avatar and nickname, which open the Profile.
 - **Play card:** the next level to play, a big **Play / Continue / Play again** button, your level progress and your total stars.
 - **Daily card:** your login streak and today's reward: a green **Claim +N** when it's ready, otherwise "Claimed today · Tomorrow +N" and a **Rewards** button. See "Daily rewards, streaks and achievements".
@@ -934,11 +935,13 @@ sessionStorage.setItem('neon-backup', JSON.stringify(Object.fromEntries(Object.k
 - **Once per cold launch.** A `sessionStorage` flag is set when it plays and checked by the inline script before the first paint. Android resume never reloads the page; a reload in the same session or WebView skips it too; a new app process starts with empty session storage.
 - **No double splash** on Android: the native launch window is a plain colour (see "Android app").
 
-**Player recap.** After the splash, if **Player recap** is on (Settings → Gameplay, default on), one card shows a single fact from your own saved records, with **Continue** and **Skip** (both go to Home; Back counts as Skip). Each cold launch shows the next fact in a fixed rotation (`src/recap/insights.ts`), skipping any that your records don't support yet. A new player with no records goes straight to Home. League results wait until the intro is over.
+**Player recap.** After the splash, if **Player recap** is on (Settings → Gameplay, default on), a full screen (`src/ui/RecapScreen.ts`) shows the animated NEON ESCAPE logo (the three arrows draw themselves in, their heads pop, and the cyan arrow keeps nudging upwards, escaping), the name, and a single fact from your own saved records as a quote signed "— Your recap". Tap anywhere to continue; it also continues by itself after **7 s** (`RECAP_AUTO_MS`, shown by a thin progress line). **Skip** (top right) and Back skip it; all three go to Home. With reduced motion everything is simply there, without animation. Each cold launch shows the next fact in a fixed rotation (`src/recap/insights.ts`), skipping any that your records don't support yet. A new player with no records goes straight to Home. League results wait until the intro is over.
 
 - Facts: last 7 days (levels cleared, play time, days played), yesterday, level progress and next level, stars and perfect levels, best time on your highest completed level, daily streak, flawless clears, arrows escaped, chain-reaction releases, total play time.
 - Only real saved data: lifetime numbers say "since <date>" (when statistics tracking started). Best times from an older layout of a redesigned level are not used. There is no data about other players and no comparison with them.
 - **Daily tracking** (`src/recap/DailyLog.ts`, key `neon-escape.daily-stats`): the same attempts and play time that update the lifetime statistics are also split by the local calendar day they end on (Daily League challenges are excluded, as for statistics). Tracking starts on the first launch with this version and remembers that day, so a weekly summary appears only once all seven days were tracked. The newest 35 days are kept, ready for future weekly summaries.
+
+**Game logo.** The mark is three neon arrows (cyan, purple, pink) on a dark dotted tile, like a board: each points away from the others and the cyan one breaks out of the top edge. The source is `resources/logo/neon-escape-mark.svg`; the recap screen inlines the same drawing with animation classes. `python scripts/generate-icons.py` (Pillow and Edge or Chrome) renders it into the Android launcher icons (`mipmap-*/ic_launcher.png`, `ic_launcher_round.png`, and the adaptive `ic_launcher_foreground.png` on `@color/ic_launcher_background` = `#101522`) and the web favicon (`public/favicon.svg`, `public/favicon.png`). Run it again after changing the logo.
 
 ## Large boards: thin arrows, zoom and touch
 
@@ -1103,6 +1106,8 @@ count. The only real challenge is **finding an arrow that can escape**, again an
 ├── capacitor.config.json  Android app id, name and web folder (Capacitor)
 ├── android/               Native Android project (Capacitor); MainActivity.java = immersive full screen
 ├── scripts/android-apk.mjs Debug APK build used by `npm run android:apk`
+├── scripts/generate-icons.py Launcher icons and favicon from the logo
+├── resources/logo/        The NEON ESCAPE logo mark (SVG source)
 ├── tools/level-plan.json  How Levels 11–30 were generated (`npm run levels:plan`)
 ├── docs/level-analysis.md  Difficulty analysis of the levels (old vs new)
 ├── tools/                 Level CLI (analyze, validate, generate) and its build config
@@ -1244,7 +1249,7 @@ count. The only real challenge is **finding an arrow that can escape**, again an
         ├── BoosterBar.ts      HUD booster row: credit balance, Hint, Reveal
         ├── ShopScreen.ts      Energy Credits Shop: balance, item cards (Buy / Equip / Equipped), purchase confirmation text
         ├── QuickSettings.ts   Music, sound effects and vibration controls in that card
-        ├── RecapDialog.ts     Startup recap card with Continue and Skip
+        ├── RecapScreen.ts     Full-screen startup recap: animated logo, name, one fact
         ├── CompleteDialog.ts  Level-complete / game-complete dialog: stars, time, personal best, statistics
         ├── GameOverDialog.ts  Out-of-lives dialog
         ├── ConfirmDialog.ts   Confirmations: leave level, restart level, reset settings
