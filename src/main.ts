@@ -3,6 +3,7 @@ import { App } from './app/App';
 import { runIntro } from './app/Intro';
 import { firstPaintStart, sessionStore, StudioSplash } from './branding/StudioSplash';
 import { Feedback, type FeedbackEvent } from './app/Feedback';
+import { Confetti } from './ui/Confetti';
 import { AudioManager } from './audio/AudioManager';
 import { GameState } from './core/GameState';
 import { createGame } from './createGame';
@@ -65,7 +66,11 @@ const haptics = new Haptics(
   () => settings.current.hapticStrength,
 );
 const feedback = new Feedback(audio, haptics);
-const emit = (event: FeedbackEvent) => feedback.handle(event);
+const confetti = new Confetti();
+const emit = (event: FeedbackEvent) => {
+  feedback.handle(event);
+  if (event.type === 'stars') confetti.burst(); // the completion dialog opens: a level is done
+};
 
 // Every enabled button in the app gives a soft tap sound (no vibration: taps already feel like taps).
 document.getElementById('app')?.addEventListener('click', (event) => {
@@ -83,6 +88,7 @@ let app: App | undefined;
 let ads: RewardedAds | undefined;
 let adShowing = false;
 const boardSlot = requireElement('board-slot');
+boardSlot.addEventListener('pointerdown', () => app?.noteBoardActivity(), { passive: true });
 const gameUi = requireElement('game-ui');
 const hudBar = requireElement('hud');
 const scene = new GameScene(state, {
@@ -321,7 +327,7 @@ ads = new RewardedAds({
   log: (message) => console.warn(message),
 });
 app.renderShop();
-introDone.then(() => app!.startAdsIfEligible()); // not before the ad-free start is over
+introDone.then(() => app!.startAds());
 
 // Android: the Back button/gesture follows the game's own navigation and dialogs.
 connectNativeApp({ onBack: () => app!.handleBack(true), onBackground: setBackground });

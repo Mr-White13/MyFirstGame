@@ -1,6 +1,6 @@
 import { requireElement } from './dom';
 
-export type ToastKind = 'info' | 'achievement';
+export type ToastKind = 'info' | 'achievement' | 'hint';
 
 /**
  * A short, self-dismissing message at the bottom of the screen ("Settings

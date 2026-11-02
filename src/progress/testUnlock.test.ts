@@ -14,6 +14,11 @@ describe('testing flag: all levels playable', () => {
     expect(testUnlockEnabled({ DEV: true, PROD: true })).toBe(false);
     expect(testUnlockEnabled({})).toBe(false);
     expect(testUnlockEnabled({ DEV: true, PROD: false })).toBe(true);
+    expect(testUnlockEnabled({ DEV: false, PROD: true, VITE_UNLOCK_ALL_LEVELS: '0' })).toBe(false);
+  });
+
+  it('a testing build opts in explicitly (VITE_UNLOCK_ALL_LEVELS=1, the "unlocked" mode)', () => {
+    expect(testUnlockEnabled({ DEV: false, PROD: true, VITE_UNLOCK_ALL_LEVELS: '1' })).toBe(true);
   });
 
   it('is on in the test (development) build and opens every level (all 100)', () => {

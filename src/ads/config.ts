@@ -40,9 +40,9 @@ export const REWARDED_AD_CREDITS = 30;
  */
 export const MAX_REWARDED_ADS_PER_DAY = 5;
 /**
- * No ads at all during a player's first 30 minutes of actual play (the
- * statistics' play time: menus and idle time don't count). Until then no ad
- * is offered and the consent form isn't shown either.
+ * No unsolicited ad prompts (the booster offer) during a player's first 30
+ * minutes of actual play (the statistics' play time: menus and idle time
+ * don't count). Ads the player asks for (Shop, Continue) work from the start.
  */
 export const AD_FREE_PLAY_MS = 30 * 60_000;
 /** Give up loading an ad after this long (no connection, slow network): the ad is "unavailable". */

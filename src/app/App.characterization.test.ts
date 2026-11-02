@@ -1625,15 +1625,10 @@ describe('Game Over: Continue with a rewarded ad', () => {
     expect(h.calls('stats.save')[0][0]).toMatchObject({ failedRuns: 1 }); // leaving saves the loss
   });
 
-  it('not offered without ads (browser), in the ad-free start, or in Daily League challenges', async () => {
+  it('not offered without ads (browser), or in Daily League challenges', async () => {
     const browser = await lose({ ads: undefined });
     expect(browser.shown).toMatchObject({ canContinue: false });
     expect(browser.app.canContinue).toBe(false);
-
-    const early = await lose({ playTimeMs: PLAYED - 1 });
-    expect(early.app.canContinue).toBe(false);
-    await early.app.continueWithAd();
-    expect(early.effects()).toEqual([]);
 
     const h = createHarness({ ads: {}, playTimeMs: PLAYED, progress: progressThrough(10), challenges: [CHALLENGE] });
     h.app.start();
@@ -1646,17 +1641,18 @@ describe('Game Over: Continue with a rewarded ad', () => {
 });
 
 describe('ad-free start (first 30 minutes of play)', () => {
-  it('no ads, no consent form, no offers before 30 minutes of play; the Shop says how long', async () => {
+  it('ads start after the intro; the player can watch them from the start (Shop, Continue), but the booster offer waits', async () => {
     const h = createHarness({ ads: {}, playTimeMs: 12 * 60_000, credits: 5, progress: progressThrough(3) });
     h.app.start();
-    h.app.startAdsIfEligible();
-    expect(h.effects()).not.toContain('ads.start');
+    h.clear();
+    h.app.startAds();
+    expect(h.effects()).toEqual(['ads.start']);
     await h.app.showShop();
     await flush();
-    expect(h.shopViews.at(-1)).toMatchObject({ earn: { lockedMinutes: 18 } });
+    expect(h.shopViews.at(-1)).toMatchObject({ earn: { state: expect.any(String) } });
     h.clear();
     await h.app.watchAd();
-    expect(h.effects()).toEqual([]);
+    expect(h.effects()).toContain('ads.watch');
     await h.app.openLevel(4);
     await flush();
     h.clear();
@@ -1667,17 +1663,13 @@ describe('ad-free start (first 30 minutes of play)', () => {
     expect(h.effects().filter((e) => e.startsWith('confirmDialog.ask'))).toEqual([]); // no ad offer, only the explanation
   });
 
-  it('ads start once the player is past 30 minutes (at launch, or when an attempt pushes them over)', async () => {
-    const ready = createHarness({ ads: {}, playTimeMs: PLAYED });
-    ready.app.start();
-    ready.clear();
-    ready.app.startAdsIfEligible();
-    expect(ready.effects()).toEqual(['ads.start']);
-
-    const almost = createHarness({ ads: {}, playTimeMs: PLAYED - 2_000 });
-    await enterLevel(almost, 1);
-    almost.advance(3_000);
-    almost.app.restartLevel(); // the abandoned attempt adds 3 s of play
-    expect(almost.effects()).toContain('ads.start');
+  it('Continue is offered on Game Over during the ad-free start', async () => {
+    const h = createHarness({ ads: {}, playTimeMs: 0, progress: progressThrough(1) });
+    await enterLevel(h, 2);
+    h.advance(5_000);
+    h.state.set({ status: 'failed', lives: 0, mistakes: 3, remaining: 4 });
+    h.app.handleLevelLost();
+    h.app.handleLevelFailed();
+    expect(h.calls('gameOverDialog.show').at(-1)![0]).toMatchObject({ canContinue: true });
   });
 });

@@ -45,6 +45,7 @@ import type { BoosterBar } from '../ui/BoosterBar';
 import { AttemptTracker, type AttemptSummary } from './AttemptTracker';
 import { BOOSTER_TIP, BoosterController } from './BoosterController';
 import { TIP_MS, TIP_TEXT, TIPS_UNTIL_COMPLETED, tipForEvent, type TipId } from './tips';
+import { IDLE_HINT_SHOW_MS, IdleHint, idleHintText } from './idleHint';
 import { routeBack, type BackLayer } from './backLayers';
 import { LeagueController } from './LeagueController';
 import { RecordsKeeper } from './RecordsKeeper';
@@ -119,6 +120,8 @@ export class App {
   private readonly history = new NavigationHistory();
   private readonly attempt = new AttemptTracker();
   private clockTimer = 0;
+  /** "Only N arrows can move" after a long think (see idleHint.ts). */
+  private readonly idleHint = new IdleHint();
   /** True while the app is hidden or in the background (browser tab or Android app). */
   private background = false;
   private zoomHintShown = false;
@@ -320,7 +323,7 @@ export class App {
    */
   async watchAd(): Promise<void> {
     const ads = this.parts.ads;
-    if (!ads || !this.adsEligible || this.watchingAd || this.navigating) return;
+    if (!ads || this.watchingAd || this.navigating) return;
     this.watchingAd = true;
     try {
       const result = await ads.watch();
@@ -370,7 +373,6 @@ export class App {
             remaining: ads.remainingToday,
             limit: ads.dailyLimit,
             credits: ads.credits,
-            lockedMinutes: this.adsEligible || !ads.supported ? 0 : Math.max(1, Math.ceil((AD_FREE_PLAY_MS - this.records.stats.playTimeMs) / 60_000)),
           }
         : undefined,
     });
@@ -379,7 +381,8 @@ export class App {
   /**
    * Too few credits for a booster: after the usual explanation, optionally
    * offer an ad, saying exactly what it pays. "Not now" (or Back) carries on
-   * as before; the booster is never used automatically after the ad.
+   * as before; the booster is never used automatically after the ad. This
+   * prompt is unsolicited, so it waits for the ad-free start to end.
    */
   private async offerAdForBooster(id: BoosterId): Promise<void> {
     const { ads, confirmDialog, rewards } = this.parts;
@@ -514,8 +517,26 @@ export class App {
 
   /** A game event from the board (release, collision, chain, bonus): the first of each kind may explain a rule. */
   handleGameEvent(event: FeedbackEvent): void {
+    this.noteBoardActivity();
     const tip = tipForEvent(event);
     if (tip) this.showTip(tip);
+  }
+
+  /** A tap on the board (or a move playing out): the player isn't idle. */
+  noteBoardActivity(): void {
+    this.idleHint.activity(this.attempt.timer.elapsed());
+  }
+
+  /**
+   * After a long think during play, say how many arrows can move now. A
+   * toast, so it never blocks input; nothing when no arrow can move.
+   */
+  private checkIdleHint(): void {
+    const { state, screens, toast } = this.parts;
+    if (screens.active !== 'game' || !this.attempt.isOpen) return;
+    if (!this.idleHint.due(this.attempt.timer.elapsed(), state.isPlaying)) return;
+    const movable = state.escapableArrows().length;
+    if (movable > 0) toast.show(idleHintText(movable), IDLE_HINT_SHOW_MS, 'hint');
   }
 
   /**
@@ -601,7 +622,6 @@ export class App {
       return;
     }
     const completion = this.records.record(summary);
-    this.startAdsIfEligible();
     this.lastCompletion = completion && {
       unlocked: completion.unlocked,
       newBestStars: completion.newBestStars,
@@ -693,11 +713,12 @@ export class App {
   /**
    * Continue is offered once per attempt, on regular levels (not Daily
    * League challenges), when rewarded ads are possible for this player
-   * (after the ad-free start, with consent, in the Android app).
+   * (with consent, in the Android app). The player chooses it, so the
+   * ad-free start doesn't hide it.
    */
   get canContinue(): boolean {
     const ads = this.parts.ads;
-    return this.pendingFailure && !this.continued && !this.attemptIsChallenge && this.adsEligible && !!ads && ads.canOfferContinue;
+    return this.pendingFailure && !this.continued && !this.attemptIsChallenge && !!ads && ads.canOfferContinue;
   }
 
   /**
@@ -731,18 +752,18 @@ export class App {
     }
   }
 
-  /** Rewarded ads are offered only after AD_FREE_PLAY_MS of play (statistics' play time): no ads in the first minutes. */
+  /**
+   * Unsolicited ad prompts (the booster offer) wait for AD_FREE_PLAY_MS of
+   * play (statistics' play time). Ads the player asks for (Shop, Continue)
+   * are available from the start.
+   */
   get adsEligible(): boolean {
     return this.records.stats.playTimeMs >= AD_FREE_PLAY_MS;
   }
 
-  /**
-   * Starts rewarded ads (consent, then the SDK) once the player is past the
-   * ad-free start; before that, not even the consent form appears. Called
-   * after the intro and whenever an attempt adds play time. Idempotent.
-   */
-  startAdsIfEligible(): void {
-    if (this.adsEligible) void this.parts.ads?.start();
+  /** Starts rewarded ads (consent, then the SDK) after the intro. Idempotent. */
+  startAds(): void {
+    void this.parts.ads?.start();
   }
 
   /** Called by the completion dialog's buttons. */
@@ -869,7 +890,6 @@ export class App {
   private recordEnded(summary: AttemptSummary | null): void {
     if (!summary || this.attemptIsChallenge || this.attemptIsTestPlay) return; // challenges keep their own records; test plays none
     this.records.record(summary);
-    this.startAdsIfEligible(); // this attempt's play time may end the ad-free start
   }
 
   private renderAll(): void {
@@ -893,6 +913,7 @@ export class App {
     this.attemptStartCollected = this.challenge ? collectedIn(this.parts.league.current, this.challenge) : 0;
     this.lastChallenge = null;
     this.attempt.begin(level.levelId, this.parts.levels[level.levelId - 1]?.revision ?? 1);
+    this.idleHint.activity(0);
     this.leagueController.renderChallengeHud();
     this.boosters.render();
   }
@@ -971,7 +992,10 @@ export class App {
   /** Refreshes the HUD clock while the game screen is shown. */
   private startClock(): void {
     this.stopClock();
-    this.clockTimer = window.setInterval(() => this.parts.hud.setTime(this.attempt.timer.elapsed()), CLOCK_REFRESH_MS);
+    this.clockTimer = window.setInterval(() => {
+      this.parts.hud.setTime(this.attempt.timer.elapsed());
+      this.checkIdleHint();
+    }, CLOCK_REFRESH_MS);
   }
 
   private stopClock(): void {
