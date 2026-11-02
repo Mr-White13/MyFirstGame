@@ -22,6 +22,10 @@ export function createGame(parent: HTMLElement, scene: Phaser.Scene): Phaser.Gam
     antialias: true,
     // Smooth (multisampled) edges for the vector arrows; never snap them to whole pixels.
     antialiasGL: true,
+    // Must be explicit: Phaser defaults pixelArt to `zoom !== 1`, and the high-DPI zoom
+    // below (1 / devicePixelRatio) would turn it on for every phone, which silently
+    // switches off both settings above (jagged arrow edges, blocky cached textures).
+    pixelArt: false,
     roundPixels: false,
     disableContextMenu: true, // no long-press / right-click menu on the board
     scene,

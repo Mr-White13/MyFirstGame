@@ -882,7 +882,7 @@ Arrows are drawn in proportion to the cell, and the proportions change with the 
 | 10×10 to 15×15 | Gradually thinner bodies, fainter glow, more compact heads |
 | 16×16 and up | Clean thin paths, one faint ring, small but clear arrowheads |
 
-- **Maximum thickness on screen:** on large cells (Levels 1–3 on a phone, any level on a tablet) the body is capped at 9 CSS px. Halo and core shrink with it; the head shrinks only half as much, so it stays clearly an arrow. Corner arcs get more segments on large cells (about one per 4 px), and WebGL multisampled anti-aliasing is requested explicitly. Tip position, corners and hit testing are unchanged.
+- **Maximum thickness on screen:** on large cells (Levels 1–3 on a phone, any level on a tablet) the body is capped at 9 CSS px. Halo and core shrink with it; the head shrinks only half as much, so it stays clearly an arrow. Corner arcs get more segments on large cells (about one per 4 px), and WebGL multisampled anti-aliasing (4×) is requested explicitly, with `pixelArt: false` set too: Phaser turns pixel-art mode on by default whenever the game zoom isn't 1, and the high-DPI zoom (1 / device pixel ratio) did that on every phone, which silently switched anti-aliasing off and made edges jagged, most visibly on the Light theme. Tip position, corners and hit testing are unchanged.
 - **Minimum sizes on screen:** bodies are never thinner than 2.5 CSS px and heads never narrower than 4 CSS px (capped at 30% of a cell, so neighbours never touch). The core line is dropped when it would be thinner than a pixel.
 - **Device pixel density** is taken into account: the canvas renders at device resolution and the minimums are in CSS pixels.
 - **What stays the same:** colours, rounded turns, themes, the gold Energy Arrow diamond (never smaller than the body) and the red dashed look of activated arrows.
@@ -920,7 +920,7 @@ Boards whose cells are smaller than about 44 CSS px on your screen can be zoomed
 
 Phaser rebuilds the triangles of every `Graphics` object on every frame, whether it changed or not. That, not the moving arrow, was the cost: each arrow drew a filled circle (100 segments) at every point of its path, in three or four glow layers, and the grid dots were 100-segment circles too. Step 14 changed this:
 
-- **Resting arrows are cached** (`src/render/StaticArrowLayer.ts`): all arrows at rest are drawn into one render texture and their `Graphics` are hidden, so the board costs one textured quad per frame. Arrows that move, flash, are pressed or tweened stay live vectors on top. The cache is rebuilt only when that set changes, a resting arrow changes look (theme, red state) or the board moves, and after zooming it is re-rendered at the new resolution (up to 2×, at most 2048 px) once the zoom settles.
+- **Resting arrows are cached** (`src/render/StaticArrowLayer.ts`): all arrows at rest are drawn into one render texture and their `Graphics` are hidden, so the board costs one textured quad per frame. Arrows that move, flash, are pressed or tweened stay live vectors on top. The cache is rebuilt only when that set changes, a resting arrow changes look (theme, red state) or the board moves, and after zooming it is re-rendered at the new resolution once the zoom settles. It is **supersampled**: drawn at 2× the screen resolution (times the zoom, up to 3×, at most 2048 px per side) and filtered down, because drawing into a texture gets no multisampling; this gives resting arrows the same smooth edges as moving ones.
 - **Cheaper geometry:** a body is one joined stroke with small triangle-fan caps (no circle per vertex); heads and Energy diamonds are triangles (no polygon triangulation); grid dots and sparks are 8-sided fans; rings are reused 32-point strokes.
 - **No allocations per frame:** a moving arrow's path is measured once (`MeasuredPolyline`), and each frame's shaft, trail and dash pieces are cut into reused point buffers.
 - **Less glow in motion:** a moving arrow drops its faint outer halo ring (invisible at speed); resting arrows keep the full look.
@@ -937,7 +937,7 @@ Measured in desktop Chrome with a phone-sized canvas (375 × 812 CSS px at 2×),
 Before, Levels 18 and 30 could not reach 60 fps even on a desktop CPU; after, all three hold 60 fps in that browser with a large margin. These are desktop numbers: **phone performance has not been verified** on a real device.
 
 - **Diagnostics overlay for real devices:** in Settings, tap **Version** five times. The line at the bottom shows fps, then the average and worst frame interval over the last half second, the share of frames slower than 20 ms, and the CPU time per frame, then arrows, grid size, zoom and the vibration backend. Tap five times again to hide it. To compare, open Levels 3, 18 and 30 and watch it at rest and while releasing long arrows.
-- **Known limits:** the difficulty and lives analysis run offline only (never in the game). At zoom above 2× the cached arrows are slightly soft until an arrow is touched.
+- **Known limits:** the difficulty and lives analysis run offline only (never in the game). At high zoom (above 1.5×), or on very dense screens where the 2048 px limit applies, the cached arrows are less supersampled, so slightly softer, until an arrow is touched.
 
 ## Levels
 
