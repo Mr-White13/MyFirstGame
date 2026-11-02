@@ -36,7 +36,7 @@ import { LevelSelect } from './ui/LevelSelect';
 import { AvatarPicker, CountryPicker } from './ui/Pickers';
 import { ProfileScreen } from './ui/ProfileScreen';
 import { RecordsScreen } from './ui/RecordsScreen';
-import { RecapDialog } from './ui/RecapDialog';
+import { RecapScreen } from './ui/RecapScreen';
 import { Screens } from './ui/Screens';
 import { SettingsScreen } from './ui/SettingsScreen';
 import { BoosterBar } from './ui/BoosterBar';
@@ -212,18 +212,18 @@ app = new App({
 // Cold launch: the Mr. White Games splash (already on screen from index.html),
 // then optionally one recap insight, then Home, which is ready underneath.
 // The intro is in place before start() settles the league, so a result waits for it.
-const recapDialog = new RecapDialog();
+const recapScreen = new RecapScreen();
 let markIntroDone = () => {};
 const introDone = new Promise<void>((resolve) => (markIntroDone = resolve));
 const recapStorage = new RecapStorage();
-app.start(() => recapDialog.close('skip'));
+app.start(() => recapScreen.close('skip'));
 void runIntro({
   splash: new StudioSplash(document.getElementById('studio-splash'), {
     reducedMotion: appearance.current.reducedMotion,
     session: sessionStore(),
     startedAt: firstPaintStart(), // the reveal began at first paint (index.html)
   }),
-  recap: recapDialog,
+  recap: recapScreen,
   recapEnabled: () => settings.current.showRecap,
   nextInsight: () => {
     const picked = pickInsight(app!.recapRecords, recapStorage.load().next);

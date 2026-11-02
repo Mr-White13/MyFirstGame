@@ -4551,36 +4551,278 @@ body.is-navigating #app {
   color: var(--text);
 }
 
-/* ---------- Startup recap (src/ui/RecapDialog.ts) ---------- */
+/* ---------- Startup recap screen (src/ui/RecapScreen.ts) ---------- */
 
-.recap {
-  position: relative;
+/* Full screen, under the fading studio splash (z 40) and above everything else. */
+.recap-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-rows: 1fr auto auto;
+  justify-items: center;
+  padding:
+    max(env(safe-area-inset-top), 16px) calc(var(--gutter) + env(safe-area-inset-right))
+    max(env(safe-area-inset-bottom), 16px) calc(var(--gutter) + env(safe-area-inset-left));
+  overflow: hidden;
+  color: var(--text);
+  background:
+    radial-gradient(120% 70% at 50% 34%, rgb(var(--cyan-rgb) / 0.12), transparent 60%),
+    radial-gradient(90% 60% at 50% 100%, rgb(var(--purple-rgb) / 0.14), transparent 70%),
+    var(--bg);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 260ms ease;
+}
+
+.recap-screen.overlay--visible {
+  opacity: 1;
+}
+
+.recap-screen[hidden] {
+  display: none;
+}
+
+.recap-screen__skip {
+  position: absolute;
+  top: max(env(safe-area-inset-top), 14px);
+  right: calc(var(--gutter) + env(safe-area-inset-right));
+  z-index: 1;
+}
+
+.recap-screen__body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  gap: 18px;
+  width: min(100%, 420px);
   text-align: center;
 }
 
-.recap__skip {
-  position: absolute;
-  top: 8px;
-  right: 8px;
+.recap-logo {
+  width: min(44vw, 176px);
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 10px 30px rgb(var(--cyan-rgb) / 0.18));
 }
 
-.recap__title {
+.recap-screen__wordmark {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 1.25rem;
+  font-size: clamp(1.9rem, 9vw, 2.6rem);
   font-weight: 800;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  background: linear-gradient(90deg, var(--cyan), var(--purple) 60%, var(--pink));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 14px rgb(var(--cyan-rgb) / 0.35));
 }
 
-.recap__text {
-  margin: 0 0 8px;
-  max-width: 28ch;
-  font-size: 1rem;
-  line-height: 1.45;
+.recap-quote {
+  display: grid;
+  gap: 10px;
+  margin: 18px 0 0;
+  padding: 0 4px;
+  text-align: left;
+}
+
+.recap-quote__title {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+
+.recap-quote__text {
+  margin: 0;
+  font-size: clamp(1.15rem, 5.2vw, 1.4rem);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.recap-quote__by {
+  justify-self: end;
+  font-size: 0.95rem;
   color: var(--text-muted);
+}
+
+.recap-screen__continue {
+  margin: 8px 0 12px;
+  padding: 10px 18px;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.recap-screen__continue:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+.recap-screen__progress {
+  width: min(60%, 220px);
+  height: 3px;
+  border-radius: var(--r-pill);
+  background: rgb(var(--muted-rgb) / 0.18);
+  overflow: hidden;
+}
+
+.recap-screen__progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+
+/* ----- The intro animation (each time the screen opens: .recap-screen--play) ----- */
+
+.recap-screen--play .recap-screen__progress span {
+  animation: recap-progress linear forwards; /* duration set by RecapScreen (RECAP_AUTO_MS) */
+}
+
+.recap-screen--play .recap-logo__tile {
+  transform-origin: 60px 60px;
+  animation: recap-tile 520ms var(--ease-out) both;
+}
+
+.recap-screen--play .recap-logo__arrow {
+  stroke-dasharray: 1;
+  animation: recap-draw 620ms cubic-bezier(0.6, 0, 0.3, 1) both;
+}
+
+.recap-screen--play .recap-logo__arrow--1 {
+  animation-delay: 260ms;
+}
+
+.recap-screen--play .recap-logo__arrow--2 {
+  animation-delay: 460ms;
+}
+
+.recap-screen--play .recap-logo__arrow--3 {
+  animation-delay: 640ms;
+}
+
+.recap-screen--play .recap-logo__head {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: recap-head 300ms var(--ease-out) both;
+}
+
+.recap-screen--play .recap-logo__head--1 {
+  animation-delay: 820ms;
+}
+
+.recap-screen--play .recap-logo__head--2 {
+  animation-delay: 1020ms;
+}
+
+.recap-screen--play .recap-logo__head--3 {
+  animation-delay: 1180ms;
+}
+
+.recap-screen--play .recap-logo__glow,
+.recap-screen--play .recap-logo__core,
+.recap-screen--play .recap-logo__sockets {
+  animation: recap-fade 500ms ease both 1100ms;
+}
+
+/* After drawing in, the cyan arrow keeps nudging upwards: it is escaping. */
+.recap-screen--play .recap-logo__escape {
+  animation: recap-escape 1600ms ease-in-out 1500ms infinite alternate;
+}
+
+.recap-screen--play .recap-screen__wordmark {
+  animation: recap-rise 600ms var(--ease-out) both 900ms;
+}
+
+.recap-screen--play .recap-quote {
+  animation: recap-rise 600ms var(--ease-out) both 1350ms;
+}
+
+.recap-screen--play .recap-screen__continue {
+  animation:
+    recap-fade 500ms ease both 1900ms,
+    recap-breathe 2400ms ease-in-out 2400ms infinite;
+}
+
+@keyframes recap-tile {
+  from {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+}
+
+@keyframes recap-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes recap-head {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  70% {
+    transform: scale(1.18);
+  }
+}
+
+@keyframes recap-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes recap-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@keyframes recap-escape {
+  to {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes recap-breathe {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@keyframes recap-progress {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Reduced motion: everything is simply there (the auto-continue line still fills, it carries meaning). */
+:root[data-motion='reduce'] .recap-screen--play :is(.recap-logo__tile, .recap-logo__arrow, .recap-logo__head, .recap-logo__glow, .recap-logo__core, .recap-logo__sockets, .recap-logo__escape, .recap-screen__wordmark, .recap-quote, .recap-screen__continue) {
+  animation: none;
+}
+
+:root[data-motion='reduce'] .recap-screen {
+  transition: none;
 }
 
 /* Testing flag (src/progress/testUnlock.ts): locked levels that can be opened anyway. */
