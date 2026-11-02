@@ -4913,3 +4913,81 @@ body.is-navigating #app {
   content: ' *';
   color: var(--text-faint);
 }
+
+/* ---------- Rewarded ads: Shop "Earn credits" and the shield (src/ads/, src/ui/earnView.ts) ---------- */
+
+.shop-earn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--r-lg);
+  border: 1px solid rgb(var(--green-rgb) / 0.4);
+}
+
+.shop-earn[hidden] {
+  display: none;
+}
+
+.shop-earn__text {
+  display: grid;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.shop-earn__offer {
+  margin: 0;
+  font-weight: 700;
+}
+
+.shop-earn__offer strong {
+  color: var(--green);
+  font-family: var(--font-display);
+}
+
+.shop-earn__status {
+  margin: 0;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+.shop-earn__btn {
+  flex: none;
+}
+
+.shop-earn__btn[hidden] {
+  display: none;
+}
+
+.shop-earn__btn[aria-busy='true'] {
+  opacity: 0.7;
+}
+
+.shop__credits.is-ticking {
+  animation: credits-earned 600ms var(--ease-out);
+}
+
+@keyframes credits-earned {
+  40% {
+    transform: scale(1.15);
+    color: var(--green);
+    text-shadow: 0 0 12px rgb(var(--green-rgb) / 0.6);
+  }
+}
+
+:root[data-motion='reduce'] .shop__credits.is-ticking {
+  animation: none;
+}
+
+/* Covers the game while a rewarded ad opens or shows (the ad itself is native, on top). */
+.ad-shield {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgb(0 0 0 / 0.55);
+}
+
+.ad-shield[hidden] {
+  display: none;
+}

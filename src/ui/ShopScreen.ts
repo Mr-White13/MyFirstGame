@@ -1,6 +1,7 @@
 import { avatarSvg, type AvatarId } from '../profile/avatars';
 import { CATALOG, COSMETIC_SLOTS, SLOT_TITLES, type CosmeticId, type CosmeticItem, type CosmeticSlot, type CosmeticsState, type PurchaseBlock } from '../shop/catalog';
 import type { ConfirmQuestion } from './ConfirmDialog';
+import { presentEarn, type EarnView } from './earnView';
 import { requireElement, svgIcon } from './dom';
 
 export interface ShopActions {
@@ -10,6 +11,8 @@ export interface ShopActions {
   /** Wear an owned item, or `null` for the free default. */
   onEquip(slot: CosmeticSlot, id: CosmeticId | null): void;
   onPlay(): void;
+  /** "Watch ad" in Earn credits (an explicit tap; App shows the ad). */
+  onWatchAd?(): void;
 }
 
 export interface ShopView {
@@ -17,6 +20,8 @@ export interface ShopView {
   /** The player's avatar, shown in every preview. */
   readonly avatar: AvatarId;
   readonly cosmetics: CosmeticsState;
+  /** Rewarded ads for credits (missing: the section is hidden). */
+  readonly earn?: EarnView;
 }
 
 /** What a card offers: buy it, wear it, or it is already worn. */
@@ -68,11 +73,16 @@ export class ShopScreen {
   private readonly credits = requireElement('shop-credits');
   private readonly creditsWrap = requireElement('shop-credits-wrap');
   private readonly avatar = requireElement('shop-avatar');
+  private readonly earnSection = requireElement('shop-earn');
+  private readonly earnStatus = requireElement('shop-earn-status');
+  private readonly earnOffer = requireElement('shop-earn-offer');
+  private readonly watchButton = requireElement<HTMLButtonElement>('btn-shop-watch-ad');
   private last?: ShopView;
 
   constructor(actions: ShopActions) {
     requireElement('btn-shop-back').addEventListener('click', () => actions.onBack());
     requireElement('btn-shop-play').addEventListener('click', () => actions.onPlay());
+    this.watchButton.addEventListener('click', () => actions.onWatchAd?.());
     this.catalog.addEventListener('click', (event) => {
       const button = (event.target as Element).closest?.<HTMLButtonElement>('[data-shop-action]');
       if (!button) return;
@@ -89,6 +99,29 @@ export class ShopScreen {
     this.creditsWrap.setAttribute('aria-label', `${view.credits} Energy Credits`);
     this.avatar.innerHTML = avatarSvg(view.avatar, view.cosmetics.equipped.frame); // static, trusted markup
     this.catalog.replaceChildren(...COSMETIC_SLOTS.map((slot) => this.section(slot, view)));
+    this.renderEarn(view.earn);
+  }
+
+  /** A short glow on the balance after credits were earned. */
+  celebrateEarn(): void {
+    this.creditsWrap.classList.remove('is-ticking');
+    void this.creditsWrap.offsetWidth; // restart the CSS animation
+    this.creditsWrap.classList.add('is-ticking');
+  }
+
+  private renderEarn(earn: EarnView | undefined): void {
+    this.earnSection.hidden = earn === undefined;
+    if (!earn) return;
+    const shown = presentEarn(earn);
+    this.earnOffer.lastElementChild!.textContent = `+${earn.credits}`;
+    this.earnStatus.textContent = shown.status;
+    this.watchButton.hidden = shown.button === null;
+    if (shown.button) {
+      this.watchButton.textContent = shown.button.label;
+      this.watchButton.disabled = !shown.button.enabled;
+      this.watchButton.setAttribute('aria-busy', String(shown.button.busy));
+      this.watchButton.setAttribute('aria-label', shown.button.enabled ? `${shown.button.label}: earn ${earn.credits} Energy Credits` : shown.button.label);
+    }
   }
 
   /** A short unlock glow on a card that was just bought. */

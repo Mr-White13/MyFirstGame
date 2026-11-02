@@ -4,4 +4,7 @@
     <string name="title_activity_main">NEON ESCAPE</string>
     <string name="package_name">dev.neonescape.prototype</string>
     <string name="custom_url_scheme">dev.neonescape.prototype</string>
+    <!-- AdMob application ID. TEST ID (Google's public sample app): always serves test ads.
+         Replace with the real AdMob app ID only when production ads are configured (see src/ads/config.ts). -->
+    <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
 </resources>

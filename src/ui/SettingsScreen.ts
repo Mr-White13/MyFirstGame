@@ -13,6 +13,8 @@ export interface SettingsActions {
   onTestVibration(): Promise<string>;
   /** Hidden developer switch: five taps on Version. Returns a short status message. */
   onToggleDiagnostics(): string;
+  /** "Privacy options (ads)": Google's consent form (only shown when the consent SDK requires it). */
+  onAdPrivacyOptions?(): void;
 }
 
 /** What the device can do, so the screen can explain controls that won't have an effect here. */
@@ -53,6 +55,7 @@ export class SettingsScreen {
   private readonly motionHint = requireElement('motion-hint');
   private readonly audioNote = requireElement('audio-note');
   private readonly hapticsHint = requireElement('haptics-hint');
+  private readonly adPrivacyButton = requireElement<HTMLButtonElement>('btn-ad-privacy');
   private settings?: GameSettings;
   private audioUnavailable = false;
 
@@ -77,6 +80,7 @@ export class SettingsScreen {
     });
     requireElement('btn-settings-back').addEventListener('click', () => actions.onBack());
     requireElement('btn-reset-settings').addEventListener('click', () => actions.onReset());
+    this.adPrivacyButton.addEventListener('click', () => actions.onAdPrivacyOptions?.());
     const testButton = requireElement<HTMLButtonElement>('btn-test-vibration');
     const testStatus = requireElement('vibration-test-status');
     testButton.addEventListener('click', () => {
@@ -142,6 +146,11 @@ export class SettingsScreen {
           ? 'Screen transitions, particles and background motion are off. Arrows still move.'
           : 'Full animation, even if your device asks for reduced motion.';
     this.renderAudioNote(settings);
+  }
+
+  /** Shows "Privacy options (ads)" when the consent SDK requires an entry point (for example in the EEA and UK). */
+  setAdPrivacyOptions(required: boolean): void {
+    this.adPrivacyButton.hidden = !required;
   }
 
   /** Shows a note when the audio device can't be opened (no Web Audio, or no output device). */

@@ -40,6 +40,9 @@ import { RecapDialog } from './ui/RecapDialog';
 import { Screens } from './ui/Screens';
 import { SettingsScreen } from './ui/SettingsScreen';
 import { BoosterBar } from './ui/BoosterBar';
+import { admobBackend } from './ads/admobBackend';
+import { ACTIVE_AD_CONFIG } from './ads/config';
+import { NO_ADS_BACKEND, RewardedAds } from './ads/RewardedAds';
 import { ShopScreen } from './ui/ShopScreen';
 import { QuickSettings } from './ui/QuickSettings';
 import { ThemePicker } from './ui/ThemePicker';
@@ -76,6 +79,9 @@ state.subscribe((snapshot) => hud.update(snapshot));
 
 // The scene and the UI report back to the app, which is created right after them.
 let app: App | undefined;
+/** Rewarded ads (created below, once the wallet exists); true while one covers the game. */
+let ads: RewardedAds | undefined;
+let adShowing = false;
 const boardSlot = requireElement('board-slot');
 const gameUi = requireElement('game-ui');
 const hudBar = requireElement('hud');
@@ -196,12 +202,18 @@ app = new App({
     onBuy: (id) => void app?.buyCosmetic(id),
     onEquip: (slot, id) => app?.equipCosmetic(slot, id),
     onPlay: () => void app?.continueFromShop(),
+    onWatchAd: () => void app?.watchAd(),
   }),
+  get ads() {
+    return ads;
+  },
 });
 // Cold launch: the Mr. White Games splash (already on screen from index.html),
 // then optionally one recap insight, then Home, which is ready underneath.
 // The intro is in place before start() settles the league, so a result waits for it.
 const recapDialog = new RecapDialog();
+let markIntroDone = () => {};
+const introDone = new Promise<void>((resolve) => (markIntroDone = resolve));
 const recapStorage = new RecapStorage();
 app.start(() => recapDialog.close('skip'));
 void runIntro({
@@ -217,7 +229,10 @@ void runIntro({
     if (picked) recapStorage.save({ next: picked.next });
     return picked?.insight ?? null;
   },
-}).finally(() => app!.endIntro());
+}).finally(() => {
+  app!.endIntro();
+  markIntroDone();
+});
 
 // Hidden performance overlay for real devices (Settings: tap Version 5 times).
 const diagnostics = new Diagnostics(game, () => {
@@ -233,6 +248,7 @@ const settingsScreen = new SettingsScreen(
     onChange: (patch) => settings.update(patch),
     onPreviewSfx: () => audio.play('release'),
     onToggleDiagnostics: () => (diagnostics.toggle() ? 'diagnostics on' : 'diagnostics off'),
+    onAdPrivacyOptions: () => void app?.openAdPrivacyOptions(),
     onTestVibration: async () => {
       const result = await haptics.test();
       if (result.status === 'unsupported') return "This device can't vibrate.";
@@ -270,12 +286,41 @@ applySettings();
 // visibilitychange; the Android app also with native pause/resume. Repeats are harmless.
 const setBackground = (hidden: boolean) => {
   app!.setBackground(hidden);
-  audio.setHidden(hidden);
+  audio.setHidden(hidden || adShowing); // an ad on screen keeps the game silent until it closes
   if (hidden) haptics.stop();
   else settingsScreen.setAudioUnavailable(audio.isUnavailable);
 };
 document.addEventListener('visibilitychange', () => setBackground(document.hidden));
 audio.setHidden(document.hidden);
+
+// Rewarded ads (Android app only; browsers have no ad SDK and never load it).
+// Consent is gathered once the intro is over, then one ad is preloaded. While an
+// ad is on screen the level clock pauses, game audio is silent, and a shield
+// blocks taps on the game; all of it is undone when the ad closes.
+const adShield = document.getElementById('ad-shield');
+ads = new RewardedAds({
+  backend: isNativeApp() ? admobBackend(ACTIVE_AD_CONFIG) : NO_ADS_BACKEND,
+  ledger: {
+    remaining: (today) => rewards.remainingAdRewards(today),
+    nextRewardId: (today) => rewards.nextAdRewardId(today),
+    grant: (today, rewardId) => rewards.grantAdReward(today, rewardId),
+  },
+  today: () => dayClock.refresh(),
+  onChange: () => {
+    app?.renderShop();
+    settingsScreen.setAdPrivacyOptions(ads?.privacyOptionsRequired ?? false);
+  },
+  onShowing: (showing) => {
+    adShowing = showing;
+    app!.setAdShowing(showing);
+    audio.setHidden(showing || document.hidden);
+    if (showing) haptics.stop();
+    if (adShield) adShield.hidden = !showing;
+  },
+  log: (message) => console.warn(message),
+});
+app.renderShop();
+introDone.then(() => void ads!.start());
 
 // Android: the Back button/gesture follows the game's own navigation and dialogs.
 connectNativeApp({ onBack: () => app!.handleBack(true), onBackground: setBackground });
