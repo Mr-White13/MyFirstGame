@@ -15,6 +15,18 @@ import {
 } from './Achievements';
 import { createWallet, earn, readWallet, spend, type Transaction, type Wallet } from './Wallet';
 import { BOOSTERS, countBooster, NO_BOOSTERS, type BoosterCounts, type BoosterId } from '../boosters/Boosters';
+import {
+  canEquip,
+  cosmeticById,
+  createCosmetics,
+  readCosmetics,
+  shopTransactionId,
+  type CosmeticId,
+  type CosmeticItem,
+  type CosmeticSlot,
+  type CosmeticsState,
+  type PurchaseBlock,
+} from '../shop/catalog';
 
 /**
  * Daily check-in, wallet and achievements in **one** saved record, so a
@@ -35,7 +47,16 @@ export interface RewardsRecord {
    * version 1: older saves read as zero uses, tip not shown.
    */
   readonly boosters: BoosterRecord;
+  /**
+   * Shop cosmetics: what is owned (forever) and what is equipped. Saved with
+   * the wallet, so a purchase's charge and its unlock are one write. Added
+   * within version 1: older saves read as nothing owned, nothing equipped.
+   */
+  readonly cosmetics: CosmeticsState;
 }
+
+/** The result of a Shop purchase. On failure nothing was charged or changed. */
+export type PurchaseResult = { readonly ok: true; readonly item: CosmeticItem } | { readonly ok: false; readonly reason: PurchaseBlock };
 
 export interface BoosterRecord {
   readonly used: BoosterCounts;
@@ -59,7 +80,14 @@ export const REWARDS_KEY = 'neon-escape.rewards';
 export const REWARDS_VERSION = 1;
 
 export function createRewards(): RewardsRecord {
-  return { daily: createDaily(), wallet: createWallet(), achievements: {}, bestChain: 0, boosters: { used: NO_BOOSTERS, introduced: false } };
+  return {
+    daily: createDaily(),
+    wallet: createWallet(),
+    achievements: {},
+    bestChain: 0,
+    boosters: { used: NO_BOOSTERS, introduced: false },
+    cosmetics: createCosmetics(),
+  };
 }
 
 const KNOWN_ACHIEVEMENTS = new Set(ACHIEVEMENTS.map((a) => a.id));
@@ -82,7 +110,14 @@ export function readRewards(raw: string | null): { value: RewardsRecord; status:
   const applied = [...new Set([...wallet.applied, ...Object.keys(unlocked).map(achievementTransactionId)])];
   const bestChain = typeof data.bestChain === 'number' && Number.isInteger(data.bestChain) && data.bestChain >= 0 ? data.bestChain : 0;
   return {
-    value: { daily: readDaily(data.daily), wallet: { ...wallet, applied }, achievements: unlocked, bestChain, boosters: readBoosters(data.boosters) },
+    value: {
+      daily: readDaily(data.daily),
+      wallet: { ...wallet, applied },
+      achievements: unlocked,
+      bestChain,
+      boosters: readBoosters(data.boosters),
+      cosmetics: readCosmetics(data.cosmetics, applied),
+    },
     status: 'current',
   };
 }
@@ -194,6 +229,46 @@ export class Rewards {
     if (!paid.ok) return false;
     const boosters = { ...this.record.boosters, used: countBooster(this.record.boosters.used, id) };
     this.commit({ ...this.record, wallet: paid.wallet, boosters }, today);
+    return true;
+  }
+
+  /**
+   * Buys a Shop item once, and equips it. The charge, the ownership and the
+   * equipped item are saved in **one** write; if that write fails, nothing
+   * changes (not even in memory) and nothing is charged, so the balance and
+   * the items owned can never disagree. Refused, without any change, for an
+   * unknown item, one already owned (also if its payment is already in the
+   * wallet) or too few credits.
+   */
+  buyCosmetic(id: string): PurchaseResult {
+    const item = cosmeticById(id);
+    if (!item) return { ok: false, reason: 'unknown' };
+    const { cosmetics, wallet } = this.record;
+    if (cosmetics.owned.includes(item.id)) return { ok: false, reason: 'owned' };
+    const paid = spend(wallet, { id: shopTransactionId(item.id), amount: item.price });
+    if (!paid.ok) return { ok: false, reason: paid.reason === 'duplicate' ? 'owned' : paid.reason === 'insufficient' ? 'insufficient' : 'unknown' };
+    const next: RewardsRecord = {
+      ...this.record,
+      wallet: paid.wallet,
+      cosmetics: { owned: [...cosmetics.owned, item.id], equipped: { ...cosmetics.equipped, [item.slot]: item.id } },
+    };
+    if (!this.safe.save(next)) return { ok: false, reason: 'not-saved' };
+    this.lastSaveOk = true;
+    this.record = next;
+    this.listeners.forEach((l) => l(next));
+    return { ok: true, item };
+  }
+
+  /**
+   * Wears an owned item in its slot, or `null` for the free default (no
+   * frame). Returns false (no change) for an item not owned or not for that
+   * slot. Equipping costs nothing.
+   */
+  equipCosmetic(today: DayKey, slot: CosmeticSlot, id: CosmeticId | null): boolean {
+    const { cosmetics } = this.record;
+    if (!canEquip(cosmetics, slot, id)) return false;
+    if (cosmetics.equipped[slot] === id) return true;
+    this.commit({ ...this.record, cosmetics: { ...cosmetics, equipped: { ...cosmetics.equipped, [slot]: id } } }, today);
     return true;
   }
 

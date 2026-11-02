@@ -6,6 +6,9 @@
  * innerHTML is safe; player input never ends up in these strings.
  */
 
+import type { CosmeticId } from '../shop/catalog';
+import { frameMarkup } from './frames';
+
 const C = { cyan: '#27DDF5', purple: '#A855F7', orange: '#FF9F43', green: '#48F5A5', red: '#FF526B', text: '#F4F7FC' };
 const stroke = (color: string, width = 3) =>
   `fill="none" stroke="${color}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round"`;
@@ -114,12 +117,16 @@ export function isAvatarId(value: unknown): value is AvatarId {
   return typeof value === 'string' && DEFS.some((d) => d.id === value);
 }
 
-/** Complete SVG markup for an avatar, framed in a ring of its accent colour. */
-export function avatarSvg(id: AvatarId): string {
+/**
+ * Complete SVG markup for an avatar, framed in a ring of its accent colour,
+ * or in a Shop frame (see frames.ts) drawn over that ring. Every frame fits
+ * every avatar: frames stay on the outer ring, outside the artwork.
+ */
+export function avatarSvg(id: AvatarId, frame: CosmeticId | null = null): string {
   const def = DEFS.find((d) => d.id === id) ?? DEFS[0];
-  return `<svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+  return `<svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"${frame ? ' class="avatar-svg--framed"' : ''}>
     <circle cx="32" cy="32" r="30" fill="#171F30"/>
     <circle cx="32" cy="32" r="30" fill="none" stroke="${def.accent}" stroke-opacity="0.55" stroke-width="2"/>
-    ${def.art}
+    ${def.art}${frame ? frameMarkup(frame) : ''}
   </svg>`;
 }

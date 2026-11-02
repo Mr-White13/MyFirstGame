@@ -20,8 +20,13 @@ export class DailyDialog {
   private shownCredits = 0;
   private countFrame = 0;
 
-  constructor(onClaim: () => void) {
+  /** `onShop`: "Spend credits in the Shop" (the dialog closes first). */
+  constructor(onClaim: () => void, onShop?: () => void) {
     this.claimButton.addEventListener('click', () => onClaim());
+    requireElement('btn-daily-shop').addEventListener('click', () => {
+      this.close();
+      onShop?.();
+    });
     requireElement('btn-daily-close').addEventListener('click', () => this.close());
     this.overlay.onBackdropClick(() => this.close());
   }

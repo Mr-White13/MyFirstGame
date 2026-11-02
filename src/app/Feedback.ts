@@ -26,7 +26,9 @@ export type FeedbackEvent =
   /** A league promotion was shown. */
   | { readonly type: 'promoted' }
   /** A booster (Hint, Reveal, Extra Heart) was used. */
-  | { readonly type: 'booster' };
+  | { readonly type: 'booster' }
+  /** A Shop item was bought (it is already saved). */
+  | { readonly type: 'purchase' };
 
 export interface SoundPlayer {
   play(id: SoundId, options?: SoundOptions & { delay?: number }): boolean;
@@ -111,6 +113,10 @@ export class Feedback {
       case 'booster':
         this.sound.play('unlock');
         this.haptics.play('release');
+        return;
+      case 'purchase':
+        this.sound.play('achievement');
+        this.haptics.play('reward');
         return;
     }
   }

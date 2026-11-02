@@ -189,6 +189,9 @@
           <button type="button" class="nav-tile" id="btn-home-achievements">
             <svg class="icon" aria-hidden="true"><use href="#icon-trophy" /></svg><span>Awards</span><em class="nav-tile__badge" id="home-achievements">0/12</em>
           </button>
+          <button type="button" class="nav-tile" id="btn-home-shop">
+            <svg class="icon" aria-hidden="true"><use href="#icon-credit" /></svg><span>Shop</span>
+          </button>
           <button type="button" class="nav-tile" id="btn-home-settings-tile">
             <svg class="icon" aria-hidden="true"><use href="#icon-settings" /></svg><span>Settings</span>
           </button>
@@ -660,6 +663,32 @@
       </section>
 
       <!-- Achievements -->
+      <!-- Energy Credits Shop: permanent cosmetics (src/shop/catalog.ts, src/ui/ShopScreen.ts) -->
+      <section class="screen screen--shop" id="screen-shop" aria-labelledby="shop-title">
+        <header class="topbar">
+          <button type="button" class="icon-btn" id="btn-shop-back" aria-label="Back">
+            <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
+          </button>
+          <h1 class="topbar__title" id="shop-title">Shop</h1>
+          <span class="topbar__spacer" aria-hidden="true"></span>
+        </header>
+        <div class="shop__scroll">
+          <section class="shop__summary surface" aria-label="Your Energy Credits">
+            <span class="avatar avatar--large shop__avatar" id="shop-avatar"></span>
+            <div class="shop__balance">
+              <span class="shop__label">Energy Credits</span>
+              <span class="credits-inline shop__credits" id="shop-credits-wrap"><svg class="icon" aria-hidden="true"><use href="#icon-credit" /></svg><strong id="shop-credits">0</strong></span>
+              <p class="shop__note">Cosmetics are permanent: buy once, keep forever. They only change how things look.</p>
+            </div>
+          </section>
+          <div class="shop__catalog" id="shop-catalog"></div>
+          <button type="button" class="btn btn--primary shop__play" id="btn-shop-play">
+            <svg class="icon" aria-hidden="true"><use href="#icon-next" /></svg>Continue playing
+          </button>
+          <p class="card-note">Earn Energy Credits from daily rewards, achievements and the Daily League. Credits can't be bought with money.</p>
+        </div>
+      </section>
+
       <section class="screen screen--achievements" id="screen-achievements" aria-labelledby="achievements-title">
         <header class="topbar">
           <button type="button" class="icon-btn" id="btn-achievements-back" aria-label="Back">
@@ -776,6 +805,9 @@
           <ol class="daily-grid" id="daily-grid" aria-label="7-day reward cycle"></ol>
           <p class="daily__message" id="daily-message" role="status" aria-live="polite"></p>
           <button type="button" class="btn btn--primary daily__claim" id="btn-daily-claim">Claim</button>
+          <button type="button" class="btn btn--ghost btn--small daily__shop" id="btn-daily-shop">
+            <svg class="icon" aria-hidden="true"><use href="#icon-credit" /></svg>Spend credits in the Shop
+          </button>
           <p class="card-note">Play on consecutive days to move through the 7-day cycle. Miss a day and the cycle starts again from Day 1. Credits you've earned are always kept. Best streak: <strong id="daily-best">0</strong>.</p>
         </div>
       </div>

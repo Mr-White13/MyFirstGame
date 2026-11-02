@@ -40,6 +40,7 @@ import { RecapDialog } from './ui/RecapDialog';
 import { Screens } from './ui/Screens';
 import { SettingsScreen } from './ui/SettingsScreen';
 import { BoosterBar } from './ui/BoosterBar';
+import { ShopScreen } from './ui/ShopScreen';
 import { QuickSettings } from './ui/QuickSettings';
 import { ThemePicker } from './ui/ThemePicker';
 import { Toast } from './ui/Toast';
@@ -119,6 +120,7 @@ const home = new HomeScreen(LEVELS, {
   onDaily: () => app?.openDaily(),
   onAchievements: () => void app?.showAchievements(),
   onLeague: () => void app?.showLeague(),
+  onShop: () => void app?.showShop(),
 });
 const profileScreen = new ProfileScreen(LEVELS, {
   onBack: () => void app?.goBack(),
@@ -143,7 +145,10 @@ const leagueScreen = new LeagueScreen(
   () => void app?.goBack(),
   (number) => void app?.openChallenge(number),
 );
-const dailyDialog = new DailyDialog(() => app?.claimDaily());
+const dailyDialog = new DailyDialog(
+  () => app?.claimDaily(),
+  () => void app?.showShop(),
+);
 const achievementsScreen = new AchievementsScreen(() => void app?.goBack());
 
 const game = createGame(requireElement('stage'), scene);
@@ -183,6 +188,12 @@ app = new App({
   dailyDialog,
   achievementsScreen,
   boosterBar: new BoosterBar((id) => app?.useBooster(id)),
+  shopScreen: new ShopScreen({
+    onBack: () => void app?.goBack(),
+    onBuy: (id) => void app?.buyCosmetic(id),
+    onEquip: (slot, id) => app?.equipCosmetic(slot, id),
+    onPlay: () => void app?.continueFromShop(),
+  }),
 });
 // Cold launch: the Mr. White Games splash (already on screen from index.html),
 // then optionally one recap insight, then Home, which is ready underneath.
