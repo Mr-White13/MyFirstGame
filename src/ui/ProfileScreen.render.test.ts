@@ -17,7 +17,7 @@ const STATS: Readonly<Record<string, PlayerStats>> = {
 
 const PROFILES: Readonly<Record<string, PlayerProfile>> = {
   default: createProfile(),
-  custom: { nickname: 'Neo <b>&</b>', avatar: 'fox', country: 'RO' },
+  custom: { id: null, nickname: 'Neo <b>&</b>', avatar: 'fox', country: 'RO' },
 };
 
 const LEAGUE: LeagueState = {
