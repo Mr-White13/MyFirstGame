@@ -2,6 +2,7 @@ import { formatTotal } from '../core/time';
 import { recordsSummary } from '../progress/chapters';
 import type { LevelData } from '../core/types';
 import { avatarSvg } from '../profile/avatars';
+import type { CosmeticId } from '../shop/catalog';
 import { countryName, flagEmoji } from '../profile/countries';
 import { rankFor, validateNickname, type PlayerProfile } from '../profile/Profile';
 import type { PlayerStats } from '../profile/Stats';
@@ -28,11 +29,15 @@ export interface ProfileRewards {
   readonly daysPlayed: number;
   readonly unlocked: number;
   readonly total: number;
+  /** The avatar frame bought in the Shop and equipped (null or missing: none). */
+  readonly frame?: CosmeticId | null;
 }
 
 /** Player identity, progress summary, lifetime statistics and a summary of personal records (the full list has its own screen). */
 export class ProfileScreen {
   private readonly avatar = requireElement('profile-avatar');
+  /** The equipped Shop frame, drawn around the avatar. */
+  private frame: CosmeticId | null = null;
   private readonly nickname = requireElement('profile-nickname');
   private readonly nameView = requireElement('profile-name-view');
   private readonly nameForm = requireElement<HTMLFormElement>('profile-name-form');
@@ -81,7 +86,7 @@ export class ProfileScreen {
   render(profile: PlayerProfile, progress: Progress, stats: PlayerStats): void {
     this.current = profile;
     const levelCount = this.levels.length;
-    this.avatar.innerHTML = avatarSvg(profile.avatar); // static, trusted markup
+    this.avatar.innerHTML = avatarSvg(profile.avatar, this.frame); // static, trusted markup
     this.nickname.textContent = profile.nickname; // player text: never parsed as HTML
     this.countryFlag.textContent = profile.country ? flagEmoji(profile.country) : '';
     this.countryName.textContent = profile.country ? countryName(profile.country) : 'Add country';
@@ -124,6 +129,11 @@ export class ProfileScreen {
   }
 
   renderRewards(r: ProfileRewards): void {
+    const frame = r.frame ?? null;
+    if (frame !== this.frame) {
+      this.frame = frame;
+      if (this.current) this.avatar.innerHTML = avatarSvg(this.current.avatar, frame); // static, trusted markup
+    }
     const days = (n: number) => `${n} ${n === 1 ? 'day' : 'days'}`;
     this.setText('stat-credits', r.credits);
     this.setText('stat-streak', days(r.streak));

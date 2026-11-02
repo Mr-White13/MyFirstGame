@@ -86,6 +86,8 @@ interface Options {
   confirmRestart?: boolean;
   /** Whether the first-time booster tip was already shown (default true, so older tests see no tip). */
   boosterTipSeen?: boolean;
+  /** Energy Credits in the wallet (default 100). */
+  credits?: number;
 }
 
 function createHarness(options: Options = {}) {
@@ -93,6 +95,8 @@ function createHarness(options: Options = {}) {
   const rec = (name: string, ...args: unknown[]) => void log.push({ name, args });
   /** Every view the booster toolbar was asked to show (not logged as effects). */
   const boosterViews: unknown[] = [];
+  /** Every view the Shop screen was asked to show (not logged as effects). */
+  const shopViews: unknown[] = [];
   const initial = { progress: options.progress ?? createProgress(), stats: createStats(new Date(0)), dailyLog: createDailyLog(TODAY), profile: createProfile() };
 
   let now = 0;
@@ -277,9 +281,28 @@ function createHarness(options: Options = {}) {
     renderLeague: () => rec('profileScreen.renderLeague'),
   };
   const rewards = {
-    current: { daily: createDaily(), boosters: { used: { hint: 0, reveal: 0, heart: 0 }, introduced: options.boosterTipSeen ?? true } },
-    credits: 100,
+    current: {
+      daily: createDaily(),
+      boosters: { used: { hint: 0, reveal: 0, heart: 0 }, introduced: options.boosterTipSeen ?? true },
+      cosmetics: { owned: [] as string[], equipped: { frame: null as string | null } },
+    },
+    credits: options.credits ?? 100,
     spendBooster: (today: string, id: string) => (rec('rewards.spendBooster', today, id), true),
+    /** Shop purchase: logs, charges and unlocks unless `failSave` (then nothing changes, like a failed write). */
+    failSave: false,
+    buyCosmetic(id: string) {
+      rec('rewards.buyCosmetic', id);
+      if (this.failSave) return { ok: false, reason: 'not-saved' };
+      const price = ({ 'frame-cyber': 150, 'frame-plasma': 250, 'frame-elite': 400, 'frame-inferno': 500 } as Record<string, number>)[id];
+      this.credits -= price;
+      this.current = { ...this.current, cosmetics: { owned: [...this.current.cosmetics.owned, id], equipped: { frame: id } } };
+      return { ok: true, item: { id } };
+    },
+    equipCosmetic(today: string, slot: string, id: string | null) {
+      rec('rewards.equipCosmetic', today, slot, id);
+      this.current = { ...this.current, cosmetics: { ...this.current.cosmetics, equipped: { frame: id } } };
+      return true;
+    },
     markBoostersIntroduced(today: string) {
       rec('rewards.markBoostersIntroduced', today);
       this.current = { ...this.current, boosters: { ...this.current.boosters, introduced: true } };
@@ -379,6 +402,7 @@ function createHarness(options: Options = {}) {
     leagueScreen: { render: () => rec('leagueScreen.render') },
     leagueResult,
     boosterBar: { render: (view: unknown) => (boosterViews.push(view), undefined), flash: (id: string) => rec('boosterBar.flash', id) },
+    shopScreen: { render: (view: unknown) => (shopViews.push(view), undefined), celebrate: (id: string) => rec('shopScreen.celebrate', id) },
   };
   const app = new App(parts as unknown as AppParts);
 
@@ -394,6 +418,7 @@ function createHarness(options: Options = {}) {
     rewards,
     scene,
     boosterViews,
+    shopViews,
     dayClock,
     confirmDialog,
     leagueResult,
@@ -1257,5 +1282,96 @@ describe('boosters', () => {
     h.state.escapableArrows = () => [freeArrow];
     h.app.useBooster('hint');
     expect(h.effects()).toEqual([]);
+  });
+});
+
+describe('shop', () => {
+  async function enterShop(options: Options = {}) {
+    const h = createHarness(options);
+    h.app.start();
+    await h.app.showShop();
+    await flush();
+    h.clear();
+    return h;
+  }
+
+  it('opens from Home, showing the balance, the avatar and the cosmetics owned', async () => {
+    const h = await enterShop({ credits: 320 });
+    expect(h.app.screen).toBe('shop');
+    expect(h.shopViews.at(-1)).toMatchObject({ credits: 320, avatar: 'bot', cosmetics: { owned: [], equipped: { frame: null } } });
+  });
+
+  it('asks before buying, then buys once through the wallet, celebrates and plays feedback', async () => {
+    const h = await enterShop({ credits: 320 });
+    const buying = h.app.buyCosmetic('frame-cyber');
+    expect(h.effects()).toEqual(['confirmDialog.ask Buy Cyber Frame?']);
+    h.clear();
+    h.parts.confirmDialog.close(true);
+    await buying;
+    expect(h.effects()).toEqual([
+      'confirmDialog.close true',
+      'rewards.buyCosmetic frame-cyber',
+      'shopScreen.celebrate frame-cyber',
+      'toast.show Cyber Frame unlocked and equipped · −150 2600 achievement',
+      'feedback purchase',
+    ]);
+    expect(h.rewards.credits).toBe(170);
+  });
+
+  it('cancelling the confirmation buys nothing', async () => {
+    const h = await enterShop({ credits: 320 });
+    const buying = h.app.buyCosmetic('frame-plasma');
+    h.parts.confirmDialog.close(false);
+    await buying;
+    expect(h.effects().filter((e) => e.startsWith('rewards.'))).toEqual([]);
+    expect(h.rewards.credits).toBe(320);
+  });
+
+  it('too few credits: explains the price without asking or charging', async () => {
+    const h = await enterShop({ credits: 120 });
+    await h.app.buyCosmetic('frame-elite');
+    expect(h.effects()).toEqual(['toast.show Elite Frame costs 400 Energy Credits; you have 120. Earn more from daily rewards and achievements. 3200']);
+  });
+
+  it('rapid Buy taps open one confirmation and buy once', async () => {
+    const h = await enterShop({ credits: 1000 });
+    const first = h.app.buyCosmetic('frame-inferno');
+    const second = h.app.buyCosmetic('frame-inferno');
+    const other = h.app.buyCosmetic('frame-cyber');
+    h.parts.confirmDialog.close(true);
+    await Promise.all([first, second, other]);
+    expect(h.effects().filter((e) => e.startsWith('confirmDialog.ask') || e.startsWith('rewards.buy'))).toEqual(['confirmDialog.ask Buy Inferno Frame?', 'rewards.buyCosmetic frame-inferno']);
+    expect(h.rewards.credits).toBe(500);
+    h.clear();
+    await h.app.buyCosmetic('frame-inferno'); // already owned: just equips, never pays again
+    expect(h.effects()).toEqual([`rewards.equipCosmetic ${TODAY} frame frame-inferno`]);
+  });
+
+  it('a purchase that could not be saved says nothing was charged', async () => {
+    const h = await enterShop({ credits: 500 });
+    h.rewards.failSave = true;
+    const buying = h.app.buyCosmetic('frame-plasma');
+    h.parts.confirmDialog.close(true);
+    await buying;
+    expect(h.effects().slice(-1)).toEqual(["toast.show The purchase couldn't be saved on this device, so nothing was charged. Try again. 3200"]);
+    expect(h.rewards.credits).toBe(500);
+  });
+
+  it('equips and unequips (free), only from the Shop screen', async () => {
+    const h = await enterShop({ credits: 500 });
+    h.app.equipCosmetic('frame', null);
+    expect(h.effects()).toEqual([`rewards.equipCosmetic ${TODAY} frame null`]);
+    await h.app.showHome();
+    await flush();
+    h.clear();
+    h.app.equipCosmetic('frame', null);
+    await h.app.buyCosmetic('frame-cyber');
+    expect(h.effects()).toEqual([]);
+  });
+
+  it('"Continue playing" opens the next level, like Home\'s Play', async () => {
+    const h = await enterShop({ progress: progressThrough(3) });
+    await h.app.continueFromShop();
+    expect(h.effects()).toContain('scene.loadLevel 4');
   });
 });

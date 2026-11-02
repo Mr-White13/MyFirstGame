@@ -18,6 +18,7 @@ export class Screens {
     settings: requireElement('screen-settings'),
     achievements: requireElement('screen-achievements'),
     league: requireElement('screen-league'),
+    shop: requireElement('screen-shop'),
   };
   private current: ScreenName | null = null;
 

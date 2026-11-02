@@ -297,7 +297,7 @@ On a cold launch the **Mr. White Games** splash plays first, optionally followed
 - **Play card:** the next level to play, a big **Play / Continue / Play again** button, your level progress and your total stars.
 - **Daily card:** your login streak and today's reward: a green **Claim +N** when it's ready, otherwise "Claimed today · Tomorrow +N" and a **Rewards** button. See "Daily rewards, streaks and achievements".
 - **League card:** your league crest and today's Energy Points (or "Unlocks after Level 10" with your progress). Opens the League screen.
-- **Menu:** **Levels**, **Profile**, **Awards** (achievements, with *n*/12) and **Settings**. The old "Events" and "Daily activity (coming soon)" placeholders were replaced by these.
+- **Menu:** **Levels**, **Profile**, **Awards** (achievements, with *n*/12), **Shop** (see "Energy Credits Shop") and **Settings**. The old "Events" and "Daily activity (coming soon)" placeholders were replaced by these.
 
 Other screens:
 
@@ -540,7 +540,7 @@ Open the calendar from the **daily card** on Home or the **credits chip** in the
 **Energy Credits** are the reward currency added in this step:
 - Earned from daily rewards and achievements. They never reset.
 - Offline only: they can't be bought, transferred or exchanged, and have no real-money value.
-- Credits are spent on **hints and boosters** during a level (see "Hints and boosters"), through the wallet's validated `spend()`; the save format is unchanged. There is no shop yet.
+- Credits are spent on **hints and boosters** during a level (see "Hints and boosters") and on permanent cosmetics in the **Shop** (see "Energy Credits Shop"), both through the wallet's validated `spend()`; the wallet's save format is unchanged.
 
 **Energy Points** are a different thing, coming in Step 10: points collected from special arrows during play that count toward daily league progress and reset with each competition. They will have their own record. Nothing in the wallet counts them, and the two are never mixed.
 
@@ -582,7 +582,8 @@ All of this is **one** record, `neon-escape.rewards` (version 1), separate from 
   "wallet": { "credits": 245, "earned": 245, "applied": ["achievement:first-escape", "daily:2026-10-31"] },
   "achievements": { "first-escape": "2026-10-20" },
   "bestChain": 2,
-  "boosters": { "used": { "hint": 3, "reveal": 1, "heart": 0 }, "introduced": true } }
+  "boosters": { "used": { "hint": 3, "reveal": 1, "heart": 0 }, "introduced": true },
+  "cosmetics": { "owned": ["frame-cyber", "frame-plasma"], "equipped": { "frame": "frame-plasma" } } }
 ```
 
 - **Boosters** (`boosters`): how many times each booster was paid for, and whether the first-time tip was shown. It sits in the same record as the wallet, so spending credits and counting the use are one write. Added within version 1: older saves read as zero uses and the tip not shown. Booster spends use transaction ids `booster:<id>:<n>` (numbered per booster, so they never repeat); like daily ids, only the most recent 50 are kept.
@@ -646,6 +647,51 @@ How they behave:
 **Code:** rules in `src/boosters/Boosters.ts` (costs, availability, hint choice) and `GameState` (`escapableArrows`, `blockerOf`, `restoreLife`); payment in `Rewards.spendBooster`; the flow in `src/app/BoosterController.ts`; the toolbar in `src/ui/BoosterBar.ts`; highlights in `ArrowView.setAssist` and `GameScene.showHint` / `showReveal`. How a use is paid (`BoosterPayment`: credits, or free) is separate from what it does, so a later source such as a rewarded ad can grant the same boosters.
 
 **Manual test in Chrome:** open a level you have really unlocked with some credits. Tap Hint (balance −20, one arrow glows; tap it), Reveal (−40, free arrows glow for 3 s), make a mistake and tap +1 (−80, the heart grows back). Then try +1 at full hearts, a booster you can't afford, a double tap, and a locked level (test play: "Free", balance unchanged).
+
+## Energy Credits Shop
+
+A shop for **permanent cosmetics**, paid with the Energy Credits you earn from daily rewards, achievements and the Daily League. No money, no ads, no separate currency. Open it from the **Shop** tile on Home, or from "Spend credits in the Shop" in the Daily rewards card (opened from the credits chip on Home).
+
+The screen shows your balance and your avatar (wearing what you've equipped), a note that cosmetics are permanent, then the catalog. Each card previews the item **on your own avatar**, with its name, description and one action:
+
+| Card state | Shows | Tap |
+| --- | --- | --- |
+| Not owned | The price (dimmed if you can't afford it) | Affordable: a confirmation (price, balance after, "permanent"), then the purchase. Not affordable: a message with the price and your balance; nothing is asked or charged. |
+| Owned | An **Owned** badge and **Equip** | Wears it (free). |
+| Equipped | A green border, an **Equipped** badge and button | Nothing: it is already worn. |
+
+A **"Continue playing"** button opens the next level (like Home's Play), and Back returns to where you came from. The Shop never advertises itself: there are no pop-ups or reminders.
+
+### Avatar frames
+
+| Frame | Price | Look |
+| --- | --- | --- |
+| **No frame** | Free | The avatar's own ring (the default; equip it to take a frame off). |
+| **Cyber Frame** | 150 | A cyan circuit ring with four nodes and tick marks. |
+| **Plasma Frame** | 250 | A violet ring with pink plasma that slowly circles it. |
+| **Elite Frame** | 400 | A gold ring with seven studs and a small crown on top. |
+| **Inferno Frame** | 500 | A red ring surrounded by flickering orange and gold flames. |
+
+- Frames appear around your avatar on **Home**, **Profile** and in the **Shop**, and fit all 10 avatars: they are drawn on the avatar's outer ring, outside its artwork (`src/profile/frames.ts`, added to `avatarSvg`). An avatar without a frame is drawn exactly as before.
+- Code-drawn SVG with no images, gradients, filters or element ids, so nothing clashes when a frame shows twice on a page, and nothing is costly to draw. Fixed colours (like the avatars), on the avatar's own dark disc, so they read the same in every theme.
+- Motion is one slow CSS animation (Plasma turns once every 14 s, Inferno flickers gently), switched off with **reduced motion** or **visual effects off**.
+- Cosmetics never change gameplay, progression, the Daily League or boosters.
+
+### Buying and saving
+
+- **Prices live in one place:** `COSMETIC_PRICES` in `src/shop/catalog.ts` (initial balancing values).
+- **One purchase, one write.** `Rewards.buyCosmetic` takes the price from the existing wallet (`spend`, transaction id `shop:<item>`), adds the item to what you own and equips it, all in the rewards record's single save. **If that write fails** (storage full or blocked, or a save from a newer version that must not be overwritten), the purchase does not happen at all: nothing is charged and nothing is unlocked, not even until the next restart, and you're told so. Without any storage, purchases are refused for the same reason.
+- **Bought once, owned forever.** An owned item can't be bought again (the wallet also refuses a second `shop:<item>` payment), so a double tap, a retry or a refresh never charges twice. If the owned list were ever lost but the payment is in the wallet, the item still counts as owned. The balance can't go negative.
+- **Rapid taps:** while a purchase confirmation is open, further Buy taps are ignored, so only one confirmation (and at most one purchase) can happen at a time.
+- **Equipping** is free and saved at once; only owned items (or "No frame") can be equipped.
+- **Saved as** `cosmetics` in `neon-escape.rewards` (see "How rewards are saved"): `owned` (item ids) and `equipped` (one per slot, `null` = default). Added within version 1: existing saves load with nothing owned or equipped and every credit, reward and record intact. Each field is validated: unknown items are dropped, and an equipped item you don't own falls back to the default.
+- **Not tamper-proof.** Like all local saves, someone editing `localStorage` with DevTools can change their credits or items. These checks protect against bugs, double taps and failed writes, not deliberate editing, which is acceptable while the game is offline with no real-money value.
+
+### Extending the catalog
+
+Every item has a **slot** (`frame` today). A new category, such as arrow trails, special effects or seasonal items, adds a slot, its items and prices in `src/shop/catalog.ts`, and its look where it is drawn. Buying, owning, equipping, saving and the Shop screen work per slot unchanged. Boosters are deliberately **not** sold here: they stay a direct, per-use purchase during a level.
+
+**Manual test in Chrome:** earn credits (claim daily rewards, unlock achievements) or use a test save, open Shop. Tap a frame you can't afford (message, no charge), buy one you can (confirm, balance drops once, the card glows, "Equipped"), equip another owned frame and "No frame", go to Home and Profile (the frame is there), reload (still owned and equipped), and double-tap Buy (one confirmation).
 
 ## Daily League
 
@@ -1050,6 +1096,9 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     │   ├── Achievements.ts    The 12 achievements and their progress
     │   └── chainFeasibility.ts Proves chain achievements are reachable (used by tests)
     │
+    ├── shop/
+    │   └── catalog.ts         Shop items, prices (one place), slots, ownership validation
+    │
     ├── settings/          Player preferences, separate from progress
     │   ├── Settings.ts        Settings model, validation, versioned storage and migration, SettingsStore
     │   └── Appearance.ts      Theme / reduced-motion / effects resolution; applies them to CSS and the board
@@ -1066,7 +1115,8 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     ├── profile/           Local player identity and lifetime statistics
     │   ├── Profile.ts         Nickname rules, avatar/country choice, rank, profile storage
     │   ├── identity.ts        Random starting nicknames and the unique player id
-    │   ├── avatars.ts         10 original inline-SVG avatars
+    │   ├── avatars.ts         10 original inline-SVG avatars (optionally wearing a Shop frame)
+    │   ├── frames.ts          The four code-drawn avatar frames sold in the Shop
     │   ├── countries.ts       ISO 3166-1 alpha-2 list, names via Intl, flag emoji, search
     │   └── Stats.ts           Lifetime counters per attempt, stats storage
     │
@@ -1116,6 +1166,7 @@ count. The only real challenge is **finding an arrow that can escape**, again an
         ├── Hud.ts             In-game timer, hearts, arrows left, back and restart buttons
         ├── ThemePicker.ts     HUD quick settings button and card, theme choice (pauses the timer)
         ├── BoosterBar.ts      HUD booster row: credit balance, Hint, Reveal, Extra Heart
+        ├── ShopScreen.ts      Energy Credits Shop: balance, item cards (Buy / Equip / Equipped), purchase confirmation text
         ├── QuickSettings.ts   Music, sound effects and vibration controls in that card
         ├── RecapDialog.ts     Startup recap card with Continue and Skip
         ├── CompleteDialog.ts  Level-complete / game-complete dialog: stars, time, personal best, statistics
@@ -1247,6 +1298,6 @@ layout aren't compared with the new one.
 
 ## Not in this prototype
 
-Release signing and store publishing, a custom app icon and splash screen, in-game level generation (the generator is an offline developer tool), a shop, online leagues or leaderboards, accounts, ads and monetisation are intentionally left out. Energy Credits cannot be bought.
+Release signing and store publishing, a custom app icon and splash screen, in-game level generation (the generator is an offline developer tool), real-money purchases, online leagues or leaderboards, accounts, ads and monetisation are intentionally left out. Energy Credits cannot be bought.
 
 **About scoring:** the star rating (lives left) is the measure of skill. The move counter is kept for compatibility. It counts arrows you cleared by tapping, so it equals the arrow count minus chain-reaction releases, and it isn't used for ratings.

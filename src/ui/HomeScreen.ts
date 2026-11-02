@@ -1,7 +1,8 @@
 import type { LevelData } from '../core/types';
 import type { ClaimStatus } from '../daily/Daily';
 import { league, leagueBadgeSvg } from '../league/leagues';
-import { avatarSvg } from '../profile/avatars';
+import { avatarSvg, type AvatarId } from '../profile/avatars';
+import type { CosmeticId } from '../shop/catalog';
 import type { PlayerProfile } from '../profile/Profile';
 import { completedCount, MAX_STARS, nextLevelToPlay, totalStars, type Progress } from '../progress/Progress';
 import { requireElement } from './dom';
@@ -14,6 +15,7 @@ export interface HomeActions {
   onDaily(): void;
   onAchievements(): void;
   onLeague(): void;
+  onShop(): void;
 }
 
 /** The Home league card: locked progress, or the league and today's points. */
@@ -37,11 +39,16 @@ export interface HomeRewards {
   readonly next: { readonly day: number; readonly credits: number };
   readonly unlocked: number;
   readonly total: number;
+  /** The avatar frame bought in the Shop and equipped (null or missing: none). */
+  readonly frame?: CosmeticId | null;
 }
 
 /** The start screen: identity, the next level to play, progress and the main menu. */
 export class HomeScreen {
   private readonly avatar = requireElement('home-avatar');
+  private avatarId?: AvatarId;
+  /** The equipped Shop frame, drawn around the avatar. */
+  private frame: CosmeticId | null = null;
   private readonly nickname = requireElement('home-nickname');
   private readonly nextLabel = requireElement('home-next-label');
   private readonly nextLevel = requireElement('home-next-level');
@@ -80,13 +87,15 @@ export class HomeScreen {
     this.creditsButton.addEventListener('click', () => actions.onDaily());
     this.achievementsButton.addEventListener('click', () => actions.onAchievements());
     this.leagueButton.addEventListener('click', () => actions.onLeague());
+    requireElement('btn-home-shop').addEventListener('click', () => actions.onShop());
     requireElement('btn-home-settings').addEventListener('click', () => actions.onSettings());
     requireElement('btn-home-settings-tile').addEventListener('click', () => actions.onSettings());
   }
 
   render(profile: PlayerProfile, progress: Progress): void {
     const levelCount = this.levels.length;
-    this.avatar.innerHTML = avatarSvg(profile.avatar); // static, trusted markup
+    this.avatarId = profile.avatar;
+    this.avatar.innerHTML = avatarSvg(profile.avatar, this.frame); // static, trusted markup
     this.nickname.textContent = profile.nickname; // player text: never parsed as HTML
 
     const done = completedCount(progress, levelCount);
@@ -133,6 +142,11 @@ export class HomeScreen {
    * the main action; the card only asks for attention when a reward is ready.
    */
   renderRewards(r: HomeRewards): void {
+    const frame = r.frame ?? null;
+    if (frame !== this.frame) {
+      this.frame = frame;
+      if (this.avatarId) this.avatar.innerHTML = avatarSvg(this.avatarId, frame); // static, trusted markup
+    }
     this.credits.textContent = String(r.credits);
     this.creditsButton.setAttribute('aria-label', `Energy Credits: ${r.credits}. Open daily rewards`);
     this.streak.textContent = r.streak > 0 ? `${r.streak}-day streak` : 'Start a streak';

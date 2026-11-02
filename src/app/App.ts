@@ -3,7 +3,9 @@ import type { GameState } from '../core/GameState';
 import type { LevelData } from '../core/types';
 import { withAvatar, withCountry, withNickname, type PlayerProfile, type ProfileStorage } from '../profile/Profile';
 import type { AttemptOutcome, PlayerStats, StatsStorage } from '../profile/Stats';
-import { isCompleted, nextLevelToPlay, type Progress } from '../progress/Progress';
+import { completedCount, isCompleted, nextLevelToPlay, type Progress } from '../progress/Progress';
+import { cosmeticById, type CosmeticId, type CosmeticSlot } from '../shop/catalog';
+import { purchaseMessage, purchaseQuestion, type ShopScreen } from '../ui/ShopScreen';
 import { canPlayLevel, isTestPlay } from '../progress/testUnlock';
 import { ENERGY_PER_CHALLENGE, MAX_DAILY_POINTS, type DailyChallenge } from '../league/challenges';
 import { collectedIn, points } from '../league/League';
@@ -84,6 +86,8 @@ export interface AppParts {
   readonly leagueResult: LeagueResultDialog;
   /** The HUD's booster row (Hint, Reveal, Extra Heart). */
   readonly boosterBar: BoosterBar;
+  /** The Energy Credits Shop (permanent cosmetics). */
+  readonly shopScreen: ShopScreen;
 }
 
 /** How often the HUD clock is refreshed. The time itself comes from a monotonic clock. */
@@ -113,6 +117,8 @@ export class App {
   /** True while the app is hidden or in the background (browser tab or Android app). */
   private background = false;
   private zoomHintShown = false;
+  /** True from a Shop "Buy" tap until its confirmation is answered: further Buy taps are ignored. */
+  private purchasing = false;
   /** The regular level opened most recently this session (challenges don't count), or null before the first. */
   private lastLevelOpened: number | null = null;
   /** The Daily League challenge being played, or null for a regular level. */
@@ -242,6 +248,57 @@ export class App {
   showLeague(): Promise<void> {
     this.leagueController.settle();
     return this.showMenuScreen('league');
+  }
+
+  showShop(): Promise<void> {
+    return this.showMenuScreen('shop');
+  }
+
+  /**
+   * A Shop "Buy" tap. Too few credits: explains the price (nothing to
+   * confirm). Otherwise asks first, then buys through the wallet: one saved
+   * write for the charge and the unlock, and the new item is equipped. While
+   * the question is open, further Buy taps are ignored, and an item already
+   * owned can never be paid again (Rewards refuses it), so rapid taps can't
+   * spend twice.
+   */
+  async buyCosmetic(id: CosmeticId): Promise<void> {
+    const { rewards, confirmDialog, toast, shopScreen, screens } = this.parts;
+    const item = cosmeticById(id);
+    if (!item || this.purchasing || this.navigating || screens.active !== 'shop') return;
+    if (rewards.current.cosmetics.owned.includes(item.id)) return this.equipCosmetic(item.slot, item.id);
+    if (rewards.credits < item.price) {
+      toast.show(purchaseMessage(item, 'insufficient', rewards.credits), 3200);
+      return;
+    }
+    this.purchasing = true;
+    try {
+      const confirmed = await confirmDialog.ask(purchaseQuestion(item, rewards.credits));
+      if (!confirmed || screens.active !== 'shop') return;
+      const result = rewards.buyCosmetic(item.id);
+      if (!result.ok) {
+        toast.show(purchaseMessage(item, result.reason, rewards.credits), 3200);
+        return;
+      }
+      shopScreen.celebrate(item.id);
+      toast.show(`${item.name} unlocked and equipped · −${item.price}`, 2600, 'achievement');
+      this.parts.feedback({ type: 'purchase' });
+    } finally {
+      this.purchasing = false;
+    }
+  }
+
+  /** Wears an owned Shop item, or `null` for the free default. Free; ignored for items not owned. */
+  equipCosmetic(slot: CosmeticSlot, id: CosmeticId | null): void {
+    if (this.parts.screens.active !== 'shop') return;
+    this.parts.rewards.equipCosmetic(this.parts.dayClock.today, slot, id);
+  }
+
+  /** The Shop's "Continue playing": the same level Home's Play button opens. */
+  continueFromShop(): Promise<void> {
+    const count = this.parts.levels.length;
+    const progress = this.records.progress;
+    return this.openLevel(completedCount(progress, count) === count ? 1 : nextLevelToPlay(progress, count));
   }
 
   /** True once Level 10 is completed. Before that no competition exists and no points can be earned. */
@@ -655,6 +712,7 @@ export class App {
     const views = rewards.achievements();
     const unlocked = views.filter((v) => v.unlocked).length;
     const day = cycleDay(daily.lastCheckIn === today ? daily.streak : 1);
+    const { cosmetics } = rewards.current;
     home.renderRewards({
       credits: rewards.credits,
       streak: daily.lastCheckIn === today ? daily.streak : 0,
@@ -663,6 +721,7 @@ export class App {
       next: nextReward(daily, today),
       unlocked,
       total: views.length,
+      frame: cosmetics.equipped.frame,
     });
     profileScreen.renderRewards({
       credits: rewards.credits,
@@ -671,7 +730,9 @@ export class App {
       daysPlayed: daily.daysPlayed,
       unlocked,
       total: views.length,
+      frame: cosmetics.equipped.frame,
     });
+    this.parts.shopScreen.render({ credits: rewards.credits, avatar: this.profile.avatar, cosmetics });
     achievementsScreen.render(views, rewards.credits);
     if (dailyDialog.isOpen) dailyDialog.render(daily, today, rewards.credits);
     this.boosters.render();

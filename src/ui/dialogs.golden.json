@@ -432,6 +432,7 @@
    ],
    "daily-message": "<p aria-live=\"polite\" class=\"daily__message\" id=\"daily-message\" role=\"status\">Checking in…</>",
    "btn-daily-claim": "<button class=\"btn btn--primary daily__claim\" disabled id=\"btn-daily-claim\" type=\"button\">Not available</>",
+   "btn-daily-shop": "<button class=\"btn btn--ghost btn--small daily__shop\" id=\"btn-daily-shop\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-credit\"></></>Spend credits in the Shop </>",
    "daily-best": "<strong id=\"daily-best\">0 days</>"
   },
   "daily: day 1 available": {
@@ -495,6 +496,7 @@
    ],
    "daily-message": "<p aria-live=\"polite\" class=\"daily__message\" id=\"daily-message\" role=\"status\"></>",
    "btn-daily-claim": "<button class=\"btn btn--primary daily__claim\" id=\"btn-daily-claim\" type=\"button\">Claim +10</>",
+   "btn-daily-shop": "<button class=\"btn btn--ghost btn--small daily__shop\" id=\"btn-daily-shop\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-credit\"></></>Spend credits in the Shop </>",
    "daily-best": "<strong id=\"daily-best\">1 day</>"
   },
   "daily: day 4, one missed": {
@@ -560,6 +562,7 @@
    ],
    "daily-message": "<p aria-live=\"polite\" class=\"daily__message\" id=\"daily-message\" role=\"status\"></>",
    "btn-daily-claim": "<button class=\"btn btn--primary daily__claim\" id=\"btn-daily-claim\" type=\"button\">Claim +25</>",
+   "btn-daily-shop": "<button class=\"btn btn--ghost btn--small daily__shop\" id=\"btn-daily-shop\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-credit\"></></>Spend credits in the Shop </>",
    "daily-best": "<strong id=\"daily-best\">4 days</>"
   },
   "daily: day 4 claimed": {
@@ -623,6 +626,7 @@
    ],
    "daily-message": "<p aria-live=\"polite\" class=\"daily__message\" id=\"daily-message\" role=\"status\">Come back tomorrow for Day 5: +30.</>",
    "btn-daily-claim": "<button class=\"btn btn--primary daily__claim\" disabled id=\"btn-daily-claim\" type=\"button\">Claimed today</>",
+   "btn-daily-shop": "<button class=\"btn btn--ghost btn--small daily__shop\" id=\"btn-daily-shop\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-credit\"></></>Spend credits in the Shop </>",
    "daily-best": "<strong id=\"daily-best\">4 days</>"
   },
   "daily: clock back": {
@@ -686,6 +690,7 @@
    ],
    "daily-message": "<p aria-live=\"polite\" class=\"daily__message\" id=\"daily-message\" role=\"status\">Your device's date is earlier than a day you've already played. Rewards continue once that date has passed.</>",
    "btn-daily-claim": "<button class=\"btn btn--primary daily__claim\" disabled id=\"btn-daily-claim\" type=\"button\">Not available</>",
+   "btn-daily-shop": "<button class=\"btn btn--ghost btn--small daily__shop\" id=\"btn-daily-shop\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-credit\"></></>Spend credits in the Shop </>",
    "daily-best": "<strong id=\"daily-best\">2 days</>"
   },
   "daily: day 7 available": {
@@ -749,6 +754,7 @@
    ],
    "daily-message": "<p aria-live=\"polite\" class=\"daily__message\" id=\"daily-message\" role=\"status\"></>",
    "btn-daily-claim": "<button class=\"btn btn--primary daily__claim\" id=\"btn-daily-claim\" type=\"button\">Claim +75</>",
+   "btn-daily-shop": "<button class=\"btn btn--ghost btn--small daily__shop\" id=\"btn-daily-shop\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-credit\"></></>Spend credits in the Shop </>",
    "daily-best": "<strong id=\"daily-best\">7 days</>"
   },
   "daily: celebrate (start)": {
@@ -814,6 +820,7 @@
    ],
    "daily-message": "<p aria-live=\"polite\" class=\"daily__message\" id=\"daily-message\" role=\"status\">+75 Energy Credits claimed.</>",
    "btn-daily-claim": "<button class=\"btn btn--primary daily__claim\" id=\"btn-daily-claim\" type=\"button\">Claim +75</>",
+   "btn-daily-shop": "<button class=\"btn btn--ghost btn--small daily__shop\" id=\"btn-daily-shop\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-credit\"></></>Spend credits in the Shop </>",
    "daily-best": "<strong id=\"daily-best\">7 days</>"
   },
   "daily: celebrate (halfway)": "186",
