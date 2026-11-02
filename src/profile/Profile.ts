@@ -1,21 +1,45 @@
 import { browserStorage, readVersioned, SafeStore, type KeyValueStore, type SaveStatus } from '../storage/SafeStore';
 import { DEFAULT_AVATAR, isAvatarId, type AvatarId } from './avatars';
 import { isCountryCode } from './countries';
+import { isPlayerId, newPlayerId, randomNickname, type RandomBytes, type RandomSource } from './identity';
 
-/** The player's local, cosmetic identity. No account, nothing leaves the device. */
+/** The player's local identity. No account, nothing leaves the device. */
 export interface PlayerProfile {
+  /**
+   * Unique player id (a random UUID, see identity.ts), assigned once by
+   * ProfileStorage and never changed. Null only before it is assigned.
+   * Identify players by this, never by nickname: nicknames are not unique.
+   */
+  readonly id: string | null;
   readonly nickname: string;
   readonly avatar: AvatarId;
   /** ISO 3166-1 alpha-2 code, or null for "prefer not to say" (the default). */
   readonly country: string | null;
 }
 
+/**
+ * The placeholder name before an identity is assigned. Players never keep
+ * it: ProfileStorage replaces it with a random nickname (see withIdentity).
+ */
 export const DEFAULT_NICKNAME = 'Player';
 /** Longest nickname, in user-perceived characters. */
 export const NICKNAME_MAX = 16;
 
 export function createProfile(): PlayerProfile {
-  return { nickname: DEFAULT_NICKNAME, avatar: DEFAULT_AVATAR, country: null };
+  return { id: null, nickname: DEFAULT_NICKNAME, avatar: DEFAULT_AVATAR, country: null };
+}
+
+/**
+ * Gives a profile without an id its identity: a new unique id and, if it
+ * still has the placeholder name "Player" (new players, and saves from
+ * before random names), a random nickname. A name the player chose is kept.
+ * Profiles that already have an id are returned unchanged, so a player who
+ * later types "Player" themselves keeps it.
+ */
+export function withIdentity(profile: PlayerProfile, random?: RandomSource, bytes?: RandomBytes): PlayerProfile {
+  if (profile.id !== null) return profile;
+  const nickname = profile.nickname === DEFAULT_NICKNAME ? randomNickname(random) : profile.nickname;
+  return { ...profile, id: newPlayerId(bytes), nickname };
 }
 
 /** Splits into user-perceived characters (so an emoji counts as one), where supported. */
@@ -105,6 +129,7 @@ export function readProfile(raw: string | null): { value: PlayerProfile; status:
   const { data } = header;
 
   let profile = createProfile();
+  if (isPlayerId(data.id)) profile = { ...profile, id: data.id };
   if (typeof data.nickname === 'string') profile = withNickname(profile, data.nickname);
   if (typeof data.avatar === 'string') profile = withAvatar(profile, data.avatar);
   if (typeof data.country === 'string') profile = withCountry(profile, data.country);
@@ -118,12 +143,26 @@ export function serializeProfile(profile: PlayerProfile): string {
 export class ProfileStorage {
   private readonly safe: SafeStore<PlayerProfile>;
 
-  constructor(store: KeyValueStore | null = browserStorage()) {
+  constructor(
+    store: KeyValueStore | null = browserStorage(),
+    /** Randomness for a new identity (tests pass fixed sources). */
+    private readonly random?: RandomSource,
+    private readonly bytes?: RandomBytes,
+  ) {
     this.safe = new SafeStore(PROFILE_KEY, { read: readProfile, write: serializeProfile, fallback: createProfile }, store);
   }
 
+  /**
+   * The stored profile, given its identity (id and random nickname) the first
+   * time it has none, which is saved at once so it never changes again. A
+   * profile that can't be saved (no storage, or a newer save protected) gets
+   * an identity for this session only.
+   */
   load(): PlayerProfile {
-    return this.safe.load();
+    const stored = this.safe.load();
+    const profile = withIdentity(stored, this.random, this.bytes);
+    if (profile !== stored) this.safe.save(profile);
+    return profile;
   }
 
   save(profile: PlayerProfile): boolean {

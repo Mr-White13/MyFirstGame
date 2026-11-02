@@ -82,6 +82,8 @@ const READERS: Record<string, Reader> = {
       'v1 valid': { version: 1, nickname: 'Neo', avatar: 'bot', country: 'RO' },
       'v1 messy nickname': { version: 1, nickname: '  Ne\u0000o ​  the   One with a very long name ', avatar: 'unknown-avatar', country: 'XX' },
       'v1 empty nickname': { version: 1, nickname: '   ', country: null },
+      'v1 with player id': { version: 1, id: '0f9c2a4e-7b1d-4c3e-9a2b-5d6e7f8a9b0c', nickname: 'Turbo Otter', avatar: 'fox', country: null },
+      'v1 invalid player id': { version: 1, id: 'Player-1', nickname: 'Neo' },
     },
   },
   stats: {

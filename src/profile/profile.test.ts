@@ -12,8 +12,10 @@ import {
   validateNickname,
   withAvatar,
   withCountry,
+  withIdentity,
   withNickname,
 } from './Profile';
+import { isPlayerId, NAME_ADJECTIVES, NAME_NOUNS, newPlayerId, randomNickname, SPECIAL_NAME_SHARE, SPECIAL_NAMES } from './identity';
 import { addPlayTime, createStats, readStats, recordAttempt, STATS_KEY, StatsStorage } from './Stats';
 import { MemoryStore } from '../testing/memoryStore';
 
@@ -104,23 +106,65 @@ describe('rank', () => {
   });
 });
 
+/** Fixed randomness: always the first words, and ids from a counter (all valid, all different). */
+const firstWords = () => 0.5;
+let idCounter = 0;
+const countingBytes = () => {
+  const bytes = new Uint8Array(16);
+  new DataView(bytes.buffer).setUint32(12, ++idCounter);
+  return bytes;
+};
+const fixedStorage = (store: MemoryStore | null) => new ProfileStorage(store, firstWords, countingBytes);
+
 describe('profile storage', () => {
-  it('persists nickname, avatar and country', () => {
+  it('persists id, nickname, avatar and country', () => {
     const store = new MemoryStore();
     const profile = withCountry(withAvatar(withNickname(createProfile(), 'Ada'), 'fox'), 'JP');
-    new ProfileStorage(store).save(profile);
-    expect(new ProfileStorage(store).load()).toEqual({ nickname: 'Ada', avatar: 'fox', country: 'JP' });
+    fixedStorage(store).save(profile);
+    const loaded = fixedStorage(store).load();
+    expect(loaded).toMatchObject({ nickname: 'Ada', avatar: 'fox', country: 'JP' });
+    expect(isPlayerId(loaded.id)).toBe(true);
+    expect(fixedStorage(store).load()).toEqual(loaded); // the id was saved: it never changes
   });
 
   it('keeps valid fields and defaults the rest', () => {
-    const raw = JSON.stringify({ version: 1, nickname: '   ', avatar: 'unicorn', country: 'GB' });
-    expect(readProfile(raw).value).toEqual({ nickname: 'Player', avatar: DEFAULT_AVATAR, country: 'GB' });
+    const raw = JSON.stringify({ version: 1, nickname: '   ', avatar: 'unicorn', country: 'GB', id: 'not-a-uuid' });
+    expect(readProfile(raw).value).toEqual({ id: null, nickname: 'Player', avatar: DEFAULT_AVATAR, country: 'GB' });
+    const id = '0f9c2a4e-7b1d-4c3e-9a2b-5d6e7f8a9b0c';
+    expect(readProfile(JSON.stringify({ version: 1, id, nickname: 'Neo' })).value.id).toBe(id);
+  });
+
+  it('gives a new player a random nickname and a unique id, saved at once', () => {
+    const store = new MemoryStore();
+    const first = fixedStorage(store).load();
+    expect(first.nickname).not.toBe(DEFAULT_NICKNAME);
+    expect(first.nickname).toBe(randomNickname(firstWords));
+    expect(isPlayerId(first.id)).toBe(true);
+    expect(readProfile(store.getItem(PROFILE_KEY)).value).toEqual(first);
+    expect(fixedStorage(new MemoryStore()).load().id).not.toBe(first.id);
+  });
+
+  it('renames a saved "Player" once, keeps a chosen name, and never renames after that', () => {
+    const store = new MemoryStore();
+    store.setItem(PROFILE_KEY, JSON.stringify({ version: 1, nickname: 'Player', avatar: 'fox', country: 'RO' }));
+    const upgraded = fixedStorage(store).load();
+    expect(upgraded).toMatchObject({ nickname: randomNickname(firstWords), avatar: 'fox', country: 'RO' });
+    expect(isPlayerId(upgraded.id)).toBe(true);
+
+    const chosen = new MemoryStore();
+    chosen.setItem(PROFILE_KEY, JSON.stringify({ version: 1, nickname: 'Ada' }));
+    expect(fixedStorage(chosen).load().nickname).toBe('Ada');
+
+    // A player with an id who types "Player" themselves keeps it.
+    fixedStorage(store).save(withNickname(upgraded, 'Player'));
+    expect(fixedStorage(store).load()).toEqual({ ...upgraded, nickname: 'Player' });
+    expect(withIdentity(upgraded)).toBe(upgraded);
   });
 
   it('backs up corrupted profiles and never overwrites newer ones', () => {
     const store = new MemoryStore();
     store.setItem(PROFILE_KEY, '{nope');
-    expect(new ProfileStorage(store).load()).toEqual(createProfile());
+    expect(fixedStorage(store).load()).toMatchObject({ nickname: randomNickname(firstWords), avatar: DEFAULT_AVATAR, country: null });
     expect(store.getItem(`${PROFILE_KEY}.backup`)).toBe('{nope');
 
     const future = JSON.stringify({ version: 9, nickname: 'Future' });
@@ -131,10 +175,43 @@ describe('profile storage', () => {
     expect(store.getItem(PROFILE_KEY)).toBe(future);
   });
 
-  it('works without storage', () => {
-    const storage = new ProfileStorage(null);
-    expect(storage.load()).toEqual(createProfile());
+  it('works without storage: an identity for this session only', () => {
+    const storage = fixedStorage(null);
+    const profile = storage.load();
+    expect(isPlayerId(profile.id)).toBe(true);
+    expect(profile.nickname).not.toBe(DEFAULT_NICKNAME);
     expect(storage.save(createProfile())).toBe(false);
+  });
+});
+
+describe('player identity', () => {
+  it('random nicknames always fit the nickname rules', () => {
+    const names = [...NAME_ADJECTIVES.flatMap((a) => NAME_NOUNS.map((n) => `${a} ${n}`)), ...SPECIAL_NAMES];
+    for (const name of names) expect(validateNickname(name)).toEqual({ ok: true, value: name });
+    expect(names).not.toContain(DEFAULT_NICKNAME);
+    expect(new Set(NAME_ADJECTIVES).size).toBe(NAME_ADJECTIVES.length);
+    expect(new Set(NAME_NOUNS).size).toBe(NAME_NOUNS.length);
+    expect(NAME_ADJECTIVES.length * NAME_NOUNS.length).toBeGreaterThanOrEqual(1500);
+  });
+
+  it('picks every word and the special names, at about the planned share', () => {
+    let seed = 1;
+    const lcg = () => ((seed = (seed * 1103515245 + 12345) % 2 ** 31) / 2 ** 31);
+    const names = Array.from({ length: 20_000 }, () => randomNickname(lcg));
+    const special = names.filter((n) => SPECIAL_NAMES.includes(n)).length / names.length;
+    expect(special).toBeGreaterThan(SPECIAL_NAME_SHARE * 0.8);
+    expect(special).toBeLessThan(SPECIAL_NAME_SHARE * 1.2);
+    for (const word of [...NAME_ADJECTIVES, ...NAME_NOUNS]) expect(names.some((n) => n.split(' ').includes(word))).toBe(true);
+    expect(randomNickname(() => 0.9999999)).toBe(`${NAME_ADJECTIVES.at(-1)} ${NAME_NOUNS.at(-1)}`); // never out of range
+  });
+
+  it('player ids are version 4 UUIDs, unique across many players', () => {
+    expect(newPlayerId(() => new Uint8Array(16))).toBe('00000000-0000-4000-8000-000000000000');
+    expect(newPlayerId(() => new Uint8Array(16).fill(255))).toBe('ffffffff-ffff-4fff-bfff-ffffffffffff');
+    const ids = Array.from({ length: 10_000 }, () => newPlayerId());
+    expect(ids.every(isPlayerId)).toBe(true);
+    expect(new Set(ids).size).toBe(ids.length);
+    for (const bad of ['', 'Player', 'ffffffff-ffff-1fff-bfff-ffffffffffff', 'FFFFFFFF-FFFF-4FFF-BFFF-FFFFFFFFFFFF', 42, null]) expect(isPlayerId(bad)).toBe(false);
   });
 });
 

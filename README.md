@@ -323,7 +323,9 @@ Only level 1 is unlocked at first. Completing a level unlocks the next one. You 
 
 Everything is local: no account, no backend, nothing leaves the device.
 
-- **Nickname:** "Player" by default, editable on the Profile screen. Up to 16 characters (an emoji counts as one). Whitespace is trimmed and collapsed. Control and invisible formatting characters are removed, and an empty name is refused with a message. Names are always rendered as plain text, so markup can't be injected.
+- **Random starting nickname:** on first launch every player gets a fun random name, saved at once and editable on the Profile screen like any name (`src/profile/identity.ts`). Usually two words from hand-picked lists (40 × 46, over 1,800 combinations, such as *Turbo Otter*, *Glitchy Waffle* or *Quantum Noodle*); about 1 in 10 players gets a rare game-themed name such as *Arrow Whisperer* or *Sir Taps-a-Lot*. A test checks that every combination fits the nickname rules below. Players from before this change who still had the old default "Player" get a random name once; a name they chose is kept.
+- **Player id:** each profile also gets a hidden, permanent **player id**: a random version 4 UUID (122 random bits, from `crypto.getRandomValues`, which also works on the dev server opened over the LAN). Two players practically never share one, even with millions of players, so **future features should identify players by this id, never by nickname**. Nicknames are *not* unique: with thousands of players some random names repeat, and anyone can type any name. Unique names can only be enforced by a server, once online features exist (for example by reserving names, or adding a short tag like "Turbo Otter #4821").
+- **Nickname rules:** editable on the Profile screen. Up to 16 characters (an emoji counts as one). Whitespace is trimmed and collapsed. Control and invisible formatting characters are removed, and an empty name is refused with a message. Names are always rendered as plain text, so markup can't be injected.
 - **Avatars:** 10 original code-drawn neon avatars: Neon Bot, Cyber Fox, Star Walker, Energy Orb, Grid Runner, Holo Cat, Cyber Wyrm, AI Core, Glitch and Escape Artist. They are inline SVG in `src/profile/avatars.ts`, with no image files or third-party art. The selected avatar appears on Home and Profile.
 - **Country:** optional. "Prefer not to say" is the default, and the game never asks for or infers your location. A searchable list of ISO 3166-1 alpha-2 codes; only the code is stored. Names come from the browser (`Intl.DisplayNames`). Flags use emoji where the platform supports them; on Windows they show as two letters.
 - **Rank:** a cosmetic title derived from total stars: Rookie, Runner (5★), Tracer (12★), Navigator (20★), Grid Master (27★).
@@ -355,7 +357,7 @@ Eight separate keys in `localStorage`, each versioned and loaded with the same s
 | Key | Contents | Version |
 | --- | -------- | ------- |
 | `neon-escape.progress` | Unlocks and per-level records: best moves, stars, mistakes, time and layout revision | 4 |
-| `neon-escape.profile` | Nickname, avatar, country | 1 |
+| `neon-escape.profile` | Player id, nickname, avatar, country | 1 |
 | `neon-escape.stats` | Lifetime counters and `trackedSince` | 1 |
 | `neon-escape.settings` | Theme, motion, effects, audio, vibration and gameplay options (see "Settings") | 1 |
 | `neon-escape.rewards` | Daily check-in, Energy Credits wallet, achievements (see "How rewards are saved") | 1 |
@@ -1027,6 +1029,7 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     │
     ├── profile/           Local player identity and lifetime statistics
     │   ├── Profile.ts         Nickname rules, avatar/country choice, rank, profile storage
+    │   ├── identity.ts        Random starting nicknames and the unique player id
     │   ├── avatars.ts         10 original inline-SVG avatars
     │   ├── countries.ts       ISO 3166-1 alpha-2 list, names via Intl, flag emoji, search
     │   └── Stats.ts           Lifetime counters per attempt, stats storage
