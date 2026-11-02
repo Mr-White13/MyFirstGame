@@ -1336,9 +1336,17 @@ body.is-navigating #app {
 }
 
 .icon-btn--small {
+  position: relative; /* anchors the touch area; .view-reset (Reset zoom) stays absolute */
   width: 36px;
   height: 36px;
   border-radius: var(--r-sm);
+}
+
+/* The 36 px buttons (chapter arrows, Reset zoom, edit name, dialog close) keep a 44 px touch target. */
+.icon-btn--small::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
 }
 
 .icon-btn--small .icon {

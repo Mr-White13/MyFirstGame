@@ -145,6 +145,11 @@ export class ArrowView {
     this.redraw();
   }
 
+  /** The resting tip (head) of the arrow, in world pixels. */
+  get tip(): Point {
+    return this.restPath[this.restPath.length - 1] ?? { x: 0, y: 0 };
+  }
+
   /** A ring at the arrow's tip, marking where a Hint points (decoration: none with reduced motion or effects off). */
   pulseRing(): void {
     const tip = this.restPath[this.restPath.length - 1];

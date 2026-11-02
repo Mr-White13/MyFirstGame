@@ -62,6 +62,8 @@ const BONUS_STAGGER_MS = 90;
 const INTRO_SPREAD_MS = 280;
 /** While a Hint waits to be tapped, a ring marks its arrow's tip this often. */
 const HINT_RING_MS = 1400;
+/** How long a zoomed view takes to glide to a hinted arrow that was off screen. */
+const HINT_PAN_MS = 380;
 
 /**
  * Glue between input, game logic and rendering. All rules live in GameState;
@@ -116,6 +118,8 @@ export class GameScene extends Phaser.Scene {
   private revealTimer?: Phaser.Time.TimerEvent;
   /** Repeats the ring at the hinted arrow's tip while the hint waits. */
   private hintRingTimer?: Phaser.Time.TimerEvent;
+  /** Glides a zoomed view to a hinted arrow that was off screen. */
+  private panTween?: Phaser.Tweens.Tween;
   private readonly viewport = new BoardViewport();
   /** A shaped level's cells ("row,col"): only they show board dots. Null for rectangular boards. */
   private outline: ReadonlySet<string> | null = null;
@@ -149,6 +153,7 @@ export class GameScene extends Phaser.Scene {
     this.input.on(Phaser.Input.Events.GAME_OUT, () => this.cancelGestures());
     this.input.on(Phaser.Input.Events.POINTER_WHEEL, (p: Phaser.Input.Pointer, _over: unknown, _dx: number, dy: number) => {
       if (dy === 0 || !this.viewport.zoomable) return;
+      this.stopPan();
       this.viewport.zoomAt({ x: p.x, y: p.y }, this.viewport.zoom * Math.pow(WHEEL_STEP, -Math.sign(dy)));
       this.applyView();
     });
@@ -204,6 +209,7 @@ export class GameScene extends Phaser.Scene {
   resetView(): void {
     this.cancelGestures();
     if (!this.board) return;
+    this.stopPan();
     this.viewport.reset();
     this.applyView();
   }
@@ -231,6 +237,7 @@ export class GameScene extends Phaser.Scene {
     this.hinted = arrowId;
     view.setAssist('hint');
     view.pulseRing();
+    this.bringIntoView(view.tip);
     this.hintRingTimer?.remove();
     this.hintRingTimer = this.time.addEvent({
       delay: HINT_RING_MS,
@@ -242,6 +249,40 @@ export class GameScene extends Phaser.Scene {
       },
     });
     return true;
+  }
+
+  /**
+   * Zoomed in and the point is off screen (or at the very edge): glides the
+   * view so it is centred, keeping the zoom. Instant with reduced motion; any
+   * touch on the board cancels the glide, so it never fights the player.
+   */
+  private bringIntoView(p: { x: number; y: number }): void {
+    if (!this.viewport.zoomed || this.viewport.isVisible(p, this.layout.cellSize)) return;
+    const from = this.viewport.scroll;
+    const to = this.viewport.scrollToCenter(p);
+    this.panTween?.remove();
+    if (reducedMotion()) {
+      this.viewport.scrollTo(to.x, to.y);
+      this.applyView();
+      return;
+    }
+    this.panTween = this.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: HINT_PAN_MS,
+      ease: 'Cubic.easeInOut',
+      onUpdate: (tween) => {
+        const t = tween.getValue() ?? 1;
+        this.viewport.scrollTo(from.x + (to.x - from.x) * t, from.y + (to.y - from.y) * t);
+        this.applyView();
+      },
+      onComplete: () => (this.panTween = undefined),
+    });
+  }
+
+  private stopPan(): void {
+    this.panTween?.remove();
+    this.panTween = undefined;
   }
 
   private stopHintRing(): void {
@@ -341,6 +382,7 @@ export class GameScene extends Phaser.Scene {
 
   /** Applies what the gesture tracker made of the pointer events. Coordinates are canvas (screen) pixels. */
   private handleGestures(events: readonly GestureEvent[]): void {
+    if (events.length > 0) this.stopPan(); // the player takes over the view
     for (const e of events) {
       switch (e.type) {
         case 'press':
@@ -602,6 +644,7 @@ export class GameScene extends Phaser.Scene {
 
   /** Sets the zoom limits for the current board and fits it. */
   private configureView(): void {
+    this.stopPan();
     const l = this.layout;
     const slot: Rect = { x: l.x, y: l.y, width: l.width, height: l.height };
     this.viewport.configure({ x: 0, y: 0, width: this.scale.width, height: this.scale.height }, slot, maxZoomFor(l.cellSize, l.pxPerCss), this.zoomArea(slot));

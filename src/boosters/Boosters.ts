@@ -31,6 +31,13 @@ export const BOOSTERS: Readonly<Record<BoosterId, BoosterDefinition>> = {
   heart: { id: 'heart', name: 'Extra Heart', cost: 80, description: 'gives back one lost heart' },
 };
 
+/**
+ * Boosters (and their first-time tip) start at this level: Levels 1–3 are
+ * the tutorial, where the player first learns how arrows, hearts and red
+ * arrows work, without a toolbar of extras.
+ */
+export const BOOSTERS_FROM_LEVEL = 4;
+
 /** How long Reveal shows the free arrows. */
 export const REVEAL_MS = 3000;
 /** After an activation, further taps on any booster are ignored this long: no double spending from rapid taps. */

@@ -101,6 +101,36 @@ export class BoardViewport {
     this.clamp();
   }
 
+  /** True if the world point is on screen, at least `margin` world pixels inside the visible part of the board. */
+  isVisible(p: Point, margin = 0): boolean {
+    const v = this.view;
+    const left = this.sx + margin;
+    const top = this.sy + margin;
+    const right = this.sx + v.width / this.z - margin;
+    const bottom = this.sy + v.height / this.z - margin;
+    return p.x >= left && p.x <= right && p.y >= top && p.y <= bottom;
+  }
+
+  /** The scroll that would put the world point in the middle of the zoomed view (kept on the board). Unchanged when not zoomed. */
+  scrollToCenter(p: Point): Point {
+    if (!this.zoomed) return this.scroll;
+    const [x, y] = [this.sx, this.sy];
+    this.sx = p.x - this.area.width / (2 * this.z);
+    this.sy = p.y - this.area.height / (2 * this.z);
+    this.clamp();
+    const target = { x: this.sx, y: this.sy };
+    [this.sx, this.sy] = [x, y];
+    return target;
+  }
+
+  /** Scrolls the zoomed view (kept on the board). Does nothing when not zoomed. */
+  scrollTo(x: number, y: number): void {
+    if (!this.zoomed) return;
+    this.sx = x;
+    this.sy = y;
+    this.clamp();
+  }
+
   /** Keeps the view on the board: no scrolling past its edges, and centred where it doesn't fill the area. */
   private clamp(): void {
     const s = this.slot;
