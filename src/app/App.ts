@@ -38,10 +38,11 @@ import type { AchievementsScreen } from '../ui/AchievementsScreen';
 import type { DailyDialog } from '../ui/DailyDialog';
 import type { Screens } from '../ui/Screens';
 import type { Toast } from '../ui/Toast';
-import type { BoosterId } from '../boosters/Boosters';
+import { BOOSTERS_FROM_LEVEL, type BoosterId } from '../boosters/Boosters';
 import type { BoosterBar } from '../ui/BoosterBar';
 import { AttemptTracker, type AttemptSummary } from './AttemptTracker';
 import { BOOSTER_TIP, BoosterController } from './BoosterController';
+import { TIP_MS, TIP_TEXT, TIPS_UNTIL_COMPLETED, tipForEvent, type TipId } from './tips';
 import { routeBack, type BackLayer } from './backLayers';
 import { LeagueController } from './LeagueController';
 import { RecordsKeeper } from './RecordsKeeper';
@@ -159,7 +160,12 @@ export class App {
       attempt: this.attempt,
       bar: parts.boosterBar,
       // Challenges are played without boosters; test plays get them free (never real credits).
-      mode: () => ({ challenge: this.attemptIsChallenge, testPlay: this.attemptIsTestPlay }),
+      // Levels 1–3 (the tutorial) have no booster row.
+      mode: () => ({
+        challenge: this.attemptIsChallenge,
+        testPlay: this.attemptIsTestPlay,
+        tutorial: !this.attemptIsChallenge && parts.state.levelId < BOOSTERS_FROM_LEVEL,
+      }),
       notify: (message) => parts.toast.show(message, 2600),
       onUsed: () => parts.feedback({ type: 'booster' }),
       later: (fn, ms) => window.setTimeout(fn, ms),
@@ -387,6 +393,7 @@ export class App {
       // Only now is the level interactive: loading and the screen transition don't count.
       this.attempt.interactive();
       this.startClock();
+      if (levelId === 1) this.showTip('tap');
       this.introduceBoosters();
     });
   }
@@ -398,14 +405,33 @@ export class App {
   }
 
   /**
-   * Once ever, from Level 2 on (Level 1 stays a clean tutorial): a short,
-   * self-dismissing tip on what the boosters do and cost.
+   * Once ever, when boosters first appear (Level 4 on; Levels 1–3 are the
+   * tutorial): a short, self-dismissing tip on what the boosters cost.
    */
   private introduceBoosters(): void {
     const { rewards, dayClock, toast, state } = this.parts;
-    if (this.challenge || state.levelId < 2 || rewards.current.boosters.introduced) return;
+    if (this.challenge || state.levelId < BOOSTERS_FROM_LEVEL || rewards.current.boosters.introduced) return;
     toast.show(BOOSTER_TIP, 5000);
     rewards.markBoostersIntroduced(dayClock.today);
+  }
+
+  /** A game event from the board (release, collision, chain, bonus): the first of each kind may explain a rule. */
+  handleGameEvent(event: FeedbackEvent): void {
+    const tip = tipForEvent(event);
+    if (tip) this.showTip(tip);
+  }
+
+  /**
+   * A one-time rule tip, as a toast that never blocks play. Shown once ever,
+   * only during a level, and only to players still learning (fewer than
+   * TIPS_UNTIL_COMPLETED levels completed, so existing players aren't interrupted).
+   */
+  private showTip(id: TipId): void {
+    const { rewards, dayClock, toast, screens, levels } = this.parts;
+    if (screens.active !== 'game' || rewards.current.tips.includes(id)) return;
+    if (completedCount(this.records.progress, levels.length) >= TIPS_UNTIL_COMPLETED) return;
+    toast.show(TIP_TEXT[id], TIP_MS);
+    rewards.markTipSeen(dayClock.today, id);
   }
 
   /** Back from gameplay, asking first if an unfinished attempt would be lost. */

@@ -1050,7 +1050,8 @@
      "equipped": {
       "frame": null
      }
-    }
+    },
+    "tips": []
    },
    "status": "empty"
   },
@@ -1086,7 +1087,8 @@
      "equipped": {
       "frame": null
      }
-    }
+    },
+    "tips": []
    },
    "status": "corrupt"
   },
@@ -1122,7 +1124,8 @@
      "equipped": {
       "frame": null
      }
-    }
+    },
+    "tips": []
    },
    "status": "corrupt"
   },
@@ -1158,7 +1161,8 @@
      "equipped": {
       "frame": null
      }
-    }
+    },
+    "tips": []
    },
    "status": "corrupt"
   },
@@ -1194,7 +1198,8 @@
      "equipped": {
       "frame": null
      }
-    }
+    },
+    "tips": []
    },
    "status": "corrupt"
   },
@@ -1230,7 +1235,8 @@
      "equipped": {
       "frame": null
      }
-    }
+    },
+    "tips": []
    },
    "status": "corrupt"
   },
@@ -1266,7 +1272,8 @@
      "equipped": {
       "frame": null
      }
-    }
+    },
+    "tips": []
    },
    "status": "corrupt"
   },
@@ -1302,7 +1309,8 @@
      "equipped": {
       "frame": null
      }
-    }
+    },
+    "tips": []
    },
    "status": "corrupt"
   },
@@ -1338,7 +1346,8 @@
      "equipped": {
       "frame": null
      }
-    }
+    },
+    "tips": []
    },
    "status": "corrupt"
   },
@@ -1374,7 +1383,8 @@
      "equipped": {
       "frame": null
      }
-    }
+    },
+    "tips": []
    },
    "status": "corrupt"
   },
@@ -1410,7 +1420,8 @@
      "equipped": {
       "frame": null
      }
-    }
+    },
+    "tips": []
    },
    "status": "newer"
   },
@@ -1446,7 +1457,8 @@
      "equipped": {
       "frame": null
      }
-    }
+    },
+    "tips": []
    },
    "status": "corrupt"
   },
@@ -1482,7 +1494,8 @@
      "equipped": {
       "frame": null
      }
-    }
+    },
+    "tips": []
    },
    "status": "current"
   },
@@ -1518,7 +1531,8 @@
      "equipped": {
       "frame": null
      }
-    }
+    },
+    "tips": []
    },
    "status": "newer"
   },
@@ -1554,7 +1568,8 @@
      "equipped": {
       "frame": null
      }
-    }
+    },
+    "tips": []
    },
    "status": "newer"
   },
@@ -1602,7 +1617,8 @@
      "equipped": {
       "frame": null
      }
-    }
+    },
+    "tips": []
    },
    "status": "current"
   },
@@ -1643,7 +1659,8 @@
      "equipped": {
       "frame": null
      }
-    }
+    },
+    "tips": []
    },
    "status": "current"
   },
@@ -1682,7 +1699,8 @@
      "equipped": {
       "frame": null
      }
-    }
+    },
+    "tips": []
    },
    "status": "current"
   }

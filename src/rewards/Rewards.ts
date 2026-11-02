@@ -15,6 +15,7 @@ import {
 } from './Achievements';
 import { createWallet, earn, readWallet, spend, type Transaction, type Wallet } from './Wallet';
 import { BOOSTERS, countBooster, NO_BOOSTERS, type BoosterCounts, type BoosterId } from '../boosters/Boosters';
+import { isTipId, type TipId } from '../app/tips';
 import {
   canEquip,
   cosmeticById,
@@ -53,6 +54,8 @@ export interface RewardsRecord {
    * within version 1: older saves read as nothing owned, nothing equipped.
    */
   readonly cosmetics: CosmeticsState;
+  /** One-time rule tips already shown (see app/tips.ts). Added within version 1: older saves have none. */
+  readonly tips: readonly TipId[];
 }
 
 /** The result of a Shop purchase. On failure nothing was charged or changed. */
@@ -87,6 +90,7 @@ export function createRewards(): RewardsRecord {
     bestChain: 0,
     boosters: { used: NO_BOOSTERS, introduced: false },
     cosmetics: createCosmetics(),
+    tips: [],
   };
 }
 
@@ -117,6 +121,7 @@ export function readRewards(raw: string | null): { value: RewardsRecord; status:
       bestChain,
       boosters: readBoosters(data.boosters),
       cosmetics: readCosmetics(data.cosmetics, applied),
+      tips: Array.isArray(data.tips) ? [...new Set(data.tips.filter(isTipId))] : [],
     },
     status: 'current',
   };
@@ -270,6 +275,12 @@ export class Rewards {
     if (cosmetics.equipped[slot] === id) return true;
     this.commit({ ...this.record, cosmetics: { ...cosmetics, equipped: { ...cosmetics.equipped, [slot]: id } } }, today);
     return true;
+  }
+
+  /** A one-time rule tip has been shown; it never shows again. */
+  markTipSeen(today: DayKey, id: TipId): void {
+    if (this.record.tips.includes(id)) return;
+    this.commit({ ...this.record, tips: [...this.record.tips, id] }, today);
   }
 
   /** The first-time booster tip has been shown; it never shows again. */

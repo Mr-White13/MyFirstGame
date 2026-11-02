@@ -8,7 +8,7 @@ import { createStats, type PlayerStats } from '../profile/Stats';
 import { boosterTransactionId, readRewards, REWARDS_KEY, Rewards, serializeRewards, createRewards } from '../rewards/Rewards';
 import { createWallet, earn, spend } from '../rewards/Wallet';
 import { MemoryStore } from '../testing/memoryStore';
-import { BOOSTER_LOCK_MS, BOOSTERS, checkBooster, hintTarget, REVEAL_MS, type BoosterContext, type BoosterId } from './Boosters';
+import { BOOSTER_LOCK_MS, BOOSTERS, BOOSTERS_FROM_LEVEL, checkBooster, hintTarget, REVEAL_MS, type BoosterContext, type BoosterId } from './Boosters';
 
 const DAY = '2026-11-02';
 const level = (id: number) => LEVELS[id - 1];
@@ -416,5 +416,33 @@ describe('booster spending and saved data', () => {
     expect(rewards.current.boosters.introduced).toBe(false);
     rewards.markBoostersIntroduced(DAY);
     expect(make().current.boosters.introduced).toBe(true);
+  });
+});
+
+describe('boosters in the tutorial levels', () => {
+  it('Levels 1–3 hide the toolbar and ignore booster taps without charging', () => {
+    const { controller, rewards, bar, mode } = setup({ credits: 500, levelId: 2 });
+    (mode as { tutorial?: boolean }).tutorial = true;
+    expect(controller.use('hint')).toEqual({ used: false, reason: 'not-playing' });
+    expect(rewards.credits).toBe(500);
+    controller.render();
+    expect(bar.render).toHaveBeenLastCalledWith(expect.objectContaining({ visible: false }));
+    expect(BOOSTERS_FROM_LEVEL).toBe(4);
+  });
+});
+
+describe('rule tips (saved data)', () => {
+  it('a tip shown is remembered across reloads; unknown or repeated ids in a save are dropped', () => {
+    const store = new MemoryStore();
+    const make = () => new Rewards({ levels: LEVELS, records: () => ({ progress: createProgress(), stats: createStats() }) }, store);
+    const rewards = make();
+    expect(rewards.current.tips).toEqual([]);
+    rewards.markTipSeen(DAY, 'blocked');
+    rewards.markTipSeen(DAY, 'blocked');
+    expect(make().current.tips).toEqual(['blocked']);
+    const raw = { ...JSON.parse(store.getItem(REWARDS_KEY)!), tips: ['tap', 'tap', 'sing-a-song', 7, 'chain'] };
+    expect(readRewards(JSON.stringify(raw)).value.tips).toEqual(['tap', 'chain']);
+    const { tips: _, ...older } = raw;
+    expect(readRewards(JSON.stringify(older)).value.tips).toEqual([]); // saves from before tips: none shown yet
   });
 });

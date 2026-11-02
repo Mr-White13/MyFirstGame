@@ -230,6 +230,30 @@ describe('zoom and pan transform', () => {
     v.panBy(100, 100);
     expect(v.scroll).toEqual({ x: 0, y: 0 });
   });
+
+  it('can bring an off-screen point (a hinted arrow) to the middle of a zoomed view, staying on the board', () => {
+    const v = make();
+    expect(v.scrollToCenter({ x: 700, y: 1000 })).toEqual(v.scroll); // fitted: nothing to scroll
+    v.zoomAt({ x: 100, y: 450 }, 3); // zoomed into the top-left corner of the board
+    const far = { x: 700, y: 1000 }; // bottom-right of the board
+    expect(v.isVisible(far)).toBe(false);
+    const before = v.scroll;
+    const target = v.scrollToCenter(far);
+    expect(v.scroll).toEqual(before); // only computes the target
+    v.scrollTo(target.x, target.y);
+    expect(v.isVisible(far)).toBe(true);
+    const screen = v.worldToScreen(far);
+    expect(screen.x).toBeGreaterThan(v.view.x);
+    expect(screen.x).toBeLessThan(v.view.x + v.view.width);
+    // A point at the board's very edge can't be centred, but the view stays on the board and shows it.
+    const corner = { x: 749, y: 1099 };
+    const t = v.scrollToCenter(corner);
+    v.scrollTo(t.x, t.y);
+    expect(v.isVisible(corner)).toBe(true);
+    expect(v.scroll.x + v.view.width / v.zoom).toBeLessThanOrEqual(slot.x + slot.width + 1e-6);
+    // A margin counts points near the edge as not quite visible.
+    expect(v.isVisible(v.screenToWorld({ x: v.view.x + 2, y: v.view.y + v.view.height / 2 }), 10)).toBe(false);
+  });
 });
 
 describe('gestures', () => {

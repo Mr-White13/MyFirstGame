@@ -88,6 +88,8 @@ interface Options {
   boosterTipSeen?: boolean;
   /** Energy Credits in the wallet (default 100). */
   credits?: number;
+  /** Whether the one-time rule tips were already shown (default true, so older tests see none). */
+  tipsSeen?: boolean;
 }
 
 function createHarness(options: Options = {}) {
@@ -285,6 +287,11 @@ function createHarness(options: Options = {}) {
       daily: createDaily(),
       boosters: { used: { hint: 0, reveal: 0, heart: 0 }, introduced: options.boosterTipSeen ?? true },
       cosmetics: { owned: [] as string[], equipped: { frame: null as string | null } },
+      tips: options.tipsSeen === false ? ([] as string[]) : ['tap', 'blocked', 'chain', 'streak'],
+    },
+    markTipSeen(today: string, id: string) {
+      rec('rewards.markTipSeen', today, id);
+      this.current = { ...this.current, tips: [...this.current.tips, id] };
     },
     credits: options.credits ?? 100,
     spendBooster: (today: string, id: string) => (rec('rewards.spendBooster', today, id), true),
@@ -1221,29 +1228,45 @@ describe('background and resume', () => {
 describe('boosters', () => {
   const freeArrow = { id: 'a1', direction: 'right', cells: [{ row: 0, col: 0 }] } as ArrowData;
 
-  it('shows the first-time tip once, from Level 2 on (not on Level 1, not in a challenge)', async () => {
+  it('shows the first-time tip once, from Level 4 on (not on the tutorial Levels 1–3, not in a challenge)', async () => {
     const h = createHarness({ progress: progressThrough(10), boosterTipSeen: false, challenges: [CHALLENGE] });
     await enterLevel(h, 1);
+    for (const id of [2, 3]) {
+      await h.app.openLevel(id);
+      await flush();
+    }
     expect(h.rewards.current.boosters.introduced).toBe(false);
     await h.app.openChallenge(1);
     await flush();
     expect(h.rewards.current.boosters.introduced).toBe(false);
     h.clear();
-    await h.app.openLevel(2);
+    await h.app.openLevel(4);
     await flush();
     expect(h.effects().filter((e) => e.startsWith('toast.show') || e.startsWith('rewards.mark'))).toEqual([
       'toast.show Stuck? Boosters: Hint 20 · Reveal 40 · Extra Heart 80 credits 5000',
       `rewards.markBoostersIntroduced ${TODAY}`,
     ]);
     h.clear();
-    await h.app.openLevel(3);
+    await h.app.openLevel(5);
     await flush();
     expect(h.effects().filter((e) => e.startsWith('toast.show'))).toEqual([]);
   });
 
+  it('the tutorial Levels 1–3 have no booster row, and booster taps there do nothing', async () => {
+    const h = createHarness({ progress: progressThrough(3) });
+    await enterLevel(h, 3);
+    expect(h.boosterViews.at(-1)).toMatchObject({ visible: false });
+    h.state.escapableArrows = () => [freeArrow];
+    h.app.useBooster('hint');
+    expect(h.effects()).toEqual([]);
+    await h.app.openLevel(4);
+    await flush();
+    expect(h.boosterViews.at(-1)).toMatchObject({ visible: true });
+  });
+
   it('a Hint on a level the player really unlocked is paid from the wallet, then shown', async () => {
-    const h = createHarness();
-    await enterLevel(h, 1);
+    const h = createHarness({ progress: progressThrough(3) });
+    await enterLevel(h, 4);
     h.state.escapableArrows = () => [freeArrow];
     h.state.getArrows = () => [freeArrow];
     h.app.useBooster('hint');
@@ -1373,5 +1396,46 @@ describe('shop', () => {
     const h = await enterShop({ progress: progressThrough(3) });
     await h.app.continueFromShop();
     expect(h.effects()).toContain('scene.loadLevel 4');
+  });
+});
+
+describe('rule tips', () => {
+  it('Level 1 explains tapping once; the first lost heart, chain and streak bonus each explain their rule once', async () => {
+    const h = createHarness({ tipsSeen: false });
+    await enterLevel(h, 1);
+    h.clear();
+    await h.app.openLevel(1); // reopened: no tap tip again
+    await flush();
+    expect(h.effects().filter((e) => e.startsWith('toast.show'))).toEqual([]);
+    expect(h.rewards.current.tips).toEqual(['tap']);
+    h.clear();
+    h.app.handleGameEvent({ type: 'blocked', lifeLost: false }); // a free nudge teaches nothing
+    h.app.handleGameEvent({ type: 'release' });
+    h.app.handleGameEvent({ type: 'blocked', lifeLost: true });
+    h.app.handleGameEvent({ type: 'chain', index: 1 }); // only the first release of a chain counts
+    h.app.handleGameEvent({ type: 'chain', index: 0 });
+    h.app.handleGameEvent({ type: 'bonus', index: 0 });
+    h.app.handleGameEvent({ type: 'blocked', lifeLost: true }); // already explained
+    expect(h.effects().filter((e) => e.startsWith('toast.show'))).toEqual([
+      'toast.show Blocked! That cost a heart. The arrow turns red and leaves by itself once its path is clear. 4500',
+      'toast.show Chain reaction: freeing a path released a red arrow, at no cost. 4500',
+      'toast.show Streak bonus! 5 quick clears in a row sent 2 free arrows off the board. 4500',
+    ]);
+    expect(h.rewards.current.tips).toEqual(['tap', 'blocked', 'chain', 'streak']);
+  });
+
+  it('players who already completed 5 levels get no tips', async () => {
+    const h = createHarness({ tipsSeen: false, progress: progressThrough(5) });
+    await enterLevel(h, 1);
+    h.app.handleGameEvent({ type: 'blocked', lifeLost: true });
+    expect(h.effects().filter((e) => e.startsWith('toast.show') || e.startsWith('rewards.markTip'))).toEqual([]);
+  });
+
+  it('tips only show during a level', async () => {
+    const h = createHarness({ tipsSeen: false });
+    h.app.start();
+    h.clear();
+    h.app.handleGameEvent({ type: 'blocked', lifeLost: true });
+    expect(h.effects()).toEqual([]);
   });
 });

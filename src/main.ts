@@ -86,7 +86,10 @@ const scene = new GameScene(state, {
   onCelebrationEnd: () => app?.handleCelebrationEnd(),
   onLevelLost: () => app?.handleLevelLost(),
   onLevelFailed: () => app?.handleLevelFailed(),
-  onFeedback: emit,
+  onFeedback: (event) => {
+    emit(event);
+    app?.handleGameEvent(event); // one-time rule tips (first lost heart, chain, streak bonus)
+  },
   onViewChange: (zoomed, zoomable) => {
     hud.setZoomed(zoomed);
     if (zoomable) app?.zoomHint();

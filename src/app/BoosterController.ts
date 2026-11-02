@@ -27,8 +27,8 @@ export interface BoosterDeps {
   /** The open attempt: booster uses are counted per attempt. */
   readonly attempt: { readonly isOpen: boolean; useBooster(id: BoosterId): void };
   readonly bar: { render(view: BoosterBarView): void; flash(id: BoosterId): void };
-  /** The current run: challenges have no boosters, test plays get them free. */
-  readonly mode: () => { readonly challenge: boolean; readonly testPlay: boolean };
+  /** The current run: challenges and the tutorial levels have no boosters, test plays get them free. */
+  readonly mode: () => { readonly challenge: boolean; readonly testPlay: boolean; readonly tutorial?: boolean };
   /** A short message for the player (the toast). */
   readonly notify: (message: string) => void;
   /** Sound / haptics when a booster works. */
@@ -62,6 +62,7 @@ export class BoosterController {
 
   use(id: BoosterId): BoosterOutcome {
     const { state, scene, wallet, attempt, mode } = this.deps;
+    if (mode().tutorial) return { used: false, reason: 'not-playing' }; // no toolbar there: nothing to explain
     const check = checkBooster(id, this.context());
     if (!check.ok) return this.refuse(id, check.reason);
 
@@ -98,10 +99,10 @@ export class BoosterController {
 
   /** Refreshes the toolbar: balance, costs, and which boosters would work now. */
   render(): void {
-    const { challenge, testPlay } = this.deps.mode();
+    const { challenge, testPlay, tutorial } = this.deps.mode();
     const ctx = { ...this.context(), locked: false };
     const available = Object.fromEntries(BOOSTER_IDS.map((id) => [id, checkBooster(id, ctx).ok])) as Record<BoosterId, boolean>;
-    this.deps.bar.render({ visible: !challenge, credits: this.deps.wallet.credits, free: testPlay, available });
+    this.deps.bar.render({ visible: !challenge && !tutorial, credits: this.deps.wallet.credits, free: testPlay, available });
   }
 
   private context(): BoosterContext {

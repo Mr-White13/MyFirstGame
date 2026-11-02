@@ -4,12 +4,19 @@ import { LEVELS } from '../levels';
 import { createStats } from '../profile/Stats';
 import { createProgress, isUnlocked, recordCompletion } from './Progress';
 import { ProgressStorage, STORAGE_KEY } from './ProgressStorage';
-import { canPlayLevel, isTestPlay, UNLOCK_ALL_LEVELS_FOR_TESTING } from './testUnlock';
+import { canPlayLevel, isTestPlay, testUnlockEnabled, UNLOCK_ALL_LEVELS_FOR_TESTING } from './testUnlock';
 
 describe('testing flag: all levels playable', () => {
   const fresh = createProgress();
 
-  it('is on in this build and opens every level (all 100)', () => {
+  it('is on only in development: a production build (every APK and release) never opens locked levels', () => {
+    expect(testUnlockEnabled({ DEV: false, PROD: true })).toBe(false);
+    expect(testUnlockEnabled({ DEV: true, PROD: true })).toBe(false);
+    expect(testUnlockEnabled({})).toBe(false);
+    expect(testUnlockEnabled({ DEV: true, PROD: false })).toBe(true);
+  });
+
+  it('is on in the test (development) build and opens every level (all 100)', () => {
     expect(UNLOCK_ALL_LEVELS_FOR_TESTING).toBe(true);
     for (const level of LEVELS) expect(canPlayLevel(fresh, level.id, LEVELS.length)).toBe(true);
     expect(canPlayLevel(fresh, 0, LEVELS.length)).toBe(false);

@@ -224,6 +224,17 @@ A new id is a different app on the phone: it installs next to the old one with e
 - **Blocked:** the arrow slides up to the arrow in its way, which flashes orange and gets knocked. It costs **one life**. The tapped arrow springs back and **stays red**.
 - Remove every arrow to complete the level. **Restart** resets the level at any time, even in the middle of a chain reaction.
 
+**Rule tips for new players** (`src/app/tips.ts`): short toasts, each shown **once ever**, at the moment a rule first matters. There's no blocking tutorial:
+
+| When | Tip |
+| --- | --- |
+| Opening Level 1 | Tap an arrow: it flies off the board if nothing is in its way. |
+| First heart lost | Blocked! That cost a heart. The arrow turns red and leaves by itself once its path is clear. |
+| First chain reaction | Chain reaction: freeing a path released a red arrow, at no cost. |
+| First streak bonus | Streak bonus! 5 quick clears in a row sent 2 free arrows off the board. |
+
+They show only during a level, and only to players who have completed fewer than 5 levels, so existing players aren't interrupted. Which tips were shown is saved as `tips` in `neon-escape.rewards` (added within version 1; older saves have none).
+
 ### Lives
 
 Every level starts with **three hearts**. Only the first blocked tap on an arrow costs a life:
@@ -315,7 +326,7 @@ Other screens:
 - **Escape** closes the top dialog or acts as Back on desktop.
 - Navigation is locked during transitions, so double taps can't open two screens.
 
-**Testing build: all levels open.** `UNLOCK_ALL_LEVELS_FOR_TESTING` in `src/progress/testUnlock.ts` is currently `true`, so every one of the 100 levels can be opened from Level select (a note says so, and levels you haven't really unlocked have a dashed outline). Such a level is a **test play**: its result is shown, with a "not saved" notice, but nothing is recorded: no completion, stars, best time, unlock, statistics or daily stats. Your real unlocks and records never change because of the flag. For a release, set it to `false`; nothing else needs to change.
+**Testing build: all levels open (development only).** `UNLOCK_ALL_LEVELS_FOR_TESTING` in `src/progress/testUnlock.ts` is on only in development (the Vite dev server and the tests) and **always off in a production build** (`npm run build`, so every APK and release), where the normal unlock rules apply; a test checks this (`testUnlockEnabled`). In development every one of the 100 levels can be opened from Level select (a note says so, and levels you haven't really unlocked have a dashed outline). Such a level is a **test play**: its result is shown, with a "not saved" notice, but nothing is recorded: no completion, stars, best time, unlock, statistics or daily stats. Your real unlocks and records never change because of the flag, and boosters in a test play are free without touching the real wallet.
 
 Only level 1 is unlocked at first. Completing a level unlocks the next one. You can replay any unlocked level, and replaying never locks anything again.
 
@@ -480,7 +491,7 @@ All audio goes through one `AudioManager` (`src/audio/`) with a **music bus** an
 - **Contrast:** a unit test checks that every arrow, error and success colour has at least 3:1 contrast with its board in every theme. Light-theme text and accents were darkened for readable contrast on white.
 - **Keyboard:** all Settings controls are native inputs. Tab moves between them, Space toggles switches, arrow keys change the segmented choices and sliders, and every control has a visible focus ring. Escape closes dialogs or goes back.
 - **Labels:** switches use `role="switch"` with their visible label, segmented controls are labelled radio groups with hints, sliders announce their percentage.
-- **Touch targets** are at least 44 px high (sliders have a 44 px hit area around a thinner track). "On" is shown by the knob's position and a check mark, and the selected theme by a check badge, not by colour alone.
+- **Touch targets** are at least 44 px (sliders have a 44 px hit area around a thinner track; the 36 px icon buttons such as chapter arrows, Reset zoom, edit name and dialog close, and the booster pills, have an invisible 44 px touch area around them). "On" is shown by the knob's position and a check mark, and the selected theme by a check badge, not by colour alone.
 
 ### Settings storage
 
@@ -640,7 +651,9 @@ How they behave:
 - **Statistics for later:** each attempt counts the boosters used (`AttemptSummary.boosters`, paid or free), and the rewards record keeps lifetime paid uses. Neither changes any rule or screen yet.
 - **Daily League challenges:** boosters are **off**. The league's gold strip takes the toolbar's place (so challenge boards aren't smaller), and the scoring rules are unchanged. This keeps league days comparable and avoids turning league credits straight back into league help.
 - **Test plays** (levels open only through `UNLOCK_ALL_LEVELS_FOR_TESTING`): boosters are **free** and read "Free"; the real wallet and its counts are never touched, so testing can't spend real credits.
-- **First-time tip:** the first time you open Level 2 or later, a short toast says what the boosters cost. It shows once (`boosters.introduced`); Level 1 stays a clean tutorial.
+- **Not in the tutorial:** Levels 1–3 have no booster row (`BOOSTERS_FROM_LEVEL` = 4), so new players first learn arrows, hearts and red arrows without extras.
+- **First-time tip:** the first time you open Level 4 or later, a short toast says what the boosters cost. It shows once (`boosters.introduced`).
+- **Hints on zoomed boards:** if the hinted arrow is off screen while zoomed in, the view glides (about 0.4 s, instant with reduced motion) to centre it, keeping the zoom; touching the board stops the glide.
 - **Feedback:** a short pop on the button, a soft sound and tick, and a restored heart grows back in on the HUD. With reduced motion the glows are steady (no pulse) and the rings and pops are skipped; colours follow every theme.
 - **Small screens:** the row never makes the HUD wider. Below 420 px the buttons show icon and cost only (the full name is in each button's label and tooltip); touch targets stay 44 px. In landscape the HUD is a side column, so the board doesn't shrink at all.
 
