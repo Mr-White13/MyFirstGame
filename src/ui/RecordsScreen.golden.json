@@ -15,8 +15,10 @@
   "          <svg:svg aria-hidden=\"true\" class=\"icon\">",
   "            <svg:use href=\"#icon-back\">",
   "        <div aria-live=\"polite\" class=\"chapter-nav__info\">",
-  "          <span class=\"chapter-nav__title\" id=\"records-chapter-title\">",
+  "          <span class=\"chapter-nav__label\" id=\"records-chapter-number\">",
   "            \"Chapter 1\"",
+  "          <span class=\"chapter-nav__title\" id=\"records-chapter-title\">",
+  "            \"It's Just the Beginning\"",
   "          <span class=\"chapter-nav__meta\" id=\"records-chapter-meta\">",
   "            \"Levels 1–20 · 0/20 done · 0/60 ★\"",
   "        <button aria-label=\"Next chapter\" class=\"icon-btn icon-btn--small chapter-nav__next\" id=\"btn-records-chapter-next\" type=\"button\">",
@@ -270,7 +272,7 @@
   "            <svg:use href=\"#icon-spark\">"
  ],
  "fresh/auto": {
-  "records-chapter-title": "<span class=\"chapter-nav__title\" id=\"records-chapter-title\">Chapter 1</>",
+  "records-chapter-title": "<span class=\"chapter-nav__title\" id=\"records-chapter-title\">It's Just the Beginning</>",
   "records-chapter-meta": "<span class=\"chapter-nav__meta\" id=\"records-chapter-meta\">Levels 1–20 · 0/20 done · 0/60 ★</>",
   "btn-records-chapter-prev": "<button aria-label=\"Previous chapter\" class=\"icon-btn icon-btn--small\" disabled id=\"btn-records-chapter-prev\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-back\"></></> </>",
   "btn-records-chapter-next": "<button aria-label=\"Next chapter\" class=\"icon-btn icon-btn--small chapter-nav__next\" id=\"btn-records-chapter-next\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-back\"></></> </>",
@@ -301,7 +303,7 @@
   ]
  },
  "fresh/chapter 2": {
-  "records-chapter-title": "<span class=\"chapter-nav__title\" id=\"records-chapter-title\">Chapter 2</>",
+  "records-chapter-title": "<span class=\"chapter-nav__title\" id=\"records-chapter-title\">Tangled Lines</>",
   "records-chapter-meta": "<span class=\"chapter-nav__meta\" id=\"records-chapter-meta\">Levels 21–30 · 0/10 done · 0/30 ★</>",
   "btn-records-chapter-prev": "<button aria-label=\"Previous chapter\" class=\"icon-btn icon-btn--small\" id=\"btn-records-chapter-prev\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-back\"></></> </>",
   "btn-records-chapter-next": "<button aria-label=\"Next chapter\" class=\"icon-btn icon-btn--small chapter-nav__next\" disabled id=\"btn-records-chapter-next\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-back\"></></> </>",
@@ -322,7 +324,7 @@
   ]
  },
  "mid/auto": {
-  "records-chapter-title": "<span class=\"chapter-nav__title\" id=\"records-chapter-title\">Chapter 1</>",
+  "records-chapter-title": "<span class=\"chapter-nav__title\" id=\"records-chapter-title\">It's Just the Beginning</>",
   "records-chapter-meta": "<span class=\"chapter-nav__meta\" id=\"records-chapter-meta\">Levels 1–20 · 7/20 done · 11/60 ★</>",
   "btn-records-chapter-prev": "<button aria-label=\"Previous chapter\" class=\"icon-btn icon-btn--small\" disabled id=\"btn-records-chapter-prev\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-back\"></></> </>",
   "btn-records-chapter-next": "<button aria-label=\"Next chapter\" class=\"icon-btn icon-btn--small chapter-nav__next\" id=\"btn-records-chapter-next\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-back\"></></> </>",
@@ -353,7 +355,7 @@
   ]
  },
  "mid/chapter 2": {
-  "records-chapter-title": "<span class=\"chapter-nav__title\" id=\"records-chapter-title\">Chapter 2</>",
+  "records-chapter-title": "<span class=\"chapter-nav__title\" id=\"records-chapter-title\">Tangled Lines</>",
   "records-chapter-meta": "<span class=\"chapter-nav__meta\" id=\"records-chapter-meta\">Levels 21–30 · 0/10 done · 0/30 ★</>",
   "btn-records-chapter-prev": "<button aria-label=\"Previous chapter\" class=\"icon-btn icon-btn--small\" id=\"btn-records-chapter-prev\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-back\"></></> </>",
   "btn-records-chapter-next": "<button aria-label=\"Next chapter\" class=\"icon-btn icon-btn--small chapter-nav__next\" disabled id=\"btn-records-chapter-next\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-back\"></></> </>",
@@ -374,7 +376,7 @@
   ]
  },
  "chapter2/auto": {
-  "records-chapter-title": "<span class=\"chapter-nav__title\" id=\"records-chapter-title\">Chapter 1</>",
+  "records-chapter-title": "<span class=\"chapter-nav__title\" id=\"records-chapter-title\">It's Just the Beginning</>",
   "records-chapter-meta": "<span class=\"chapter-nav__meta\" id=\"records-chapter-meta\">Levels 1–20 · 19/20 done · 37/60 ★</>",
   "btn-records-chapter-prev": "<button aria-label=\"Previous chapter\" class=\"icon-btn icon-btn--small\" disabled id=\"btn-records-chapter-prev\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-back\"></></> </>",
   "btn-records-chapter-next": "<button aria-label=\"Next chapter\" class=\"icon-btn icon-btn--small chapter-nav__next\" id=\"btn-records-chapter-next\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-back\"></></> </>",
@@ -405,7 +407,7 @@
   ]
  },
  "chapter2/chapter 2": {
-  "records-chapter-title": "<span class=\"chapter-nav__title\" id=\"records-chapter-title\">Chapter 2</>",
+  "records-chapter-title": "<span class=\"chapter-nav__title\" id=\"records-chapter-title\">Tangled Lines</>",
   "records-chapter-meta": "<span class=\"chapter-nav__meta\" id=\"records-chapter-meta\">Levels 21–30 · 3/10 done · 6/30 ★</>",
   "btn-records-chapter-prev": "<button aria-label=\"Previous chapter\" class=\"icon-btn icon-btn--small\" id=\"btn-records-chapter-prev\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-back\"></></> </>",
   "btn-records-chapter-next": "<button aria-label=\"Next chapter\" class=\"icon-btn icon-btn--small chapter-nav__next\" disabled id=\"btn-records-chapter-next\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-back\"></></> </>",
@@ -426,7 +428,7 @@
   ]
  },
  "allComplete/auto": {
-  "records-chapter-title": "<span class=\"chapter-nav__title\" id=\"records-chapter-title\">Chapter 2</>",
+  "records-chapter-title": "<span class=\"chapter-nav__title\" id=\"records-chapter-title\">Tangled Lines</>",
   "records-chapter-meta": "<span class=\"chapter-nav__meta\" id=\"records-chapter-meta\">Levels 21–30 · 10/10 done · 30/30 ★</>",
   "btn-records-chapter-prev": "<button aria-label=\"Previous chapter\" class=\"icon-btn icon-btn--small\" id=\"btn-records-chapter-prev\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-back\"></></> </>",
   "btn-records-chapter-next": "<button aria-label=\"Next chapter\" class=\"icon-btn icon-btn--small chapter-nav__next\" disabled id=\"btn-records-chapter-next\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-back\"></></> </>",
@@ -447,7 +449,7 @@
   ]
  },
  "allComplete/chapter 2": {
-  "records-chapter-title": "<span class=\"chapter-nav__title\" id=\"records-chapter-title\">Chapter 2</>",
+  "records-chapter-title": "<span class=\"chapter-nav__title\" id=\"records-chapter-title\">Tangled Lines</>",
   "records-chapter-meta": "<span class=\"chapter-nav__meta\" id=\"records-chapter-meta\">Levels 21–30 · 10/10 done · 30/30 ★</>",
   "btn-records-chapter-prev": "<button aria-label=\"Previous chapter\" class=\"icon-btn icon-btn--small\" id=\"btn-records-chapter-prev\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-back\"></></> </>",
   "btn-records-chapter-next": "<button aria-label=\"Next chapter\" class=\"icon-btn icon-btn--small chapter-nav__next\" disabled id=\"btn-records-chapter-next\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-back\"></></> </>",
@@ -583,7 +585,7 @@
   ]
  },
  "mid/search \"\"": {
-  "records-chapter-title": "<span class=\"chapter-nav__title\" id=\"records-chapter-title\">Chapter 1</>",
+  "records-chapter-title": "<span class=\"chapter-nav__title\" id=\"records-chapter-title\">It's Just the Beginning</>",
   "records-chapter-meta": "<span class=\"chapter-nav__meta\" id=\"records-chapter-meta\">Levels 1–20 · 7/20 done · 11/60 ★</>",
   "btn-records-chapter-prev": "<button aria-label=\"Previous chapter\" class=\"icon-btn icon-btn--small\" disabled id=\"btn-records-chapter-prev\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-back\"></></> </>",
   "btn-records-chapter-next": "<button aria-label=\"Next chapter\" class=\"icon-btn icon-btn--small chapter-nav__next\" id=\"btn-records-chapter-next\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-back\"></></> </>",

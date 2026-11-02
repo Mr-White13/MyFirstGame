@@ -120,8 +120,8 @@ describe('recap insights', () => {
     const r = records({ progress: cleared([1, 2, 3]), stats, daily });
     const text = Object.fromEntries(availableInsights(r).map((i) => [i.id, i.text]));
     expect(text).toEqual({
-      progress: '3 of 40 levels completed. Next up: Level 4.',
-      stars: '9 of 120 stars collected, with 3 perfect levels.',
+      progress: '3 of 100 levels completed. Next up: Level 4.',
+      stars: '9 of 300 stars collected, with 3 perfect levels.',
       'best-time': 'Your best time on Level 3 is 00:42.',
       streak: 'Day 5 in a row. Your longest is 9.',
       flawless: '4 clears without a single mistake since 1 Oct.',
@@ -149,7 +149,7 @@ describe('recap insights', () => {
       completed: { 5: { bestMoves: 9, revision: 2, bestStars: 3, bestMistakes: 0, bestTimeMs: 12_000 } },
     };
     expect(insightFor('best-time', records({ progress }))).toBeNull();
-    expect(insightFor('progress', records({ progress }))?.text).toBe('1 of 40 levels completed. Next up: Level 1.');
+    expect(insightFor('progress', records({ progress }))?.text).toBe('1 of 100 levels completed. Next up: Level 1.');
   });
 
   it('offers daily and weekly summaries only when those days were fully tracked', () => {

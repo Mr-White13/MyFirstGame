@@ -43,7 +43,7 @@ describe('updating from 10 to 30 levels', () => {
     expect(isUnlocked(progress, 5)).toBe(false);
   });
 
-  it('completing Level 10 now unlocks Level 11, each level unlocks the next up to 40, and Level 40 is the final level', () => {
+  it('completing Level 10 now unlocks Level 11, each level unlocks the next up to 100, and Level 100 is the final level', () => {
     const store = new MemoryStore();
     store.setItem(STORAGE_KEY, tenLevelSave());
     let progress = new ProgressStorage(LEVELS.length, store).load();
@@ -51,15 +51,15 @@ describe('updating from 10 to 30 levels', () => {
       levelId, revision: LEVELS[levelId - 1].revision ?? 1, outcome: 'won', timeMs: 40_000, uncountedTimeMs: 40_000,
       moves: 10, stars: 3, directClears: 10, autoClears: 0, bonusClears: 0, longestChain: 0, mistakes: 0,
     });
-    for (let id = 11; id <= 39; id++) {
+    for (let id = 11; id <= 99; id++) {
       const { records, completion } = applyAttempt({ progress, stats: createStats() }, won(id), LEVELS.length);
       expect(completion?.unlocked).toBe(id + 1);
       progress = records.progress;
     }
-    const last = applyAttempt({ progress, stats: createStats() }, won(40), LEVELS.length);
+    const last = applyAttempt({ progress, stats: createStats() }, won(100), LEVELS.length);
     expect(last.completion?.unlocked).toBeNull(); // nothing after the final level
-    expect(LEVELS.at(-1)?.id).toBe(40); // the dialog's "game complete" variant triggers at levelCount
-    expect(recordCompletion(last.records.progress, 40, { moves: 1, stars: 1, mistakes: 2, timeMs: 1 }, LEVELS.length).unlocked).toBeNull();
+    expect(LEVELS.at(-1)?.id).toBe(100); // the dialog's "game complete" variant triggers at levelCount
+    expect(recordCompletion(last.records.progress, 100, { moves: 1, stars: 1, mistakes: 2, timeMs: 1 }, LEVELS.length).unlocked).toBeNull();
   });
 
   it('leaves rewards, achievements and settings untouched when progress is loaded with the new level count', () => {
@@ -148,10 +148,10 @@ describe('rebalancing levels 2–10 (revision 2 → 3)', () => {
     store.setItem(STORAGE_KEY, revision2Save());
     const progress = new ProgressStorage(LEVELS.length, store).load();
     const result = recordCompletion(progress, 5, { moves: 9, stars: 2, mistakes: 1, timeMs: 60_000 }, LEVELS.length, LEVELS[4].revision);
-    expect(LEVELS[4].revision).toBe(5); // redesigned again in Steps 13 and 14
+    expect(LEVELS[4].revision).toBe(6); // redesigned again in Steps 13 and 14, and in the 100-level rebuild
     expect(result.firstClear).toBe(false); // still counted as a replay
     expect(result.newBestTime).toBe(true); // slower than the old record, but a new layout
-    expect(result.progress.completed[5]).toEqual({ bestMoves: 9, revision: 5, bestStars: 2, bestMistakes: 1, bestTimeMs: 60_000 });
+    expect(result.progress.completed[5]).toEqual({ bestMoves: 9, revision: 6, bestStars: 2, bestMistakes: 1, bestTimeMs: 60_000 });
     expect(result.progress.highestUnlocked).toBe(11);
     // Level 1 is unchanged: its record is still compared.
     const again = recordCompletion(progress, 1, { moves: 9, stars: 2, mistakes: 1, timeMs: 60_000 }, LEVELS.length, LEVELS[0].revision ?? 1);
@@ -220,6 +220,41 @@ describe('Step 14 full-coverage redesign of Levels 4–30', () => {
     for (const id of [4, 10, 11, 20, 30]) {
       const r = recordCompletion(progress, id, slow, LEVELS.length, LEVELS[id - 1].revision ?? 1);
       expect(r.progress.completed[id], `level ${id}`).toMatchObject({ bestTimeMs: 99_000, revision: LEVELS[id - 1].revision });
+    }
+  });
+});
+
+describe('100-level rebuild of Levels 4–40', () => {
+  /** A save written before the rebuild: all 40 levels done (4–10 at revision 5, 11–30 at 3, 31–40 at 1). */
+  function fortyLevelSave(): string {
+    const completed: Record<number, unknown> = {};
+    for (let id = 1; id <= 40; id++) {
+      const revision = id === 1 ? 1 : id <= 3 ? 3 : id <= 10 ? 5 : id <= 30 ? 3 : 1;
+      completed[id] = { bestMoves: 10, revision, bestStars: 3, bestMistakes: 0, bestTimeMs: 60_000 + id };
+    }
+    return JSON.stringify({ version: 4, highestUnlocked: 40, completed });
+  }
+
+  it('gives every rebuilt level a new revision', () => {
+    expect(LEVELS.slice(3, 10).map((l) => l.revision)).toEqual(Array(7).fill(6));
+    expect(LEVELS.slice(10, 30).map((l) => l.revision)).toEqual(Array(20).fill(4));
+    expect(LEVELS.slice(30, 40).map((l) => l.revision)).toEqual(Array(10).fill(2));
+  });
+
+  it('keeps every completion, unlock and star, opens Level 41, and starts fresh records only on the rebuilt layouts', () => {
+    const store = new MemoryStore();
+    store.setItem(STORAGE_KEY, fortyLevelSave());
+    const progress = new ProgressStorage(LEVELS.length, store).load();
+    expect(progress.highestUnlocked).toBe(41);
+    expect(totalStars(progress, LEVELS.length)).toBe(120);
+    const slow = { moves: 12, stars: 1, mistakes: 2, timeMs: 99_000 };
+    for (const id of [1, 2, 3]) {
+      expect(recordCompletion(progress, id, slow, LEVELS.length, LEVELS[id - 1].revision ?? 1).progress.completed[id].bestTimeMs).toBe(60_000 + id);
+    }
+    for (const id of [4, 10, 11, 30, 31, 40]) {
+      const r = recordCompletion(progress, id, slow, LEVELS.length, LEVELS[id - 1].revision ?? 1);
+      expect(r.progress.completed[id], `level ${id}`).toMatchObject({ bestTimeMs: 99_000, revision: LEVELS[id - 1].revision });
+      expect(r.firstClear).toBe(false);
     }
   });
 });

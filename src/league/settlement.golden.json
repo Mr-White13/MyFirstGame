@@ -65,8 +65,8 @@
      "outcome": "promoted"
     }
    },
-   "pool": 5,
-   "results": "d:awarded f:awarded g:awarded r:awarded done:true e:awarded l:awarded s:awarded t:awarded done:true d:awarded k:awarded h:awarded v:awarded done:true",
+   "pool": 6,
+   "results": "c:awarded e:awarded g:awarded u:awarded done:true i:awarded l:awarded q:awarded p:awarded done:true a:awarded l:awarded p:awarded D:awarded done:true",
    "lastHistory": {
     "date": "2026-10-19",
     "days": 1,
@@ -87,18 +87,18 @@
      "date": "2026-10-20",
      "startTier": 2,
      "collected": [
-      "2026-10-20:1:L9/d",
-      "2026-10-20:1:L9/f",
-      "2026-10-20:1:L9/g",
-      "2026-10-20:1:L9/r",
-      "2026-10-20:2:L12/e",
-      "2026-10-20:2:L12/l",
-      "2026-10-20:2:L12/s",
-      "2026-10-20:2:L12/t",
-      "2026-10-20:3:L15/d",
-      "2026-10-20:3:L15/k",
-      "2026-10-20:3:L15/h",
-      "2026-10-20:3:L15/v"
+      "2026-10-20:1:L13/c",
+      "2026-10-20:1:L13/e",
+      "2026-10-20:1:L13/g",
+      "2026-10-20:1:L13/u",
+      "2026-10-20:2:L16/i",
+      "2026-10-20:2:L16/l",
+      "2026-10-20:2:L16/q",
+      "2026-10-20:2:L16/p",
+      "2026-10-20:3:L31/a",
+      "2026-10-20:3:L31/l",
+      "2026-10-20:3:L31/p",
+      "2026-10-20:3:L31/D"
      ],
      "completed": [
       1,
@@ -106,7 +106,7 @@
       3
      ],
      "sweepRewarded": true,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
      "points": 24,
@@ -137,8 +137,8 @@
      "outcome": "promoted"
     }
    },
-   "pool": 5,
-   "results": "g:awarded m:awarded i:awarded n:awarded done:true d:awarded g:awarded m:awarded c:awarded done:true",
+   "pool": 6,
+   "results": "a:awarded c:awarded k:awarded h:awarded done:true f:awarded n:awarded p:awarded h:awarded done:true",
    "lastHistory": {
     "date": "2026-10-20",
     "days": 1,
@@ -159,21 +159,21 @@
      "date": "2026-10-21",
      "startTier": 3,
      "collected": [
-      "2026-10-21:1:L10/g",
-      "2026-10-21:1:L10/m",
-      "2026-10-21:1:L10/i",
-      "2026-10-21:1:L10/n",
-      "2026-10-21:2:L11/d",
-      "2026-10-21:2:L11/g",
-      "2026-10-21:2:L11/m",
-      "2026-10-21:2:L11/c"
+      "2026-10-21:1:L12/a",
+      "2026-10-21:1:L12/c",
+      "2026-10-21:1:L12/k",
+      "2026-10-21:1:L12/h",
+      "2026-10-21:2:L14/f",
+      "2026-10-21:2:L14/n",
+      "2026-10-21:2:L14/p",
+      "2026-10-21:2:L14/h"
      ],
      "completed": [
       1,
       2
      ],
      "sweepRewarded": false,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
      "points": 32,
@@ -205,8 +205,8 @@
      "outcome": "retained"
     }
    },
-   "pool": 5,
-   "results": "g:awarded b:awarded k:awarded",
+   "pool": 6,
+   "results": "c:awarded d:awarded k:awarded",
    "lastHistory": {
     "date": "2026-10-21",
     "days": 1,
@@ -227,13 +227,13 @@
      "date": "2026-10-22",
      "startTier": 3,
      "collected": [
-      "2026-10-22:1:L7/g",
-      "2026-10-22:1:L7/b",
-      "2026-10-22:1:L7/k"
+      "2026-10-22:1:L12/c",
+      "2026-10-22:1:L12/d",
+      "2026-10-22:1:L12/k"
      ],
      "completed": [],
      "sweepRewarded": false,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
      "points": 35,
@@ -265,8 +265,8 @@
      "outcome": "relegated"
     }
    },
-   "pool": 5,
-   "results": "l:awarded",
+   "pool": 6,
+   "results": "a:awarded g:awarded m:awarded",
    "lastHistory": {
     "date": "2026-10-22",
     "days": 1,
@@ -287,14 +287,16 @@
      "date": "2026-10-23",
      "startTier": 2,
      "collected": [
-      "2026-10-23:1:L6/l"
+      "2026-10-23:1:L8/a",
+      "2026-10-23:1:L8/g",
+      "2026-10-23:1:L8/m"
      ],
      "completed": [],
      "sweepRewarded": false,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 36,
+     "points": 38,
      "promotions": 2,
      "relegations": 1,
      "challengesCompleted": 8
@@ -313,50 +315,50 @@
    "status": "settled",
    "notice": {
     "fromTier": 2,
-    "toTier": 1,
+    "toTier": 2,
     "daysSettled": 1,
     "promotions": 0,
-    "relegations": 1,
+    "relegations": 0,
     "lastPlayed": {
      "date": "2026-10-23",
-     "points": 1,
-     "outcome": "relegated"
+     "points": 3,
+     "outcome": "retained"
     }
    },
-   "pool": 5,
-   "results": "b:awarded j:awarded c:awarded l:awarded done:true c:awarded g:awarded e:awarded o:awarded done:true f:awarded o:awarded r:awarded A:awarded done:true",
+   "pool": 6,
+   "results": "m:awarded d:awarded f:awarded n:awarded done:true g:awarded j:awarded c:awarded n:awarded done:true E:awarded w:awarded o:awarded A:awarded done:true",
    "lastHistory": {
     "date": "2026-10-23",
     "days": 1,
-    "points": 1,
+    "points": 3,
     "challenges": 0,
     "startTier": 2,
-    "endTier": 1,
-    "outcome": "relegated"
+    "endTier": 2,
+    "outcome": "retained"
    },
    "historyLength": 5,
    "saved": {
     "version": 1,
-    "tier": 1,
+    "tier": 2,
     "highestTier": 3,
     "inactiveStreak": 0,
     "lastDay": "2026-10-24",
     "current": {
      "date": "2026-10-24",
-     "startTier": 1,
+     "startTier": 2,
      "collected": [
-      "2026-10-24:1:L5/b",
-      "2026-10-24:1:L5/j",
-      "2026-10-24:1:L5/c",
-      "2026-10-24:1:L5/l",
-      "2026-10-24:2:L9/c",
-      "2026-10-24:2:L9/g",
-      "2026-10-24:2:L9/e",
-      "2026-10-24:2:L9/o",
-      "2026-10-24:3:L16/f",
-      "2026-10-24:3:L16/o",
-      "2026-10-24:3:L16/r",
-      "2026-10-24:3:L16/A"
+      "2026-10-24:1:L8/m",
+      "2026-10-24:1:L8/d",
+      "2026-10-24:1:L8/f",
+      "2026-10-24:1:L8/n",
+      "2026-10-24:2:L22/g",
+      "2026-10-24:2:L22/j",
+      "2026-10-24:2:L22/c",
+      "2026-10-24:2:L22/n",
+      "2026-10-24:3:L31/E",
+      "2026-10-24:3:L31/w",
+      "2026-10-24:3:L31/o",
+      "2026-10-24:3:L31/A"
      ],
      "completed": [
       1,
@@ -364,12 +366,12 @@
       3
      ],
      "sweepRewarded": true,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 48,
+     "points": 50,
      "promotions": 2,
-     "relegations": 2,
+     "relegations": 1,
      "challengesCompleted": 11
     },
     "milestones": [
@@ -385,8 +387,8 @@
    "day": "2026-10-25",
    "status": "settled",
    "notice": {
-    "fromTier": 1,
-    "toTier": 2,
+    "fromTier": 2,
+    "toTier": 3,
     "daysSettled": 1,
     "promotions": 1,
     "relegations": 0,
@@ -396,43 +398,43 @@
      "outcome": "promoted"
     }
    },
-   "pool": 5,
-   "results": "e:awarded f:awarded h:awarded l:awarded done:true",
+   "pool": 6,
+   "results": "a:awarded k:awarded m:awarded p:awarded done:true",
    "lastHistory": {
     "date": "2026-10-24",
     "days": 1,
     "points": 12,
     "challenges": 3,
-    "startTier": 1,
-    "endTier": 2,
+    "startTier": 2,
+    "endTier": 3,
     "outcome": "promoted"
    },
    "historyLength": 6,
    "saved": {
     "version": 1,
-    "tier": 2,
+    "tier": 3,
     "highestTier": 3,
     "inactiveStreak": 0,
     "lastDay": "2026-10-25",
     "current": {
      "date": "2026-10-25",
-     "startTier": 2,
+     "startTier": 3,
      "collected": [
-      "2026-10-25:1:L4/e",
-      "2026-10-25:1:L4/f",
-      "2026-10-25:1:L4/h",
-      "2026-10-25:1:L4/l"
+      "2026-10-25:1:L12/a",
+      "2026-10-25:1:L12/k",
+      "2026-10-25:1:L12/m",
+      "2026-10-25:1:L12/p"
      ],
      "completed": [
       1
      ],
      "sweepRewarded": false,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 52,
+     "points": 54,
      "promotions": 3,
-     "relegations": 2,
+     "relegations": 1,
      "challengesCompleted": 12
     },
     "milestones": [
@@ -448,8 +450,8 @@
    "day": "2026-10-26",
    "status": "settled",
    "notice": {
-    "fromTier": 2,
-    "toTier": 2,
+    "fromTier": 3,
+    "toTier": 3,
     "daysSettled": 1,
     "promotions": 0,
     "relegations": 0,
@@ -459,40 +461,40 @@
      "outcome": "retained"
     }
    },
-   "pool": 5,
-   "results": "g:awarded m:awarded h:awarded i:awarded done:true g:awarded d:awarded e:awarded k:awarded done:true E:awarded b:awarded t:awarded x:awarded done:true",
+   "pool": 6,
+   "results": "g:awarded n:awarded j:awarded k:awarded done:true i:awarded f:awarded n:awarded o:awarded done:true s:awarded x:awarded w:awarded v:awarded done:true",
    "lastHistory": {
     "date": "2026-10-25",
     "days": 1,
     "points": 4,
     "challenges": 1,
-    "startTier": 2,
-    "endTier": 2,
+    "startTier": 3,
+    "endTier": 3,
     "outcome": "retained"
    },
    "historyLength": 7,
    "saved": {
     "version": 1,
-    "tier": 2,
+    "tier": 3,
     "highestTier": 3,
     "inactiveStreak": 0,
     "lastDay": "2026-10-26",
     "current": {
      "date": "2026-10-26",
-     "startTier": 2,
+     "startTier": 3,
      "collected": [
-      "2026-10-26:1:L5/g",
-      "2026-10-26:1:L5/m",
-      "2026-10-26:1:L5/h",
-      "2026-10-26:1:L5/i",
-      "2026-10-26:2:L10/g",
-      "2026-10-26:2:L10/d",
-      "2026-10-26:2:L10/e",
-      "2026-10-26:2:L10/k",
-      "2026-10-26:3:L21/E",
-      "2026-10-26:3:L21/b",
-      "2026-10-26:3:L21/t",
-      "2026-10-26:3:L21/x"
+      "2026-10-26:1:L9/g",
+      "2026-10-26:1:L9/n",
+      "2026-10-26:1:L9/j",
+      "2026-10-26:1:L9/k",
+      "2026-10-26:2:L12/i",
+      "2026-10-26:2:L12/f",
+      "2026-10-26:2:L12/n",
+      "2026-10-26:2:L12/o",
+      "2026-10-26:3:L25/s",
+      "2026-10-26:3:L25/x",
+      "2026-10-26:3:L25/w",
+      "2026-10-26:3:L25/v"
      ],
      "completed": [
       1,
@@ -500,12 +502,12 @@
       3
      ],
      "sweepRewarded": true,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 64,
+     "points": 66,
      "promotions": 3,
-     "relegations": 2,
+     "relegations": 1,
      "challengesCompleted": 15
     },
     "milestones": [
@@ -521,8 +523,8 @@
    "day": "2026-10-27",
    "status": "settled",
    "notice": {
-    "fromTier": 2,
-    "toTier": 3,
+    "fromTier": 3,
+    "toTier": 4,
     "daysSettled": 1,
     "promotions": 1,
     "relegations": 0,
@@ -532,83 +534,10 @@
      "outcome": "promoted"
     }
    },
-   "pool": 5,
-   "results": "e:awarded j:awarded b:awarded i:awarded done:true n:awarded d:awarded k:awarded j:awarded done:true g:awarded l:awarded f:awarded o:awarded done:true",
+   "pool": 6,
+   "results": "i:awarded p:awarded q:awarded s:awarded done:true f:awarded o:awarded g:awarded l:awarded done:true f:awarded w:awarded g:awarded i:awarded done:true",
    "lastHistory": {
     "date": "2026-10-26",
-    "days": 1,
-    "points": 12,
-    "challenges": 3,
-    "startTier": 2,
-    "endTier": 3,
-    "outcome": "promoted"
-   },
-   "historyLength": 8,
-   "saved": {
-    "version": 1,
-    "tier": 3,
-    "highestTier": 3,
-    "inactiveStreak": 0,
-    "lastDay": "2026-10-27",
-    "current": {
-     "date": "2026-10-27",
-     "startTier": 3,
-     "collected": [
-      "2026-10-27:1:L6/e",
-      "2026-10-27:1:L6/j",
-      "2026-10-27:1:L6/b",
-      "2026-10-27:1:L6/i",
-      "2026-10-27:2:L7/n",
-      "2026-10-27:2:L7/d",
-      "2026-10-27:2:L7/k",
-      "2026-10-27:2:L7/j",
-      "2026-10-27:3:L8/g",
-      "2026-10-27:3:L8/l",
-      "2026-10-27:3:L8/f",
-      "2026-10-27:3:L8/o"
-     ],
-     "completed": [
-      1,
-      2,
-      3
-     ],
-     "sweepRewarded": true,
-     "pool": 5
-    },
-    "lifetime": {
-     "points": 76,
-     "promotions": 4,
-     "relegations": 2,
-     "challengesCompleted": 18
-    },
-    "milestones": [
-     "league:first-promotion",
-     "league:highest:gold",
-     "league:highest:platinum"
-    ],
-    "outbox": [],
-    "notice": null
-   }
-  },
-  {
-   "day": "2026-10-28",
-   "status": "settled",
-   "notice": {
-    "fromTier": 3,
-    "toTier": 4,
-    "daysSettled": 1,
-    "promotions": 1,
-    "relegations": 0,
-    "lastPlayed": {
-     "date": "2026-10-27",
-     "points": 12,
-     "outcome": "promoted"
-    }
-   },
-   "pool": 5,
-   "results": "c:awarded g:awarded h:awarded s:awarded done:true w:awarded s:awarded x:awarded h:awarded done:true j:awarded r:awarded s:awarded z:awarded done:true",
-   "lastHistory": {
-    "date": "2026-10-27",
     "days": 1,
     "points": 12,
     "challenges": 3,
@@ -616,29 +545,29 @@
     "endTier": 4,
     "outcome": "promoted"
    },
-   "historyLength": 9,
+   "historyLength": 8,
    "saved": {
     "version": 1,
     "tier": 4,
     "highestTier": 4,
     "inactiveStreak": 0,
-    "lastDay": "2026-10-28",
+    "lastDay": "2026-10-27",
     "current": {
-     "date": "2026-10-28",
+     "date": "2026-10-27",
      "startTier": 4,
      "collected": [
-      "2026-10-28:1:L9/c",
-      "2026-10-28:1:L9/g",
-      "2026-10-28:1:L9/h",
-      "2026-10-28:1:L9/s",
-      "2026-10-28:2:L14/w",
-      "2026-10-28:2:L14/s",
-      "2026-10-28:2:L14/x",
-      "2026-10-28:2:L14/h",
-      "2026-10-28:3:L16/j",
-      "2026-10-28:3:L16/r",
-      "2026-10-28:3:L16/s",
-      "2026-10-28:3:L16/z"
+      "2026-10-27:1:L10/i",
+      "2026-10-27:1:L10/p",
+      "2026-10-27:1:L10/q",
+      "2026-10-27:1:L10/s",
+      "2026-10-27:2:L11/f",
+      "2026-10-27:2:L11/o",
+      "2026-10-27:2:L11/g",
+      "2026-10-27:2:L11/l",
+      "2026-10-27:3:L18/f",
+      "2026-10-27:3:L18/w",
+      "2026-10-27:3:L18/g",
+      "2026-10-27:3:L18/i"
      ],
      "completed": [
       1,
@@ -646,13 +575,13 @@
       3
      ],
      "sweepRewarded": true,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 88,
-     "promotions": 5,
-     "relegations": 2,
-     "challengesCompleted": 21
+     "points": 78,
+     "promotions": 4,
+     "relegations": 1,
+     "challengesCompleted": 18
     },
     "milestones": [
      "league:first-promotion",
@@ -665,7 +594,7 @@
    }
   },
   {
-   "day": "2026-10-29",
+   "day": "2026-10-28",
    "status": "settled",
    "notice": {
     "fromTier": 4,
@@ -674,21 +603,96 @@
     "promotions": 1,
     "relegations": 0,
     "lastPlayed": {
-     "date": "2026-10-28",
+     "date": "2026-10-27",
      "points": 12,
      "outcome": "promoted"
     }
    },
-   "pool": 5,
-   "results": "j:awarded d:awarded",
+   "pool": 6,
+   "results": "b:awarded d:awarded e:awarded k:awarded done:true i:awarded k:awarded m:awarded d:awarded done:true g:awarded l:awarded o:awarded q:awarded done:true",
    "lastHistory": {
-    "date": "2026-10-28",
+    "date": "2026-10-27",
     "days": 1,
     "points": 12,
     "challenges": 3,
     "startTier": 4,
     "endTier": 5,
     "outcome": "promoted"
+   },
+   "historyLength": 9,
+   "saved": {
+    "version": 1,
+    "tier": 5,
+    "highestTier": 5,
+    "inactiveStreak": 0,
+    "lastDay": "2026-10-28",
+    "current": {
+     "date": "2026-10-28",
+     "startTier": 5,
+     "collected": [
+      "2026-10-28:1:L9/b",
+      "2026-10-28:1:L9/d",
+      "2026-10-28:1:L9/e",
+      "2026-10-28:1:L9/k",
+      "2026-10-28:2:L14/i",
+      "2026-10-28:2:L14/k",
+      "2026-10-28:2:L14/m",
+      "2026-10-28:2:L14/d",
+      "2026-10-28:3:L16/g",
+      "2026-10-28:3:L16/l",
+      "2026-10-28:3:L16/o",
+      "2026-10-28:3:L16/q"
+     ],
+     "completed": [
+      1,
+      2,
+      3
+     ],
+     "sweepRewarded": true,
+     "pool": 6
+    },
+    "lifetime": {
+     "points": 90,
+     "promotions": 5,
+     "relegations": 1,
+     "challengesCompleted": 21
+    },
+    "milestones": [
+     "league:first-promotion",
+     "league:highest:gold",
+     "league:highest:platinum",
+     "league:highest:diamond",
+     "league:highest:neon-elite"
+    ],
+    "outbox": [],
+    "notice": null
+   }
+  },
+  {
+   "day": "2026-10-29",
+   "status": "settled",
+   "notice": {
+    "fromTier": 5,
+    "toTier": 5,
+    "daysSettled": 1,
+    "promotions": 0,
+    "relegations": 0,
+    "lastPlayed": {
+     "date": "2026-10-28",
+     "points": 12,
+     "outcome": "retained"
+    }
+   },
+   "pool": 6,
+   "results": "d:awarded g:awarded",
+   "lastHistory": {
+    "date": "2026-10-28",
+    "days": 1,
+    "points": 12,
+    "challenges": 3,
+    "startTier": 5,
+    "endTier": 5,
+    "outcome": "retained"
    },
    "historyLength": 10,
    "saved": {
@@ -701,17 +705,17 @@
      "date": "2026-10-29",
      "startTier": 5,
      "collected": [
-      "2026-10-29:1:L4/j",
-      "2026-10-29:1:L4/d"
+      "2026-10-29:1:L9/d",
+      "2026-10-29:1:L9/g"
      ],
      "completed": [],
      "sweepRewarded": false,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 90,
-     "promotions": 6,
-     "relegations": 2,
+     "points": 92,
+     "promotions": 5,
+     "relegations": 1,
      "challengesCompleted": 21
     },
     "milestones": [
@@ -740,8 +744,8 @@
      "outcome": "relegated"
     }
    },
-   "pool": 5,
-   "results": "b:awarded m:awarded j:awarded i:awarded done:true e:awarded o:awarded u:awarded p:awarded done:true",
+   "pool": 6,
+   "results": "f:awarded k:awarded l:awarded h:awarded done:true q:awarded m:awarded o:awarded v:awarded done:true",
    "lastHistory": {
     "date": "2026-10-30",
     "days": 3,
@@ -762,26 +766,26 @@
      "date": "2026-11-02",
      "startTier": 2,
      "collected": [
-      "2026-11-02:1:L5/b",
-      "2026-11-02:1:L5/m",
-      "2026-11-02:1:L5/j",
-      "2026-11-02:1:L5/i",
-      "2026-11-02:2:L11/e",
-      "2026-11-02:2:L11/o",
-      "2026-11-02:2:L11/u",
-      "2026-11-02:2:L11/p"
+      "2026-11-02:1:L4/f",
+      "2026-11-02:1:L4/k",
+      "2026-11-02:1:L4/l",
+      "2026-11-02:1:L4/h",
+      "2026-11-02:2:L24/q",
+      "2026-11-02:2:L24/m",
+      "2026-11-02:2:L24/o",
+      "2026-11-02:2:L24/v"
      ],
      "completed": [
       1,
       2
      ],
      "sweepRewarded": false,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 98,
-     "promotions": 6,
-     "relegations": 5,
+     "points": 100,
+     "promotions": 5,
+     "relegations": 4,
      "challengesCompleted": 23
     },
     "milestones": [
@@ -810,8 +814,8 @@
      "outcome": "retained"
     }
    },
-   "pool": 5,
-   "results": "a:awarded d:awarded f:awarded h:awarded done:true s:awarded w:awarded m:awarded j:awarded done:true b:awarded y:awarded e:awarded k:awarded done:true",
+   "pool": 6,
+   "results": "b:awarded h:awarded d:awarded i:awarded done:true l:awarded n:awarded p:awarded s:awarded done:true k:awarded x:awarded e:awarded v:awarded done:true",
    "lastHistory": {
     "date": "2026-11-02",
     "days": 1,
@@ -832,18 +836,18 @@
      "date": "2026-11-03",
      "startTier": 2,
      "collected": [
-      "2026-11-03:1:L4/a",
-      "2026-11-03:1:L4/d",
-      "2026-11-03:1:L4/f",
+      "2026-11-03:1:L4/b",
       "2026-11-03:1:L4/h",
-      "2026-11-03:2:L11/s",
-      "2026-11-03:2:L11/w",
-      "2026-11-03:2:L11/m",
-      "2026-11-03:2:L11/j",
-      "2026-11-03:3:L20/b",
-      "2026-11-03:3:L20/y",
-      "2026-11-03:3:L20/e",
-      "2026-11-03:3:L20/k"
+      "2026-11-03:1:L4/d",
+      "2026-11-03:1:L4/i",
+      "2026-11-03:2:L10/l",
+      "2026-11-03:2:L10/n",
+      "2026-11-03:2:L10/p",
+      "2026-11-03:2:L10/s",
+      "2026-11-03:3:L26/k",
+      "2026-11-03:3:L26/x",
+      "2026-11-03:3:L26/e",
+      "2026-11-03:3:L26/v"
      ],
      "completed": [
       1,
@@ -851,12 +855,12 @@
       3
      ],
      "sweepRewarded": true,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 110,
-     "promotions": 6,
-     "relegations": 5,
+     "points": 112,
+     "promotions": 5,
+     "relegations": 4,
      "challengesCompleted": 26
     },
     "milestones": [
@@ -885,8 +889,8 @@
      "outcome": "promoted"
     }
    },
-   "pool": 5,
-   "results": "c:awarded n:awarded m:awarded h:awarded done:true c:awarded g:awarded d:awarded r:awarded done:true r:awarded e:awarded z:awarded n:awarded done:true",
+   "pool": 6,
+   "results": "h:awarded i:awarded b:awarded d:awarded done:true g:awarded i:awarded l:awarded j:awarded done:true j:awarded m:awarded k:awarded o:awarded done:true",
    "lastHistory": {
     "date": "2026-11-03",
     "days": 1,
@@ -907,18 +911,18 @@
      "date": "2026-11-04",
      "startTier": 3,
      "collected": [
-      "2026-11-04:1:L6/c",
-      "2026-11-04:1:L6/n",
-      "2026-11-04:1:L6/m",
-      "2026-11-04:1:L6/h",
-      "2026-11-04:2:L12/c",
+      "2026-11-04:1:L7/h",
+      "2026-11-04:1:L7/i",
+      "2026-11-04:1:L7/b",
+      "2026-11-04:1:L7/d",
       "2026-11-04:2:L12/g",
-      "2026-11-04:2:L12/d",
-      "2026-11-04:2:L12/r",
-      "2026-11-04:3:L21/r",
-      "2026-11-04:3:L21/e",
-      "2026-11-04:3:L21/z",
-      "2026-11-04:3:L21/n"
+      "2026-11-04:2:L12/i",
+      "2026-11-04:2:L12/l",
+      "2026-11-04:2:L12/j",
+      "2026-11-04:3:L29/j",
+      "2026-11-04:3:L29/m",
+      "2026-11-04:3:L29/k",
+      "2026-11-04:3:L29/o"
      ],
      "completed": [
       1,
@@ -926,12 +930,12 @@
       3
      ],
      "sweepRewarded": true,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 122,
-     "promotions": 7,
-     "relegations": 5,
+     "points": 124,
+     "promotions": 6,
+     "relegations": 4,
      "challengesCompleted": 29
     },
     "milestones": [
@@ -960,8 +964,8 @@
      "outcome": "promoted"
     }
    },
-   "pool": 5,
-   "results": "c:awarded q:awarded e:awarded o:awarded done:true s:awarded q:awarded f:awarded i:awarded done:true b:awarded a:awarded m:awarded q:awarded done:true",
+   "pool": 6,
+   "results": "m:awarded e:awarded c:awarded k:awarded done:true e:awarded f:awarded o:awarded k:awarded done:true c:awarded e:awarded x:awarded n:awarded done:true",
    "lastHistory": {
     "date": "2026-11-04",
     "days": 1,
@@ -982,18 +986,18 @@
      "date": "2026-11-05",
      "startTier": 4,
      "collected": [
-      "2026-11-05:1:L8/c",
-      "2026-11-05:1:L8/q",
-      "2026-11-05:1:L8/e",
-      "2026-11-05:1:L8/o",
-      "2026-11-05:2:L10/s",
-      "2026-11-05:2:L10/q",
-      "2026-11-05:2:L10/f",
-      "2026-11-05:2:L10/i",
-      "2026-11-05:3:L12/b",
-      "2026-11-05:3:L12/a",
-      "2026-11-05:3:L12/m",
-      "2026-11-05:3:L12/q"
+      "2026-11-05:1:L9/m",
+      "2026-11-05:1:L9/e",
+      "2026-11-05:1:L9/c",
+      "2026-11-05:1:L9/k",
+      "2026-11-05:2:L15/e",
+      "2026-11-05:2:L15/f",
+      "2026-11-05:2:L15/o",
+      "2026-11-05:2:L15/k",
+      "2026-11-05:3:L23/c",
+      "2026-11-05:3:L23/e",
+      "2026-11-05:3:L23/x",
+      "2026-11-05:3:L23/n"
      ],
      "completed": [
       1,
@@ -1001,12 +1005,12 @@
       3
      ],
      "sweepRewarded": true,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 134,
-     "promotions": 8,
-     "relegations": 5,
+     "points": 136,
+     "promotions": 7,
+     "relegations": 4,
      "challengesCompleted": 32
     },
     "milestones": [
@@ -1035,8 +1039,8 @@
      "outcome": "promoted"
     }
    },
-   "pool": 5,
-   "results": "a:awarded k:awarded o:awarded l:awarded done:true p:awarded t:awarded j:awarded o:awarded done:true g:awarded o:awarded u:awarded f:awarded done:true",
+   "pool": 6,
+   "results": "f:awarded l:awarded j:awarded o:awarded done:true h:awarded f:awarded r:awarded y:awarded done:true y:awarded m:awarded r:awarded t:awarded done:true",
    "lastHistory": {
     "date": "2026-11-05",
     "days": 1,
@@ -1057,18 +1061,18 @@
      "date": "2026-11-06",
      "startTier": 5,
      "collected": [
-      "2026-11-06:1:L7/a",
-      "2026-11-06:1:L7/k",
-      "2026-11-06:1:L7/o",
-      "2026-11-06:1:L7/l",
-      "2026-11-06:2:L12/p",
-      "2026-11-06:2:L12/t",
-      "2026-11-06:2:L12/j",
-      "2026-11-06:2:L12/o",
-      "2026-11-06:3:L13/g",
-      "2026-11-06:3:L13/o",
-      "2026-11-06:3:L13/u",
-      "2026-11-06:3:L13/f"
+      "2026-11-06:1:L9/f",
+      "2026-11-06:1:L9/l",
+      "2026-11-06:1:L9/j",
+      "2026-11-06:1:L9/o",
+      "2026-11-06:2:L13/h",
+      "2026-11-06:2:L13/f",
+      "2026-11-06:2:L13/r",
+      "2026-11-06:2:L13/y",
+      "2026-11-06:3:L22/y",
+      "2026-11-06:3:L22/m",
+      "2026-11-06:3:L22/r",
+      "2026-11-06:3:L22/t"
      ],
      "completed": [
       1,
@@ -1076,12 +1080,12 @@
       3
      ],
      "sweepRewarded": true,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 146,
-     "promotions": 9,
-     "relegations": 5,
+     "points": 148,
+     "promotions": 8,
+     "relegations": 4,
      "challengesCompleted": 35
     },
     "milestones": [
@@ -1110,8 +1114,8 @@
      "outcome": "retained"
     }
    },
-   "pool": 5,
-   "results": "j:awarded c:awarded n:awarded m:awarded done:true r:awarded q:awarded f:awarded p:awarded done:true a:awarded d:awarded j:awarded q:awarded done:true",
+   "pool": 6,
+   "results": "a:awarded h:awarded e:awarded o:awarded done:true c:awarded i:awarded h:awarded o:awarded done:true a:awarded k:awarded s:awarded h:awarded done:true",
    "lastHistory": {
     "date": "2026-11-06",
     "days": 1,
@@ -1132,18 +1136,18 @@
      "date": "2026-11-07",
      "startTier": 5,
      "collected": [
-      "2026-11-07:1:L6/j",
-      "2026-11-07:1:L6/c",
-      "2026-11-07:1:L6/n",
-      "2026-11-07:1:L6/m",
-      "2026-11-07:2:L8/r",
-      "2026-11-07:2:L8/q",
-      "2026-11-07:2:L8/f",
-      "2026-11-07:2:L8/p",
-      "2026-11-07:3:L9/a",
-      "2026-11-07:3:L9/d",
-      "2026-11-07:3:L9/j",
-      "2026-11-07:3:L9/q"
+      "2026-11-07:1:L7/a",
+      "2026-11-07:1:L7/h",
+      "2026-11-07:1:L7/e",
+      "2026-11-07:1:L7/o",
+      "2026-11-07:2:L12/c",
+      "2026-11-07:2:L12/i",
+      "2026-11-07:2:L12/h",
+      "2026-11-07:2:L12/o",
+      "2026-11-07:3:L14/a",
+      "2026-11-07:3:L14/k",
+      "2026-11-07:3:L14/s",
+      "2026-11-07:3:L14/h"
      ],
      "completed": [
       1,
@@ -1151,12 +1155,12 @@
       3
      ],
      "sweepRewarded": true,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 158,
-     "promotions": 9,
-     "relegations": 5,
+     "points": 160,
+     "promotions": 8,
+     "relegations": 4,
      "challengesCompleted": 38
     },
     "milestones": [
@@ -1185,8 +1189,8 @@
      "outcome": "retained"
     }
    },
-   "pool": 5,
-   "results": "a:awarded d:awarded k:awarded n:awarded done:true",
+   "pool": 6,
+   "results": "b:awarded d:awarded q:awarded s:awarded done:true",
    "lastHistory": {
     "date": "2026-11-07",
     "days": 1,
@@ -1207,21 +1211,21 @@
      "date": "2026-11-08",
      "startTier": 5,
      "collected": [
-      "2026-11-08:1:L6/a",
-      "2026-11-08:1:L6/d",
-      "2026-11-08:1:L6/k",
-      "2026-11-08:1:L6/n"
+      "2026-11-08:1:L11/b",
+      "2026-11-08:1:L11/d",
+      "2026-11-08:1:L11/q",
+      "2026-11-08:1:L11/s"
      ],
      "completed": [
       1
      ],
      "sweepRewarded": false,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 162,
-     "promotions": 9,
-     "relegations": 5,
+     "points": 164,
+     "promotions": 8,
+     "relegations": 4,
      "challengesCompleted": 39
     },
     "milestones": [
@@ -1250,8 +1254,8 @@
      "outcome": "relegated"
     }
    },
-   "pool": 5,
-   "results": "b:awarded a:awarded g:awarded",
+   "pool": 6,
+   "results": "c:awarded j:awarded r:awarded",
    "lastHistory": {
     "date": "2026-11-08",
     "days": 1,
@@ -1272,18 +1276,18 @@
      "date": "2026-11-09",
      "startTier": 4,
      "collected": [
-      "2026-11-09:1:L4/b",
-      "2026-11-09:1:L4/a",
-      "2026-11-09:1:L4/g"
+      "2026-11-09:1:L11/c",
+      "2026-11-09:1:L11/j",
+      "2026-11-09:1:L11/r"
      ],
      "completed": [],
      "sweepRewarded": false,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 165,
-     "promotions": 9,
-     "relegations": 6,
+     "points": 167,
+     "promotions": 8,
+     "relegations": 5,
      "challengesCompleted": 39
     },
     "milestones": [
@@ -1312,8 +1316,8 @@
      "outcome": "relegated"
     }
    },
-   "pool": 5,
-   "results": "b:awarded f:awarded j:awarded s:awarded done:true b:awarded c:awarded f:awarded j:awarded done:true b:awarded f:awarded B:awarded s:awarded done:true",
+   "pool": 6,
+   "results": "m:awarded j:awarded h:awarded o:awarded done:true c:awarded d:awarded k:awarded r:awarded done:true e:awarded o:awarded s:awarded C:awarded done:true",
    "lastHistory": {
     "date": "2026-11-09",
     "days": 1,
@@ -1334,18 +1338,18 @@
      "date": "2026-11-10",
      "startTier": 3,
      "collected": [
-      "2026-11-10:1:L9/b",
-      "2026-11-10:1:L9/f",
+      "2026-11-10:1:L9/m",
       "2026-11-10:1:L9/j",
-      "2026-11-10:1:L9/s",
-      "2026-11-10:2:L12/b",
-      "2026-11-10:2:L12/c",
-      "2026-11-10:2:L12/f",
-      "2026-11-10:2:L12/j",
-      "2026-11-10:3:L20/b",
-      "2026-11-10:3:L20/f",
-      "2026-11-10:3:L20/B",
-      "2026-11-10:3:L20/s"
+      "2026-11-10:1:L9/h",
+      "2026-11-10:1:L9/o",
+      "2026-11-10:2:L16/c",
+      "2026-11-10:2:L16/d",
+      "2026-11-10:2:L16/k",
+      "2026-11-10:2:L16/r",
+      "2026-11-10:3:L32/e",
+      "2026-11-10:3:L32/o",
+      "2026-11-10:3:L32/s",
+      "2026-11-10:3:L32/C"
      ],
      "completed": [
       1,
@@ -1353,12 +1357,12 @@
       3
      ],
      "sweepRewarded": true,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 177,
-     "promotions": 9,
-     "relegations": 7,
+     "points": 179,
+     "promotions": 8,
+     "relegations": 6,
      "challengesCompleted": 42
     },
     "milestones": [
@@ -1387,8 +1391,8 @@
      "outcome": "promoted"
     }
    },
-   "pool": 5,
-   "results": "j:awarded l:awarded c:awarded i:awarded done:true a:awarded l:awarded k:awarded j:awarded done:true a:awarded i:awarded x:awarded g:awarded done:true",
+   "pool": 6,
+   "results": "a:awarded f:awarded j:awarded k:awarded done:true a:awarded d:awarded o:awarded l:awarded done:true f:awarded s:awarded A:awarded q:awarded done:true",
    "lastHistory": {
     "date": "2026-11-10",
     "days": 1,
@@ -1409,18 +1413,18 @@
      "date": "2026-11-11",
      "startTier": 4,
      "collected": [
-      "2026-11-11:1:L6/j",
-      "2026-11-11:1:L6/l",
-      "2026-11-11:1:L6/c",
-      "2026-11-11:1:L6/i",
+      "2026-11-11:1:L9/a",
+      "2026-11-11:1:L9/f",
+      "2026-11-11:1:L9/j",
+      "2026-11-11:1:L9/k",
       "2026-11-11:2:L11/a",
+      "2026-11-11:2:L11/d",
+      "2026-11-11:2:L11/o",
       "2026-11-11:2:L11/l",
-      "2026-11-11:2:L11/k",
-      "2026-11-11:2:L11/j",
-      "2026-11-11:3:L14/a",
-      "2026-11-11:3:L14/i",
-      "2026-11-11:3:L14/x",
-      "2026-11-11:3:L14/g"
+      "2026-11-11:3:L17/f",
+      "2026-11-11:3:L17/s",
+      "2026-11-11:3:L17/A",
+      "2026-11-11:3:L17/q"
      ],
      "completed": [
       1,
@@ -1428,12 +1432,12 @@
       3
      ],
      "sweepRewarded": true,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 189,
-     "promotions": 10,
-     "relegations": 7,
+     "points": 191,
+     "promotions": 9,
+     "relegations": 6,
      "challengesCompleted": 45
     },
     "milestones": [
@@ -1462,8 +1466,8 @@
      "outcome": "promoted"
     }
    },
-   "pool": 5,
-   "results": "i:awarded a:awarded d:awarded f:awarded done:true r:awarded d:awarded f:awarded m:awarded done:true D:awarded A:awarded s:awarded l:awarded done:true",
+   "pool": 6,
+   "results": "f:awarded n:awarded h:awarded k:awarded done:true a:awarded b:awarded x:awarded n:awarded done:true a:awarded b:awarded x:awarded n:awarded done:true",
    "lastHistory": {
     "date": "2026-11-11",
     "days": 1,
@@ -1484,18 +1488,18 @@
      "date": "2026-11-12",
      "startTier": 5,
      "collected": [
-      "2026-11-12:1:L7/i",
-      "2026-11-12:1:L7/a",
-      "2026-11-12:1:L7/d",
-      "2026-11-12:1:L7/f",
-      "2026-11-12:2:L10/r",
-      "2026-11-12:2:L10/d",
-      "2026-11-12:2:L10/f",
-      "2026-11-12:2:L10/m",
-      "2026-11-12:3:L21/D",
-      "2026-11-12:3:L21/A",
-      "2026-11-12:3:L21/s",
-      "2026-11-12:3:L21/l"
+      "2026-11-12:1:L9/f",
+      "2026-11-12:1:L9/n",
+      "2026-11-12:1:L9/h",
+      "2026-11-12:1:L9/k",
+      "2026-11-12:2:L18/a",
+      "2026-11-12:2:L18/b",
+      "2026-11-12:2:L18/x",
+      "2026-11-12:2:L18/n",
+      "2026-11-12:3:L24/a",
+      "2026-11-12:3:L24/b",
+      "2026-11-12:3:L24/x",
+      "2026-11-12:3:L24/n"
      ],
      "completed": [
       1,
@@ -1503,12 +1507,12 @@
       3
      ],
      "sweepRewarded": true,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 201,
-     "promotions": 11,
-     "relegations": 7,
+     "points": 203,
+     "promotions": 10,
+     "relegations": 6,
      "challengesCompleted": 48
     },
     "milestones": [
@@ -1537,8 +1541,8 @@
      "outcome": "retained"
     }
    },
-   "pool": 5,
-   "results": "l:awarded r:awarded e:awarded i:awarded done:true d:awarded f:awarded y:awarded x:awarded done:true A:awarded s:awarded m:awarded k:awarded done:true",
+   "pool": 6,
+   "results": "g:awarded i:awarded j:awarded e:awarded done:true c:awarded d:awarded j:awarded o:awarded done:true a:awarded u:awarded h:awarded c:awarded done:true",
    "lastHistory": {
     "date": "2026-11-12",
     "days": 1,
@@ -1559,18 +1563,18 @@
      "date": "2026-11-13",
      "startTier": 5,
      "collected": [
-      "2026-11-13:1:L8/l",
-      "2026-11-13:1:L8/r",
-      "2026-11-13:1:L8/e",
-      "2026-11-13:1:L8/i",
-      "2026-11-13:2:L15/d",
-      "2026-11-13:2:L15/f",
-      "2026-11-13:2:L15/y",
-      "2026-11-13:2:L15/x",
-      "2026-11-13:3:L20/A",
-      "2026-11-13:3:L20/s",
-      "2026-11-13:3:L20/m",
-      "2026-11-13:3:L20/k"
+      "2026-11-13:1:L9/g",
+      "2026-11-13:1:L9/i",
+      "2026-11-13:1:L9/j",
+      "2026-11-13:1:L9/e",
+      "2026-11-13:2:L12/c",
+      "2026-11-13:2:L12/d",
+      "2026-11-13:2:L12/j",
+      "2026-11-13:2:L12/o",
+      "2026-11-13:3:L24/a",
+      "2026-11-13:3:L24/u",
+      "2026-11-13:3:L24/h",
+      "2026-11-13:3:L24/c"
      ],
      "completed": [
       1,
@@ -1578,12 +1582,12 @@
       3
      ],
      "sweepRewarded": true,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 213,
-     "promotions": 11,
-     "relegations": 7,
+     "points": 215,
+     "promotions": 10,
+     "relegations": 6,
      "challengesCompleted": 51
     },
     "milestones": [
@@ -1612,8 +1616,8 @@
      "outcome": "retained"
     }
    },
-   "pool": 5,
-   "results": "b:awarded h:awarded q:awarded l:awarded done:true a:awarded n:awarded g:awarded u:awarded done:true G:awarded d:awarded q:awarded E:awarded done:true",
+   "pool": 6,
+   "results": "b:awarded n:awarded q:awarded r:awarded done:true a:awarded o:awarded k:awarded s:awarded done:true c:awarded b:awarded n:awarded r:awarded done:true",
    "lastHistory": {
     "date": "2026-11-13",
     "days": 1,
@@ -1634,18 +1638,18 @@
      "date": "2026-11-14",
      "startTier": 5,
      "collected": [
-      "2026-11-14:1:L11/b",
-      "2026-11-14:1:L11/h",
-      "2026-11-14:1:L11/q",
-      "2026-11-14:1:L11/l",
-      "2026-11-14:2:L13/a",
-      "2026-11-14:2:L13/n",
-      "2026-11-14:2:L13/g",
-      "2026-11-14:2:L13/u",
-      "2026-11-14:3:L17/G",
-      "2026-11-14:3:L17/d",
-      "2026-11-14:3:L17/q",
-      "2026-11-14:3:L17/E"
+      "2026-11-14:1:L10/b",
+      "2026-11-14:1:L10/n",
+      "2026-11-14:1:L10/q",
+      "2026-11-14:1:L10/r",
+      "2026-11-14:2:L11/a",
+      "2026-11-14:2:L11/o",
+      "2026-11-14:2:L11/k",
+      "2026-11-14:2:L11/s",
+      "2026-11-14:3:L21/c",
+      "2026-11-14:3:L21/b",
+      "2026-11-14:3:L21/n",
+      "2026-11-14:3:L21/r"
      ],
      "completed": [
       1,
@@ -1653,12 +1657,12 @@
       3
      ],
      "sweepRewarded": true,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 225,
-     "promotions": 11,
-     "relegations": 7,
+     "points": 227,
+     "promotions": 10,
+     "relegations": 6,
      "challengesCompleted": 54
     },
     "milestones": [
@@ -1687,8 +1691,8 @@
      "outcome": "retained"
     }
    },
-   "pool": 5,
-   "results": "a:awarded j:awarded f:awarded h:awarded done:true l:awarded k:awarded p:awarded t:awarded done:true w:awarded C:awarded A:awarded s:awarded done:true",
+   "pool": 6,
+   "results": "b:awarded d:awarded l:awarded p:awarded done:true q:awarded f:awarded l:awarded p:awarded done:true a:awarded m:awarded s:awarded d:awarded done:true",
    "lastHistory": {
     "date": "2026-11-14",
     "days": 1,
@@ -1709,18 +1713,18 @@
      "date": "2026-11-15",
      "startTier": 5,
      "collected": [
-      "2026-11-15:1:L4/a",
-      "2026-11-15:1:L4/j",
-      "2026-11-15:1:L4/f",
-      "2026-11-15:1:L4/h",
-      "2026-11-15:2:L12/l",
-      "2026-11-15:2:L12/k",
-      "2026-11-15:2:L12/p",
-      "2026-11-15:2:L12/t",
-      "2026-11-15:3:L17/w",
-      "2026-11-15:3:L17/C",
-      "2026-11-15:3:L17/A",
-      "2026-11-15:3:L17/s"
+      "2026-11-15:1:L10/b",
+      "2026-11-15:1:L10/d",
+      "2026-11-15:1:L10/l",
+      "2026-11-15:1:L10/p",
+      "2026-11-15:2:L15/q",
+      "2026-11-15:2:L15/f",
+      "2026-11-15:2:L15/l",
+      "2026-11-15:2:L15/p",
+      "2026-11-15:3:L24/a",
+      "2026-11-15:3:L24/m",
+      "2026-11-15:3:L24/s",
+      "2026-11-15:3:L24/d"
      ],
      "completed": [
       1,
@@ -1728,12 +1732,12 @@
       3
      ],
      "sweepRewarded": true,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 237,
-     "promotions": 11,
-     "relegations": 7,
+     "points": 239,
+     "promotions": 10,
+     "relegations": 6,
      "challengesCompleted": 57
     },
     "milestones": [
@@ -1762,8 +1766,8 @@
      "outcome": "retained"
     }
    },
-   "pool": 5,
-   "results": "c:awarded d:awarded i:awarded l:awarded done:true e:awarded u:awarded w:awarded t:awarded done:true D:awarded E:awarded a:awarded y:awarded done:true",
+   "pool": 6,
+   "results": "l:awarded c:awarded a:awarded b:awarded done:true h:awarded s:awarded y:awarded z:awarded done:true d:awarded u:awarded m:awarded q:awarded done:true",
    "lastHistory": {
     "date": "2026-11-15",
     "days": 1,
@@ -1784,18 +1788,18 @@
      "date": "2026-11-16",
      "startTier": 5,
      "collected": [
-      "2026-11-16:1:L4/c",
-      "2026-11-16:1:L4/d",
-      "2026-11-16:1:L4/i",
-      "2026-11-16:1:L4/l",
-      "2026-11-16:2:L11/e",
-      "2026-11-16:2:L11/u",
-      "2026-11-16:2:L11/w",
-      "2026-11-16:2:L11/t",
-      "2026-11-16:3:L18/D",
-      "2026-11-16:3:L18/E",
-      "2026-11-16:3:L18/a",
-      "2026-11-16:3:L18/y"
+      "2026-11-16:1:L6/l",
+      "2026-11-16:1:L6/c",
+      "2026-11-16:1:L6/a",
+      "2026-11-16:1:L6/b",
+      "2026-11-16:2:L17/h",
+      "2026-11-16:2:L17/s",
+      "2026-11-16:2:L17/y",
+      "2026-11-16:2:L17/z",
+      "2026-11-16:3:L23/d",
+      "2026-11-16:3:L23/u",
+      "2026-11-16:3:L23/m",
+      "2026-11-16:3:L23/q"
      ],
      "completed": [
       1,
@@ -1803,12 +1807,12 @@
       3
      ],
      "sweepRewarded": true,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 249,
-     "promotions": 11,
-     "relegations": 7,
+     "points": 251,
+     "promotions": 10,
+     "relegations": 6,
      "challengesCompleted": 60
     },
     "milestones": [
@@ -1837,8 +1841,8 @@
      "outcome": "retained"
     }
    },
-   "pool": 5,
-   "results": "b:awarded a:awarded",
+   "pool": 6,
+   "results": "c:awarded",
    "lastHistory": {
     "date": "2026-11-16",
     "days": 1,
@@ -1859,17 +1863,16 @@
      "date": "2026-11-17",
      "startTier": 5,
      "collected": [
-      "2026-11-17:1:L5/b",
-      "2026-11-17:1:L5/a"
+      "2026-11-17:1:L4/c"
      ],
      "completed": [],
      "sweepRewarded": false,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 251,
-     "promotions": 11,
-     "relegations": 7,
+     "points": 252,
+     "promotions": 10,
+     "relegations": 6,
      "challengesCompleted": 60
     },
     "milestones": [
@@ -1894,12 +1897,12 @@
     "relegations": 4,
     "lastPlayed": {
      "date": "2026-11-17",
-     "points": 2,
+     "points": 1,
      "outcome": "relegated"
     }
    },
-   "pool": 5,
-   "results": "b:awarded g:awarded r:awarded q:awarded",
+   "pool": 6,
+   "results": "a:awarded o:awarded",
    "lastHistory": {
     "date": "2026-11-18",
     "days": 4,
@@ -1920,19 +1923,17 @@
      "date": "2026-11-22",
      "startTier": 1,
      "collected": [
-      "2026-11-22:1:L8/b",
-      "2026-11-22:1:L8/g",
-      "2026-11-22:1:L8/r",
-      "2026-11-22:1:L8/q"
+      "2026-11-22:1:L22/a",
+      "2026-11-22:1:L22/o"
      ],
      "completed": [],
      "sweepRewarded": false,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 255,
-     "promotions": 11,
-     "relegations": 11,
+     "points": 254,
+     "promotions": 10,
+     "relegations": 10,
      "challengesCompleted": 60
     },
     "milestones": [
@@ -1957,16 +1958,16 @@
     "relegations": 0,
     "lastPlayed": {
      "date": "2026-11-22",
-     "points": 4,
+     "points": 2,
      "outcome": "retained"
     }
    },
-   "pool": 5,
-   "results": "b:awarded j:awarded f:awarded h:awarded done:true f:awarded h:awarded l:awarded n:awarded done:true j:awarded m:awarded i:awarded n:awarded done:true",
+   "pool": 6,
+   "results": "c:awarded f:awarded i:awarded u:awarded done:true a:awarded w:awarded v:awarded t:awarded done:true d:awarded u:awarded h:awarded w:awarded done:true",
    "lastHistory": {
     "date": "2026-11-22",
     "days": 1,
-    "points": 4,
+    "points": 2,
     "challenges": 0,
     "startTier": 1,
     "endTier": 1,
@@ -1983,18 +1984,18 @@
      "date": "2026-11-23",
      "startTier": 1,
      "collected": [
-      "2026-11-23:1:L4/b",
-      "2026-11-23:1:L4/j",
-      "2026-11-23:1:L4/f",
-      "2026-11-23:1:L4/h",
-      "2026-11-23:2:L9/f",
-      "2026-11-23:2:L9/h",
-      "2026-11-23:2:L9/l",
-      "2026-11-23:2:L9/n",
-      "2026-11-23:3:L10/j",
-      "2026-11-23:3:L10/m",
-      "2026-11-23:3:L10/i",
-      "2026-11-23:3:L10/n"
+      "2026-11-23:1:L17/c",
+      "2026-11-23:1:L17/f",
+      "2026-11-23:1:L17/i",
+      "2026-11-23:1:L17/u",
+      "2026-11-23:2:L26/a",
+      "2026-11-23:2:L26/w",
+      "2026-11-23:2:L26/v",
+      "2026-11-23:2:L26/t",
+      "2026-11-23:3:L28/d",
+      "2026-11-23:3:L28/u",
+      "2026-11-23:3:L28/h",
+      "2026-11-23:3:L28/w"
      ],
      "completed": [
       1,
@@ -2002,12 +2003,12 @@
       3
      ],
      "sweepRewarded": true,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 267,
-     "promotions": 11,
-     "relegations": 11,
+     "points": 266,
+     "promotions": 10,
+     "relegations": 10,
      "challengesCompleted": 63
     },
     "milestones": [
@@ -2036,8 +2037,8 @@
      "outcome": "promoted"
     }
    },
-   "pool": 5,
-   "results": "b:awarded d:awarded i:awarded l:awarded done:true j:awarded e:awarded h:awarded i:awarded done:true",
+   "pool": 6,
+   "results": "h:awarded j:awarded g:awarded l:awarded done:true f:awarded g:awarded l:awarded n:awarded done:true",
    "lastHistory": {
     "date": "2026-11-23",
     "days": 1,
@@ -2058,26 +2059,26 @@
      "date": "2026-11-24",
      "startTier": 2,
      "collected": [
-      "2026-11-24:1:L4/b",
-      "2026-11-24:1:L4/d",
-      "2026-11-24:1:L4/i",
-      "2026-11-24:1:L4/l",
-      "2026-11-24:2:L8/j",
-      "2026-11-24:2:L8/e",
-      "2026-11-24:2:L8/h",
-      "2026-11-24:2:L8/i"
+      "2026-11-24:1:L15/h",
+      "2026-11-24:1:L15/j",
+      "2026-11-24:1:L15/g",
+      "2026-11-24:1:L15/l",
+      "2026-11-24:2:L16/f",
+      "2026-11-24:2:L16/g",
+      "2026-11-24:2:L16/l",
+      "2026-11-24:2:L16/n"
      ],
      "completed": [
       1,
       2
      ],
      "sweepRewarded": false,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 275,
-     "promotions": 12,
-     "relegations": 11,
+     "points": 274,
+     "promotions": 11,
+     "relegations": 10,
      "challengesCompleted": 65
     },
     "milestones": [
@@ -2106,8 +2107,8 @@
      "outcome": "retained"
     }
    },
-   "pool": 5,
-   "results": "b:awarded j:awarded g:awarded f:awarded done:true",
+   "pool": 6,
+   "results": "r:awarded s:awarded n:awarded j:awarded done:true",
    "lastHistory": {
     "date": "2026-11-24",
     "days": 1,
@@ -2128,21 +2129,21 @@
      "date": "2026-11-25",
      "startTier": 2,
      "collected": [
-      "2026-11-25:1:L4/b",
-      "2026-11-25:1:L4/j",
-      "2026-11-25:1:L4/g",
-      "2026-11-25:1:L4/f"
+      "2026-11-25:1:L15/r",
+      "2026-11-25:1:L15/s",
+      "2026-11-25:1:L15/n",
+      "2026-11-25:1:L15/j"
      ],
      "completed": [
       1
      ],
      "sweepRewarded": false,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 279,
-     "promotions": 12,
-     "relegations": 11,
+     "points": 278,
+     "promotions": 11,
+     "relegations": 10,
      "challengesCompleted": 66
     },
     "milestones": [
@@ -2171,8 +2172,8 @@
      "outcome": "retained"
     }
    },
-   "pool": 5,
-   "results": "c:awarded j:awarded g:awarded k:awarded done:true n:awarded b:awarded e:awarded m:awarded done:true c:awarded p:awarded q:awarded A:awarded done:true",
+   "pool": 6,
+   "results": "e:awarded m:awarded n:awarded k:awarded done:true b:awarded j:awarded h:awarded l:awarded done:true a:awarded r:awarded n:awarded l:awarded done:true",
    "lastHistory": {
     "date": "2026-11-25",
     "days": 1,
@@ -2193,18 +2194,18 @@
      "date": "2026-11-26",
      "startTier": 2,
      "collected": [
-      "2026-11-26:1:L4/c",
-      "2026-11-26:1:L4/j",
-      "2026-11-26:1:L4/g",
-      "2026-11-26:1:L4/k",
-      "2026-11-26:2:L7/n",
-      "2026-11-26:2:L7/b",
-      "2026-11-26:2:L7/e",
-      "2026-11-26:2:L7/m",
-      "2026-11-26:3:L20/c",
-      "2026-11-26:3:L20/p",
-      "2026-11-26:3:L20/q",
-      "2026-11-26:3:L20/A"
+      "2026-11-26:1:L8/e",
+      "2026-11-26:1:L8/m",
+      "2026-11-26:1:L8/n",
+      "2026-11-26:1:L8/k",
+      "2026-11-26:2:L10/b",
+      "2026-11-26:2:L10/j",
+      "2026-11-26:2:L10/h",
+      "2026-11-26:2:L10/l",
+      "2026-11-26:3:L14/a",
+      "2026-11-26:3:L14/r",
+      "2026-11-26:3:L14/n",
+      "2026-11-26:3:L14/l"
      ],
      "completed": [
       1,
@@ -2212,12 +2213,12 @@
       3
      ],
      "sweepRewarded": true,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 291,
-     "promotions": 12,
-     "relegations": 11,
+     "points": 290,
+     "promotions": 11,
+     "relegations": 10,
      "challengesCompleted": 69
     },
     "milestones": [
@@ -2246,8 +2247,8 @@
      "outcome": "promoted"
     }
    },
-   "pool": 5,
-   "results": "a:awarded c:awarded f:awarded i:awarded done:true m:awarded j:awarded f:awarded h:awarded done:true l:awarded o:awarded s:awarded v:awarded done:true",
+   "pool": 6,
+   "results": "a:awarded b:awarded e:awarded d:awarded done:true u:awarded n:awarded i:awarded s:awarded done:true a:awarded h:awarded i:awarded l:awarded done:true",
    "lastHistory": {
     "date": "2026-11-26",
     "days": 1,
@@ -2269,17 +2270,17 @@
      "startTier": 3,
      "collected": [
       "2026-11-27:1:L4/a",
-      "2026-11-27:1:L4/c",
-      "2026-11-27:1:L4/f",
-      "2026-11-27:1:L4/i",
-      "2026-11-27:2:L5/m",
-      "2026-11-27:2:L5/j",
-      "2026-11-27:2:L5/f",
-      "2026-11-27:2:L5/h",
-      "2026-11-27:3:L14/l",
-      "2026-11-27:3:L14/o",
-      "2026-11-27:3:L14/s",
-      "2026-11-27:3:L14/v"
+      "2026-11-27:1:L4/b",
+      "2026-11-27:1:L4/e",
+      "2026-11-27:1:L4/d",
+      "2026-11-27:2:L18/u",
+      "2026-11-27:2:L18/n",
+      "2026-11-27:2:L18/i",
+      "2026-11-27:2:L18/s",
+      "2026-11-27:3:L25/a",
+      "2026-11-27:3:L25/h",
+      "2026-11-27:3:L25/i",
+      "2026-11-27:3:L25/l"
      ],
      "completed": [
       1,
@@ -2287,12 +2288,12 @@
       3
      ],
      "sweepRewarded": true,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 303,
-     "promotions": 13,
-     "relegations": 11,
+     "points": 302,
+     "promotions": 12,
+     "relegations": 10,
      "challengesCompleted": 72
     },
     "milestones": [
@@ -2321,8 +2322,8 @@
      "outcome": "promoted"
     }
    },
-   "pool": 5,
-   "results": "d:awarded f:awarded h:awarded l:awarded done:true j:awarded h:awarded v:awarded u:awarded done:true j:awarded r:awarded u:awarded y:awarded done:true",
+   "pool": 6,
+   "results": "h:awarded d:awarded g:awarded p:awarded done:true B:awarded C:awarded c:awarded x:awarded done:true C:awarded a:awarded m:awarded q:awarded done:true",
    "lastHistory": {
     "date": "2026-11-27",
     "days": 1,
@@ -2343,18 +2344,18 @@
      "date": "2026-11-28",
      "startTier": 4,
      "collected": [
-      "2026-11-28:1:L4/d",
-      "2026-11-28:1:L4/f",
-      "2026-11-28:1:L4/h",
-      "2026-11-28:1:L4/l",
-      "2026-11-28:2:L15/j",
-      "2026-11-28:2:L15/h",
-      "2026-11-28:2:L15/v",
-      "2026-11-28:2:L15/u",
-      "2026-11-28:3:L17/j",
-      "2026-11-28:3:L17/r",
-      "2026-11-28:3:L17/u",
-      "2026-11-28:3:L17/y"
+      "2026-11-28:1:L15/h",
+      "2026-11-28:1:L15/d",
+      "2026-11-28:1:L15/g",
+      "2026-11-28:1:L15/p",
+      "2026-11-28:2:L21/B",
+      "2026-11-28:2:L21/C",
+      "2026-11-28:2:L21/c",
+      "2026-11-28:2:L21/x",
+      "2026-11-28:3:L29/C",
+      "2026-11-28:3:L29/a",
+      "2026-11-28:3:L29/m",
+      "2026-11-28:3:L29/q"
      ],
      "completed": [
       1,
@@ -2362,12 +2363,12 @@
       3
      ],
      "sweepRewarded": true,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 315,
-     "promotions": 14,
-     "relegations": 11,
+     "points": 314,
+     "promotions": 13,
+     "relegations": 10,
      "challengesCompleted": 75
     },
     "milestones": [
@@ -2396,8 +2397,8 @@
      "outcome": "promoted"
     }
    },
-   "pool": 5,
-   "results": "j:awarded l:awarded c:awarded m:awarded done:true c:awarded l:awarded j:awarded i:awarded done:true c:awarded e:awarded j:awarded n:awarded done:true",
+   "pool": 6,
+   "results": "b:awarded e:awarded g:awarded n:awarded done:true k:awarded h:awarded f:awarded m:awarded done:true j:awarded c:awarded e:awarded s:awarded done:true",
    "lastHistory": {
     "date": "2026-11-28",
     "days": 1,
@@ -2418,18 +2419,18 @@
      "date": "2026-11-29",
      "startTier": 5,
      "collected": [
-      "2026-11-29:1:L6/j",
-      "2026-11-29:1:L6/l",
-      "2026-11-29:1:L6/c",
-      "2026-11-29:1:L6/m",
-      "2026-11-29:2:L8/c",
-      "2026-11-29:2:L8/l",
-      "2026-11-29:2:L8/j",
-      "2026-11-29:2:L8/i",
-      "2026-11-29:3:L16/c",
-      "2026-11-29:3:L16/e",
-      "2026-11-29:3:L16/j",
-      "2026-11-29:3:L16/n"
+      "2026-11-29:1:L12/b",
+      "2026-11-29:1:L12/e",
+      "2026-11-29:1:L12/g",
+      "2026-11-29:1:L12/n",
+      "2026-11-29:2:L20/k",
+      "2026-11-29:2:L20/h",
+      "2026-11-29:2:L20/f",
+      "2026-11-29:2:L20/m",
+      "2026-11-29:3:L24/j",
+      "2026-11-29:3:L24/c",
+      "2026-11-29:3:L24/e",
+      "2026-11-29:3:L24/s"
      ],
      "completed": [
       1,
@@ -2437,12 +2438,12 @@
       3
      ],
      "sweepRewarded": true,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 327,
-     "promotions": 15,
-     "relegations": 11,
+     "points": 326,
+     "promotions": 14,
+     "relegations": 10,
      "challengesCompleted": 78
     },
     "milestones": [
@@ -2471,8 +2472,8 @@
      "outcome": "retained"
     }
    },
-   "pool": 5,
-   "results": "c:awarded j:awarded e:awarded",
+   "pool": 6,
+   "results": "n:awarded",
    "lastHistory": {
     "date": "2026-11-29",
     "days": 1,
@@ -2493,18 +2494,16 @@
      "date": "2026-11-30",
      "startTier": 5,
      "collected": [
-      "2026-11-30:1:L4/c",
-      "2026-11-30:1:L4/j",
-      "2026-11-30:1:L4/e"
+      "2026-11-30:1:L14/n"
      ],
      "completed": [],
      "sweepRewarded": false,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 330,
-     "promotions": 15,
-     "relegations": 11,
+     "points": 327,
+     "promotions": 14,
+     "relegations": 10,
      "challengesCompleted": 78
     },
     "milestones": [
@@ -2529,16 +2528,16 @@
     "relegations": 1,
     "lastPlayed": {
      "date": "2026-11-30",
-     "points": 3,
+     "points": 1,
      "outcome": "relegated"
     }
    },
-   "pool": 5,
-   "results": "c:awarded e:awarded h:awarded l:awarded done:true n:awarded s:awarded u:awarded t:awarded done:true D:awarded E:awarded e:awarded o:awarded done:true",
+   "pool": 6,
+   "results": "t:awarded u:awarded m:awarded s:awarded done:true u:awarded o:awarded k:awarded b:awarded done:true a:awarded c:awarded m:awarded s:awarded done:true",
    "lastHistory": {
     "date": "2026-11-30",
     "days": 1,
-    "points": 3,
+    "points": 1,
     "challenges": 0,
     "startTier": 5,
     "endTier": 4,
@@ -2555,18 +2554,18 @@
      "date": "2026-12-01",
      "startTier": 4,
      "collected": [
-      "2026-12-01:1:L4/c",
-      "2026-12-01:1:L4/e",
-      "2026-12-01:1:L4/h",
-      "2026-12-01:1:L4/l",
-      "2026-12-01:2:L14/n",
-      "2026-12-01:2:L14/s",
-      "2026-12-01:2:L14/u",
-      "2026-12-01:2:L14/t",
-      "2026-12-01:3:L18/D",
-      "2026-12-01:3:L18/E",
-      "2026-12-01:3:L18/e",
-      "2026-12-01:3:L18/o"
+      "2026-12-01:1:L18/t",
+      "2026-12-01:1:L18/u",
+      "2026-12-01:1:L18/m",
+      "2026-12-01:1:L18/s",
+      "2026-12-01:2:L22/u",
+      "2026-12-01:2:L22/o",
+      "2026-12-01:2:L22/k",
+      "2026-12-01:2:L22/b",
+      "2026-12-01:3:L28/a",
+      "2026-12-01:3:L28/c",
+      "2026-12-01:3:L28/m",
+      "2026-12-01:3:L28/s"
      ],
      "completed": [
       1,
@@ -2574,12 +2573,12 @@
       3
      ],
      "sweepRewarded": true,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 342,
-     "promotions": 15,
-     "relegations": 12,
+     "points": 339,
+     "promotions": 14,
+     "relegations": 11,
      "challengesCompleted": 81
     },
     "milestones": [
@@ -2608,8 +2607,8 @@
      "outcome": "promoted"
     }
    },
-   "pool": 5,
-   "results": "b:awarded j:awarded g:awarded f:awarded done:true r:awarded o:awarded j:awarded b:awarded done:true z:awarded e:awarded r:awarded y:awarded done:true",
+   "pool": 6,
+   "results": "b:awarded c:awarded m:awarded f:awarded done:true s:awarded c:awarded e:awarded o:awarded done:true h:awarded z:awarded y:awarded s:awarded done:true",
    "lastHistory": {
     "date": "2026-12-01",
     "days": 1,
@@ -2630,18 +2629,18 @@
      "date": "2026-12-02",
      "startTier": 5,
      "collected": [
-      "2026-12-02:1:L4/b",
-      "2026-12-02:1:L4/j",
-      "2026-12-02:1:L4/g",
-      "2026-12-02:1:L4/f",
-      "2026-12-02:2:L10/r",
-      "2026-12-02:2:L10/o",
-      "2026-12-02:2:L10/j",
-      "2026-12-02:2:L10/b",
-      "2026-12-02:3:L15/z",
-      "2026-12-02:3:L15/e",
-      "2026-12-02:3:L15/r",
-      "2026-12-02:3:L15/y"
+      "2026-12-02:1:L8/b",
+      "2026-12-02:1:L8/c",
+      "2026-12-02:1:L8/m",
+      "2026-12-02:1:L8/f",
+      "2026-12-02:2:L14/s",
+      "2026-12-02:2:L14/c",
+      "2026-12-02:2:L14/e",
+      "2026-12-02:2:L14/o",
+      "2026-12-02:3:L29/h",
+      "2026-12-02:3:L29/z",
+      "2026-12-02:3:L29/y",
+      "2026-12-02:3:L29/s"
      ],
      "completed": [
       1,
@@ -2649,12 +2648,12 @@
       3
      ],
      "sweepRewarded": true,
-     "pool": 5
+     "pool": 6
     },
     "lifetime": {
-     "points": 354,
-     "promotions": 16,
-     "relegations": 12,
+     "points": 351,
+     "promotions": 15,
+     "relegations": 11,
      "challengesCompleted": 84
     },
     "milestones": [
@@ -2677,10 +2676,10 @@
   "league:highest:platinum=40",
   "daily:league-sweep:2026-10-24=15",
   "daily:league-sweep:2026-10-26=15",
-  "daily:league-sweep:2026-10-27=15",
   "league:highest:diamond=50",
-  "daily:league-sweep:2026-10-28=15",
+  "daily:league-sweep:2026-10-27=15",
   "league:highest:neon-elite=75",
+  "daily:league-sweep:2026-10-28=15",
   "daily:league-sweep:2026-11-03=15",
   "daily:league-sweep:2026-11-04=15",
   "daily:league-sweep:2026-11-05=15",

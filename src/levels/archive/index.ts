@@ -34,6 +34,24 @@ import step13Level18 from './step13/level18';
 import step13Level19 from './step13/level19';
 import step13Level20 from './step13/level20';
 import step13Level21 from './step13/level21';
+import step14Level04 from './step14/level04';
+import step14Level05 from './step14/level05';
+import step14Level06 from './step14/level06';
+import step14Level07 from './step14/level07';
+import step14Level08 from './step14/level08';
+import step14Level09 from './step14/level09';
+import step14Level10 from './step14/level10';
+import step14Level11 from './step14/level11';
+import step14Level12 from './step14/level12';
+import step14Level13 from './step14/level13';
+import step14Level14 from './step14/level14';
+import step14Level15 from './step14/level15';
+import step14Level16 from './step14/level16';
+import step14Level17 from './step14/level17';
+import step14Level18 from './step14/level18';
+import step14Level19 from './step14/level19';
+import step14Level20 from './step14/level20';
+import step14Level21 from './step14/level21';
 export { REVISION_2_LAYOUTS } from './revision2';
 
 /*
@@ -45,7 +63,9 @@ export { REVISION_2_LAYOUTS } from './revision2';
  * step12/ holds Levels 4–20 exactly as shipped before the Step 13 redesign
  * (4–10 at revision 3, 11–20 at revision 1); step13/ holds Levels 4–21 as
  * shipped in Step 13 (4–10 at revision 4, 11–21 at revision 2), recovered
- * verbatim from the Step 13 build. These files are frozen copies: never edit them.
+ * verbatim from the Step 13 build; step14/ holds Levels 4–21 as shipped in
+ * Step 14, the full-coverage layouts (4–10 at revision 5, 11–21 at revision 3),
+ * before the 100-level rebuild. These files are frozen copies: never edit them.
  */
 
 /** Levels 4–20 as they were before the Step 13 redesign, in id order. */
@@ -89,4 +109,26 @@ export const STEP_13_LEVELS: readonly LevelData[] = [
   step13Level19,
   step13Level20,
   step13Level21,
+];
+
+/** Levels 4–21 as they were in Step 14 (before the 100-level rebuild), in id order. */
+export const STEP_14_LEVELS: readonly LevelData[] = [
+  step14Level04,
+  step14Level05,
+  step14Level06,
+  step14Level07,
+  step14Level08,
+  step14Level09,
+  step14Level10,
+  step14Level11,
+  step14Level12,
+  step14Level13,
+  step14Level14,
+  step14Level15,
+  step14Level16,
+  step14Level17,
+  step14Level18,
+  step14Level19,
+  step14Level20,
+  step14Level21,
 ];

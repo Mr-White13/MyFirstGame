@@ -1,5 +1,5 @@
 import { formatClock } from '../core/time';
-import { BONUS_CLEARS, STREAK_TAPS, STREAK_WINDOW_MS, type GameSnapshot } from '../core/types';
+import { BONUS_CLEARS, STREAK_TAPS, STREAK_WINDOW_MS, type GameSnapshot, type LevelData } from '../core/types';
 import { requireElement } from './dom';
 
 /** What the HUD shows during a Daily League challenge. */
@@ -23,7 +23,7 @@ export interface ChallengeHud {
 export class Hud {
   private readonly title = requireElement('hud-title');
   private readonly level = requireElement('hud-level');
-  /** A special level's name under the title (Level 31); hidden for other levels and challenges. */
+  /** Under the title: a named level's name, else HARD / VERY HARD, coloured by tier; hidden for normal levels and challenges. */
   private readonly name = requireElement('hud-name');
   private readonly league = requireElement('hud-league');
   private readonly energy = requireElement('hud-energy');
@@ -46,8 +46,8 @@ export class Hud {
   private last?: GameSnapshot;
 
   constructor(
-    /** The display name of a level, if it has one (see LevelData.name). */
-    private readonly levelName: (levelId: number) => string | undefined = () => undefined,
+    /** A level's name and difficulty tier, if it has them (see LevelData.name and LevelData.tier). */
+    private readonly levelInfo: (levelId: number) => Pick<LevelData, 'name' | 'tier'> | undefined = () => undefined,
   ) {}
 
   update(snapshot: GameSnapshot): void {
@@ -110,10 +110,12 @@ export class Hud {
   }
 
   private renderName(levelId: number | undefined): void {
-    const name = this.challenge || levelId === undefined ? undefined : this.levelName(levelId);
-    this.name.textContent = name ?? '';
-    this.name.hidden = name === undefined;
-  }
+    const info = this.challenge || levelId === undefined ? undefined : this.levelInfo(levelId);
+    const text = info?.name ?? info?.tier?.toUpperCase();
+    this.name.textContent = text ?? '';
+    this.name.hidden = text === undefined;
+    this.name.classList.toggle('hud__name--hard', info?.tier === 'hard');
+    this.name.classList.toggle('hud__name--very-hard', info?.tier === 'very hard');  }
 
   /** The Reset zoom control on the board: shown only while the board is zoomed in. */
   setZoomed(zoomed: boolean): void {

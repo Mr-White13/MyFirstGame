@@ -1,22 +1,22 @@
 import { levelFromMap } from './levelMap';
 
-/** Level 13 — generated from tools/level-plan.json (seed 1350, attempt 0), score 57 (Medium–hard). */
+/** Level 13 — chapter 1, hard level, generated from tools/level-plan.json (seed 1350, attempt 1), score 62 (Hard). */
 export default levelFromMap(
   13,
   [
-    'a^ b  b> c  c  c> d^ g  g  g',
-    'a  b  f  e  e  e> d  d  d  g',
-    'a  b  f  e  m  m  m  m  m  g',
-    'a  b  fv e  m  l  l  l  m  g',
-    'a  a  p  e  n  n  k  l  m  gv',
-    'h^ i^ p  e  j^ n  kv lv m  m>',
-    'h  i  p  j  j  n  n  n  n  n',
-    'i  i  p  p  p  p  p  x  x  nv',
-    'i  o  s  s  s  s  p  p> x  x',
-    'i  o  s  q  q  q> r  r  r> x',
-    'i  o  s  s  s  s> w  w  w  x',
-    't^ ov u  u  u  u  u  u> w  x',
-    't  t  u  v< v  v  v  v  wv xv',
+    'a^ j  j  j  b^ c< c  d  d  e',
+    'a  j  h  j  b  d< d  d  e< e',
+    'a  j  h  j  b  f^ g< g  g  q',
+    'a  h< h  j  b  f  i< i  g  q',
+    'a  j< j  j  k^ f  l^ i  q  q',
+    'k  k  k  k  k  f  l  l  q  m^',
+    'n^ o< o  o  o  f  f  l  q  m',
+    'n  p^ r  r  o  l  l  l  qv m',
+    'n  p  r  o  o  r^ s^ t  t  t',
+    'n  p  r  r  r  r  s  tv y  t',
+    'u^ p  p  v< v  v  s  x  y  t',
+    'u  w^ p  p  x< x  x  x  y  t',
+    'u  w  w  w  w  y< y  y  y  t',
   ],
-  { revision: 3 },
+  { revision: 4, tier: 'hard' },
 );

@@ -23,6 +23,9 @@ export interface ArrowData {
   readonly energy?: boolean;
 }
 
+/** How hard a level is meant to be, as shown to the player (level select, HUD). */
+export type LevelTier = 'normal' | 'hard' | 'very hard';
+
 export interface LevelData {
   readonly id: number;
   /**
@@ -38,6 +41,12 @@ export interface LevelData {
    * form a silhouette, and only those show the board's dots. Rules ignore it.
    */
   readonly outline?: boolean;
+  /**
+   * The level's place in the campaign rhythm (a few normal levels, then a
+   * harder one, now and then a very hard one); normal when absent. Shown in
+   * level select and the HUD; rules ignore it.
+   */
+  readonly tier?: Exclude<LevelTier, 'normal'>;
   readonly rows: number;
   readonly cols: number;
   readonly arrows: readonly ArrowData[];

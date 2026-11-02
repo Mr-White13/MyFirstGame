@@ -1908,7 +1908,7 @@
    "won",
    {
     "firstClear": true,
-    "unlocked": null,
+    "unlocked": 41,
     "newBestStars": true,
     "bestStars": 3,
     "newBestTime": true,
@@ -1943,11 +1943,2891 @@
     "bestTimeMs": 13000,
     "previousBestTimeMs": 13000
    }
+  ],
+  [
+   41,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   41,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 42,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 28000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   41,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 12000,
+    "previousBestTimeMs": 28000
+   }
+  ],
+  [
+   41,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 12000,
+    "previousBestTimeMs": 12000
+   }
+  ],
+  [
+   42,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   42,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 43,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 27000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   42,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 11000,
+    "previousBestTimeMs": 27000
+   }
+  ],
+  [
+   42,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 11000,
+    "previousBestTimeMs": 11000
+   }
+  ],
+  [
+   43,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   43,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 44,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 26000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   43,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 10000,
+    "previousBestTimeMs": 26000
+   }
+  ],
+  [
+   43,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 10000,
+    "previousBestTimeMs": 10000
+   }
+  ],
+  [
+   44,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   44,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 45,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 25000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   44,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 9000,
+    "previousBestTimeMs": 25000
+   }
+  ],
+  [
+   44,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 9000,
+    "previousBestTimeMs": 9000
+   }
+  ],
+  [
+   45,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   45,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 46,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 24000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   45,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 8000,
+    "previousBestTimeMs": 24000
+   }
+  ],
+  [
+   45,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 8000,
+    "previousBestTimeMs": 8000
+   }
+  ],
+  [
+   46,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   46,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 47,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 23000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   46,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 7000,
+    "previousBestTimeMs": 23000
+   }
+  ],
+  [
+   46,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 7000,
+    "previousBestTimeMs": 7000
+   }
+  ],
+  [
+   47,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   47,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 48,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 22000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   47,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 6000,
+    "previousBestTimeMs": 22000
+   }
+  ],
+  [
+   47,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 6000,
+    "previousBestTimeMs": 6000
+   }
+  ],
+  [
+   48,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   48,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 49,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 21000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   48,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 5000,
+    "previousBestTimeMs": 21000
+   }
+  ],
+  [
+   48,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 5000,
+    "previousBestTimeMs": 5000
+   }
+  ],
+  [
+   49,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   49,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 50,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 20000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   49,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 4000,
+    "previousBestTimeMs": 20000
+   }
+  ],
+  [
+   49,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 4000,
+    "previousBestTimeMs": 4000
+   }
+  ],
+  [
+   50,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   50,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 51,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 19000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   50,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 3000,
+    "previousBestTimeMs": 19000
+   }
+  ],
+  [
+   50,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 3000,
+    "previousBestTimeMs": 3000
+   }
+  ],
+  [
+   51,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   51,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 52,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 18000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   51,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 2000,
+    "previousBestTimeMs": 18000
+   }
+  ],
+  [
+   51,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 2000,
+    "previousBestTimeMs": 2000
+   }
+  ],
+  [
+   52,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   52,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 53,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 17000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   52,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 1000,
+    "previousBestTimeMs": 17000
+   }
+  ],
+  [
+   52,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 1000,
+    "previousBestTimeMs": 1000
+   }
+  ],
+  [
+   53,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   53,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 54,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 16000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   53,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 16000
+   }
+  ],
+  [
+   53,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   54,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   54,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 55,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 15000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   54,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 15000
+   }
+  ],
+  [
+   54,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   55,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   55,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 56,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 14000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   55,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 14000
+   }
+  ],
+  [
+   55,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   56,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   56,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 57,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 13000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   56,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 13000
+   }
+  ],
+  [
+   56,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   57,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   57,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 58,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 12000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   57,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 12000
+   }
+  ],
+  [
+   57,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   58,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   58,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 59,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 11000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   58,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 11000
+   }
+  ],
+  [
+   58,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   59,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   59,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 60,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 10000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   59,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 10000
+   }
+  ],
+  [
+   59,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   60,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   60,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 61,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 9000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   60,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 9000
+   }
+  ],
+  [
+   60,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   61,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   61,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 62,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 8000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   61,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 8000
+   }
+  ],
+  [
+   61,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   62,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   62,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 63,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 7000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   62,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 7000
+   }
+  ],
+  [
+   62,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   63,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   63,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 64,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 6000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   63,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 6000
+   }
+  ],
+  [
+   63,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   64,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   64,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 65,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 5000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   64,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 5000
+   }
+  ],
+  [
+   64,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   65,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   65,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 66,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 4000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   65,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 4000
+   }
+  ],
+  [
+   65,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   66,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   66,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 67,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 3000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   66,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 3000
+   }
+  ],
+  [
+   66,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   67,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   67,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 68,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 2000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   67,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 2000
+   }
+  ],
+  [
+   67,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   68,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   68,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 69,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 1000,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   68,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 1000
+   }
+  ],
+  [
+   68,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   69,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   69,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 70,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   69,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   69,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   70,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   70,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 71,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   70,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   70,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   71,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   71,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 72,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   71,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   71,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   72,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   72,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 73,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   72,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   72,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   73,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   73,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 74,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   73,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   73,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   74,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   74,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 75,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   74,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   74,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   75,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   75,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 76,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   75,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   75,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   76,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   76,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 77,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   76,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   76,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   77,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   77,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 78,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   77,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   77,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   78,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   78,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 79,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   78,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   78,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   79,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   79,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 80,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   79,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   79,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   80,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   80,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 81,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   80,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   80,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   81,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   81,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 82,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   81,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   81,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   82,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   82,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 83,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   82,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   82,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   83,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   83,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 84,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   83,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   83,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   84,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   84,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 85,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   84,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   84,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   85,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   85,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 86,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   85,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   85,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   86,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   86,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 87,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   86,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   86,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   87,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   87,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 88,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   87,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   87,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   88,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   88,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 89,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   88,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   88,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   89,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   89,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 90,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   89,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   89,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   90,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   90,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 91,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   90,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   90,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   91,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   91,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 92,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   91,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   91,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   92,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   92,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 93,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   92,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   92,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   93,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   93,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 94,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   93,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   93,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   94,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   94,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 95,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   94,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   94,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   95,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   95,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 96,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   95,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   95,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   96,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   96,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 97,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   96,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   96,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   97,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   97,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 98,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   97,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   97,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   98,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   98,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 99,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   98,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   98,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   99,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   99,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": 100,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   99,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   99,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   100,
+   "chaos",
+   "failed",
+   null
+  ],
+  [
+   100,
+   "greedy-bursts",
+   "won",
+   {
+    "firstClear": true,
+    "unlocked": null,
+    "newBestStars": true,
+    "bestStars": 3,
+    "newBestTime": true,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": null
+   }
+  ],
+  [
+   100,
+   "solution-slow",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
+  ],
+  [
+   100,
+   "greedy-fast",
+   "won",
+   {
+    "firstClear": false,
+    "unlocked": null,
+    "newBestStars": false,
+    "bestStars": 3,
+    "newBestTime": false,
+    "bestTimeMs": 0,
+    "previousBestTimeMs": 0
+   }
   ]
  ],
  "records": {
   "progress": {
-   "highestUnlocked": 40,
+   "highestUnlocked": 100,
    "completed": {
     "1": {
      "bestMoves": 5,
@@ -1972,272 +4852,692 @@
     },
     "4": {
      "bestMoves": 10,
-     "revision": 5,
+     "revision": 6,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 49000
     },
     "5": {
      "bestMoves": 12,
-     "revision": 5,
+     "revision": 6,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 48000
     },
     "6": {
-     "bestMoves": 12,
-     "revision": 5,
+     "bestMoves": 11,
+     "revision": 6,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 47000
     },
     "7": {
-     "bestMoves": 15,
-     "revision": 5,
+     "bestMoves": 14,
+     "revision": 6,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 46000
     },
     "8": {
-     "bestMoves": 16,
-     "revision": 5,
+     "bestMoves": 12,
+     "revision": 6,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 45000
     },
     "9": {
-     "bestMoves": 15,
-     "revision": 5,
+     "bestMoves": 13,
+     "revision": 6,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 44000
     },
     "10": {
-     "bestMoves": 17,
-     "revision": 5,
+     "bestMoves": 16,
+     "revision": 6,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 43000
     },
     "11": {
-     "bestMoves": 19,
-     "revision": 3,
+     "bestMoves": 15,
+     "revision": 4,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 42000
     },
     "12": {
-     "bestMoves": 19,
-     "revision": 3,
+     "bestMoves": 14,
+     "revision": 4,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 41000
     },
     "13": {
-     "bestMoves": 20,
-     "revision": 3,
+     "bestMoves": 21,
+     "revision": 4,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 40000
     },
     "14": {
-     "bestMoves": 20,
-     "revision": 3,
+     "bestMoves": 16,
+     "revision": 4,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 39000
     },
     "15": {
-     "bestMoves": 23,
-     "revision": 3,
+     "bestMoves": 15,
+     "revision": 4,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 38000
     },
     "16": {
-     "bestMoves": 23,
-     "revision": 3,
+     "bestMoves": 16,
+     "revision": 4,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 37000
     },
     "17": {
-     "bestMoves": 27,
-     "revision": 3,
+     "bestMoves": 23,
+     "revision": 4,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 36000
     },
     "18": {
-     "bestMoves": 27,
-     "revision": 3,
+     "bestMoves": 21,
+     "revision": 4,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 35000
     },
     "19": {
-     "bestMoves": 25,
-     "revision": 3,
+     "bestMoves": 21,
+     "revision": 4,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 34000
     },
     "20": {
-     "bestMoves": 23,
-     "revision": 3,
+     "bestMoves": 25,
+     "revision": 4,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 33000
     },
     "21": {
-     "bestMoves": 27,
-     "revision": 3,
+     "bestMoves": 24,
+     "revision": 4,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 32000
     },
     "22": {
      "bestMoves": 23,
-     "revision": 3,
+     "revision": 4,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 31000
     },
     "23": {
-     "bestMoves": 30,
-     "revision": 3,
+     "bestMoves": 25,
+     "revision": 4,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 30000
     },
     "24": {
-     "bestMoves": 27,
-     "revision": 3,
+     "bestMoves": 20,
+     "revision": 4,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 29000
     },
     "25": {
-     "bestMoves": 30,
-     "revision": 3,
+     "bestMoves": 21,
+     "revision": 4,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 28000
     },
     "26": {
-     "bestMoves": 28,
-     "revision": 3,
+     "bestMoves": 22,
+     "revision": 4,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 27000
     },
     "27": {
-     "bestMoves": 31,
-     "revision": 3,
+     "bestMoves": 29,
+     "revision": 4,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 26000
     },
     "28": {
-     "bestMoves": 31,
-     "revision": 3,
+     "bestMoves": 23,
+     "revision": 4,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 25000
     },
     "29": {
-     "bestMoves": 31,
-     "revision": 3,
+     "bestMoves": 23,
+     "revision": 4,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 24000
     },
     "30": {
-     "bestMoves": 32,
-     "revision": 3,
+     "bestMoves": 26,
+     "revision": 4,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 23000
     },
     "31": {
-     "bestMoves": 139,
-     "revision": 1,
+     "bestMoves": 28,
+     "revision": 2,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 22000
     },
     "32": {
-     "bestMoves": 149,
-     "revision": 1,
+     "bestMoves": 25,
+     "revision": 2,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 21000
     },
     "33": {
-     "bestMoves": 144,
-     "revision": 1,
+     "bestMoves": 29,
+     "revision": 2,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 20000
     },
     "34": {
-     "bestMoves": 141,
-     "revision": 1,
+     "bestMoves": 28,
+     "revision": 2,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 19000
     },
     "35": {
-     "bestMoves": 154,
-     "revision": 1,
+     "bestMoves": 25,
+     "revision": 2,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 18000
     },
     "36": {
-     "bestMoves": 146,
-     "revision": 1,
+     "bestMoves": 27,
+     "revision": 2,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 17000
     },
     "37": {
-     "bestMoves": 146,
-     "revision": 1,
+     "bestMoves": 32,
+     "revision": 2,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 16000
     },
     "38": {
-     "bestMoves": 146,
-     "revision": 1,
+     "bestMoves": 27,
+     "revision": 2,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 15000
     },
     "39": {
-     "bestMoves": 129,
-     "revision": 1,
+     "bestMoves": 29,
+     "revision": 2,
      "bestStars": 3,
      "bestMistakes": 0,
      "bestTimeMs": 14000
     },
     "40": {
+     "bestMoves": 44,
+     "revision": 2,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 13000
+    },
+    "41": {
+     "bestMoves": 26,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 12000
+    },
+    "42": {
+     "bestMoves": 34,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 11000
+    },
+    "43": {
+     "bestMoves": 41,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 10000
+    },
+    "44": {
+     "bestMoves": 35,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 9000
+    },
+    "45": {
+     "bestMoves": 30,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 8000
+    },
+    "46": {
+     "bestMoves": 30,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 7000
+    },
+    "47": {
+     "bestMoves": 146,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 6000
+    },
+    "48": {
+     "bestMoves": 33,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 5000
+    },
+    "49": {
+     "bestMoves": 30,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 4000
+    },
+    "50": {
+     "bestMoves": 41,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 3000
+    },
+    "51": {
+     "bestMoves": 31,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 2000
+    },
+    "52": {
+     "bestMoves": 29,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 1000
+    },
+    "53": {
+     "bestMoves": 29,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "54": {
+     "bestMoves": 141,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "55": {
+     "bestMoves": 31,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "56": {
+     "bestMoves": 30,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "57": {
+     "bestMoves": 47,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "58": {
+     "bestMoves": 34,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "59": {
+     "bestMoves": 33,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "60": {
+     "bestMoves": 144,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "61": {
+     "bestMoves": 32,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "62": {
+     "bestMoves": 30,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "63": {
+     "bestMoves": 49,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "64": {
+     "bestMoves": 32,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "65": {
+     "bestMoves": 29,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "66": {
+     "bestMoves": 30,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "67": {
+     "bestMoves": 146,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "68": {
+     "bestMoves": 32,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "69": {
+     "bestMoves": 31,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "70": {
+     "bestMoves": 48,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "71": {
+     "bestMoves": 30,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "72": {
+     "bestMoves": 26,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "73": {
+     "bestMoves": 36,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "74": {
+     "bestMoves": 146,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "75": {
+     "bestMoves": 32,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "76": {
+     "bestMoves": 33,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "77": {
+     "bestMoves": 54,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "78": {
+     "bestMoves": 34,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "79": {
+     "bestMoves": 30,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "80": {
+     "bestMoves": 129,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "81": {
+     "bestMoves": 34,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "82": {
+     "bestMoves": 28,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "83": {
+     "bestMoves": 72,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "84": {
+     "bestMoves": 32,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "85": {
+     "bestMoves": 33,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "86": {
+     "bestMoves": 37,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "87": {
+     "bestMoves": 149,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "88": {
+     "bestMoves": 28,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "89": {
+     "bestMoves": 35,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "90": {
+     "bestMoves": 154,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "91": {
+     "bestMoves": 33,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "92": {
+     "bestMoves": 33,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "93": {
+     "bestMoves": 31,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "94": {
+     "bestMoves": 139,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "95": {
+     "bestMoves": 32,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "96": {
+     "bestMoves": 35,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "97": {
+     "bestMoves": 78,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "98": {
+     "bestMoves": 33,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "99": {
+     "bestMoves": 33,
+     "revision": 1,
+     "bestStars": 3,
+     "bestMistakes": 0,
+     "bestTimeMs": 0
+    },
+    "100": {
      "bestMoves": 173,
      "revision": 1,
      "bestStars": 3,
      "bestMistakes": 0,
-     "bestTimeMs": 13000
+     "bestTimeMs": 0
     }
    }
   },
   "stats": {
-   "successfulRuns": 123,
-   "failedRuns": 37,
-   "flawlessRuns": 121,
-   "playTimeMs": 6520000,
-   "arrowsCleared": 7767,
-   "chainClears": 4,
+   "successfulRuns": 303,
+   "failedRuns": 97,
+   "flawlessRuns": 301,
+   "playTimeMs": 7447000,
+   "arrowsCleared": 14862,
+   "chainClears": 3,
    "trackedSince": "2026-10-01T08:00:00.000Z"
   }
  },
@@ -2245,11 +5545,11 @@
   "since": "2026-10-31",
   "days": {
    "2026-10-31": {
-    "playMs": 6520000,
-    "runs": 160,
-    "wins": 123,
-    "flawless": 121,
-    "arrows": 7767
+    "playMs": 7447000,
+    "runs": 400,
+    "wins": 303,
+    "flawless": 301,
+    "arrows": 14862
    }
   }
  }

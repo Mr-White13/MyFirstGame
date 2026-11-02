@@ -1,21 +1,21 @@
 import { levelFromMap } from './levelMap';
 
-/** Level 10 — difficulty spike, generated from tools/level-plan.json (seed 1050, attempt 4), score 62 (Hard). */
+/** Level 10 — chapter 1, hard level, generated from tools/level-plan.json (seed 1050, attempt 8), score 59 (Hard). */
 export default levelFromMap(
   10,
   [
-    'a  a  a  a> b  b  b> c  d',
-    'e  e  e  e  e  f  c< c  d',
-    'g  g  g  i^ e  f  f  f  d',
-    'h  h> g  i  e  e  e> fv d',
-    'g< g  g  i  i  i  i  d  d',
-    'o  o  o  j< j  j  j  dv j',
-    'o  k^ l  l  k  k  j  j  j',
-    'o  k  l  k  k  q  q  q  m^',
-    'o  k  lv k  r  q  n^ q  m',
-    'ov k  k  k  r  q  n  q  m',
-    'p< p  p  p  r  qv n  q  m',
-    'r< r  r  r  r  s< s  s  s',
+    'a< a  a  a  a  b< b  b  b',
+    'c  c  c  c  a  a  a  a  b',
+    'c  g  g  c  c  c  c> a  d^',
+    'c  g  e< e  e  e  e  e  d',
+    'f^ g  g  g  g  g> d  d  d',
+    'f  h  h  h> i  i  i  i> j^',
+    'f  k^ l  l  l  l  l> m^ j',
+    'f  k  k  o  o  s^ q^ m  j',
+    'f  f  k  k  o  s  q  m  j',
+    'n^ f  f  p  ov s  q  j  j',
+    'n  n  p< p  r  s  q  q  q',
+    'r< r  r  r  r  s  t< t  t',
   ],
-  { revision: 5 },
+  { revision: 6, tier: 'hard' },
 );

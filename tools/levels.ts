@@ -193,13 +193,26 @@ function validate(): void {
   console.log(`\nAll ${LEVELS.length} levels are valid and solvable.`);
 }
 
-function levelFile(level: LevelData, note: string, revision?: number, name?: string, outline?: boolean): string {
-  if (revision === undefined && name === undefined && !outline) {
+/** Options written into a level file (see levelFromMap). */
+interface FileOptions {
+  readonly revision?: number;
+  readonly name?: string;
+  readonly outline?: boolean;
+  readonly tier?: LevelData['tier'];
+}
+
+function levelFile(level: LevelData, note: string, o: FileOptions = {}): string {
+  const options = [
+    o.revision === undefined ? '' : `revision: ${o.revision}`,
+    o.name === undefined ? '' : `name: '${o.name}'`,
+    o.outline ? 'outline: true' : '',
+    o.tier === undefined ? '' : `tier: '${o.tier}'`,
+  ].filter(Boolean);
+  if (options.length === 0) {
     const rows = levelToMap(level).map((row) => `  '${row}',`);
     return [`import { levelFromMap } from './levelMap';`, ``, `/** Level ${level.id} — ${note} */`, `export default levelFromMap(${level.id}, [`, ...rows, `]);`, ``].join('\n');
   }
   const rows = levelToMap(level).map((row) => `    '${row}',`);
-  const options = [revision === undefined ? '' : `revision: ${revision}`, name === undefined ? '' : `name: '${name}'`, outline ? 'outline: true' : ''];
   return [
     `import { levelFromMap } from './levelMap';`,
     ``,
@@ -209,7 +222,7 @@ function levelFile(level: LevelData, note: string, revision?: number, name?: str
     `  [`,
     ...rows,
     `  ],`,
-    `  { ${options.filter(Boolean).join(', ')} },`,
+    `  { ${options.join(', ')} },`,
     `);`,
     ``,
   ].join('\n');
@@ -311,6 +324,8 @@ interface PlanEntry {
   readonly name?: string;
   /** Fill mode: fill only this shape from tools/shapes.ts (the level then draws only its outline's cells). */
   readonly shape?: string;
+  /** The level's tier in the campaign rhythm, written into the file (see LevelData.tier). */
+  readonly tier?: LevelData['tier'];
   /** Layout revision written into the file (see LevelData.revision). */
   readonly revision?: number;
   readonly note?: string;
@@ -399,7 +414,7 @@ function plan(args: Args): void {
     known.push(level);
     const note = `${entry.note ? `${entry.note}, ` : ''}generated from tools/level-plan.json (seed ${seed}, attempt ${attempt}), score ${report.score} (${report.category}).`;
     if (fs.existsSync(target) && !force) fail(`${target} already exists; use --force to replace it`);
-    fs.writeFileSync(target, levelFile(level, note, entry.revision, entry.name, entry.shape !== undefined));
+    fs.writeFileSync(target, levelFile(level, note, { revision: entry.revision, name: entry.name, outline: entry.shape !== undefined, tier: entry.tier }));
     console.log(
       `Level ${entry.id}: ${rows}×${cols}, ${level.arrows.length} arrows, score ${report.score}, depth ${report.exact.depth}, free ${report.exact.initialFree}, density ${Math.round(report.exact.density * 100)}%, mean length ${report.exact.meanLength.toFixed(1)}, empty square ${report.exact.largestEmptySquare} (${((Date.now() - started) / 1000).toFixed(1)} s) → ${path.relative(process.cwd(), target)}`,
     );

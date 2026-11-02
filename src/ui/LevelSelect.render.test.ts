@@ -59,23 +59,23 @@ describe('LevelSelect interactions', () => {
     const { view } = make();
     view.render(PROGRESS.mid);
     const title = () => byId('chapter-title').textContent;
-    expect(title()).toBe('Chapter 1');
+    expect(title()).toBe("It's Just the Beginning");
     expect(byId('btn-chapter-prev').disabled).toBe(true);
     expect(byId('btn-chapter-current').disabled).toBe(true);
     byId('btn-chapter-next').click();
-    expect(title()).toBe('Chapter 2');
+    expect(title()).toBe('Tangled Lines');
     expect(byId('btn-chapter-next').disabled).toBe(true);
     expect(byId('btn-chapter-current').disabled).toBe(false);
     byId('btn-chapter-next').click(); // disabled in the page, but a click still clamps
-    expect(title()).toBe('Chapter 2');
+    expect(title()).toBe('Tangled Lines');
     byId('btn-chapter-current').click();
-    expect(title()).toBe('Chapter 1');
+    expect(title()).toBe("It's Just the Beginning");
     byId('btn-chapter-prev').click();
-    expect(title()).toBe('Chapter 1');
+    expect(title()).toBe("It's Just the Beginning");
     // The chosen chapter survives a re-render.
     byId('btn-chapter-next').click();
     view.render(PROGRESS.mid);
-    expect(title()).toBe('Chapter 2');
+    expect(title()).toBe('Tangled Lines');
   });
 
   it('a tile click (delegated, from any child) selects its level; locked tiles do nothing', () => {
@@ -108,7 +108,7 @@ describe('LevelSelect interactions', () => {
     expect(view.shownChapter).toBe(2);
     expect(doc.activeElement?.dataset.level).toBe('23');
     view.focusLevel(2);
-    expect(byId('chapter-title').textContent).toBe('Chapter 1');
+    expect(byId('chapter-title').textContent).toBe("It's Just the Beginning");
     expect(doc.activeElement?.dataset.level).toBe('2');
     view.focusLevel(99); // clamps to the last chapter; no such tile: the play button
     expect(view.shownChapter).toBe(2);
