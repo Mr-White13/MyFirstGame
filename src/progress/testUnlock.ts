@@ -1,19 +1,21 @@
 import { isUnlocked, type Progress } from './Progress';
 
 /**
- * Whether the testing unlock is on for a build: only in development (the
- * Vite dev server and the tests), never in a production build, which is
- * what the Android app and any release use. Pure, so it can be tested.
+ * Whether the testing unlock is on for a build: in development (the Vite dev
+ * server and the tests), or in a build made on purpose for testing with
+ * `VITE_UNLOCK_ALL_LEVELS=1` (`npm run android:apk:unlocked`, see
+ * .env.unlocked). A normal production build (`npm run build`, every release)
+ * never has it. Pure, so it can be tested.
  */
-export function testUnlockEnabled(env: { readonly DEV?: boolean; readonly PROD?: boolean }): boolean {
-  return env.DEV === true && env.PROD !== true;
+export function testUnlockEnabled(env: { readonly DEV?: boolean; readonly PROD?: boolean; readonly VITE_UNLOCK_ALL_LEVELS?: string }): boolean {
+  return (env.DEV === true && env.PROD !== true) || env.VITE_UNLOCK_ALL_LEVELS === '1';
 }
 
 /**
  * TESTING ONLY. While true, every level can be opened from level select,
- * whatever the saved unlocks say. On in development only (see
- * testUnlockEnabled): `npm run build`, and so every APK or release, always
- * has it off, with the normal unlock rules. A test checks this.
+ * whatever the saved unlocks say. On in development and in explicit testing
+ * builds only (see testUnlockEnabled): `npm run build`, and so every normal
+ * APK or release, has it off, with the normal unlock rules. A test checks this.
  *
  * It never touches saved progress. A level opened only because of this flag
  * is a "test play": its result is shown but not recorded (no completion,

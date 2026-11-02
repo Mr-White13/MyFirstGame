@@ -24,6 +24,7 @@ public class MainActivity extends BridgeActivity {
         // Local plugins must be registered before the bridge starts.
         registerPlugin(NeonHapticsPlugin.class);
         super.onCreate(savedInstanceState);
+        hideSystemBars(); // right away, not only on first focus: no status bar band at launch
     }
 
     @Override

@@ -18,6 +18,7 @@
     "android:sync": "npm run build && cap sync android",
     "android:open": "cap open android",
     "android:apk": "npm run android:sync && node scripts/android-apk.mjs",
+    "android:apk:unlocked": "tsc --noEmit && vite build --mode unlocked && cap sync android && node scripts/android-apk.mjs",
     "android:run": "npm run android:sync && cap run android",
     "levels:plan": "npm run levels:build --silent && node .tools/levels.mjs plan"
   },

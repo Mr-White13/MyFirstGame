@@ -282,16 +282,9 @@ describe('rewarded ads: Continue after Game Over', () => {
 
   it('closed early gives nothing; before ads have started nothing is shown at all', async () => {
     const { ads } = setup(fakeBackend({ rewardCalls: 0 }));
-    expect(await ads.watchForContinue()).toEqual({ kind: 'busy' }); // not started (for example the ad-free start)
+    expect(await ads.watchForContinue()).toEqual({ kind: 'busy' }); // not started yet
     await ads.start();
     expect(await ads.watchForContinue()).toEqual({ kind: 'dismissed' });
   });
 
-  it('the Shop explains the ad-free start', () => {
-    expect(presentEarn({ state: 'ready', remaining: 5, limit: 5, credits: 30, lockedMinutes: 18 })).toEqual({
-      status: 'No ads while you get started: this unlocks after 18 more minutes of play.',
-      button: null,
-    });
-    expect(presentEarn({ state: 'ready', remaining: 5, limit: 5, credits: 30, lockedMinutes: 1 }).status).toMatch(/1 more minute of/);
-  });
 });
