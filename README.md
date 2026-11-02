@@ -4,7 +4,7 @@ A 2D arrow-clearing puzzle game for mobile, built with **Phaser 3**, **TypeScrip
 
 Tap an arrow to send it flying off the board in the direction it points. It can only leave if nothing is in its way. Clear every arrow to finish the level.
 
-It opens on a **Home** screen with your local **player profile** (nickname, avatar, country) and lifetime **statistics**. Every level is **timed**, with personal bests. A **Settings** screen offers four visual themes, reduced motion and effects options, synthesised sound effects and ambient music, vibration and gameplay preferences. A **daily check-in** with a 7-day reward cycle, login streaks, **Energy Credits** and **12 achievements** reward coming back. After Level 10, the **Daily League** offers three daily challenges with collectible **Energy Arrows** and a six-tier league (Bronze to Neon Elite) based on transparent, offline daily targets. The game has **30 levels**: 10 hand-made ones that grow from a 5-arrow tutorial to dense 9×9 boards, then 20 larger generated and reviewed levels up to 16×16, with thin adaptive arrows and pinch-zoom. It includes a level select screen, unlockable progression and progress saved in the browser.
+It opens on a **Home** screen with your local **player profile** (nickname, avatar, country) and lifetime **statistics**. Every level is **timed**, with personal bests. A **Settings** screen offers four visual themes, reduced motion and effects options, synthesised sound effects and ambient music, vibration and gameplay preferences. A **daily check-in** with a 7-day reward cycle, login streaks, **Energy Credits** and **12 achievements** reward coming back. After Level 10, the **Daily League** offers three daily challenges with collectible **Energy Arrows** and a six-tier league (Bronze to Neon Elite) based on transparent, offline daily targets. The game has **100 levels in five named chapters of 20**: three small tutorials, then generated and reviewed portrait boards that grow from 9×7 to 17×12, with **hard** and **very hard** levels marked in the level list and the HUD. Twelve very hard levels close the chapters, including **THE IMPOSSIBLE GRID** (30×24, 173 arrows) and nine **shaped boards** up to 38×30 such as THE FORTRESS; each very hard level opens with a **power-up wave**. Thin adaptive arrows and pinch-zoom keep large boards playable. During a level, a **quick settings** card switches the theme, music, sound effects and vibration (Off, Soft or Strong) without leaving it. It includes a level select screen, unlockable progression and progress saved in the browser.
 
 ## Requirements
 
@@ -118,7 +118,7 @@ Or in Android Studio: `npm run android:open`, wait for "Gradle sync" to finish (
 
 1. It starts full screen in portrait, with no white flash, and nothing hidden under the notch or the gesture bar.
 2. On a cold start the Mr. White Games splash plays once (about 3.7 s; tap to skip once the logo is shown), then the recap card (if you have records and it's on in Settings), then Home. Press Home and come back: no splash.
-3. Tap Play: the first tap starts the music (if enabled); arrows, sounds and vibration work. Toggle Settings → Vibration and Sound to check they respond.
+3. Tap Play: the first tap starts the music (if enabled); arrows, sounds and vibration work. In the level, open the HUD's settings button: switch Music and Sound effects off and on, and try Vibration Off, Soft and Strong (Soft should feel clearly lighter). Settings → Feedback shows the same choice.
 4. Back: from a level it asks "Leave level?" (after a move), from Levels/Profile/Settings it goes back, it closes dialogs, and on Home it sends the app to the background.
 5. Press Home during a level, wait, and come back: the timer didn't run while away and the music resumes.
 6. Force-close the app (recent apps → swipe away) and reopen: progress, stars, settings, credits and the daily calendar are still there.
@@ -135,11 +135,11 @@ Or in Android Studio: `npm run android:open`, wait for "Gradle sync" to finish (
 
 **What changed:**
 - The app has its own small native plugin that vibrates as **media/game** usage (Android 13+: `USAGE_MEDIA`; older: `USAGE_GAME`), so it follows the **media vibration** intensity instead of touch feedback.
-- Effects are stronger, with set strengths (amplitude 0–255):
+- Effects are stronger, with set strengths (amplitude 0–255). These are the **Strong** values; see "Vibration (haptics)" for **Soft**:
 
 | Event | Effect |
 | --- | --- |
-| Arrow released | 32 ms at 140 (light tick) |
+| Arrow released | 22 ms at 80 (the softest cue: it plays for every arrow you send off) |
 | Chain reaction | 36 ms at 170, once per chain |
 | Blocked collision | 48 ms at 220 |
 | Heart lost | 45 · pause 60 · 45 ms at 230 |
@@ -301,8 +301,8 @@ On a cold launch the **Mr. White Games** splash plays first, optionally followed
 
 Other screens:
 
-1. **Level select:** all 10 levels with grid size or best stars, your completion count and star total, and a Continue button. Completed levels show a check, the next level glows, and locked levels show a lock and can't be opened.
-2. **Gameplay:** a compact HUD pinned to the top (back, the level title with the timer, the **theme** palette button and restart; then hearts, a progress meter, the five **streak** pips and arrows left), and below it a borderless board (a faint dot per cell) that uses all the remaining height: Levels 4–30 are tall portrait boards. Safe areas are respected at the top and bottom. Restart is disabled until you've made a move or a mistake; with **Confirm restart** on (the default) it asks first. If leaving would lose an unfinished attempt, you're asked to confirm first.
+1. **Level select:** one chapter of 20 levels at a time (previous / next chapter, opening on the chapter you're playing), with grid size or best stars, your completion count and star total, and a Continue button. Completed levels show a check, the next level glows, and locked levels show a lock and can't be opened. **Hard** levels have an orange tile and **very hard** ones a red tile, with a legend above the grid.
+2. **Gameplay:** a compact HUD pinned to the top (back, the level title with the timer, the **quick settings** button and restart; then hearts, a progress meter, the five **streak** pips and arrows left), and below it a borderless board (a faint dot per cell) that uses all the remaining height: Levels 4–100 are tall portrait boards. Under the title, hard levels say **HARD** in orange and very hard ones **VERY HARD** (or their name, such as THE FORTRESS) in red. Safe areas are respected at the top and bottom. Restart is disabled until you've made a move or a mistake; with **Confirm restart** on (the default) it asks first. If leaving would lose an unfinished attempt, you're asked to confirm first.
 3. **Settings:** see "Settings" below. **Achievements** and the **Daily rewards** calendar: see "Daily rewards, streaks and achievements".
 4. **Profile:** your avatar, nickname, country and rank, then a progress summary, statistics and personal records (see below).
 5. **Level complete:** stars and lives left, time and personal best, arrows cleared (with chain clears) and mistakes, plus "New best time!", "Best rating!" and "Level *n* unlocked" chips. Buttons: **Next level**, **Restart** and **Levels**. After level 10 a **game-complete** variant offers **Play from level 1**.
@@ -315,7 +315,7 @@ Other screens:
 - **Escape** closes the top dialog or acts as Back on desktop.
 - Navigation is locked during transitions, so double taps can't open two screens.
 
-**Testing build: all levels open.** `UNLOCK_ALL_LEVELS_FOR_TESTING` in `src/progress/testUnlock.ts` is currently `true`, so every one of the 30 levels can be opened from Level select (a note says so, and levels you haven't really unlocked have a dashed outline). Such a level is a **test play**: its result is shown, with a "not saved" notice, but nothing is recorded: no completion, stars, best time, unlock, statistics or daily stats. Your real unlocks and records never change because of the flag. For a release, set it to `false`; nothing else needs to change.
+**Testing build: all levels open.** `UNLOCK_ALL_LEVELS_FOR_TESTING` in `src/progress/testUnlock.ts` is currently `true`, so every one of the 100 levels can be opened from Level select (a note says so, and levels you haven't really unlocked have a dashed outline). Such a level is a **test play**: its result is shown, with a "not saved" notice, but nothing is recorded: no completion, stars, best time, unlock, statistics or daily stats. Your real unlocks and records never change because of the flag. For a release, set it to `false`; nothing else needs to change.
 
 Only level 1 is unlocked at first. Completing a level unlocks the next one. You can replay any unlocked level, and replaying never locks anything again.
 
@@ -332,8 +332,8 @@ Everything is local: no account, no backend, nothing leaves the device.
 
 | Shown as | Meaning |
 | -------- | ------- |
-| Levels (of 10) | Unique levels completed |
-| Stars (of 30) | Sum of best ratings; unranked levels count 0 |
+| Levels (of 100) | Unique levels completed |
+| Stars (of 300) | Sum of best ratings; unranked levels count 0 |
 | Perfect levels | Levels whose best rating is 3 stars |
 | Play time | Active play across all attempts: completed, failed and abandoned. Same rules as the level timer. |
 | Levels cleared | Successful runs, **including replays** (unlike "Levels", which counts each level once) |
@@ -396,7 +396,7 @@ Open **Settings** from the gear in the Home header or the Settings tile. Every c
 | Audio | Sound (master) | **On** / Off |
 | | Music, Music volume | **On**, **35 %** |
 | | Sound effects, Effects volume | **On**, **70 %** |
-| Feedback | Vibration | **On** / Off |
+| Feedback | Vibration | **Strong**, Soft, Off |
 | Gameplay | Show gameplay timer | **On** / Off |
 | | Confirm restart | **On** / Off |
 | | Player recap | **On** / Off |
@@ -414,7 +414,7 @@ Open **Settings** from the gear in the Home header or the Settings tile. Every c
 How it works:
 
 - **One place for colours.** CSS colours are tokens on `:root`, redefined per theme under `[data-theme='light']` and `[data-theme='colorful']`. Translucent tints use channel tokens such as `rgb(var(--cyan-rgb) / 0.1)`, so no colour is hard-coded in rules. The Phaser board has matching **semantic** palettes in `src/render/theme.ts` (`background`, `well`, `dots`, `arrows`, `error`, `warning`, `success`, `chain`, `glow`, …). The board is borderless, so `well` (what arrows are drawn on) is the page colour.
-- **In-game picker.** The palette button in the gameplay HUD opens a compact card with the same four themes. A choice applies at once and is saved to the same setting; the level, zoom and pan are untouched. The timer is paused while the card is open, and a tap outside it (which never reaches the board), Back or Escape closes it without a change.
+- **In-game quick settings.** The settings button in the gameplay HUD opens a compact card with the same four themes, plus **Music** and **Sound effects** switches and **Vibration** (Off, Soft, Strong). Every choice applies at once and is saved to the same settings as the Settings screen, so the two always agree; the level, zoom and pan are untouched. Picking a theme closes the card; the switches leave it open so you can change several things. Turning Music or Sound effects on also lifts the master Sound mute, so a switch never shows "on" while staying silent. The timer is paused while the card is open, and a tap outside it (which never reaches the board), Back or Escape closes it.
 - **The board follows the theme.** `Appearance` sets `data-theme` on `<html>`, switches the Phaser palette and calls `GameScene.refreshTheme()`, which redraws the board and arrows in place. Nothing is rebuilt: arrows, animations, input, lives and the timer carry on.
 - **No startup flash.** A tiny inline script in `index.html` reads the saved settings and sets `data-theme`, `data-motion` and `data-effects` before the first paint.
 - **Gameplay is identical in every theme.** Themes only change colours.
@@ -424,7 +424,7 @@ How it works:
 
 **Reduced motion** is *Auto* (follow the device's `prefers-reduced-motion`), *On* or *Off*. An explicit On or Off always wins over the device; Auto follows device changes live.
 
-With reduced motion, screen and dialog transitions, decorative particles and rings, energy trails, staggered arrow intros, the board wave, background motes and pulsing glows are all off. Arrows still slide out and bump into blockers, and the hit arrow still flashes, because that motion explains what happened.
+With reduced motion, screen and dialog transitions, decorative particles and rings, energy trails, staggered arrow intros, the very hard levels' power-up wave and name flicker, the board wave, background motes and pulsing glows are all off. Arrows still slide out and bump into blockers, and the hit arrow still flashes, because that motion explains what happened.
 
 **Visual effects** scales only decoration:
 
@@ -460,9 +460,9 @@ All audio goes through one `AudioManager` (`src/audio/`) with a **music bus** an
 
 - Every effect is at most 350 ms (pulses at least ~30 ms, so they can be felt), and each has a minimum gap, so nothing buzzes continuously.
 - Free nudges, button taps and decorative animations never vibrate.
-- Vibration is skipped before the first user interaction (Chrome ignores it then anyway), and when the switch is off. Turning it off or backgrounding the app cancels a pulse in progress.
-- **Browser support:** works in Chrome on Android. **Desktop Chrome** has the API but no vibration motor, so nothing happens. Safari and iOS have no Vibration API: there the switch is disabled with an explanation.
-- **No intensity setting:** strength is fixed per effect (see "Vibration on Android"), and in browsers the Vibration API controls only duration. A user-facing intensity slider would behave differently on every device, so it is intentionally not offered.
+- Vibration is skipped before the first user interaction (Chrome ignores it then anyway), and when it is Off. Turning it off or backgrounding the app cancels a pulse in progress.
+- **Strength: Off, Soft or Strong** (Settings → Feedback, or the in-game quick settings). **Strong** plays the effects as listed in "Vibration on Android". **Soft** (`scaleEffect`) plays every pulse at 45 % of its strength and 60 % of its length (never under 15 ms); pauses keep their length, so a double pulse still reads as two. The browser's Vibration API has no strength control, so there Soft means shorter pulses only.
+- **Browser support:** works in Chrome on Android. **Desktop Chrome** has the API but no vibration motor, so nothing happens. Safari and iOS have no Vibration API: there the Vibration choice is disabled with an explanation.
 - **Test vibration** (Settings → Feedback) plays one strong 0.4 s vibration, even if Vibration is switched off, and reports whether the request was sent.
 
 ### Gameplay preferences
@@ -487,8 +487,10 @@ Key `neon-escape.settings`, version 1, separate from progress, profile and stati
 ```json
 { "version": 1, "theme": "dark", "motion": "auto", "effects": "normal",
   "muted": false, "music": true, "sfx": true, "musicVolume": 0.35, "sfxVolume": 0.7,
-  "haptics": true, "showTimer": true, "confirmRestart": true }
+  "haptics": true, "hapticStrength": "strong", "showTimer": true, "confirmRestart": true, "showRecap": true }
 ```
+
+- **Vibration** is stored as the existing `haptics` on/off switch plus `hapticStrength` (`"strong"` or `"soft"`). Off keeps the strength, so turning vibration back on restores the last choice. `hapticStrength` was added within version 1: older saves keep their on/off choice and get `"strong"`, which is exactly how they vibrated before.
 
 - Loaded with the same `SafeStore` rules as the other saves: each field is validated (unknown themes, wrong types and out-of-range volumes fall back to the default for that field only), corrupted data is backed up to `neon-escape.settings.backup` and replaced by defaults, a save from a newer game version is never overwritten, and without storage the settings still work for the session.
 - **Migration:** `SETTINGS_MIGRATIONS` in `src/settings/Settings.ts` upgrades older versions one step at a time. Version 1 is the first format, so the table is empty for now; fields added later within a version simply take their defaults.
@@ -631,7 +633,7 @@ An Energy Arrow is an ordinary arrow with one extra property: in a Daily League 
 - **Gameplay** is the normal level screen: three lives, red arrows, chains, timer, restart, Game Over and retry. The HUD adds a gold strip: Energy Arrows collected in this challenge (0/4), your league, and today's points (0/12).
 - **Completing** a challenge shows stars, time, Energy Arrows collected, newly earned points and today's total, with **Next challenge** (or **League**), **Restart** and **League**.
 - **Separate records:** challenges never change level unlocks, stars, best times or the lifetime statistics on the Profile. Challenge numbers are tracked in the league record instead (challenges completed, Energy Points).
-- **Layout pool:** levels with 10+ arrows on boards up to 11 columns × 15 rows (Levels 4–21 since the Step 14 full-coverage redesign, 18 layouts), so daily challenges stay quick and playable on a phone without zooming. The level generator is not used at runtime.
+- **Layout pool:** levels with 10+ arrows on boards up to 11 columns × 15 rows, so daily challenges stay quick and playable on a phone without zooming. Pool 6 (current) draws them from the 100-level campaign; pool 5 is frozen on the Step 14 layouts (`src/levels/archive/step14/`). The level generator is not used at runtime.
 - **Game updates never change a day in progress.** Each competition day saves the pool version it started with (`CHALLENGE_POOLS` in `src/league/challenges.ts`). A day that began before this update (saved without a version) keeps the original pool (Levels 4–10) until midnight: the same three layouts and the same Energy Arrows. So arrows you already collected still count and can't be collected twice, and the daily maximum stays 12. The new pool applies from the next day. Likewise for redesigns: pool versions 1–3 draw only from frozen copies of the layouts they were defined on (`src/levels/archive/`: the revision-2 Levels 4–10, and Levels 4–20 as shipped in Step 12), never from the current levels. A day that began before an update keeps exactly its three layouts and Energy Arrow ids (a golden test, `src/league/pools.golden.json`, checks this). Pool 4 now draws from `src/levels/archive/step13/` (Levels 4–21 as shipped in Step 13, recovered verbatim from that build); the Step 14 layouts are pool 5.
 
 ### Energy Points and Energy Credits
@@ -787,7 +789,7 @@ sessionStorage.setItem('neon-backup', JSON.stringify(Object.fromEntries(Object.k
 
 ## Large boards: thin arrows, zoom and touch
 
-The game supports boards from 7×7 up to 20×20. Nothing in the rules, validation, rendering or level format assumes a size, and boards up to 20×20 are covered by tests. The permanent levels go up to 16×16; larger boards are possible but become hard to read on a phone.
+Nothing in the rules, validation, rendering or level format assumes a board size. Most levels are 17×12 or smaller; the very hard levels go up to 38×30 (THE IMPOSSIBLE GRID and the shaped boards), which are meant to be played zoomed in on a phone. Shaped levels (`LevelData.outline`) draw their board dots only on the shape's cells.
 
 ### Adaptive arrow thickness
 
@@ -809,9 +811,9 @@ Arrows are drawn in proportion to the cell, and the proportions change with the 
 
 What you can tap is separate from what is drawn (`src/render/hitTest.ts`):
 
-1. A tap inside a cell an arrow occupies always selects that arrow.
-2. Otherwise the nearest arrow body counts if it is within a fingertip-sized radius: at least 22 CSS px on screen (about a 44 px target), at most 1.2 cells.
-3. If two arrows are about equally close (within 0.15 cell or 4 px), **nothing is selected**. A missed tap is better than moving the wrong arrow and losing a life. Tap again, or zoom in.
+1. The arrow whose **drawn line** is clearly nearest the finger wins, within a fingertip-sized radius: at least 22 CSS px on screen (about a 44 px target), at most 1.2 cells. This beats "whoever owns the touched cell", which picked the wrong arrow more often on dense boards (in a simulation of jittered taps on THE IMPOSSIBLE GRID, wrong picks dropped from 7.1 % to 3.1 %).
+2. If two lines are about equally close (within 0.15 cell), **nothing is selected**. A missed tap is better than moving the wrong arrow and losing a life. Tap again, or zoom in. (The margin used to have a 6 px minimum, which on unzoomed dense boards covered half a cell and made many taps select nothing.)
+3. Only when no line is near does the arrow that owns the touched cell count.
 
 Press-and-release is unchanged: an arrow lights up while your finger is on it, the move happens on release, and sliding away cancels it.
 
@@ -826,6 +828,7 @@ Boards whose cells are smaller than about 44 CSS px on your screen can be zoomed
 | Back to the whole board | The **Reset zoom** button in the board's corner | Same |
 
 - **Limits:** from the fitted view up to the zoom where cells are about 44 CSS px, at most 4×. The board can't be dragged out of view.
+- **Uses the whole area:** a zoomed board fills the board's whole part of the screen (below the HUD, or beside it in landscape), not just the fitted board's rectangle, so wide boards don't leave empty strips above and below. Where the board is smaller than that area it stays centred.
 - **Two-finger gestures never move arrows.** A second finger cancels the press, and nothing is pressed again until all fingers are lifted. A drag that becomes a pan (10 px) also cancels the press.
 - **While zoomed** the board is drawn only inside its area, so it doesn't run under the HUD.
 - **When the view resets:** Restart keeps your zoom (same board). A new level, leaving the level, rotating the phone or resizing the window fits the board again.
@@ -857,7 +860,22 @@ Before, Levels 18 and 30 could not reach 60 fps even on a desktop CPU; after, al
 
 ## Levels
 
-Thirty levels. **Levels 1–3** are the small square tutorials (unchanged since Step 12). **Levels 4–30** are tall portrait boards, redesigned in Step 14 for **full coverage**: the board starts almost completely filled with arrow paths.
+### The 100-level campaign
+
+**100 levels in five chapters of 20:** *It's Just the Beginning*, *Tangled Lines*, *Shapes in the Dark*, *The Neon Labyrinth* and *The Last Escape* (`src/progress/chapters.ts`). Levels 1–3 are hand-designed; Levels 4–100 were generated offline from `tools/level-plan.json` and reviewed. Level select and the Records page show one chapter at a time.
+
+- **Rhythm:** two or three normal levels, then a **hard** one (`tier: 'hard'`, 17 levels), with a **very hard** one (`tier: 'very hard'`, 12 levels) closing each chapter and appearing more often in chapters 3–5. The tier is a design label in the level file, shown as orange / red tiles and HARD / VERY HARD under the HUD title; the difficulty score below is measured separately.
+- **Boards:** normal and hard levels grow from 9×7 to 17×12 (most of chapters 3–5 is 17×12), some hard ones up to 24×18.
+- **The extreme levels:** ten very hard levels were first built as Levels 31–40 and are now spread through the campaign:
+  - **THE IMPOSSIBLE GRID** (Level 94): 30×24, 173 arrows, score 85.
+  - **Nine shaped boards** (36×28 or 38×30, 161–213 arrows, dependency depth 39–59): THE SHIELD (47), THE CROSSROADS (54), THE HOURGLASS (60), THE CROWN (67), THE NEON HEART (74), THE NEON PINE (80), THE ARROWHEAD (87), THE RING (90) and THE FORTRESS (100, 213 arrows). The fill generator only fills cells inside the outline (`tools/shapes.ts`, offline only), and the board draws dots only there. The rules are the normal ones: clear every arrow.
+  - Every one is valid, solvable and completable without losing a life (`shapedLevels.test.ts`, `impossibleGrid.test.ts`).
+- **Power-up wave:** opening a very hard level starts with the arrows dimmed; a ring spreads from the centre of the board and lights each arrow with a bright flash as it passes (about 1 s on any board size, `src/render/powerUpWave.ts`), and the name under the title flickers on like a neon sign. Input is never blocked, Restart uses the normal short intro, and reduced motion skips it.
+- **Saved progress is kept:** regenerated levels got a new `revision`, so completions, unlocks, stars and times stay, and old bests aren't compared with the new layouts (see "Saved data"). `npm run levels:analyze` prints the full table for all 100 levels.
+
+### Levels 1–30 (Step 14)
+
+The table below documents the first 30 levels as designed in Step 14; Levels 4–30 have since been regenerated for the 100-level campaign, so their current grids and scores differ (see `npm run levels:analyze`). **Levels 1–3** are the small square tutorials (unchanged since Step 12). **Levels 4–30** are tall portrait boards, redesigned in Step 14 for **full coverage**: the board starts almost completely filled with arrow paths.
 
 - **Coverage:** 100 % of cells on 26 of the 27 levels and 99.5 % on Level 29 (one stranded cell), up from 74–79 % in Step 13. The tests require at least 97 % on every level, no empty 2×2 area anywhere, and full coverage on at least 90 % of the levels.
 - **How:** the fill-first generator (`src/levelgen/fillLevel.ts`) covers the whole board with long, winding, non-touching paths first (always extending into the most constrained free cell, at most 4 cells straight before a turn), picks a head for each path (mostly pointing into the board), then repairs: while some arrows block each other in a cycle, or two arrows read as one, it flips a head or splits an arrow. Short leftovers are merged into neighbours where the level stays solvable. The older place-one-arrow-at-a-time generator stalls at about 75 %, because every new arrow needs an empty exit line.
@@ -1057,7 +1075,8 @@ count. The only real challenge is **finding an arrow that can escape**, again an
         ├── GameLayout.ts      Sizes the board slot so the HUD and board form one centred group
         ├── LevelSelect.ts     Level tiles and progress summary
         ├── Hud.ts             In-game timer, hearts, arrows left, back and restart buttons
-        ├── ThemePicker.ts     HUD palette button and compact theme card (pauses the timer)
+        ├── ThemePicker.ts     HUD quick settings button and card, theme choice (pauses the timer)
+        ├── QuickSettings.ts   Music, sound effects and vibration controls in that card
         ├── RecapDialog.ts     Startup recap card with Continue and Skip
         ├── CompleteDialog.ts  Level-complete / game-complete dialog: stars, time, personal best, statistics
         ├── GameOverDialog.ts  Out-of-lives dialog
