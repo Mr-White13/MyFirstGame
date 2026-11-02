@@ -5,6 +5,7 @@ import {
   effectDuration,
   HAPTIC_EFFECTS,
   Haptics,
+  scaleEffect,
   TEST_EFFECT,
   toWebPattern,
   webVibrationBackend,
@@ -32,6 +33,38 @@ describe('haptics', () => {
     const haptics = new Haptics(() => true, backend, () => 0);
     expect(haptics.play('release')).toBe(true);
     expect(calls).toEqual([{ effect: HAPTIC_EFFECTS.release, label: 'release' }]);
+  });
+
+  it('plays the soft version of an effect when the strength is soft, read live', () => {
+    const { calls, backend } = recorder();
+    let strength: 'soft' | 'strong' = 'soft';
+    let t = 0;
+    const haptics = new Haptics(() => true, backend, () => t, () => strength);
+    haptics.play('lifeLost');
+    strength = 'strong';
+    t = 1000;
+    haptics.play('lifeLost');
+    expect(calls.map((c) => c.effect)).toEqual([scaleEffect(HAPTIC_EFFECTS.lifeLost, 'soft'), HAPTIC_EFFECTS.lifeLost]);
+  });
+
+  it('soft effects are weaker and shorter pulses with the same pauses; strong is unchanged', () => {
+    for (const id of Object.keys(HAPTIC_EFFECTS) as HapticId[]) {
+      const strong = HAPTIC_EFFECTS[id];
+      const soft = scaleEffect(strong, 'soft');
+      expect(scaleEffect(strong, 'strong')).toBe(strong);
+      strong.amplitudes.forEach((a, i) => {
+        if (a === 0) {
+          expect([soft.amplitudes[i], soft.timings[i]]).toEqual([0, strong.timings[i]]);
+        } else {
+          expect(soft.amplitudes[i]).toBeGreaterThan(0);
+          expect(soft.amplitudes[i]).toBeLessThan(a);
+          expect(soft.timings[i]).toBeLessThanOrEqual(strong.timings[i]);
+          expect(soft.timings[i]).toBeGreaterThanOrEqual(15);
+        }
+      });
+    }
+    // On the web (no strength control) a soft pulse is still a shorter one.
+    expect(toWebPattern(scaleEffect(HAPTIC_EFFECTS.complete, 'soft'))[0]).toBeLessThan(toWebPattern(HAPTIC_EFFECTS.complete)[0]);
   });
 
   it('respects the Vibration setting, read live', () => {

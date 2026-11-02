@@ -3882,6 +3882,74 @@ body.is-navigating #app {
   outline-offset: 2px;
 }
 
+/* Quick settings under the theme swatches: music, effects and vibration without leaving the level. */
+.quick-settings {
+  display: grid;
+  gap: 4px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.quick-setting {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+/* Label and Off / Soft / Strong on one row, the choice sized like the switches beside it. */
+.quick-setting--choice {
+  flex-wrap: wrap;
+  row-gap: 4px;
+  cursor: default;
+}
+
+/* Each pill as wide as its word; on very narrow screens the row wraps instead of overflowing. */
+.segmented--inline {
+  flex: none;
+  grid-auto-columns: auto;
+  gap: 2px;
+  margin-left: auto;
+  padding: 2px;
+  border-radius: var(--r-pill);
+}
+
+.segmented--inline span {
+  min-height: 34px;
+  padding: 0 9px;
+  border-radius: var(--r-pill);
+  font-size: 0.74rem;
+}
+
+/* The 34 px pills keep a 44 px touch target. */
+.segmented--inline label {
+  position: relative;
+}
+
+.segmented--inline label::after {
+  content: '';
+  position: absolute;
+  inset: -5px 0;
+}
+
+.quick-setting > .icon {
+  flex: none;
+  color: var(--text-muted);
+}
+
+.quick-setting__label {
+  flex: 1;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.segmented input:disabled + span {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .theme-backdrop {
   position: fixed;
   inset: 0;

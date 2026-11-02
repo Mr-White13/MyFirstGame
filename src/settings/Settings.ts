@@ -10,6 +10,10 @@ export type ThemeChoice = 'dark' | 'light' | 'colorful' | 'system';
 export type MotionChoice = 'auto' | 'reduce' | 'full';
 /** How much decorative effect work is done: particles, trails, background motes. */
 export type EffectsLevel = 'off' | 'low' | 'normal';
+/** How strong vibrations are while `haptics` is on. */
+export type HapticStrength = 'soft' | 'strong';
+/** What the Vibration controls show: off, or on at a strength (see vibrationChoice / vibrationPatch). */
+export type VibrationChoice = 'off' | HapticStrength;
 
 /**
  * Everything on the Settings screen. Kept apart from progress, profile and
@@ -28,6 +32,8 @@ export interface GameSettings {
   /** 0..1 */
   readonly sfxVolume: number;
   readonly haptics: boolean;
+  /** Added after version 1 without a migration: older saves simply get the default. */
+  readonly hapticStrength: HapticStrength;
   readonly showTimer: boolean;
   readonly confirmRestart: boolean;
   /** After the startup splash, show one insight from the player's own records before Home. */
@@ -37,6 +43,8 @@ export interface GameSettings {
 export const THEME_CHOICES: readonly ThemeChoice[] = ['dark', 'light', 'colorful', 'system'];
 export const MOTION_CHOICES: readonly MotionChoice[] = ['auto', 'reduce', 'full'];
 export const EFFECTS_LEVELS: readonly EffectsLevel[] = ['off', 'low', 'normal'];
+export const HAPTIC_STRENGTHS: readonly HapticStrength[] = ['soft', 'strong'];
+export const VIBRATION_CHOICES: readonly VibrationChoice[] = ['off', 'soft', 'strong'];
 
 export const DEFAULT_SETTINGS: GameSettings = Object.freeze({
   theme: 'dark',
@@ -48,6 +56,7 @@ export const DEFAULT_SETTINGS: GameSettings = Object.freeze({
   musicVolume: 0.35, // ambient music sits low under the sound effects by default
   sfxVolume: 0.7,
   haptics: true,
+  hapticStrength: 'strong',
   showTimer: true,
   confirmRestart: true,
   showRecap: true,
@@ -76,6 +85,7 @@ export function withSettings(current: GameSettings, patch: Partial<Record<keyof 
   if (isOneOf(THEME_CHOICES, p.theme)) next.theme = p.theme;
   if (isOneOf(MOTION_CHOICES, p.motion)) next.motion = p.motion;
   if (isOneOf(EFFECTS_LEVELS, p.effects)) next.effects = p.effects;
+  if (isOneOf(HAPTIC_STRENGTHS, p.hapticStrength)) next.hapticStrength = p.hapticStrength;
   for (const key of ['muted', 'music', 'sfx', 'haptics', 'showTimer', 'confirmRestart', 'showRecap'] as const) {
     if (typeof p[key] === 'boolean') next[key] = p[key];
   }
@@ -84,6 +94,16 @@ export function withSettings(current: GameSettings, patch: Partial<Record<keyof 
   }
   const changed = (Object.keys(next) as (keyof GameSettings)[]).some((key) => next[key] !== current[key]);
   return changed ? next : current;
+}
+
+/** The Vibration control's value: Off, or the strength while vibration is on. */
+export function vibrationChoice(settings: GameSettings): VibrationChoice {
+  return settings.haptics ? settings.hapticStrength : 'off';
+}
+
+/** The settings change for a Vibration choice. Off keeps the strength, so turning it back on restores it. */
+export function vibrationPatch(choice: VibrationChoice): Partial<GameSettings> {
+  return choice === 'off' ? { haptics: false } : { haptics: true, hapticStrength: choice };
 }
 
 // --------------------------------------------------------------- storage

@@ -279,6 +279,7 @@
     "musicVolume": 0.35,
     "sfxVolume": 0.7,
     "haptics": true,
+    "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
     "showRecap": true
@@ -296,6 +297,7 @@
     "musicVolume": 0.35,
     "sfxVolume": 0.7,
     "haptics": true,
+    "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
     "showRecap": true
@@ -313,6 +315,7 @@
     "musicVolume": 0.35,
     "sfxVolume": 0.7,
     "haptics": true,
+    "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
     "showRecap": true
@@ -330,6 +333,7 @@
     "musicVolume": 0.35,
     "sfxVolume": 0.7,
     "haptics": true,
+    "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
     "showRecap": true
@@ -347,6 +351,7 @@
     "musicVolume": 0.35,
     "sfxVolume": 0.7,
     "haptics": true,
+    "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
     "showRecap": true
@@ -364,6 +369,7 @@
     "musicVolume": 0.35,
     "sfxVolume": 0.7,
     "haptics": true,
+    "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
     "showRecap": true
@@ -381,6 +387,7 @@
     "musicVolume": 0.35,
     "sfxVolume": 0.7,
     "haptics": true,
+    "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
     "showRecap": true
@@ -398,6 +405,7 @@
     "musicVolume": 0.35,
     "sfxVolume": 0.7,
     "haptics": true,
+    "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
     "showRecap": true
@@ -415,6 +423,7 @@
     "musicVolume": 0.35,
     "sfxVolume": 0.7,
     "haptics": true,
+    "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
     "showRecap": true
@@ -432,6 +441,7 @@
     "musicVolume": 0.35,
     "sfxVolume": 0.7,
     "haptics": true,
+    "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
     "showRecap": true
@@ -449,6 +459,7 @@
     "musicVolume": 0.35,
     "sfxVolume": 0.7,
     "haptics": true,
+    "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
     "showRecap": true
@@ -466,6 +477,7 @@
     "musicVolume": 0.35,
     "sfxVolume": 0.7,
     "haptics": true,
+    "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
     "showRecap": true
@@ -483,6 +495,7 @@
     "musicVolume": 0.35,
     "sfxVolume": 0.7,
     "haptics": true,
+    "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
     "showRecap": true
@@ -500,6 +513,7 @@
     "musicVolume": 0.35,
     "sfxVolume": 0.7,
     "haptics": true,
+    "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
     "showRecap": true
@@ -517,6 +531,7 @@
     "musicVolume": 0.35,
     "sfxVolume": 0.7,
     "haptics": true,
+    "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
     "showRecap": true
@@ -534,6 +549,7 @@
     "musicVolume": 0.2,
     "sfxVolume": 1,
     "haptics": false,
+    "hapticStrength": "strong",
     "showTimer": false,
     "confirmRestart": false,
     "showRecap": false
@@ -551,6 +567,7 @@
     "musicVolume": 0.35,
     "sfxVolume": 0.7,
     "haptics": true,
+    "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
     "showRecap": true
@@ -568,6 +585,7 @@
     "musicVolume": 1,
     "sfxVolume": 0,
     "haptics": true,
+    "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
     "showRecap": true
@@ -585,6 +603,7 @@
     "musicVolume": 0.35,
     "sfxVolume": 0.7,
     "haptics": true,
+    "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
     "showRecap": true
@@ -602,6 +621,7 @@
     "musicVolume": 0.35,
     "sfxVolume": 0.7,
     "haptics": true,
+    "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
     "showRecap": true
