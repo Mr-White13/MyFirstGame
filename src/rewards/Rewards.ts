@@ -13,7 +13,8 @@ import {
   type AchievementView,
   type UnlockedAchievements,
 } from './Achievements';
-import { createWallet, earn, readWallet, type Transaction, type Wallet } from './Wallet';
+import { createWallet, earn, readWallet, spend, type Transaction, type Wallet } from './Wallet';
+import { BOOSTERS, countBooster, NO_BOOSTERS, type BoosterCounts, type BoosterId } from '../boosters/Boosters';
 
 /**
  * Daily check-in, wallet and achievements in **one** saved record, so a
@@ -27,13 +28,38 @@ export interface RewardsRecord {
   readonly achievements: UnlockedAchievements;
   /** Most red arrows released by one chain reaction, ever (not in PlayerStats). */
   readonly bestChain: number;
+  /**
+   * Boosters paid for with credits, in total (for statistics and balancing),
+   * and whether the first-time booster tip was shown. Saved with the wallet,
+   * so a charge and its count are always written together. Added within
+   * version 1: older saves read as zero uses, tip not shown.
+   */
+  readonly boosters: BoosterRecord;
+}
+
+export interface BoosterRecord {
+  readonly used: BoosterCounts;
+  readonly introduced: boolean;
+}
+
+/** The wallet transaction id of a booster's n-th paid use (n from 1). */
+export const boosterTransactionId = (id: BoosterId, n: number): string => `booster:${id}:${n}`;
+
+function readBoosters(data: unknown): BoosterRecord {
+  const b = typeof data === 'object' && data !== null ? (data as Record<string, unknown>) : {};
+  const used = typeof b.used === 'object' && b.used !== null ? (b.used as Record<string, unknown>) : {};
+  const count = (v: unknown) => (typeof v === 'number' && Number.isInteger(v) && v >= 0 ? v : 0);
+  return {
+    used: { hint: count(used.hint), reveal: count(used.reveal), heart: count(used.heart) },
+    introduced: b.introduced === true,
+  };
 }
 
 export const REWARDS_KEY = 'neon-escape.rewards';
 export const REWARDS_VERSION = 1;
 
 export function createRewards(): RewardsRecord {
-  return { daily: createDaily(), wallet: createWallet(), achievements: {}, bestChain: 0 };
+  return { daily: createDaily(), wallet: createWallet(), achievements: {}, bestChain: 0, boosters: { used: NO_BOOSTERS, introduced: false } };
 }
 
 const KNOWN_ACHIEVEMENTS = new Set(ACHIEVEMENTS.map((a) => a.id));
@@ -56,7 +82,7 @@ export function readRewards(raw: string | null): { value: RewardsRecord; status:
   const applied = [...new Set([...wallet.applied, ...Object.keys(unlocked).map(achievementTransactionId)])];
   const bestChain = typeof data.bestChain === 'number' && Number.isInteger(data.bestChain) && data.bestChain >= 0 ? data.bestChain : 0;
   return {
-    value: { daily: readDaily(data.daily), wallet: { ...wallet, applied }, achievements: unlocked, bestChain },
+    value: { daily: readDaily(data.daily), wallet: { ...wallet, applied }, achievements: unlocked, bestChain, boosters: readBoosters(data.boosters) },
     status: 'current',
   };
 }
@@ -154,6 +180,27 @@ export class Rewards {
     }
     this.commit({ ...this.record, wallet: paid.wallet }, today);
     return this.lastSaveOk;
+  }
+
+  /**
+   * Pays for one booster use from the wallet: the credits and the use count
+   * are saved in one write. Returns false and changes nothing when the
+   * balance is too low (or the transaction is otherwise refused), so a failed
+   * activation is never charged. Test plays never call this (they are free).
+   */
+  spendBooster(today: DayKey, id: BoosterId): boolean {
+    const n = this.record.boosters.used[id] + 1;
+    const paid = spend(this.record.wallet, { id: boosterTransactionId(id, n), amount: BOOSTERS[id].cost });
+    if (!paid.ok) return false;
+    const boosters = { ...this.record.boosters, used: countBooster(this.record.boosters.used, id) };
+    this.commit({ ...this.record, wallet: paid.wallet, boosters }, today);
+    return true;
+  }
+
+  /** The first-time booster tip has been shown; it never shows again. */
+  markBoostersIntroduced(today: DayKey): void {
+    if (this.record.boosters.introduced) return;
+    this.commit({ ...this.record, boosters: { ...this.record.boosters, introduced: true } }, today);
   }
 
   /** After an attempt ends (and App has saved progress and stats): note its chain and check achievements. */

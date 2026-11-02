@@ -1,3 +1,4 @@
+import { countBooster, NO_BOOSTERS, type BoosterCounts, type BoosterId } from '../boosters/Boosters';
 import { LevelTimer, type Clock } from '../core/LevelTimer';
 import type { GameSnapshot } from '../core/types';
 import { recordCompletion, type CompletionResult, type Progress } from '../progress/Progress';
@@ -21,6 +22,12 @@ export interface AttemptSummary {
   /** Most arrows one chain reaction released in this attempt. */
   readonly longestChain: number;
   readonly mistakes: number;
+  /**
+   * Boosters used in this attempt (paid or free), for future statistics and
+   * balancing. Not saved per attempt yet. Always set by AttemptTracker;
+   * optional only so summaries built elsewhere (tests, replays) needn't list it.
+   */
+  readonly boosters?: BoosterCounts;
 }
 
 export interface Records {
@@ -61,6 +68,7 @@ export class AttemptTracker {
   private current: { levelId: number; revision: number } | null = null;
   /** Play time of the current attempt already added to the lifetime total. */
   private counted = 0;
+  private boosters: BoosterCounts = NO_BOOSTERS;
 
   constructor(clock?: Clock) {
     this.timer = new LevelTimer(clock);
@@ -75,7 +83,18 @@ export class AttemptTracker {
   begin(levelId: number, revision: number): void {
     this.current = { levelId, revision };
     this.counted = 0;
+    this.boosters = NO_BOOSTERS;
     this.timer.reset();
+  }
+
+  /** A booster was used in the open attempt. */
+  useBooster(id: BoosterId): void {
+    if (this.current) this.boosters = countBooster(this.boosters, id);
+  }
+
+  /** Boosters used so far in the open attempt. */
+  get boostersUsed(): BoosterCounts {
+    return this.boosters;
   }
 
   /** The level is ready for input: start counting. */
@@ -113,9 +132,11 @@ export class AttemptTracker {
       bonusClears: snapshot.bonusClears,
       longestChain: snapshot.longestChain,
       mistakes: snapshot.mistakes,
+      boosters: this.boosters,
     };
     this.current = null;
     this.counted = 0;
+    this.boosters = NO_BOOSTERS;
     return summary;
   }
 }

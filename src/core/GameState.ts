@@ -64,6 +64,9 @@ export interface GameStateOptions {
  *   are not player moves. No randomness: the same taps at the same times
  *   always give the same result.
  * - The level is won when the board is empty and lost when lives reach 0.
+ * - Extra Heart (a booster): restoreLife() gives back one lost life while
+ *   the level is being played, never above the starting lives. It does not
+ *   undo the mistake: stars still count mistakes (see snapshot()).
  */
 export class GameState {
   private level: LevelData;
@@ -88,6 +91,8 @@ export class GameState {
   private readonly clock: () => number;
   private longestChain = 0;
   private mistakes = 0;
+  /** Lives given back by Extra Heart in this attempt. */
+  private restored = 0;
 
   constructor(level: LevelData, options: GameStateOptions = {}) {
     this.validate = options.validate ?? true;
@@ -133,7 +138,41 @@ export class GameState {
   }
 
   get lives(): number {
-    return Math.max(0, this.startingLives - this.mistakes);
+    return Math.max(0, this.startingLives - this.mistakes + this.restored);
+  }
+
+  /** The most lives a player can have: the starting lives. */
+  get maxLives(): number {
+    return this.startingLives;
+  }
+
+  /**
+   * Arrows that can escape right now, in level-data order: tapping any of
+   * them clears it without losing a life. Uses the same exit check as a tap,
+   * on the current board. Red arrows are never in it: one that could escape
+   * would already have been released by the chain rule.
+   */
+  escapableArrows(): ArrowData[] {
+    if (this.status !== 'playing') return [];
+    return this.getArrows().filter((a) => !this.activated.has(a.id) && checkExitPath(this.grid, a).clear);
+  }
+
+  /** The first arrow in the way of `arrowId`'s exit, or null if it is free (or not on the board). */
+  blockerOf(arrowId: string): string | null {
+    const arrow = this.arrows.get(arrowId);
+    return arrow ? (checkExitPath(this.grid, arrow).blockerId ?? null) : null;
+  }
+
+  /**
+   * Gives back one lost life (Extra Heart). Only while the level is being
+   * played and a life is missing; returns false and changes nothing otherwise.
+   * The mistake still counts (stars, statistics), and the streak is untouched.
+   */
+  restoreLife(): boolean {
+    if (this.status !== 'playing' || this.lives >= this.startingLives) return false;
+    this.restored++;
+    this.emit();
+    return true;
   }
 
   /** Arrows still on the board, in level-data order. */
@@ -172,6 +211,7 @@ export class GameState {
     this.cooldown = 0;
     this.longestChain = 0;
     this.mistakes = 0;
+    this.restored = 0;
     this.emit();
   }
 
@@ -243,7 +283,9 @@ export class GameState {
       total: this.level.arrows.length,
       activated: this.activated.size,
       won,
-      stars: won ? this.lives : 0,
+      // Stars count mistakes, not lives: a life given back by Extra Heart lets the
+      // player finish but never raises the rating. Without one, this equals lives.
+      stars: won ? Math.max(1, this.startingLives - this.mistakes) : 0,
     };
   }
 

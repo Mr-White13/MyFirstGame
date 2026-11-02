@@ -3250,6 +3250,150 @@ body.is-navigating #app {
   display: none;
 }
 
+/* ---------- Boosters (Hint, Reveal, Extra Heart), see src/ui/BoosterBar.ts ---------- */
+
+/* Balance, then three equal buttons that share the HUD's width: the row never makes the HUD wider. */
+.boosters {
+  display: grid;
+  grid-template-columns: auto repeat(3, minmax(0, 1fr));
+  align-items: center;
+  gap: 6px;
+}
+
+.boosters[hidden] {
+  display: none;
+}
+
+.boosters__credits {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 4px;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.boosters__credits .icon {
+  width: 16px;
+  height: 16px;
+  color: var(--green);
+}
+
+.booster {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 0;
+  min-height: 36px;
+  padding: 0 6px;
+  white-space: nowrap;
+  border-radius: var(--r-pill);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--text);
+  background: rgb(var(--surface-rgb) / 0.86);
+  border: 1px solid rgb(var(--cyan-rgb) / 0.45);
+  box-shadow: var(--highlight), 0 0 10px rgb(var(--cyan-rgb) / 0.12);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 120ms var(--ease-out), border-color 160ms ease, opacity 160ms ease;
+}
+
+/* The 36 px pills keep a 44 px touch target. */
+.booster::after {
+  content: '';
+  position: absolute;
+  inset: -4px -2px;
+}
+
+.booster .icon {
+  width: 16px;
+  height: 16px;
+  color: var(--cyan);
+}
+
+.booster[data-booster='heart'] .icon {
+  fill: var(--pink);
+  stroke: var(--pink);
+  stroke-width: 1.4;
+}
+
+.booster__cost {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 6px;
+  border-radius: var(--r-pill);
+  font-variant-numeric: tabular-nums;
+  color: var(--green);
+  background: rgb(var(--green-rgb) / 0.12);
+}
+
+.booster:active {
+  transform: scale(0.95);
+}
+
+.booster:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Unavailable (no lost heart, no free arrow, not enough credits…): dimmed, but still tappable to explain why. */
+.booster[aria-disabled='true'] {
+  opacity: 0.45;
+  border-color: var(--line);
+  box-shadow: none;
+}
+
+.booster[aria-disabled='true'] .booster__cost {
+  color: var(--text-muted);
+  background: rgb(var(--muted-rgb) / 0.12);
+}
+
+.booster.is-activated {
+  animation: booster-pop 420ms var(--ease-out);
+}
+
+@keyframes booster-pop {
+  40% {
+    transform: scale(1.08);
+    border-color: var(--green);
+    box-shadow: 0 0 16px rgb(var(--green-rgb) / 0.55);
+  }
+}
+
+/* A heart given back by Extra Heart grows back in. */
+.heart--restored {
+  animation: heart-restore 520ms var(--ease-out);
+}
+
+@keyframes heart-restore {
+  from {
+    transform: scale(0.4);
+    opacity: 0.3;
+  }
+  60% {
+    transform: scale(1.25);
+  }
+}
+
+/* Phones narrower than 420 px: icons and costs only (the full name is in each button's label and tooltip). */
+@media (max-width: 419px) {
+  .booster__name {
+    display: none;
+  }
+}
+
+:root[data-motion='reduce'] .booster.is-activated,
+:root[data-motion='reduce'] .heart--restored {
+  animation: none;
+}
+
 .hud__energy {
   display: inline-flex;
   align-items: center;

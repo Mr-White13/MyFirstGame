@@ -84,11 +84,15 @@ interface Options {
   unlocks?: AchievementDefinition[];
   challenges?: DailyChallenge[];
   confirmRestart?: boolean;
+  /** Whether the first-time booster tip was already shown (default true, so older tests see no tip). */
+  boosterTipSeen?: boolean;
 }
 
 function createHarness(options: Options = {}) {
   const log: Call[] = [];
   const rec = (name: string, ...args: unknown[]) => void log.push({ name, args });
+  /** Every view the booster toolbar was asked to show (not logged as effects). */
+  const boosterViews: unknown[] = [];
   const initial = { progress: options.progress ?? createProgress(), stats: createStats(new Date(0)), dailyLog: createDailyLog(TODAY), profile: createProfile() };
 
   let now = 0;
@@ -131,6 +135,16 @@ function createHarness(options: Options = {}) {
     onRemove(fn: (arrow: ArrowData) => void) {
       this.removeListeners.push(fn);
     },
+    // Booster queries (BoosterController); silent, so the recorded effects stay as before.
+    subscribe: () => () => {},
+    get lives() {
+      return this.snap.lives;
+    },
+    maxLives: 3,
+    escapableArrows: () => [] as ArrowData[],
+    getArrows: () => [] as ArrowData[],
+    blockerOf: () => null,
+    restoreLife: () => false,
     /** The rules moved on: patch the live snapshot. */
     set(patch: Partial<GameSnapshot>) {
       this.snap = { ...this.snap, ...patch };
@@ -144,6 +158,10 @@ function createHarness(options: Options = {}) {
     loadLevel: (level: LevelData) => (rec('scene.loadLevel', level.id), state.reset(level.id)),
     restartLevel: () => (rec('scene.restartLevel'), state.reset(state.levelId)),
     resetView: () => rec('scene.resetView'),
+    hintShowing: false,
+    revealShowing: false,
+    showHint: (id: string) => (rec('scene.showHint', id), true),
+    showReveal: (ids: readonly string[]) => (rec('scene.showReveal', ids.length), true),
   };
   const gameEvents = new Map<string, { fn: () => void; once: boolean }[]>();
   const game = {
@@ -259,8 +277,13 @@ function createHarness(options: Options = {}) {
     renderLeague: () => rec('profileScreen.renderLeague'),
   };
   const rewards = {
-    current: { daily: createDaily() },
+    current: { daily: createDaily(), boosters: { used: { hint: 0, reveal: 0, heart: 0 }, introduced: options.boosterTipSeen ?? true } },
     credits: 100,
+    spendBooster: (today: string, id: string) => (rec('rewards.spendBooster', today, id), true),
+    markBoostersIntroduced(today: string) {
+      rec('rewards.markBoostersIntroduced', today);
+      this.current = { ...this.current, boosters: { ...this.current.boosters, introduced: true } };
+    },
     unlockListeners: [] as ((unlocked: readonly AchievementDefinition[]) => void)[],
     pendingUnlocks: options.unlocks ?? [],
     claimResult: null as { reward: { date: string; day: number; credits: number; transactionId: string }; unlocked: [] } | null,
@@ -355,6 +378,7 @@ function createHarness(options: Options = {}) {
     league,
     leagueScreen: { render: () => rec('leagueScreen.render') },
     leagueResult,
+    boosterBar: { render: (view: unknown) => (boosterViews.push(view), undefined), flash: (id: string) => rec('boosterBar.flash', id) },
   };
   const app = new App(parts as unknown as AppParts);
 
@@ -368,6 +392,8 @@ function createHarness(options: Options = {}) {
     hud,
     league,
     rewards,
+    scene,
+    boosterViews,
     dayClock,
     confirmDialog,
     leagueResult,
@@ -1163,6 +1189,73 @@ describe('background and resume', () => {
     await h.app.showHome();
     h.clear();
     vi.advanceTimersByTime(1_000);
+    expect(h.effects()).toEqual([]);
+  });
+});
+
+describe('boosters', () => {
+  const freeArrow = { id: 'a1', direction: 'right', cells: [{ row: 0, col: 0 }] } as ArrowData;
+
+  it('shows the first-time tip once, from Level 2 on (not on Level 1, not in a challenge)', async () => {
+    const h = createHarness({ progress: progressThrough(10), boosterTipSeen: false, challenges: [CHALLENGE] });
+    await enterLevel(h, 1);
+    expect(h.rewards.current.boosters.introduced).toBe(false);
+    await h.app.openChallenge(1);
+    await flush();
+    expect(h.rewards.current.boosters.introduced).toBe(false);
+    h.clear();
+    await h.app.openLevel(2);
+    await flush();
+    expect(h.effects().filter((e) => e.startsWith('toast.show') || e.startsWith('rewards.mark'))).toEqual([
+      'toast.show Stuck? Boosters: Hint 20 · Reveal 40 · Extra Heart 80 credits 5000',
+      `rewards.markBoostersIntroduced ${TODAY}`,
+    ]);
+    h.clear();
+    await h.app.openLevel(3);
+    await flush();
+    expect(h.effects().filter((e) => e.startsWith('toast.show'))).toEqual([]);
+  });
+
+  it('a Hint on a level the player really unlocked is paid from the wallet, then shown', async () => {
+    const h = createHarness();
+    await enterLevel(h, 1);
+    h.state.escapableArrows = () => [freeArrow];
+    h.state.getArrows = () => [freeArrow];
+    h.app.useBooster('hint');
+    expect(h.effects()).toEqual([`rewards.spendBooster ${TODAY} hint`, 'scene.showHint a1', 'boosterBar.flash hint', 'feedback booster']);
+    expect(h.boosterViews.at(-1)).toMatchObject({ visible: true, free: false });
+  });
+
+  it('a test play gets boosters free: the real wallet is never charged', async () => {
+    const h = createHarness(); // fresh progress: Level 5 is open only through the testing flag
+    await enterLevel(h, 5);
+    expect(h.boosterViews.at(-1)).toMatchObject({ visible: true, free: true });
+    h.state.escapableArrows = () => [freeArrow];
+    h.state.getArrows = () => [freeArrow];
+    h.app.useBooster('hint');
+    expect(h.effects()).toEqual(['scene.showHint a1', 'boosterBar.flash hint', 'feedback booster']);
+  });
+
+  it('Daily League challenges hide the toolbar and refuse boosters without charging', async () => {
+    const h = createHarness({ progress: progressThrough(10), challenges: [CHALLENGE] });
+    h.app.start();
+    await h.app.openChallenge(1);
+    await flush();
+    expect(h.boosterViews.at(-1)).toMatchObject({ visible: false });
+    h.clear();
+    h.state.escapableArrows = () => [freeArrow];
+    h.app.useBooster('hint');
+    expect(h.effects()).toEqual(['toast.show Boosters are off in Daily League challenges. 2600']);
+  });
+
+  it('after leaving the level, booster taps do nothing', async () => {
+    const h = createHarness();
+    await enterLevel(h, 1);
+    await h.app.showHome();
+    await flush();
+    h.clear();
+    h.state.escapableArrows = () => [freeArrow];
+    h.app.useBooster('hint');
     expect(h.effects()).toEqual([]);
   });
 });

@@ -1,8 +1,8 @@
 /**
  * Energy Credits: an offline, non-purchasable, non-transferable reward
  * currency with no real-money value. Earned from daily rewards and
- * achievements; kept forever (it never resets). Spending (cosmetics, hints)
- * comes later; `spend` exists so that can be added without a format change.
+ * achievements; kept forever (it never resets). Spent on hints and boosters
+ * during a level (`spend`); the saved format is the same as before spending existed.
  *
  * Not to be confused with **Energy Points** (Step 10): league points
  * collected from special arrows, which reset every competition. They will
@@ -28,8 +28,12 @@ export interface Transaction {
 
 /** Largest single credit or spend; anything bigger is rejected as invalid. */
 export const MAX_TRANSACTION = 1000;
-/** Daily ids are trimmed to the most recent ones; other ids (achievements) are kept forever. */
-const KEEP_DAILY_IDS = 30;
+/**
+ * Daily and booster ids are trimmed to the most recent ones; other ids
+ * (achievements, league milestones) are kept forever. Booster ids are
+ * numbered per booster (`booster:hint:12`), so a trimmed id never comes back.
+ */
+const KEEP_RECENT_IDS: Readonly<Record<string, number>> = { 'daily:': 30, 'booster:': 50 };
 
 export function createWallet(): Wallet {
   return { credits: 0, earned: 0, applied: [] };
@@ -50,7 +54,7 @@ export function earn(wallet: Wallet, tx: Transaction): WalletResult {
   };
 }
 
-/** Removes credits once per transaction id, if the balance allows. Not used by the game yet. */
+/** Removes credits once per transaction id, if the balance allows (boosters, see Rewards.spendBooster). */
 export function spend(wallet: Wallet, tx: Transaction): WalletResult {
   if (!validTransaction(tx)) return { ok: false, reason: 'invalid' };
   if (wallet.applied.includes(tx.id)) return { ok: false, reason: 'duplicate' };
@@ -59,11 +63,14 @@ export function spend(wallet: Wallet, tx: Transaction): WalletResult {
 }
 
 function remember(applied: readonly string[], id: string): string[] {
-  const next = [...applied, id];
-  const daily = next.filter((t) => t.startsWith('daily:'));
-  if (daily.length <= KEEP_DAILY_IDS) return next;
-  const drop = new Set(daily.slice(0, daily.length - KEEP_DAILY_IDS));
-  return next.filter((t) => !drop.has(t));
+  let next = [...applied, id];
+  for (const [prefix, keep] of Object.entries(KEEP_RECENT_IDS)) {
+    const recent = next.filter((t) => t.startsWith(prefix));
+    if (recent.length <= keep) continue;
+    const drop = new Set(recent.slice(0, recent.length - keep));
+    next = next.filter((t) => !drop.has(t));
+  }
+  return next;
 }
 
 /** Validates a stored wallet. A balance that doesn't add up is clamped, never inflated. */

@@ -60,7 +60,11 @@ export class Hud {
     // Nothing to restart before the first move or mistake.
     this.restartButton.disabled = snapshot.moves === 0 && snapshot.mistakes === 0;
 
-    this.renderHearts(snapshot.lives, sameRun && this.last !== undefined && snapshot.lives < this.last.lives);
+    const before = sameRun ? this.last : undefined;
+    // Extra Heart: exactly one more life and nothing else changed (a restart also adds lives, but resets moves and mistakes).
+    const restored =
+      before !== undefined && snapshot.lives === before.lives + 1 && snapshot.mistakes === before.mistakes && snapshot.moves === before.moves;
+    this.renderHearts(snapshot.lives, before !== undefined && snapshot.lives < before.lives, restored);
     this.renderStreak(snapshot, sameRun ? this.last : undefined);
     if (sameRun && this.last && snapshot.remaining < this.last.remaining) this.tick(this.remaining);
     this.last = snapshot;
@@ -141,16 +145,23 @@ export class Hud {
     this.restartButton.addEventListener('click', handler);
   }
 
-  /** Full hearts first, lost hearts last; the heart that was just lost plays a short break animation. */
-  private renderHearts(lives: number, justLost: boolean): void {
+  /**
+   * Full hearts first, lost hearts last; the heart that was just lost plays a
+   * short break animation, and one given back (Extra Heart) grows back in.
+   */
+  private renderHearts(lives: number, justLost: boolean, justRestored = false): void {
     const hearts = [...this.hearts.children] as SVGElement[];
     hearts.forEach((heart, index) => {
       const full = index < lives;
       heart.classList.toggle('heart--lost', !full);
-      heart.classList.remove('heart--breaking');
+      heart.classList.remove('heart--breaking', 'heart--restored');
       if (justLost && index === lives) {
         void heart.getBoundingClientRect(); // restart the CSS animation
         heart.classList.add('heart--breaking');
+      }
+      if (justRestored && index === lives - 1) {
+        void heart.getBoundingClientRect();
+        heart.classList.add('heart--restored');
       }
     });
     this.hearts.setAttribute('aria-label', `${lives} ${lives === 1 ? 'life' : 'lives'} left`);
