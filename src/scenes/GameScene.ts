@@ -7,7 +7,10 @@ import { BoardViewport, maxZoomFor } from '../render/viewport';
 import { BoardRenderer } from '../render/BoardRenderer';
 import { FxLayer } from '../render/FxLayer';
 import { StaticArrowLayer } from '../render/StaticArrowLayer';
-import { cellAtPoint, computeBoardLayout, sameLayout, type BoardLayout, type Rect } from '../render/layout';
+import { cellAtPoint, computeBoardLayout, gridBounds, sameLayout, type BoardLayout, type Rect } from '../render/layout';
+import { reducedMotion } from '../render/motion';
+import { powerUpWave, WAVE_SPREAD_MS, WAVE_START_MS } from '../render/powerUpWave';
+import { arrowColor, palette } from '../render/theme';
 import type { LevelData, MoveResult } from '../core/types';
 import type { FeedbackEvent } from '../app/Feedback';
 import { MoveSequencer, StepOwners, type SequenceStep } from './MoveSequencer';
@@ -102,6 +105,9 @@ export class GameScene extends Phaser.Scene {
   /** Set once the win or Game Over sequence has started; no more input after that. */
   private ended = false;
   private endTimer?: Phaser.Time.TimerEvent;
+  /** Set when a very hard level is opened: its arrows play the power-up wave instead of the usual intro (not on restart). */
+  private powerUpNext = false;
+  private waveTimer?: Phaser.Time.TimerEvent;
   private readonly viewport = new BoardViewport();
   /** A shaped level's cells ("row,col"): only they show board dots. Null for rectangular boards. */
   private outline: ReadonlySet<string> | null = null;
@@ -180,6 +186,7 @@ export class GameScene extends Phaser.Scene {
   /** Switches to another level, replacing every arrow and resizing the board for its grid. The view is fitted. */
   loadLevel(level: LevelData): void {
     this.state.load(level);
+    this.powerUpNext = level.tier === 'very hard';
     this.outline = level.outline ? new Set(level.arrows.flatMap((a) => a.cells.map((c) => `${c.row},${c.col}`))) : null;
     this.board?.setOutline(this.outline);
     this.rebuild(false);
@@ -205,6 +212,8 @@ export class GameScene extends Phaser.Scene {
     if (!keepView || !sameBoard) this.configureView();
     this.endTimer?.remove();
     this.endTimer = undefined;
+    this.waveTimer?.remove();
+    this.waveTimer = undefined;
     this.ended = false;
     this.sequencer.cancel();
     this.owners.clear();
@@ -218,12 +227,27 @@ export class GameScene extends Phaser.Scene {
 
   private buildArrows(): void {
     const arrows = this.state.getArrows();
+    const wave = this.powerUpNext ? powerUpWave(arrows, this.layout.rows, this.layout.cols) : null;
+    this.powerUpNext = false;
     const stagger = Math.min(30, INTRO_SPREAD_MS / Math.max(1, arrows.length));
     arrows.forEach((data, index) => {
       const view = new ArrowView(this, data, this.layout, this.arrowLayer, this.fx, index, this.staticLayer);
       view.setActivated(this.state.isActivated(data.id));
       this.views.set(data.id, view);
-      view.playIntro(60 + index * stagger);
+      if (wave) view.playPowerUp(wave.delays[index]);
+      else view.playIntro(60 + index * stagger);
+    });
+    if (wave) this.playWaveFront(wave.reach);
+  }
+
+  /** The power-up wave's front: a ring spreading from the grid centre, lighting the arrows as it passes. */
+  private playWaveFront(reach: number): void {
+    if (reducedMotion()) return;
+    const grid = gridBounds(this.layout);
+    const color = arrowColor(palette(), 0);
+    this.waveTimer = this.time.delayedCall(WAVE_START_MS, () => {
+      this.waveTimer = undefined;
+      this.fx.ring(grid.centerX, grid.centerY, color, this.layout.cellSize, 0, Math.max(1, reach), WAVE_SPREAD_MS);
     });
   }
 

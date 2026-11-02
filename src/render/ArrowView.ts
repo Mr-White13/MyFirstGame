@@ -5,6 +5,7 @@ import type { FxLayer } from './FxLayer';
 import { cellCenter, gridBounds, type BoardLayout, type Point } from './layout';
 import { decorationScale, reducedMotion } from './motion';
 import { distanceToPolyline, MeasuredPolyline, type MutablePoint } from './polyline';
+import { POWER_UP_MS } from './powerUpWave';
 import { arrowColor, lighten, mixColors, palette } from './theme';
 import { unitCircle } from './unitCircle';
 
@@ -28,6 +29,8 @@ const launchEase = (t: number): number => 0.3 * t + 0.7 * t * t;
 const CORNER_STEPS = 6;
 const CORNER_STEP_PX = 4;
 const MAX_CORNER_STEPS = 24;
+/** Opacity of an arrow waiting for the power-up wave: visible, but clearly "off". */
+const POWER_UP_DIM = 0.16;
 
 /** Unit-circle points for the triangle-fan discs (caps, sockets): enough for a smooth edge at arrow sizes. */
 const DISC_STEPS = 14;
@@ -145,6 +148,36 @@ export class ArrowView {
     this.graphics.setAlpha(0);
     this.graphics.y = this.layout.cellSize * 0.12;
     this.scene.tweens.add({ targets: this.graphics, alpha: 1, y: 0, delay, duration: 220, ease: 'Cubic.easeOut' });
+  }
+
+  /**
+   * Very hard levels' intro: the arrow waits dimmed ("power off") until the
+   * wave reaches it after `delay` ms, then lights up with a bright flash that
+   * settles into its resting colour. Input is never blocked: a tap cuts it short.
+   */
+  playPowerUp(delay: number): void {
+    if (reducedMotion()) return;
+    const bright = lighten(this.baseColor, 0.3 + 0.4 * decorationScale());
+    this.graphics.setAlpha(POWER_UP_DIM);
+    this.motion = this.scene.tweens.addCounter({
+      from: 0,
+      to: 1,
+      delay,
+      duration: POWER_UP_MS,
+      ease: 'Cubic.easeOut',
+      onUpdate: (tween) => {
+        const t = tween.getValue() ?? 1;
+        this.graphics.setAlpha(POWER_UP_DIM + (1 - POWER_UP_DIM) * Math.min(1, t * 2));
+        this.color = mixColors(this.baseColor, bright, 1 - t);
+        this.redraw();
+      },
+      onComplete: () => {
+        this.motion = undefined;
+        this.color = this.baseColor;
+        this.graphics.setAlpha(1);
+        this.redraw();
+      },
+    });
   }
 
   /**

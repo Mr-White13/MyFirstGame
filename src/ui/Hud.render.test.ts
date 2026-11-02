@@ -143,6 +143,22 @@ describe('Hud markup coupling', () => {
     expect(shown()).toEqual([true, '', false, false]);
   });
 
+  it("flickers a very hard level's name on when the level opens, not on restart", () => {
+    const levels: Record<number, { tier?: 'hard' | 'very hard' }> = { 6: { tier: 'hard' }, 20: { tier: 'very hard' } };
+    const hud = new Hud((id) => levels[id]);
+    const name = byId('hud-name');
+    const flickering = () => name.classList.contains('is-powering-up');
+    hud.update(snapshot({ levelId: 6 }));
+    expect(flickering()).toBe(false);
+    hud.update(snapshot({ levelId: 20 }));
+    expect(flickering()).toBe(true);
+    name.classList.remove('is-powering-up'); // as if the animation had played
+    hud.update(snapshot({ levelId: 20, moves: 1 }));
+    expect(flickering()).toBe(false);
+    hud.update(snapshot({ levelId: 7 }));
+    expect(flickering()).toBe(false);
+  });
+
   it('wires back, restart and reset view', () => {
     const hud = new Hud();
     const calls: string[] = [];

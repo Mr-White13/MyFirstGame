@@ -640,6 +640,47 @@ body.is-navigating #app {
   color: var(--red);
 }
 
+/* Flickers on like a neon sign while the board's power-up wave plays (powerUpWave.ts). */
+.hud__name.is-powering-up {
+  animation: name-power-up 1100ms linear 240ms both;
+}
+
+@keyframes name-power-up {
+  0%,
+  8% {
+    opacity: 0.15;
+    text-shadow: none;
+  }
+  10%,
+  14% {
+    opacity: 1;
+    text-shadow: 0 0 10px currentColor;
+  }
+  16%,
+  30% {
+    opacity: 0.2;
+    text-shadow: none;
+  }
+  32%,
+  36% {
+    opacity: 1;
+    text-shadow: 0 0 12px currentColor;
+  }
+  38%,
+  44% {
+    opacity: 0.35;
+    text-shadow: none;
+  }
+  48% {
+    opacity: 1;
+    text-shadow: 0 0 16px currentColor;
+  }
+  100% {
+    opacity: 1;
+    text-shadow: 0 0 0 transparent;
+  }
+}
+
 .hud__stats {
   display: grid;
   grid-template-columns: auto 1fr auto auto;
@@ -2624,6 +2665,7 @@ body.is-navigating #app {
 :root[data-motion='reduce'] .ambient span,
 :root[data-motion='reduce'] .level-tile--current::after,
 :root[data-motion='reduce'] .stat__value.is-ticking,
+:root[data-motion='reduce'] .hud__name.is-powering-up,
 :root[data-motion='reduce'] .overlay--visible .badge__icon {
   animation: none;
 }

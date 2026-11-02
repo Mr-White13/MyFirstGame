@@ -115,7 +115,14 @@ export class Hud {
     this.name.textContent = text ?? '';
     this.name.hidden = text === undefined;
     this.name.classList.toggle('hud__name--hard', info?.tier === 'hard');
-    this.name.classList.toggle('hud__name--very-hard', info?.tier === 'very hard');  }
+    this.name.classList.toggle('hud__name--very-hard', info?.tier === 'very hard');
+    // A very hard level's name flickers on with the board's power-up wave.
+    this.name.classList.remove('is-powering-up');
+    if (info?.tier === 'very hard') {
+      void this.name.offsetWidth; // restart the CSS animation
+      this.name.classList.add('is-powering-up');
+    }
+  }
 
   /** The Reset zoom control on the board: shown only while the board is zoomed in. */
   setZoomed(zoomed: boolean): void {
