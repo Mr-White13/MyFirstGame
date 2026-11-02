@@ -39,6 +39,7 @@ import { RecordsScreen } from './ui/RecordsScreen';
 import { RecapDialog } from './ui/RecapDialog';
 import { Screens } from './ui/Screens';
 import { SettingsScreen } from './ui/SettingsScreen';
+import { QuickSettings } from './ui/QuickSettings';
 import { ThemePicker } from './ui/ThemePicker';
 import { Toast } from './ui/Toast';
 
@@ -52,7 +53,12 @@ const appearance = new Appearance(settings, {
 const audio = new AudioManager(settings.current);
 audio.listenForGestures(document);
 // In the Android app vibration goes through the native Haptics plugin; in browsers, the Vibration API.
-const haptics = new Haptics(() => settings.current.haptics, isNativeApp() ? nativeHapticsBackend() : webVibrationBackend());
+const haptics = new Haptics(
+  () => settings.current.haptics,
+  isNativeApp() ? nativeHapticsBackend() : webVibrationBackend(),
+  undefined,
+  () => settings.current.hapticStrength,
+);
 const feedback = new Feedback(audio, haptics);
 const emit = (event: FeedbackEvent) => feedback.handle(event);
 
@@ -92,6 +98,8 @@ const themePicker = new ThemePicker({
   onPick: (theme) => settings.update({ theme }),
   current: () => settings.current.theme,
 });
+// Music, sound effects and vibration in the same card; they apply at once like every setting.
+const quickSettings = new QuickSettings((patch) => settings.update(patch), haptics.supported);
 const completeDialog = new CompleteDialog({
   onNext: () => app?.nextLevel(),
   onReplay: () => app?.restartLevel(),
@@ -232,6 +240,7 @@ const applySettings = () => {
   if (!current.haptics) haptics.stop();
   settingsScreen.render(current, appearance.current);
   settingsScreen.setAudioUnavailable(audio.isUnavailable);
+  quickSettings.render(current);
 };
 settings.subscribe(applySettings);
 appearance.onChange(() => {

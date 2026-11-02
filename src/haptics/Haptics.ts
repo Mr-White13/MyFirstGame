@@ -1,4 +1,5 @@
 import { Throttle } from '../audio/mix';
+import type { HapticStrength } from '../settings/Settings';
 
 export type HapticId = 'release' | 'blocked' | 'lifeLost' | 'chain' | 'complete' | 'reward' | 'promoted';
 
@@ -42,6 +43,25 @@ const HAPTIC_GAP_MS: Readonly<Record<HapticId, number>> = {
   reward: 800,
   promoted: 1500,
 };
+
+/** Soft vibration: this share of each pulse's strength (native) and length (both backends; the web has no strength). */
+const SOFT_AMPLITUDE = 0.45;
+const SOFT_LENGTH = 0.6;
+/** Soft pulses never get shorter than this, or many motors would not move at all. */
+const SOFT_MIN_PULSE_MS = 15;
+
+/**
+ * An effect at the player's strength. Strong is the effect as designed; soft
+ * weakens and shortens every pulse (pauses keep their length, so double
+ * pulses still read as two).
+ */
+export function scaleEffect(effect: HapticEffect, strength: HapticStrength): HapticEffect {
+  if (strength === 'strong') return effect;
+  return {
+    timings: effect.timings.map((t, i) => ((effect.amplitudes[i] ?? 255) > 0 ? Math.max(SOFT_MIN_PULSE_MS, Math.round(t * SOFT_LENGTH)) : t)),
+    amplitudes: effect.amplitudes.map((a) => (a > 0 ? Math.max(1, Math.round(a * SOFT_AMPLITUDE)) : 0)),
+  };
+}
 
 /** Total length of an effect in ms. */
 export function effectDuration(effect: HapticEffect): number {
@@ -127,6 +147,7 @@ export class Haptics {
     private readonly enabled: () => boolean,
     private readonly backend: HapticsBackend = webVibrationBackend(),
     now: () => number = () => performance.now(),
+    private readonly strength: () => HapticStrength = () => 'strong',
   ) {
     this.throttle = new Throttle(now);
   }
@@ -143,7 +164,7 @@ export class Haptics {
   play(id: HapticId): boolean {
     if (!this.backend.supported || !this.enabled()) return false;
     if (!this.throttle.allow(id, HAPTIC_GAP_MS[id])) return false;
-    this.backend.play(HAPTIC_EFFECTS[id], id);
+    this.backend.play(scaleEffect(HAPTIC_EFFECTS[id], this.strength()), id);
     return true;
   }
 

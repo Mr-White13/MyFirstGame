@@ -1,5 +1,5 @@
 import type { ResolvedAppearance } from '../settings/Appearance';
-import type { GameSettings } from '../settings/Settings';
+import { vibrationChoice, vibrationPatch, type GameSettings, type VibrationChoice } from '../settings/Settings';
 import { requireElement } from './dom';
 
 export interface SettingsActions {
@@ -21,7 +21,7 @@ export interface DeviceSupport {
   readonly audio: boolean;
 }
 
-type SwitchKey = 'music' | 'sfx' | 'haptics' | 'showTimer' | 'confirmRestart' | 'showRecap';
+type SwitchKey = 'music' | 'sfx' | 'showTimer' | 'confirmRestart' | 'showRecap';
 
 const THEME_HINTS: Record<GameSettings['theme'], string> = {
   dark: 'The original look: dark navy with cyan and purple neon.',
@@ -41,7 +41,6 @@ export class SettingsScreen {
   private readonly switches: Record<SwitchKey, HTMLInputElement> = {
     music: requireElement('set-music'),
     sfx: requireElement('set-sfx'),
-    haptics: requireElement('set-haptics'),
     showTimer: requireElement('set-timer'),
     confirmRestart: requireElement('set-confirm-restart'),
     showRecap: requireElement('set-recap'),
@@ -94,6 +93,9 @@ export class SettingsScreen {
         radio.addEventListener('change', () => radio.checked && actions.onChange({ [name]: radio.value } as Partial<GameSettings>)),
       );
     }
+    this.radios('vibration').forEach((radio) =>
+      radio.addEventListener('change', () => radio.checked && actions.onChange(vibrationPatch(radio.value as VibrationChoice))),
+    );
     this.sound.addEventListener('change', () => actions.onChange({ muted: !this.sound.checked }));
     (Object.keys(this.switches) as SwitchKey[]).forEach((key) => {
       const input = this.switches[key];
@@ -107,7 +109,7 @@ export class SettingsScreen {
     if (!support.vibration) {
       testButton.disabled = true;
       testStatus.textContent = 'Not available on this device.';
-      this.switches.haptics.disabled = true;
+      this.radios('vibration').forEach((radio) => (radio.disabled = true));
       this.hapticsHint.textContent = "This browser can't vibrate. It works in Chrome on Android phones.";
     }
   }
@@ -119,7 +121,7 @@ export class SettingsScreen {
     this.check('effects', settings.effects);
     this.sound.checked = !settings.muted;
     (Object.keys(this.switches) as SwitchKey[]).forEach((key) => (this.switches[key].checked = settings[key]));
-    if (!this.support.vibration) this.switches.haptics.checked = false;
+    this.check('vibration', this.support.vibration ? vibrationChoice(settings) : 'off');
 
     this.setSlider(this.musicVolume, this.musicValue, settings.musicVolume);
     this.setSlider(this.sfxVolume, this.sfxValue, settings.sfxVolume);

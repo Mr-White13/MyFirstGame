@@ -19,6 +19,8 @@ import {
   SETTINGS_KEY,
   SETTINGS_VERSION,
   SettingsStore,
+  vibrationChoice,
+  vibrationPatch,
   withSettings,
   type GameSettings,
 } from './Settings';
@@ -76,6 +78,7 @@ describe('settings model', () => {
       musicVolume: 0.35,
       sfxVolume: 0.7,
       haptics: true,
+      hapticStrength: 'strong',
       showTimer: true,
       confirmRestart: true,
       showRecap: true,
@@ -152,6 +155,29 @@ describe('settings storage', () => {
 
   it('fills in fields missing from an older save of the same version', () => {
     expect(readSettings(JSON.stringify({ version: 1, theme: 'light' })).value).toEqual({ ...createSettings(), theme: 'light' });
+  });
+
+  it('gives saves from before the vibration strength the strong default, keeping their on/off choice', () => {
+    const before = { version: 1, theme: 'dark', motion: 'auto', effects: 'normal', muted: false, music: true, sfx: true, musicVolume: 0.35, sfxVolume: 0.7, showTimer: true, confirmRestart: true, showRecap: true };
+    for (const haptics of [true, false]) {
+      const { value, status } = readSettings(JSON.stringify({ ...before, haptics }));
+      expect(status).toBe('current');
+      expect([value.haptics, value.hapticStrength]).toEqual([haptics, 'strong']);
+    }
+    expect(readSettings(JSON.stringify({ ...before, hapticStrength: 'medium' })).value.hapticStrength).toBe('strong');
+  });
+
+  it('maps the Vibration control (Off, Soft, Strong) to the on/off switch and the strength', () => {
+    expect(vibrationChoice(createSettings())).toBe('strong');
+    let s = withSettings(createSettings(), vibrationPatch('soft'));
+    expect([s.haptics, s.hapticStrength, vibrationChoice(s)]).toEqual([true, 'soft', 'soft']);
+    s = withSettings(s, vibrationPatch('off'));
+    expect([s.haptics, s.hapticStrength, vibrationChoice(s)]).toEqual([false, 'soft', 'off']); // the strength is kept for later
+    s = withSettings(s, vibrationPatch('strong'));
+    expect([s.haptics, s.hapticStrength, vibrationChoice(s)]).toEqual([true, 'strong', 'strong']);
+    const store = new MemoryStore();
+    new SettingsStore(store).update(vibrationPatch('soft'));
+    expect(vibrationChoice(new SettingsStore(store).current)).toBe('soft');
   });
 
   it('migrates older versions step by step', () => {

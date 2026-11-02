@@ -60,8 +60,8 @@
       <symbol id="icon-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></symbol>
       <symbol id="icon-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" /></symbol>
       <symbol id="icon-settings" viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="3.2" />
-        <path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.9 1.9M16.6 16.6l1.9 1.9M5.5 18.5l1.9-1.9M16.6 7.4l1.9-1.9" />
+        <path d="M18.79 10.31L21.38 10.51L21.38 13.49L18.79 13.69L18 15.61L19.69 17.58L17.58 19.69L15.61 18L13.69 18.79L13.49 21.38L10.51 21.38L10.31 18.79L8.39 18L6.42 19.69L4.31 17.58L6 15.61L5.21 13.69L2.62 13.49L2.62 10.51L5.21 10.31L6 8.39L4.31 6.42L6.42 4.31L8.39 6L10.31 5.21L10.51 2.62L13.49 2.62L13.69 5.21L15.61 6L17.58 4.31L19.69 6.42L18 8.39Z" />
+        <circle cx="12" cy="12" r="3" />
       </symbol>
       <symbol id="icon-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.8" /><path d="M4.5 20c1.2-4 4-5.8 7.5-5.8s6.3 1.8 7.5 5.8" /></symbol>
       <symbol id="icon-bolt" viewBox="0 0 24 24"><path d="M13 2.5L5 13.5h6l-1 8 8-11h-6z" /></symbol>
@@ -255,16 +255,16 @@
                 </span>
               </div>
               <div class="hud__actions">
-                <button type="button" class="icon-btn" id="btn-theme" aria-label="Theme" aria-haspopup="dialog" aria-expanded="false" aria-controls="theme-popover">
-                  <svg class="icon" aria-hidden="true"><use href="#icon-palette" /></svg>
+                <button type="button" class="icon-btn" id="btn-theme" aria-label="Quick settings: theme, sound and vibration" aria-haspopup="dialog" aria-expanded="false" aria-controls="theme-popover">
+                  <svg class="icon" aria-hidden="true"><use href="#icon-settings" /></svg>
                 </button>
                 <button type="button" class="icon-btn icon-btn--restart" id="btn-restart" aria-label="Restart level">
                   <svg class="icon" aria-hidden="true"><use href="#icon-restart" /></svg>
                 </button>
               </div>
             </div>
-            <!-- In-game theme picker: opens under the palette button; the timer is paused while it is open. -->
-            <div class="theme-popover surface" id="theme-popover" role="dialog" aria-label="Theme" hidden>
+            <!-- In-game quick settings: theme, music, sound effects and vibration. Opens under the settings button; the timer is paused while it is open. -->
+            <div class="theme-popover surface" id="theme-popover" role="dialog" aria-label="Quick settings" hidden>
               <div class="theme-picker theme-picker--compact" role="radiogroup" aria-label="Theme">
                 <button type="button" class="theme-option theme-option--dark" role="radio" data-theme-choice="dark" aria-checked="false">
                   <span class="theme-option__swatch" aria-hidden="true"><i></i><i></i><i></i></span>
@@ -282,6 +282,27 @@
                   <span class="theme-option__swatch" aria-hidden="true"><i></i><i></i><i></i></span>
                   <span class="theme-option__name">System</span>
                 </button>
+              </div>
+              <div class="quick-settings" id="quick-settings">
+                <label class="quick-setting">
+                  <svg class="icon" aria-hidden="true"><use href="#icon-sound" /></svg>
+                  <span class="quick-setting__label">Music</span>
+                  <input type="checkbox" class="switch" role="switch" id="quick-music" />
+                </label>
+                <label class="quick-setting">
+                  <svg class="icon" aria-hidden="true"><use href="#icon-spark" /></svg>
+                  <span class="quick-setting__label">Sound effects</span>
+                  <input type="checkbox" class="switch" role="switch" id="quick-sfx" />
+                </label>
+                <div class="quick-setting quick-setting--choice" role="radiogroup" aria-labelledby="label-quick-vibration">
+                  <svg class="icon" aria-hidden="true"><use href="#icon-vibrate" /></svg>
+                  <span class="quick-setting__label" id="label-quick-vibration">Vibration</span>
+                  <div class="segmented segmented--inline">
+                    <label><input type="radio" name="quick-vibration" value="off" /><span>Off</span></label>
+                    <label><input type="radio" name="quick-vibration" value="soft" /><span>Soft</span></label>
+                    <label><input type="radio" name="quick-vibration" value="strong" /><span>Strong</span></label>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="hud__stats">
@@ -546,13 +567,15 @@
             <h2 class="settings-group__title" id="settings-feedback">
               <svg class="icon" aria-hidden="true"><use href="#icon-vibrate" /></svg>Feedback
             </h2>
-            <label class="setting setting--switch">
-              <span class="setting__text">
-                <span class="setting__label">Vibration</span>
-                <span class="setting__hint" id="haptics-hint">Short pulses on releases, collisions and wins</span>
-              </span>
-              <input type="checkbox" class="switch" role="switch" id="set-haptics" aria-describedby="haptics-hint" />
-            </label>
+            <div class="setting setting--stack" role="radiogroup" aria-labelledby="label-vibration" aria-describedby="haptics-hint">
+              <span class="setting__label" id="label-vibration">Vibration</span>
+              <div class="segmented">
+                <label><input type="radio" name="vibration" value="off" /><span>Off</span></label>
+                <label><input type="radio" name="vibration" value="soft" /><span>Soft</span></label>
+                <label><input type="radio" name="vibration" value="strong" /><span>Strong</span></label>
+              </div>
+              <p class="setting__hint" id="haptics-hint">Short pulses on releases, collisions and wins. Soft makes them lighter and shorter.</p>
+            </div>
             <div class="setting setting--test">
               <button type="button" class="btn btn--ghost btn--small" id="btn-test-vibration">
                 <svg class="icon" aria-hidden="true"><use href="#icon-vibrate" /></svg>
