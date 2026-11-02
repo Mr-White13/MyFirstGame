@@ -2,8 +2,15 @@ import type Phaser from 'phaser';
 import type { ArrowView } from './ArrowView';
 import type { BoardLayout } from './layout';
 
-/** Highest resolution multiplier for the cache (it follows the zoom up to this, then stays a little soft). */
-const MAX_CACHE_SCALE = 2;
+/**
+ * The cache is drawn at this multiple of the screen resolution and filtered
+ * down when shown: drawing into a texture gets no multisampling, so this
+ * supersampling is what gives resting arrows smooth edges (2 = 4 samples per
+ * pixel, like the canvas's own 4× MSAA for moving arrows).
+ */
+const SUPERSAMPLE = 2;
+/** Highest resolution multiplier for the cache (supersampling times zoom, up to this; then a little soft). */
+const MAX_CACHE_SCALE = 3;
 /** Longest side of the cache texture, in pixels (memory and GPU limits on phones). */
 const MAX_CACHE_SIDE = 2048;
 /** Wait this long after the zoom stops changing before re-rendering the cache at the new resolution. */
@@ -32,8 +39,8 @@ export class StaticArrowLayer {
   private origin = { x: 0, y: 0 };
   private size = { width: 1, height: 1 };
   /** Resolution of the current texture, and the one wanted for the current zoom. */
-  private scale = 1;
-  private wantedScale = 1;
+  private scale = SUPERSAMPLE;
+  private wantedScale = SUPERSAMPLE;
   private zoomChangedAt = 0;
   private enabled = true;
 
@@ -54,7 +61,7 @@ export class StaticArrowLayer {
 
   /** The camera zoom changed; the cache follows once it settles. */
   setZoom(zoom: number): void {
-    const wanted = Math.min(MAX_CACHE_SCALE, Math.max(1, zoom));
+    const wanted = Math.min(MAX_CACHE_SCALE, SUPERSAMPLE * Math.max(1, zoom));
     if (Math.abs(wanted - this.wantedScale) < 0.01) return;
     this.wantedScale = wanted;
     this.zoomChangedAt = this.scene.time.now;
