@@ -242,36 +242,37 @@
    "density": 1,
    "meanLength": 5.25,
    "largestEmptySquare": 0,
-   "initialFree": 3,
-   "blockedShare": 0.75,
+   "initialFree": 4,
+   "blockedShare": 0.6666666666666667,
    "blockingRelations": 14,
-   "maxBlockers": 5,
+   "maxBlockers": 3,
    "longRangeBlocks": 4,
-   "depth": 4,
+   "depth": 5,
    "waves": [
+    4,
     3,
-    5,
     2,
-    2
+    2,
+    1
    ],
-   "turns": 13,
+   "turns": 10,
    "ambiguousJoins": 0
   },
   "estimated": {
-   "averageChoices": 2.7941666666666665,
-   "averageFreeShare": 0.5282759289321781,
-   "bottleneckShare": 0.22578174603174608,
-   "wrongTapsPerMove": 0.958568452380955
+   "averageChoices": 2.4929166666666664,
+   "averageFreeShare": 0.4604550715488228,
+   "bottleneckShare": 0.23879635642135671,
+   "wrongTapsPerMove": 1.085111111111107
   },
   "components": [
    {
     "name": "search",
-    "value": 0.3239973885375313,
+    "value": 0.35172513145573636,
     "weight": 35
    },
    {
     "name": "depth",
-    "value": 0.375,
+    "value": 0.4444444444444444,
     "weight": 20
    },
    {
@@ -291,67 +292,68 @@
    },
    {
     "name": "visual",
-    "value": 0.808,
+    "value": 0.7818181818181817,
     "weight": 10
    }
   ],
-  "score": 40,
+  "score": 42,
   "category": "Medium",
   "lives": {
    "random": {
-    "expectedMistakes": 5.615,
-    "winRate": 0.055,
-    "averageChainClears": 5.615
+    "expectedMistakes": 5.57,
+    "winRate": 0.03,
+    "averageChainClears": 5.57
    },
    "nearSighted": {
-    "expectedMistakes": 0.58,
+    "expectedMistakes": 0.525,
     "winRate": 1,
-    "averageChainClears": 0.58
+    "averageChainClears": 0.525
    },
    "deceptiveArrows": 0,
-   "riskScore": 38
+   "riskScore": 39
   }
  },
  {
   "id": 5,
   "exact": {
-   "rows": 10,
+   "rows": 9,
    "cols": 7,
    "arrows": 14,
    "density": 1,
-   "meanLength": 5,
+   "meanLength": 4.5,
    "largestEmptySquare": 0,
-   "initialFree": 2,
-   "blockedShare": 0.8571428571428572,
+   "initialFree": 3,
+   "blockedShare": 0.7857142857142857,
    "blockingRelations": 16,
-   "maxBlockers": 3,
-   "longRangeBlocks": 3,
-   "depth": 5,
+   "maxBlockers": 2,
+   "longRangeBlocks": 2,
+   "depth": 6,
    "waves": [
-    2,
-    4,
     3,
     3,
-    2
+    3,
+    3,
+    1,
+    1
    ],
-   "turns": 11,
+   "turns": 8,
    "ambiguousJoins": 0
   },
   "estimated": {
-   "averageChoices": 2.706785714285714,
-   "averageFreeShare": 0.4806228493728474,
-   "bottleneckShare": 0.14135714285714257,
-   "wrongTapsPerMove": 1.3448095238095252
+   "averageChoices": 2.5164285714285715,
+   "averageFreeShare": 0.433478599773241,
+   "bottleneckShare": 0.18425008325008332,
+   "wrongTapsPerMove": 1.349982142857143
   },
   "components": [
    {
     "name": "search",
-    "value": 0.40205862672797965,
+    "value": 0.4029818922275706,
     "weight": 35
    },
    {
     "name": "depth",
-    "value": 0.4444444444444444,
+    "value": 0.5,
     "weight": 20
    },
    {
@@ -361,7 +363,7 @@
    },
    {
     "name": "long-range",
-    "value": 0.1875,
+    "value": 0.125,
     "weight": 10
    },
    {
@@ -371,7 +373,7 @@
    },
    {
     "name": "visual",
-    "value": 0.776,
+    "value": 0.7454545454545455,
     "weight": 10
    }
   ],
@@ -379,14 +381,14 @@
   "category": "Medium",
   "lives": {
    "random": {
-    "expectedMistakes": 8.175,
-    "winRate": 0,
-    "averageChainClears": 8.175
+    "expectedMistakes": 7.495,
+    "winRate": 0.005,
+    "averageChainClears": 7.495
    },
    "nearSighted": {
-    "expectedMistakes": 0.06,
+    "expectedMistakes": 0.07,
     "winRate": 1,
-    "averageChainClears": 0.06
+    "averageChainClears": 0.07
    },
    "deceptiveArrows": 0,
    "riskScore": 40
@@ -397,76 +399,81 @@
   "exact": {
    "rows": 10,
    "cols": 8,
-   "arrows": 14,
+   "arrows": 13,
    "density": 1,
-   "meanLength": 5.714285714285714,
+   "meanLength": 6.153846153846154,
    "largestEmptySquare": 0,
-   "initialFree": 3,
-   "blockedShare": 0.7857142857142857,
-   "blockingRelations": 22,
-   "maxBlockers": 3,
-   "longRangeBlocks": 5,
-   "depth": 5,
+   "initialFree": 2,
+   "blockedShare": 0.8461538461538461,
+   "blockingRelations": 27,
+   "maxBlockers": 4,
+   "longRangeBlocks": 11,
+   "depth": 10,
    "waves": [
-    3,
-    4,
     2,
     2,
-    3
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1
    ],
-   "turns": 16,
+   "turns": 22,
    "ambiguousJoins": 0
   },
   "estimated": {
-   "averageChoices": 2.4771428571428573,
-   "averageFreeShare": 0.4577147683665537,
-   "bottleneckShare": 0.15199494949494935,
-   "wrongTapsPerMove": 1.4632976190476172
+   "averageChoices": 1.2969230769230768,
+   "averageFreeShare": 0.2829280313703385,
+   "bottleneckShare": 0.09073484848484847,
+   "wrongTapsPerMove": 2.4719230769230887
   },
   "components": [
    {
     "name": "search",
-    "value": 0.4225157003543963,
+    "value": 0.5527651156790241,
     "weight": 35
    },
    {
     "name": "depth",
-    "value": 0.4444444444444444,
+    "value": 0.6428571428571429,
     "weight": 20
    },
    {
     "name": "entanglement",
-    "value": 0.5116279069767442,
+    "value": 0.5806451612903226,
     "weight": 15
    },
    {
     "name": "long-range",
-    "value": 0.22727272727272727,
+    "value": 0.4074074074074074,
     "weight": 10
    },
    {
     "name": "size",
-    "value": 0.4117647058823529,
+    "value": 0.3939393939393939,
     "weight": 10
    },
    {
     "name": "visual",
-    "value": 0.8133333333333334,
+    "value": 0.8514285714285714,
     "weight": 10
    }
   ],
-  "score": 46,
-  "category": "Medium",
+  "score": 57,
+  "category": "Medium–hard",
   "lives": {
    "random": {
-    "expectedMistakes": 7.97,
+    "expectedMistakes": 9.075,
     "winRate": 0,
-    "averageChainClears": 7.97
+    "averageChainClears": 9.075
    },
    "nearSighted": {
-    "expectedMistakes": 1.8,
+    "expectedMistakes": 1.985,
     "winRate": 0.75,
-    "averageChainClears": 1.8
+    "averageChainClears": 1.985
    },
    "deceptiveArrows": 0,
    "riskScore": 55
@@ -475,39 +482,39 @@
  {
   "id": 7,
   "exact": {
-   "rows": 11,
+   "rows": 10,
    "cols": 8,
-   "arrows": 17,
+   "arrows": 16,
    "density": 1,
-   "meanLength": 5.176470588235294,
+   "meanLength": 5,
    "largestEmptySquare": 0,
    "initialFree": 4,
-   "blockedShare": 0.7647058823529411,
-   "blockingRelations": 29,
-   "maxBlockers": 6,
-   "longRangeBlocks": 8,
+   "blockedShare": 0.75,
+   "blockingRelations": 22,
+   "maxBlockers": 5,
+   "longRangeBlocks": 4,
    "depth": 6,
    "waves": [
     4,
-    3,
-    3,
-    3,
-    3,
-    1
+    4,
+    2,
+    2,
+    2,
+    2
    ],
-   "turns": 16,
+   "turns": 15,
    "ambiguousJoins": 0
   },
   "estimated": {
-   "averageChoices": 2.4197058823529414,
-   "averageFreeShare": 0.36149543687281666,
-   "bottleneckShare": 0.14387180180930165,
-   "wrongTapsPerMove": 1.858250000000001
+   "averageChoices": 2.7284375,
+   "averageFreeShare": 0.436047345883281,
+   "bottleneckShare": 0.1774446941946942,
+   "wrongTapsPerMove": 1.5055156250000024
   },
   "components": [
    {
     "name": "search",
-    "value": 0.4816302727920691,
+    "value": 0.429470521900755,
     "weight": 35
    },
    {
@@ -517,63 +524,63 @@
    },
    {
     "name": "entanglement",
-    "value": 0.5321100917431192,
+    "value": 0.4782608695652174,
     "weight": 15
    },
    {
     "name": "long-range",
-    "value": 0.27586206896551724,
+    "value": 0.18181818181818182,
     "weight": 10
    },
    {
     "name": "size",
-    "value": 0.4594594594594595,
+    "value": 0.4444444444444444,
     "weight": 10
    },
    {
     "name": "visual",
-    "value": 0.793939393939394,
+    "value": 0.7935483870967742,
     "weight": 10
    }
   ],
-  "score": 50,
-  "category": "Medium–hard",
+  "score": 46,
+  "category": "Medium",
   "lives": {
    "random": {
-    "expectedMistakes": 9.995,
+    "expectedMistakes": 8.65,
     "winRate": 0,
-    "averageChainClears": 9.995
+    "averageChainClears": 8.65
    },
    "nearSighted": {
-    "expectedMistakes": 1.8,
-    "winRate": 0.765,
-    "averageChainClears": 1.8
+    "expectedMistakes": 1,
+    "winRate": 0.965,
+    "averageChainClears": 1
    },
    "deceptiveArrows": 0,
-   "riskScore": 54
+   "riskScore": 42
   }
  },
  {
   "id": 8,
   "exact": {
-   "rows": 11,
+   "rows": 10,
    "cols": 8,
-   "arrows": 18,
+   "arrows": 14,
    "density": 1,
-   "meanLength": 4.888888888888889,
+   "meanLength": 5.714285714285714,
    "largestEmptySquare": 0,
-   "initialFree": 3,
-   "blockedShare": 0.8333333333333334,
-   "blockingRelations": 30,
-   "maxBlockers": 5,
-   "longRangeBlocks": 10,
+   "initialFree": 4,
+   "blockedShare": 0.7142857142857143,
+   "blockingRelations": 19,
+   "maxBlockers": 3,
+   "longRangeBlocks": 4,
    "depth": 7,
    "waves": [
-    3,
-    3,
     4,
-    3,
-    3,
+    4,
+    2,
+    1,
+    1,
     1,
     1
    ],
@@ -581,15 +588,15 @@
    "ambiguousJoins": 0
   },
   "estimated": {
-   "averageChoices": 2.524722222222222,
-   "averageFreeShare": 0.36376644717392254,
-   "bottleneckShare": 0.1248261713776419,
-   "wrongTapsPerMove": 1.9379953703703714
+   "averageChoices": 2.4082142857142856,
+   "averageFreeShare": 0.3709421332635673,
+   "bottleneckShare": 0.17543894993894982,
+   "wrongTapsPerMove": 1.4632746598639415
   },
   "components": [
    {
     "name": "search",
-    "value": 0.49212738667798417,
+    "value": 0.4225118720215589,
     "weight": 35
    },
    {
@@ -599,7 +606,88 @@
    },
    {
     "name": "entanglement",
-    "value": 0.5263157894736842,
+    "value": 0.47500000000000003,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.21052631578947367,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.4117647058823529,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8303030303030303,
+    "weight": 10
+   }
+  ],
+  "score": 47,
+  "category": "Medium",
+  "lives": {
+   "random": {
+    "expectedMistakes": 7.065,
+    "winRate": 0,
+    "averageChainClears": 7.065
+   },
+   "nearSighted": {
+    "expectedMistakes": 1.365,
+    "winRate": 0.93,
+    "averageChainClears": 1.365
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 44
+  }
+ },
+ {
+  "id": 9,
+  "exact": {
+   "rows": 10,
+   "cols": 8,
+   "arrows": 15,
+   "density": 1,
+   "meanLength": 5.333333333333333,
+   "largestEmptySquare": 0,
+   "initialFree": 4,
+   "blockedShare": 0.7333333333333334,
+   "blockingRelations": 24,
+   "maxBlockers": 5,
+   "longRangeBlocks": 8,
+   "depth": 6,
+   "waves": [
+    4,
+    4,
+    1,
+    2,
+    2,
+    2
+   ],
+   "turns": 17,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.6246666666666667,
+   "averageFreeShare": 0.4420205886705854,
+   "bottleneckShare": 0.15573022810522802,
+   "wrongTapsPerMove": 1.5007333333333315
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.4286911313819958,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.5,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.5161290322580645,
     "weight": 15
    },
    {
@@ -609,12 +697,424 @@
    },
    {
     "name": "size",
-    "value": 0.47368421052631576,
+    "value": 0.42857142857142855,
     "weight": 10
    },
    {
     "name": "visual",
-    "value": 0.8054054054054054,
+    "value": 0.8125,
+    "weight": 10
+   }
+  ],
+  "score": 48,
+  "category": "Medium–hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 7.97,
+    "winRate": 0,
+    "averageChainClears": 7.97
+   },
+   "nearSighted": {
+    "expectedMistakes": 2.27,
+    "winRate": 0.57,
+    "averageChainClears": 2.27
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 66
+  }
+ },
+ {
+  "id": 10,
+  "exact": {
+   "rows": 12,
+   "cols": 9,
+   "arrows": 20,
+   "density": 1,
+   "meanLength": 5.4,
+   "largestEmptySquare": 0,
+   "initialFree": 2,
+   "blockedShare": 0.9,
+   "blockingRelations": 46,
+   "maxBlockers": 7,
+   "longRangeBlocks": 20,
+   "depth": 9,
+   "waves": [
+    2,
+    2,
+    1,
+    3,
+    3,
+    3,
+    3,
+    2,
+    1
+   ],
+   "turns": 22,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.2625,
+   "averageFreeShare": 0.33298521622855815,
+   "bottleneckShare": 0.07085312685680317,
+   "wrongTapsPerMove": 2.7065541666666673
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.5750606645165918,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.6153846153846154,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6052631578947368,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.43478260869565216,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.5,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8095238095238095,
+    "weight": 10
+   }
+  ],
+  "score": 59,
+  "category": "Hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 14.32,
+    "winRate": 0,
+    "averageChainClears": 14.32
+   },
+   "nearSighted": {
+    "expectedMistakes": 0.925,
+    "winRate": 0.995,
+    "averageChainClears": 0.925
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 40
+  }
+ },
+ {
+  "id": 11,
+  "exact": {
+   "rows": 11,
+   "cols": 8,
+   "arrows": 19,
+   "density": 1,
+   "meanLength": 4.631578947368421,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.8421052631578947,
+   "blockingRelations": 37,
+   "maxBlockers": 6,
+   "longRangeBlocks": 14,
+   "depth": 5,
+   "waves": [
+    3,
+    5,
+    4,
+    6,
+    1
+   ],
+   "turns": 19,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 3.206578947368421,
+   "averageFreeShare": 0.44030642605384895,
+   "bottleneckShare": 0.13290276312954316,
+   "wrongTapsPerMove": 1.6240213032581439
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.4481268644304276,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.4444444444444444,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.564885496183206,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.3783783783783784,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.48717948717948717,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8,
+    "weight": 10
+   }
+  ],
+  "score": 50,
+  "category": "Medium–hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 11.33,
+    "winRate": 0,
+    "averageChainClears": 11.33
+   },
+   "nearSighted": {
+    "expectedMistakes": 2.625,
+    "winRate": 0.465,
+    "averageChainClears": 2.625
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 72
+  }
+ },
+ {
+  "id": 12,
+  "exact": {
+   "rows": 11,
+   "cols": 8,
+   "arrows": 16,
+   "density": 1,
+   "meanLength": 5.5,
+   "largestEmptySquare": 0,
+   "initialFree": 4,
+   "blockedShare": 0.75,
+   "blockingRelations": 28,
+   "maxBlockers": 6,
+   "longRangeBlocks": 9,
+   "depth": 7,
+   "waves": [
+    4,
+    4,
+    2,
+    1,
+    3,
+    1,
+    1
+   ],
+   "turns": 14,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.5803125,
+   "averageFreeShare": 0.3923116024600378,
+   "bottleneckShare": 0.14352392052392035,
+   "wrongTapsPerMove": 1.6457239583333334
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.4514121137919852,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.5454545454545454,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.5384615384615384,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.32142857142857145,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.4444444444444444,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.7866666666666666,
+    "weight": 10
+   }
+  ],
+  "score": 50,
+  "category": "Medium–hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 9.04,
+    "winRate": 0,
+    "averageChainClears": 9.04
+   },
+   "nearSighted": {
+    "expectedMistakes": 3.525,
+    "winRate": 0.18,
+    "averageChainClears": 3.525
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 89
+  }
+ },
+ {
+  "id": 13,
+  "exact": {
+   "rows": 13,
+   "cols": 10,
+   "arrows": 25,
+   "density": 1,
+   "meanLength": 5.2,
+   "largestEmptySquare": 0,
+   "initialFree": 2,
+   "blockedShare": 0.92,
+   "blockingRelations": 69,
+   "maxBlockers": 6,
+   "longRangeBlocks": 35,
+   "depth": 10,
+   "waves": [
+    2,
+    3,
+    3,
+    4,
+    3,
+    3,
+    4,
+    1,
+    1,
+    1
+   ],
+   "turns": 29,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.5542,
+   "averageFreeShare": 0.298550756102567,
+   "bottleneckShare": 0.06523827016972794,
+   "wrongTapsPerMove": 3.031000476190482
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.6024647563709997,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.6428571428571429,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.647887323943662,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5072463768115942,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.5555555555555556,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8148148148148148,
+    "weight": 10
+   }
+  ],
+  "score": 62,
+  "category": "Hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 19.025,
+    "winRate": 0,
+    "averageChainClears": 19.025
+   },
+   "nearSighted": {
+    "expectedMistakes": 2.56,
+    "winRate": 0.5,
+    "averageChainClears": 2.56
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 70
+  }
+ },
+ {
+  "id": 14,
+  "exact": {
+   "rows": 12,
+   "cols": 9,
+   "arrows": 20,
+   "density": 1,
+   "meanLength": 5.4,
+   "largestEmptySquare": 0,
+   "initialFree": 4,
+   "blockedShare": 0.8,
+   "blockingRelations": 36,
+   "maxBlockers": 7,
+   "longRangeBlocks": 14,
+   "depth": 6,
+   "waves": [
+    4,
+    3,
+    4,
+    3,
+    4,
+    2
+   ],
+   "turns": 19,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.904,
+   "averageFreeShare": 0.37324748687307674,
+   "bottleneckShare": 0.15689328851403161,
+   "wrongTapsPerMove": 1.8621744047619029
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.48215699489539315,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.5,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.5454545454545455,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.3888888888888889,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.5,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.7948717948717948,
     "weight": 10
    }
   ],
@@ -622,21 +1122,21 @@
   "category": "Medium–hard",
   "lives": {
    "random": {
-    "expectedMistakes": 11.285,
+    "expectedMistakes": 12,
     "winRate": 0,
-    "averageChainClears": 11.285
+    "averageChainClears": 12
    },
    "nearSighted": {
-    "expectedMistakes": 1.4,
-    "winRate": 0.82,
-    "averageChainClears": 1.4
+    "expectedMistakes": 1.565,
+    "winRate": 0.77,
+    "averageChainClears": 1.565
    },
    "deceptiveArrows": 0,
-   "riskScore": 51
+   "riskScore": 54
   }
  },
  {
-  "id": 9,
+  "id": 15,
   "exact": {
    "rows": 12,
    "cols": 9,
@@ -644,35 +1144,35 @@
    "density": 1,
    "meanLength": 5.684210526315789,
    "largestEmptySquare": 0,
-   "initialFree": 2,
-   "blockedShare": 0.8947368421052632,
-   "blockingRelations": 33,
-   "maxBlockers": 6,
+   "initialFree": 4,
+   "blockedShare": 0.7894736842105263,
+   "blockingRelations": 32,
+   "maxBlockers": 4,
    "longRangeBlocks": 8,
    "depth": 8,
    "waves": [
+    4,
     2,
-    2,
-    3,
     4,
     2,
     2,
+    1,
     2,
     2
    ],
-   "turns": 26,
+   "turns": 25,
    "ambiguousJoins": 0
   },
   "estimated": {
-   "averageChoices": 2.406052631578947,
-   "averageFreeShare": 0.3535247262355952,
-   "bottleneckShare": 0.07962185937127873,
-   "wrongTapsPerMove": 2.4114611528822056
+   "averageChoices": 2.579473684210526,
+   "averageFreeShare": 0.36549972545242965,
+   "bottleneckShare": 0.11532025849537451,
+   "wrongTapsPerMove": 2.088864348370943
   },
   "components": [
    {
     "name": "search",
-    "value": 0.5466354727631886,
+    "value": 0.5108666295577093,
     "weight": 35
    },
    {
@@ -682,12 +1182,12 @@
    },
    {
     "name": "entanglement",
-    "value": 0.5365853658536586,
+    "value": 0.5289256198347108,
     "weight": 15
    },
    {
     "name": "long-range",
-    "value": 0.24242424242424243,
+    "value": 0.25,
     "weight": 10
    },
    {
@@ -697,408 +1197,324 @@
    },
    {
     "name": "visual",
-    "value": 0.8311111111111111,
+    "value": 0.8272727272727273,
     "weight": 10
    }
   ],
-  "score": 54,
+  "score": 53,
   "category": "Medium–hard",
   "lives": {
    "random": {
-    "expectedMistakes": 13.625,
+    "expectedMistakes": 11.385,
     "winRate": 0,
-    "averageChainClears": 13.625
+    "averageChainClears": 11.385
    },
    "nearSighted": {
-    "expectedMistakes": 3.06,
-    "winRate": 0.375,
-    "averageChainClears": 3.06
+    "expectedMistakes": 1.8,
+    "winRate": 0.74,
+    "averageChainClears": 1.8
    },
    "deceptiveArrows": 0,
-   "riskScore": 78
+   "riskScore": 56
   }
  },
  {
-  "id": 10,
+  "id": 16,
   "exact": {
    "rows": 12,
    "cols": 9,
-   "arrows": 19,
+   "arrows": 20,
    "density": 1,
-   "meanLength": 5.684210526315789,
-   "largestEmptySquare": 0,
-   "initialFree": 3,
-   "blockedShare": 0.8421052631578947,
-   "blockingRelations": 45,
-   "maxBlockers": 7,
-   "longRangeBlocks": 19,
-   "depth": 13,
-   "waves": [
-    3,
-    2,
-    2,
-    1,
-    2,
-    1,
-    1,
-    1,
-    1,
-    1,
-    2,
-    1,
-    1
-   ],
-   "turns": 23,
-   "ambiguousJoins": 0
-  },
-  "estimated": {
-   "averageChoices": 1.5678947368421052,
-   "averageFreeShare": 0.24833505450314036,
-   "bottleneckShare": 0.06907406808877381,
-   "wrongTapsPerMove": 3.2912280701754404
-  },
-  "components": [
-   {
-    "name": "search",
-    "value": 0.6220159151193635,
-    "weight": 35
-   },
-   {
-    "name": "depth",
-    "value": 0.7058823529411765,
-    "weight": 20
-   },
-   {
-    "name": "entanglement",
-    "value": 0.6122448979591837,
-    "weight": 15
-   },
-   {
-    "name": "long-range",
-    "value": 0.4222222222222222,
-    "weight": 10
-   },
-   {
-    "name": "size",
-    "value": 0.48717948717948717,
-    "weight": 10
-   },
-   {
-    "name": "visual",
-    "value": 0.819047619047619,
-    "weight": 10
-   }
-  ],
-  "score": 62,
-  "category": "Hard",
-  "lives": {
-   "random": {
-    "expectedMistakes": 13.46,
-    "winRate": 0,
-    "averageChainClears": 13.46
-   },
-   "nearSighted": {
-    "expectedMistakes": 5.285,
-    "winRate": 0,
-    "averageChainClears": 5.285
-   },
-   "deceptiveArrows": 0,
-   "riskScore": 100
-  }
- },
- {
-  "id": 11,
-  "exact": {
-   "rows": 12,
-   "cols": 9,
-   "arrows": 23,
-   "density": 1,
-   "meanLength": 4.695652173913044,
+   "meanLength": 5.4,
    "largestEmptySquare": 0,
    "initialFree": 4,
-   "blockedShare": 0.8260869565217391,
-   "blockingRelations": 44,
+   "blockedShare": 0.8,
+   "blockingRelations": 38,
    "maxBlockers": 5,
-   "longRangeBlocks": 20,
-   "depth": 9,
+   "longRangeBlocks": 14,
+   "depth": 7,
    "waves": [
     4,
     5,
-    4,
-    4,
+    1,
     1,
     2,
-    1,
-    1,
-    1
+    3,
+    4
    ],
-   "turns": 28,
+   "turns": 30,
    "ambiguousJoins": 0
   },
   "estimated": {
-   "averageChoices": 3.1806521739130433,
-   "averageFreeShare": 0.34260555817585603,
-   "bottleneckShare": 0.1432676776174724,
-   "wrongTapsPerMove": 2.0131677018633587
+   "averageChoices": 2.61625,
+   "averageFreeShare": 0.37595217255010016,
+   "bottleneckShare": 0.09674775783212318,
+   "wrongTapsPerMove": 2.2715166666666646
   },
   "components": [
    {
     "name": "search",
-    "value": 0.5016405621246833,
+    "value": 0.5317822319160639,
     "weight": 35
    },
    {
     "name": "depth",
-    "value": 0.6153846153846154,
-    "weight": 20
-   },
-   {
-    "name": "entanglement",
-    "value": 0.5605095541401274,
-    "weight": 15
-   },
-   {
-    "name": "long-range",
-    "value": 0.45454545454545453,
-    "weight": 10
-   },
-   {
-    "name": "size",
-    "value": 0.5348837209302325,
-    "weight": 10
-   },
-   {
-    "name": "visual",
-    "value": 0.8196078431372549,
-    "weight": 10
-   }
-  ],
-  "score": 56,
-  "category": "Medium–hard",
-  "lives": {
-   "random": {
-    "expectedMistakes": 14.12,
-    "winRate": 0,
-    "averageChainClears": 14.12
-   },
-   "nearSighted": {
-    "expectedMistakes": 3.755,
-    "winRate": 0.175,
-    "averageChainClears": 3.755
-   },
-   "deceptiveArrows": 0,
-   "riskScore": 90
-  }
- },
- {
-  "id": 12,
-  "exact": {
-   "rows": 13,
-   "cols": 9,
-   "arrows": 21,
-   "density": 1,
-   "meanLength": 5.571428571428571,
-   "largestEmptySquare": 0,
-   "initialFree": 3,
-   "blockedShare": 0.8571428571428572,
-   "blockingRelations": 39,
-   "maxBlockers": 7,
-   "longRangeBlocks": 13,
-   "depth": 9,
-   "waves": [
-    3,
-    3,
-    3,
-    2,
-    1,
-    2,
-    2,
-    2,
-    3
-   ],
-   "turns": 24,
-   "ambiguousJoins": 0
-  },
-  "estimated": {
-   "averageChoices": 2.2607142857142857,
-   "averageFreeShare": 0.3117419240638209,
-   "bottleneckShare": 0.08612880516885926,
-   "wrongTapsPerMove": 2.6794047619047716
-  },
-  "components": [
-   {
-    "name": "search",
-    "value": 0.5725952120487453,
-    "weight": 35
-   },
-   {
-    "name": "depth",
-    "value": 0.6153846153846154,
-    "weight": 20
-   },
-   {
-    "name": "entanglement",
-    "value": 0.5531914893617021,
-    "weight": 15
-   },
-   {
-    "name": "long-range",
-    "value": 0.3333333333333333,
-    "weight": 10
-   },
-   {
-    "name": "size",
-    "value": 0.5121951219512195,
-    "weight": 10
-   },
-   {
-    "name": "visual",
-    "value": 0.8133333333333334,
-    "weight": 10
-   }
-  ],
-  "score": 57,
-  "category": "Medium–hard",
-  "lives": {
-   "random": {
-    "expectedMistakes": 14.18,
-    "winRate": 0,
-    "averageChainClears": 14.18
-   },
-   "nearSighted": {
-    "expectedMistakes": 3.105,
-    "winRate": 0.295,
-    "averageChainClears": 3.105
-   },
-   "deceptiveArrows": 0,
-   "riskScore": 82
-  }
- },
- {
-  "id": 13,
-  "exact": {
-   "rows": 13,
-   "cols": 10,
-   "arrows": 24,
-   "density": 1,
-   "meanLength": 5.416666666666667,
-   "largestEmptySquare": 0,
-   "initialFree": 5,
-   "blockedShare": 0.7916666666666666,
-   "blockingRelations": 48,
-   "maxBlockers": 7,
-   "longRangeBlocks": 21,
-   "depth": 9,
-   "waves": [
-    5,
-    6,
-    3,
-    2,
-    2,
-    1,
-    1,
-    2,
-    2
-   ],
-   "turns": 26,
-   "ambiguousJoins": 0
-  },
-  "estimated": {
-   "averageChoices": 3.27375,
-   "averageFreeShare": 0.3476722542749669,
-   "bottleneckShare": 0.11934271255695737,
-   "wrongTapsPerMove": 2.147852017195769
-  },
-  "components": [
-   {
-    "name": "search",
-    "value": 0.5178227208423564,
-    "weight": 35
-   },
-   {
-    "name": "depth",
-    "value": 0.6153846153846154,
-    "weight": 20
-   },
-   {
-    "name": "entanglement",
-    "value": 0.5714285714285714,
-    "weight": 15
-   },
-   {
-    "name": "long-range",
-    "value": 0.4375,
-    "weight": 10
-   },
-   {
-    "name": "size",
     "value": 0.5454545454545454,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.5588235294117647,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.3684210526315789,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.5,
     "weight": 10
    },
    {
     "name": "visual",
-    "value": 0.808,
+    "value": 0.84,
     "weight": 10
    }
   ],
-  "score": 57,
+  "score": 55,
   "category": "Medium–hard",
   "lives": {
    "random": {
-    "expectedMistakes": 14.555,
+    "expectedMistakes": 12.765,
     "winRate": 0,
-    "averageChainClears": 14.555
+    "averageChainClears": 12.765
    },
    "nearSighted": {
-    "expectedMistakes": 6.49,
-    "winRate": 0.005,
-    "averageChainClears": 6.49
+    "expectedMistakes": 3.05,
+    "winRate": 0.29,
+    "averageChainClears": 3.05
    },
    "deceptiveArrows": 0,
-   "riskScore": 100
+   "riskScore": 83
   }
  },
  {
-  "id": 14,
+  "id": 17,
   "exact": {
-   "rows": 13,
+   "rows": 14,
    "cols": 10,
-   "arrows": 24,
+   "arrows": 27,
    "density": 1,
-   "meanLength": 5.416666666666667,
+   "meanLength": 5.185185185185185,
    "largestEmptySquare": 0,
-   "initialFree": 5,
-   "blockedShare": 0.7916666666666666,
-   "blockingRelations": 44,
-   "maxBlockers": 7,
-   "longRangeBlocks": 17,
-   "depth": 11,
+   "initialFree": 2,
+   "blockedShare": 0.9259259259259259,
+   "blockingRelations": 74,
+   "maxBlockers": 8,
+   "longRangeBlocks": 38,
+   "depth": 16,
    "waves": [
-    5,
     2,
+    4,
+    4,
     3,
-    5,
-    2,
-    1,
-    1,
-    1,
     1,
     2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
     1
    ],
    "turns": 27,
    "ambiguousJoins": 0
   },
   "estimated": {
-   "averageChoices": 2.6239583333333334,
-   "averageFreeShare": 0.2774216272014384,
-   "bottleneckShare": 0.10152354791751056,
-   "wrongTapsPerMove": 2.6844358465608424
+   "averageChoices": 2.1555555555555554,
+   "averageFreeShare": 0.21699599667685684,
+   "bottleneckShare": 0.06942378618113917,
+   "wrongTapsPerMove": 3.6930057319224066
   },
   "components": [
    {
     "name": "search",
-    "value": 0.573054244841813,
+    "value": 0.6486917290833918,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.75,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.646288209606987,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5135135135135135,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.574468085106383,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8,
+    "weight": 10
+   }
+  ],
+  "score": 66,
+  "category": "Hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 19.76,
+    "winRate": 0,
+    "averageChainClears": 19.76
+   },
+   "nearSighted": {
+    "expectedMistakes": 5.055,
+    "winRate": 0,
+    "averageChainClears": 5.055
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 18,
+  "exact": {
+   "rows": 13,
+   "cols": 10,
+   "arrows": 25,
+   "density": 1,
+   "meanLength": 5.2,
+   "largestEmptySquare": 0,
+   "initialFree": 4,
+   "blockedShare": 0.84,
+   "blockingRelations": 44,
+   "maxBlockers": 5,
+   "longRangeBlocks": 18,
+   "depth": 8,
+   "waves": [
+    4,
+    5,
+    5,
+    3,
+    3,
+    3,
+    1,
+    1
+   ],
+   "turns": 34,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 3.4948,
+   "averageFreeShare": 0.35909291977525637,
+   "bottleneckShare": 0.12741700931955668,
+   "wrongTapsPerMove": 2.052499761904769
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.5064774540393918,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.5833333333333334,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.5398773006134969,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.4090909090909091,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.5555555555555556,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8305084745762712,
+    "weight": 10
+   }
+  ],
+  "score": 55,
+  "category": "Medium–hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 15.16,
+    "winRate": 0,
+    "averageChainClears": 15.16
+   },
+   "nearSighted": {
+    "expectedMistakes": 3.445,
+    "winRate": 0.21,
+    "averageChainClears": 3.445
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 87
+  }
+ },
+ {
+  "id": 19,
+  "exact": {
+   "rows": 13,
+   "cols": 10,
+   "arrows": 25,
+   "density": 1,
+   "meanLength": 5.2,
+   "largestEmptySquare": 0,
+   "initialFree": 4,
+   "blockedShare": 0.84,
+   "blockingRelations": 46,
+   "maxBlockers": 5,
+   "longRangeBlocks": 16,
+   "depth": 11,
+   "waves": [
+    4,
+    6,
+    4,
+    1,
+    2,
+    1,
+    1,
+    2,
+    1,
+    2,
+    1
+   ],
+   "turns": 32,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 3.0144,
+   "averageFreeShare": 0.3026844233567013,
+   "bottleneckShare": 0.10417221023730307,
+   "wrongTapsPerMove": 2.479526031746047
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.5535241930002955,
     "weight": 35
    },
    {
@@ -1108,22 +1524,197 @@
    },
    {
     "name": "entanglement",
-    "value": 0.55,
+    "value": 0.5508982035928144,
     "weight": 15
    },
    {
     "name": "long-range",
-    "value": 0.38636363636363635,
+    "value": 0.34782608695652173,
     "weight": 10
    },
    {
     "name": "size",
-    "value": 0.5454545454545454,
+    "value": 0.5555555555555556,
     "weight": 10
    },
    {
     "name": "visual",
-    "value": 0.8117647058823529,
+    "value": 0.8245614035087719,
+    "weight": 10
+   }
+  ],
+  "score": 58,
+  "category": "Hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 15.465,
+    "winRate": 0,
+    "averageChainClears": 15.465
+   },
+   "nearSighted": {
+    "expectedMistakes": 2.07,
+    "winRate": 0.665,
+    "averageChainClears": 2.07
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 60
+  }
+ },
+ {
+  "id": 20,
+  "exact": {
+   "rows": 15,
+   "cols": 11,
+   "arrows": 31,
+   "density": 1,
+   "meanLength": 5.32258064516129,
+   "largestEmptySquare": 0,
+   "initialFree": 2,
+   "blockedShare": 0.935483870967742,
+   "blockingRelations": 83,
+   "maxBlockers": 7,
+   "longRangeBlocks": 43,
+   "depth": 17,
+   "waves": [
+    2,
+    5,
+    4,
+    2,
+    1,
+    1,
+    2,
+    2,
+    1,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "turns": 31,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.3333870967741936,
+   "averageFreeShare": 0.21006786990612153,
+   "bottleneckShare": 0.05598266129118403,
+   "wrongTapsPerMove": 4.071879032258091
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.6706126737086504,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.7619047619047619,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6409266409266409,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5180722891566265,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6078431372549019,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8,
+    "weight": 10
+   }
+  ],
+  "score": 68,
+  "category": "Hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 22.865,
+    "winRate": 0,
+    "averageChainClears": 22.865
+   },
+   "nearSighted": {
+    "expectedMistakes": 6.355,
+    "winRate": 0,
+    "averageChainClears": 6.355
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 21,
+  "exact": {
+   "rows": 14,
+   "cols": 10,
+   "arrows": 30,
+   "density": 1,
+   "meanLength": 4.666666666666667,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9,
+   "blockingRelations": 66,
+   "maxBlockers": 7,
+   "longRangeBlocks": 29,
+   "depth": 8,
+   "waves": [
+    3,
+    4,
+    5,
+    4,
+    2,
+    5,
+    5,
+    2
+   ],
+   "turns": 31,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 3.751333333333333,
+   "averageFreeShare": 0.36408015887700623,
+   "bottleneckShare": 0.08444115166552228,
+   "wrongTapsPerMove": 2.6468788900913864
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.5696035882784396,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.5833333333333334,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.5945945945945946,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.4393939393939394,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8032786885245902,
     "weight": 10
    }
   ],
@@ -1131,21 +1722,21 @@
   "category": "Hard",
   "lives": {
    "random": {
-    "expectedMistakes": 14.955,
+    "expectedMistakes": 20.565,
     "winRate": 0,
-    "averageChainClears": 14.955
+    "averageChainClears": 20.565
    },
    "nearSighted": {
-    "expectedMistakes": 3.65,
-    "winRate": 0.175,
-    "averageChainClears": 3.65
+    "expectedMistakes": 4.435,
+    "winRate": 0.145,
+    "averageChainClears": 4.435
    },
    "deceptiveArrows": 0,
-   "riskScore": 90
+   "riskScore": 91
   }
  },
  {
-  "id": 15,
+  "id": 22,
   "exact": {
    "rows": 14,
    "cols": 10,
@@ -1153,52 +1744,50 @@
    "density": 1,
    "meanLength": 5.185185185185185,
    "largestEmptySquare": 0,
-   "initialFree": 5,
-   "blockedShare": 0.8148148148148149,
-   "blockingRelations": 56,
-   "maxBlockers": 9,
-   "longRangeBlocks": 27,
-   "depth": 10,
+   "initialFree": 3,
+   "blockedShare": 0.8888888888888888,
+   "blockingRelations": 67,
+   "maxBlockers": 8,
+   "longRangeBlocks": 32,
+   "depth": 8,
    "waves": [
-    5,
-    5,
-    2,
     3,
-    1,
     3,
-    1,
+    4,
+    4,
+    6,
+    3,
     2,
-    2,
-    3
+    2
    ],
-   "turns": 30,
+   "turns": 34,
    "ambiguousJoins": 0
   },
   "estimated": {
-   "averageChoices": 3.0114814814814816,
-   "averageFreeShare": 0.30649508367953654,
-   "bottleneckShare": 0.0989687605681884,
-   "wrongTapsPerMove": 2.7067517636684197
+   "averageChoices": 3.2496296296296294,
+   "averageFreeShare": 0.33309063071563016,
+   "bottleneckShare": 0.0664081366984818,
+   "wrongTapsPerMove": 2.762948412698419
   },
   "components": [
    {
     "name": "search",
-    "value": 0.5750785041526792,
+    "value": 0.5800920298301294,
     "weight": 35
    },
    {
     "name": "depth",
-    "value": 0.6428571428571429,
+    "value": 0.5833333333333334,
     "weight": 20
    },
    {
     "name": "entanglement",
-    "value": 0.5803108808290155,
+    "value": 0.6232558139534884,
     "weight": 15
    },
    {
     "name": "long-range",
-    "value": 0.48214285714285715,
+    "value": 0.47761194029850745,
     "weight": 10
    },
    {
@@ -1208,7 +1797,7 @@
    },
    {
     "name": "visual",
-    "value": 0.8105263157894737,
+    "value": 0.8229508196721311,
     "weight": 10
    }
   ],
@@ -1216,75 +1805,82 @@
   "category": "Hard",
   "lives": {
    "random": {
-    "expectedMistakes": 17.235,
+    "expectedMistakes": 19.64,
     "winRate": 0,
-    "averageChainClears": 17.235
+    "averageChainClears": 19.64
    },
    "nearSighted": {
-    "expectedMistakes": 5.44,
-    "winRate": 0.01,
-    "averageChainClears": 5.44
+    "expectedMistakes": 4.895,
+    "winRate": 0.08,
+    "averageChainClears": 4.895
    },
    "deceptiveArrows": 0,
-   "riskScore": 99
+   "riskScore": 95
   }
  },
  {
-  "id": 16,
+  "id": 23,
   "exact": {
-   "rows": 14,
-   "cols": 10,
+   "rows": 15,
+   "cols": 11,
    "arrows": 27,
    "density": 1,
-   "meanLength": 5.185185185185185,
+   "meanLength": 6.111111111111111,
    "largestEmptySquare": 0,
-   "initialFree": 6,
-   "blockedShare": 0.7777777777777778,
-   "blockingRelations": 66,
-   "maxBlockers": 8,
-   "longRangeBlocks": 34,
-   "depth": 11,
+   "initialFree": 2,
+   "blockedShare": 0.9259259259259259,
+   "blockingRelations": 77,
+   "maxBlockers": 7,
+   "longRangeBlocks": 43,
+   "depth": 18,
    "waves": [
-    6,
+    2,
     5,
-    5,
+    3,
+    2,
     2,
     1,
-    2,
     1,
-    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
     1,
     1,
     1
    ],
-   "turns": 24,
+   "turns": 44,
    "ambiguousJoins": 0
   },
   "estimated": {
-   "averageChoices": 3.292962962962963,
-   "averageFreeShare": 0.2812428594158119,
-   "bottleneckShare": 0.10141469448575373,
-   "wrongTapsPerMove": 2.4697268518518594
+   "averageChoices": 1.9885185185185186,
+   "averageFreeShare": 0.19241371211179542,
+   "bottleneckShare": 0.06580065359477126,
+   "wrongTapsPerMove": 3.9544576719576745
   },
   "components": [
    {
     "name": "search",
-    "value": 0.552545364338902,
+    "value": 0.6641171857818495,
     "weight": 35
    },
    {
     "name": "depth",
-    "value": 0.6666666666666666,
+    "value": 0.7727272727272727,
     "weight": 20
    },
    {
     "name": "entanglement",
-    "value": 0.619718309859155,
+    "value": 0.6553191489361703,
     "weight": 15
    },
    {
     "name": "long-range",
-    "value": 0.5151515151515151,
+    "value": 0.5584415584415584,
     "weight": 10
    },
    {
@@ -1294,7 +1890,91 @@
    },
    {
     "name": "visual",
-    "value": 0.788235294117647,
+    "value": 0.847887323943662,
+    "weight": 10
+   }
+  ],
+  "score": 68,
+  "category": "Hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 19.77,
+    "winRate": 0,
+    "averageChainClears": 19.77
+   },
+   "nearSighted": {
+    "expectedMistakes": 7.79,
+    "winRate": 0,
+    "averageChainClears": 7.79
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 24,
+  "exact": {
+   "rows": 14,
+   "cols": 10,
+   "arrows": 24,
+   "density": 0.9928571428571429,
+   "meanLength": 5.791666666666667,
+   "largestEmptySquare": 1,
+   "initialFree": 3,
+   "blockedShare": 0.875,
+   "blockingRelations": 56,
+   "maxBlockers": 7,
+   "longRangeBlocks": 26,
+   "depth": 9,
+   "waves": [
+    3,
+    2,
+    3,
+    3,
+    2,
+    4,
+    4,
+    2,
+    1
+   ],
+   "turns": 34,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.5672916666666667,
+   "averageFreeShare": 0.31459465467302805,
+   "bottleneckShare": 0.06745660885531668,
+   "wrongTapsPerMove": 2.992130704365088
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.5993694639743281,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.6153846153846154,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6086956521739131,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.4642857142857143,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.5454545454545454,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8301970443349754,
     "weight": 10
    }
   ],
@@ -1302,59 +1982,143 @@
   "category": "Hard",
   "lives": {
    "random": {
-    "expectedMistakes": 16.675,
+    "expectedMistakes": 17.32,
     "winRate": 0,
-    "averageChainClears": 16.675
+    "averageChainClears": 17.32
    },
    "nearSighted": {
-    "expectedMistakes": 4.42,
-    "winRate": 0.09,
-    "averageChainClears": 4.42
+    "expectedMistakes": 4.975,
+    "winRate": 0.02,
+    "averageChainClears": 4.975
    },
    "deceptiveArrows": 0,
-   "riskScore": 95
+   "riskScore": 99
   }
  },
  {
-  "id": 17,
+  "id": 25,
   "exact": {
    "rows": 14,
-   "cols": 11,
-   "arrows": 33,
+   "cols": 10,
+   "arrows": 25,
    "density": 1,
-   "meanLength": 4.666666666666667,
+   "meanLength": 5.6,
    "largestEmptySquare": 0,
-   "initialFree": 6,
-   "blockedShare": 0.8181818181818181,
-   "blockingRelations": 75,
-   "maxBlockers": 7,
-   "longRangeBlocks": 40,
-   "depth": 10,
+   "initialFree": 3,
+   "blockedShare": 0.88,
+   "blockingRelations": 61,
+   "maxBlockers": 6,
+   "longRangeBlocks": 28,
+   "depth": 9,
    "waves": [
-    6,
-    4,
-    5,
     3,
-    6,
     2,
+    4,
     2,
-    2,
-    2,
+    4,
+    3,
+    3,
+    3,
     1
    ],
-   "turns": 30,
+   "turns": 37,
    "ambiguousJoins": 0
   },
   "estimated": {
-   "averageChoices": 3.423939393939394,
-   "averageFreeShare": 0.2867143370978408,
-   "bottleneckShare": 0.08592589434158261,
-   "wrongTapsPerMove": 3.0310877825877856
+   "averageChoices": 2.596,
+   "averageFreeShare": 0.3101937169758767,
+   "bottleneckShare": 0.06861610069011469,
+   "wrongTapsPerMove": 3.027956190476189
   },
   "components": [
    {
     "name": "search",
-    "value": 0.6024716549526627,
+    "value": 0.6022240599891576,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.6153846153846154,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6192893401015228,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.45901639344262296,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.5555555555555556,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8387096774193549,
+    "weight": 10
+   }
+  ],
+  "score": 61,
+  "category": "Hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 18.485,
+    "winRate": 0,
+    "averageChainClears": 18.485
+   },
+   "nearSighted": {
+    "expectedMistakes": 5.205,
+    "winRate": 0.045,
+    "averageChainClears": 5.205
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 97
+  }
+ },
+ {
+  "id": 26,
+  "exact": {
+   "rows": 14,
+   "cols": 10,
+   "arrows": 26,
+   "density": 1,
+   "meanLength": 5.384615384615385,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.8846153846153846,
+   "blockingRelations": 60,
+   "maxBlockers": 6,
+   "longRangeBlocks": 28,
+   "depth": 10,
+   "waves": [
+    3,
+    5,
+    5,
+    5,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "turns": 32,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 3.3146153846153847,
+   "averageFreeShare": 0.3000803392251223,
+   "bottleneckShare": 0.0922106476157963,
+   "wrongTapsPerMove": 2.384013888888902
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.5437970657280727,
     "weight": 35
    },
    {
@@ -1364,130 +2128,136 @@
    },
    {
     "name": "entanglement",
-    "value": 0.6024096385542169,
+    "value": 0.6060606060606061,
     "weight": 15
    },
    {
     "name": "long-range",
-    "value": 0.5333333333333333,
+    "value": 0.4666666666666667,
     "weight": 10
    },
    {
     "name": "size",
-    "value": 0.6226415094339622,
+    "value": 0.5652173913043478,
     "weight": 10
    },
    {
     "name": "visual",
-    "value": 0.7904761904761904,
+    "value": 0.8206896551724138,
     "weight": 10
    }
   ],
-  "score": 62,
+  "score": 60,
   "category": "Hard",
   "lives": {
    "random": {
-    "expectedMistakes": 22.145,
+    "expectedMistakes": 17.37,
     "winRate": 0,
-    "averageChainClears": 22.145
+    "averageChainClears": 17.37
    },
    "nearSighted": {
-    "expectedMistakes": 5.505,
-    "winRate": 0.085,
-    "averageChainClears": 5.505
+    "expectedMistakes": 4.18,
+    "winRate": 0.115,
+    "averageChainClears": 4.18
    },
    "deceptiveArrows": 0,
-   "riskScore": 95
+   "riskScore": 93
   }
  },
  {
-  "id": 18,
+  "id": 27,
   "exact": {
-   "rows": 15,
-   "cols": 11,
-   "arrows": 33,
+   "rows": 16,
+   "cols": 12,
+   "arrows": 35,
    "density": 1,
-   "meanLength": 5,
+   "meanLength": 5.485714285714286,
    "largestEmptySquare": 0,
-   "initialFree": 6,
-   "blockedShare": 0.8181818181818181,
-   "blockingRelations": 72,
-   "maxBlockers": 6,
-   "longRangeBlocks": 38,
-   "depth": 11,
+   "initialFree": 2,
+   "blockedShare": 0.9428571428571428,
+   "blockingRelations": 126,
+   "maxBlockers": 11,
+   "longRangeBlocks": 71,
+   "depth": 17,
    "waves": [
-    6,
+    2,
+    3,
+    1,
+    3,
     4,
-    5,
+    2,
+    3,
+    2,
     2,
     1,
-    2,
-    5,
-    3,
+    1,
+    1,
     3,
     1,
+    3,
+    2,
     1
    ],
-   "turns": 30,
+   "turns": 42,
    "ambiguousJoins": 0
   },
   "estimated": {
-   "averageChoices": 3.5506060606060608,
-   "averageFreeShare": 0.2946552834427631,
-   "bottleneckShare": 0.0771105249951102,
-   "wrongTapsPerMove": 3.0148863035112923
+   "averageChoices": 2.2584285714285715,
+   "averageFreeShare": 0.2094878008799674,
+   "bottleneckShare": 0.03572752416337704,
+   "wrongTapsPerMove": 5.029224489795909
   },
   "components": [
    {
     "name": "search",
-    "value": 0.6011873691733246,
+    "value": 0.7154735913039435,
     "weight": 35
    },
    {
     "name": "depth",
-    "value": 0.6666666666666666,
+    "value": 0.7619047619047619,
     "weight": 20
    },
    {
     "name": "entanglement",
-    "value": 0.5925925925925926,
+    "value": 0.7058823529411765,
     "weight": 15
    },
    {
     "name": "long-range",
-    "value": 0.5277777777777778,
+    "value": 0.5634920634920635,
     "weight": 10
    },
    {
     "name": "size",
-    "value": 0.6226415094339622,
+    "value": 0.6363636363636364,
     "weight": 10
    },
    {
     "name": "visual",
-    "value": 0.7904761904761904,
+    "value": 0.8181818181818181,
     "weight": 10
    }
   ],
-  "score": 63,
-  "category": "Hard",
+  "score": 71,
+  "category": "Very hard",
   "lives": {
    "random": {
-    "expectedMistakes": 22.045,
+    "expectedMistakes": 28.55,
     "winRate": 0,
-    "averageChainClears": 22.045
+    "averageChainClears": 28.55
    },
    "nearSighted": {
-    "expectedMistakes": 5.23,
-    "winRate": 0.04,
-    "averageChainClears": 5.23
+    "expectedMistakes": 6.925,
+    "winRate": 0,
+    "averageChainClears": 6.925
    },
    "deceptiveArrows": 0,
-   "riskScore": 98
+   "riskScore": 100
   }
  },
  {
-  "id": 19,
+  "id": 28,
   "exact": {
    "rows": 15,
    "cols": 11,
@@ -1497,53 +2267,49 @@
    "largestEmptySquare": 0,
    "initialFree": 3,
    "blockedShare": 0.896551724137931,
-   "blockingRelations": 68,
-   "maxBlockers": 7,
-   "longRangeBlocks": 31,
-   "depth": 13,
+   "blockingRelations": 85,
+   "maxBlockers": 8,
+   "longRangeBlocks": 47,
+   "depth": 9,
    "waves": [
     3,
-    3,
-    3,
-    2,
-    3,
     4,
-    2,
-    2,
-    2,
-    2,
-    1,
+    5,
+    5,
+    4,
+    3,
+    3,
     1,
     1
    ],
-   "turns": 35,
+   "turns": 39,
    "ambiguousJoins": 0
   },
   "estimated": {
-   "averageChoices": 2.436034482758621,
-   "averageFreeShare": 0.24609331242536328,
-   "bottleneckShare": 0.07635109218868208,
-   "wrongTapsPerMove": 3.610772988505746
+   "averageChoices": 3.239310344827586,
+   "averageFreeShare": 0.30161068895553855,
+   "bottleneckShare": 0.09144889994524005,
+   "wrongTapsPerMove": 2.738270046524357
   },
   "components": [
    {
     "name": "search",
-    "value": 0.6435428765167993,
+    "value": 0.5779050201102296,
     "weight": 35
    },
    {
     "name": "depth",
-    "value": 0.7058823529411765,
+    "value": 0.6153846153846154,
     "weight": 20
    },
    {
     "name": "entanglement",
-    "value": 0.6098654708520179,
+    "value": 0.6614785992217898,
     "weight": 15
    },
    {
     "name": "long-range",
-    "value": 0.45588235294117646,
+    "value": 0.5529411764705883,
     "weight": 10
    },
    {
@@ -1553,29 +2319,29 @@
    },
    {
     "name": "visual",
-    "value": 0.81875,
+    "value": 0.8294117647058823,
     "weight": 10
    }
   ],
-  "score": 64,
+  "score": 62,
   "category": "Hard",
   "lives": {
    "random": {
-    "expectedMistakes": 21.405,
+    "expectedMistakes": 20.31,
     "winRate": 0,
-    "averageChainClears": 21.405
+    "averageChainClears": 20.31
    },
    "nearSighted": {
-    "expectedMistakes": 2.595,
-    "winRate": 0.455,
-    "averageChainClears": 2.595
+    "expectedMistakes": 5.29,
+    "winRate": 0.035,
+    "averageChainClears": 5.29
    },
    "deceptiveArrows": 0,
-   "riskScore": 73
+   "riskScore": 98
   }
  },
  {
-  "id": 20,
+  "id": 29,
   "exact": {
    "rows": 15,
    "cols": 11,
@@ -1583,57 +2349,322 @@
    "density": 1,
    "meanLength": 5.689655172413793,
    "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.896551724137931,
+   "blockingRelations": 66,
+   "maxBlockers": 5,
+   "longRangeBlocks": 27,
+   "depth": 12,
+   "waves": [
+    3,
+    3,
+    5,
+    3,
+    3,
+    1,
+    1,
+    1,
+    2,
+    4,
+    2,
+    1
+   ],
+   "turns": 41,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.677758620689655,
+   "averageFreeShare": 0.28147973109333596,
+   "bottleneckShare": 0.07247547367101831,
+   "wrongTapsPerMove": 3.4443292282430167
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.6326452872054844,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.6875,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6027397260273972,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.4090909090909091,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.5918367346938775,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8342857142857143,
+    "weight": 10
+   }
+  ],
+  "score": 63,
+  "category": "Hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 20.9,
+    "winRate": 0,
+    "averageChainClears": 20.9
+   },
+   "nearSighted": {
+    "expectedMistakes": 3.645,
+    "winRate": 0.065,
+    "averageChainClears": 3.645
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 96
+  }
+ },
+ {
+  "id": 30,
+  "exact": {
+   "rows": 16,
+   "cols": 12,
+   "arrows": 32,
+   "density": 1,
+   "meanLength": 6,
+   "largestEmptySquare": 0,
    "initialFree": 2,
-   "blockedShare": 0.9310344827586207,
-   "blockingRelations": 88,
-   "maxBlockers": 7,
-   "longRangeBlocks": 47,
-   "depth": 15,
+   "blockedShare": 0.9375,
+   "blockingRelations": 100,
+   "maxBlockers": 8,
+   "longRangeBlocks": 55,
+   "depth": 22,
    "waves": [
     2,
-    3,
-    2,
-    2,
-    3,
+    1,
+    1,
     2,
     3,
     2,
     1,
     1,
     2,
-    3,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    2,
+    1,
     1,
     1,
     1
+   ],
+   "turns": 48,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 1.65390625,
+   "averageFreeShare": 0.1725620290942248,
+   "bottleneckShare": 0.034460760295174316,
+   "wrongTapsPerMove": 5.793406250000001
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7433728031308519,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8076923076923077,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6756756756756757,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.55,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6153846153846154,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.84,
+    "weight": 10
+   }
+  ],
+  "score": 72,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 26.48,
+    "winRate": 0,
+    "averageChainClears": 26.48
+   },
+   "nearSighted": {
+    "expectedMistakes": 4.09,
+    "winRate": 0.005,
+    "averageChainClears": 4.09
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 31,
+  "exact": {
+   "rows": 15,
+   "cols": 11,
+   "arrows": 34,
+   "density": 1,
+   "meanLength": 4.852941176470588,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9117647058823529,
+   "blockingRelations": 99,
+   "maxBlockers": 6,
+   "longRangeBlocks": 55,
+   "depth": 9,
+   "waves": [
+    3,
+    3,
+    4,
+    5,
+    4,
+    4,
+    4,
+    6,
+    1
+   ],
+   "turns": 27,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 3.3572058823529414,
+   "averageFreeShare": 0.2983720474611546,
+   "bottleneckShare": 0.059244248113193884,
+   "wrongTapsPerMove": 3.3812315009336853
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.6283378628752574,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.6153846153846154,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6599999999999999,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5555555555555556,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6296296296296297,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.7770491803278688,
+    "weight": 10
+   }
+  ],
+  "score": 64,
+  "category": "Hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 25.465,
+    "winRate": 0,
+    "averageChainClears": 25.465
+   },
+   "nearSighted": {
+    "expectedMistakes": 10.105,
+    "winRate": 0,
+    "averageChainClears": 10.105
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 32,
+  "exact": {
+   "rows": 15,
+   "cols": 11,
+   "arrows": 29,
+   "density": 1,
+   "meanLength": 5.689655172413793,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.896551724137931,
+   "blockingRelations": 77,
+   "maxBlockers": 7,
+   "longRangeBlocks": 38,
+   "depth": 12,
+   "waves": [
+    3,
+    1,
+    4,
+    4,
+    3,
+    3,
+    2,
+    1,
+    2,
+    2,
+    2,
+    2
    ],
    "turns": 43,
    "ambiguousJoins": 0
   },
   "estimated": {
-   "averageChoices": 2.17,
-   "averageFreeShare": 0.23125265234225323,
-   "bottleneckShare": 0.051746991083184576,
-   "wrongTapsPerMove": 4.113466338259427
+   "averageChoices": 2.7287931034482757,
+   "averageFreeShare": 0.27581415875645193,
+   "bottleneckShare": 0.05326732080180349,
+   "wrongTapsPerMove": 3.4321709770115016
   },
   "components": [
    {
     "name": "search",
-    "value": 0.6728533553078461,
+    "value": 0.6318230761763879,
     "weight": 35
    },
    {
     "name": "depth",
-    "value": 0.7368421052631579,
+    "value": 0.6875,
     "weight": 20
    },
    {
     "name": "entanglement",
-    "value": 0.6692015209125475,
+    "value": 0.6390041493775934,
     "weight": 15
    },
    {
     "name": "long-range",
-    "value": 0.5340909090909091,
+    "value": 0.4935064935064935,
     "weight": 10
    },
    {
@@ -1647,64 +2678,514 @@
     "weight": 10
    }
   ],
-  "score": 68,
+  "score": 65,
   "category": "Hard",
   "lives": {
    "random": {
-    "expectedMistakes": 22.345,
+    "expectedMistakes": 21.44,
     "winRate": 0,
-    "averageChainClears": 22.345
+    "averageChainClears": 21.44
    },
    "nearSighted": {
-    "expectedMistakes": 8.315,
-    "winRate": 0,
-    "averageChainClears": 8.315
+    "expectedMistakes": 7.145,
+    "winRate": 0.005,
+    "averageChainClears": 7.145
    },
    "deceptiveArrows": 0,
    "riskScore": 100
   }
  },
  {
-  "id": 21,
+  "id": 33,
   "exact": {
-   "rows": 15,
-   "cols": 11,
-   "arrows": 33,
+   "rows": 16,
+   "cols": 12,
+   "arrows": 35,
    "density": 1,
-   "meanLength": 5,
+   "meanLength": 5.485714285714286,
    "largestEmptySquare": 0,
-   "initialFree": 6,
-   "blockedShare": 0.8181818181818181,
-   "blockingRelations": 89,
-   "maxBlockers": 8,
-   "longRangeBlocks": 47,
-   "depth": 11,
+   "initialFree": 3,
+   "blockedShare": 0.9142857142857143,
+   "blockingRelations": 85,
+   "maxBlockers": 7,
+   "longRangeBlocks": 43,
+   "depth": 10,
    "waves": [
+    3,
+    4,
+    6,
     6,
     3,
-    3,
+    2,
+    2,
     4,
-    4,
-    3,
     2,
-    3,
-    2,
-    2,
-    1
+    3
    ],
-   "turns": 32,
+   "turns": 36,
    "ambiguousJoins": 0
   },
   "estimated": {
-   "averageChoices": 3.0816666666666666,
-   "averageFreeShare": 0.26817248609697547,
-   "bottleneckShare": 0.0725165371766475,
-   "wrongTapsPerMove": 3.3597009379509446
+   "averageChoices": 3.513,
+   "averageFreeShare": 0.2837691396773888,
+   "bottleneckShare": 0.06744436723452168,
+   "wrongTapsPerMove": 3.246052834467121
   },
   "components": [
    {
     "name": "search",
-    "value": 0.6268448513911644,
+    "value": 0.6187609879069862,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.6428571428571429,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6181818181818182,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5058823529411764,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6363636363636364,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8028169014084507,
+    "weight": 10
+   }
+  ],
+  "score": 63,
+  "category": "Hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 25.03,
+    "winRate": 0,
+    "averageChainClears": 25.03
+   },
+   "nearSighted": {
+    "expectedMistakes": 6.35,
+    "winRate": 0.01,
+    "averageChainClears": 6.35
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 99
+  }
+ },
+ {
+  "id": 34,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 34,
+   "density": 1,
+   "meanLength": 6,
+   "largestEmptySquare": 0,
+   "initialFree": 2,
+   "blockedShare": 0.9411764705882353,
+   "blockingRelations": 107,
+   "maxBlockers": 9,
+   "longRangeBlocks": 61,
+   "depth": 23,
+   "waves": [
+    2,
+    2,
+    2,
+    1,
+    1,
+    2,
+    1,
+    1,
+    3,
+    2,
+    2,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1
+   ],
+   "turns": 57,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 1.6575,
+   "averageFreeShare": 0.17130251558050177,
+   "bottleneckShare": 0.033400396812602366,
+   "wrongTapsPerMove": 6.198723039215696
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7560595728830323,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8148148148148148,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6772151898734178,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5700934579439252,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6296296296296297,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8505494505494505,
+    "weight": 10
+   }
+  ],
+  "score": 73,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 28.23,
+    "winRate": 0,
+    "averageChainClears": 28.23
+   },
+   "nearSighted": {
+    "expectedMistakes": 6.02,
+    "winRate": 0,
+    "averageChainClears": 6.02
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 35,
+  "exact": {
+   "rows": 16,
+   "cols": 12,
+   "arrows": 31,
+   "density": 1,
+   "meanLength": 6.193548387096774,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9032258064516129,
+   "blockingRelations": 79,
+   "maxBlockers": 8,
+   "longRangeBlocks": 37,
+   "depth": 9,
+   "waves": [
+    3,
+    4,
+    7,
+    4,
+    3,
+    3,
+    4,
+    2,
+    1
+   ],
+   "turns": 37,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 3.355967741935484,
+   "averageFreeShare": 0.30200759943643407,
+   "bottleneckShare": 0.08538019748897456,
+   "wrongTapsPerMove": 2.8666324244751604
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.5890382043357859,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.6153846153846154,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6294820717131473,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.46835443037974683,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6078431372549019,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8176470588235294,
+    "weight": 10
+   }
+  ],
+  "score": 61,
+  "category": "Hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 21.625,
+    "winRate": 0,
+    "averageChainClears": 21.625
+   },
+   "nearSighted": {
+    "expectedMistakes": 5.81,
+    "winRate": 0.035,
+    "averageChainClears": 5.81
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 98
+  }
+ },
+ {
+  "id": 36,
+  "exact": {
+   "rows": 16,
+   "cols": 12,
+   "arrows": 33,
+   "density": 1,
+   "meanLength": 5.818181818181818,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9090909090909091,
+   "blockingRelations": 91,
+   "maxBlockers": 9,
+   "longRangeBlocks": 46,
+   "depth": 12,
+   "waves": [
+    3,
+    6,
+    4,
+    2,
+    1,
+    2,
+    2,
+    4,
+    4,
+    2,
+    2,
+    1
+   ],
+   "turns": 51,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 3.038181818181818,
+   "averageFreeShare": 0.26892153083942133,
+   "bottleneckShare": 0.05874994521732563,
+   "wrongTapsPerMove": 3.562464766714762
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.6404471607680462,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.6875,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6476868327402135,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5054945054945055,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6226415094339622,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8428571428571429,
+    "weight": 10
+   }
+  ],
+  "score": 66,
+  "category": "Hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 23.82,
+    "winRate": 0,
+    "averageChainClears": 23.82
+   },
+   "nearSighted": {
+    "expectedMistakes": 7.23,
+    "winRate": 0,
+    "averageChainClears": 7.23
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 37,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 38,
+   "density": 1,
+   "meanLength": 5.368421052631579,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9210526315789473,
+   "blockingRelations": 110,
+   "maxBlockers": 9,
+   "longRangeBlocks": 64,
+   "depth": 21,
+   "waves": [
+    3,
+    4,
+    3,
+    2,
+    2,
+    2,
+    3,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "turns": 49,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.1907894736842106,
+   "averageFreeShare": 0.16190088056925714,
+   "bottleneckShare": 0.044959479181113426,
+   "wrongTapsPerMove": 5.259925125313271
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7245150651724251,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6586826347305389,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5818181818181818,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6551724137931034,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.825287356321839,
+    "weight": 10
+   }
+  ],
+  "score": 72,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 29.61,
+    "winRate": 0,
+    "averageChainClears": 29.61
+   },
+   "nearSighted": {
+    "expectedMistakes": 11.005,
+    "winRate": 0,
+    "averageChainClears": 11.005
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 38,
+  "exact": {
+   "rows": 16,
+   "cols": 12,
+   "arrows": 33,
+   "density": 1,
+   "meanLength": 5.818181818181818,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9090909090909091,
+   "blockingRelations": 89,
+   "maxBlockers": 7,
+   "longRangeBlocks": 49,
+   "depth": 11,
+   "waves": [
+    3,
+    6,
+    5,
+    4,
+    3,
+    2,
+    4,
+    2,
+    2,
+    1,
+    1
+   ],
+   "turns": 49,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 3.2513636363636365,
+   "averageFreeShare": 0.2692054493086965,
+   "bottleneckShare": 0.07720881733022555,
+   "wrongTapsPerMove": 3.1647665945165926
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.6127608163119336,
     "weight": 35
    },
    {
@@ -1719,7 +3200,7 @@
    },
    {
     "name": "long-range",
-    "value": 0.5280898876404494,
+    "value": 0.550561797752809,
     "weight": 10
    },
    {
@@ -1729,441 +3210,94 @@
    },
    {
     "name": "visual",
-    "value": 0.796923076923077,
+    "value": 0.8390243902439024,
     "weight": 10
    }
   ],
-  "score": 64,
+  "score": 65,
   "category": "Hard",
   "lives": {
    "random": {
-    "expectedMistakes": 23.05,
+    "expectedMistakes": 23.34,
     "winRate": 0,
-    "averageChainClears": 23.05
+    "averageChainClears": 23.34
    },
    "nearSighted": {
-    "expectedMistakes": 8.35,
+    "expectedMistakes": 8.32,
     "winRate": 0,
-    "averageChainClears": 8.35
+    "averageChainClears": 8.32
    },
    "deceptiveArrows": 0,
    "riskScore": 100
   }
  },
  {
-  "id": 22,
-  "exact": {
-   "rows": 15,
-   "cols": 12,
-   "arrows": 27,
-   "density": 1,
-   "meanLength": 6.666666666666667,
-   "largestEmptySquare": 0,
-   "initialFree": 5,
-   "blockedShare": 0.8148148148148149,
-   "blockingRelations": 69,
-   "maxBlockers": 8,
-   "longRangeBlocks": 39,
-   "depth": 11,
-   "waves": [
-    5,
-    5,
-    4,
-    1,
-    1,
-    1,
-    1,
-    2,
-    3,
-    2,
-    2
-   ],
-   "turns": 47,
-   "ambiguousJoins": 0
-  },
-  "estimated": {
-   "averageChoices": 2.830740740740741,
-   "averageFreeShare": 0.2914644581752883,
-   "bottleneckShare": 0.07379489750445624,
-   "wrongTapsPerMove": 3.012416372721925
-  },
-  "components": [
-   {
-    "name": "search",
-    "value": 0.600990849266992,
-    "weight": 35
-   },
-   {
-    "name": "depth",
-    "value": 0.6666666666666666,
-    "weight": 20
-   },
-   {
-    "name": "entanglement",
-    "value": 0.6301369863013698,
-    "weight": 15
-   },
-   {
-    "name": "long-range",
-    "value": 0.5652173913043478,
-    "weight": 10
-   },
-   {
-    "name": "size",
-    "value": 0.574468085106383,
-    "weight": 10
-   },
-   {
-    "name": "visual",
-    "value": 0.854054054054054,
-    "weight": 10
-   }
-  ],
-  "score": 64,
-  "category": "Hard",
-  "lives": {
-   "random": {
-    "expectedMistakes": 17.76,
-    "winRate": 0,
-    "averageChainClears": 17.76
-   },
-   "nearSighted": {
-    "expectedMistakes": 7.075,
-    "winRate": 0,
-    "averageChainClears": 7.075
-   },
-   "deceptiveArrows": 0,
-   "riskScore": 100
-  }
- },
- {
-  "id": 23,
+  "id": 39,
   "exact": {
    "rows": 16,
    "cols": 12,
-   "arrows": 36,
+   "arrows": 35,
    "density": 1,
-   "meanLength": 5.333333333333333,
+   "meanLength": 5.485714285714286,
    "largestEmptySquare": 0,
-   "initialFree": 4,
-   "blockedShare": 0.8888888888888888,
-   "blockingRelations": 99,
-   "maxBlockers": 10,
-   "longRangeBlocks": 55,
-   "depth": 11,
+   "initialFree": 3,
+   "blockedShare": 0.9142857142857143,
+   "blockingRelations": 114,
+   "maxBlockers": 9,
+   "longRangeBlocks": 69,
+   "depth": 12,
    "waves": [
-    4,
-    4,
-    4,
-    7,
     3,
     5,
-    2,
+    5,
+    6,
     3,
     1,
+    3,
+    3,
     2,
+    2,
+    1,
     1
    ],
-   "turns": 37,
+   "turns": 40,
    "ambiguousJoins": 0
   },
   "estimated": {
-   "averageChoices": 3.2330555555555556,
-   "averageFreeShare": 0.24468572439540331,
-   "bottleneckShare": 0.07996785249241976,
-   "wrongTapsPerMove": 3.5419891975308495
+   "averageChoices": 3.2672857142857143,
+   "averageFreeShare": 0.2624141640855661,
+   "bottleneckShare": 0.06454187004918586,
+   "wrongTapsPerMove": 3.482256009070279
   },
   "components": [
    {
     "name": "search",
-    "value": 0.6391187480316508,
+    "value": 0.6351866828745244,
     "weight": 35
    },
    {
     "name": "depth",
-    "value": 0.6666666666666666,
+    "value": 0.6875,
     "weight": 20
    },
    {
     "name": "entanglement",
-    "value": 0.6470588235294118,
+    "value": 0.6846846846846847,
     "weight": 15
    },
    {
     "name": "long-range",
-    "value": 0.5555555555555556,
+    "value": 0.6052631578947368,
     "weight": 10
    },
    {
     "name": "size",
-    "value": 0.6428571428571429,
+    "value": 0.6363636363636364,
     "weight": 10
    },
    {
     "name": "visual",
-    "value": 0.8027397260273973,
-    "weight": 10
-   }
-  ],
-  "score": 65,
-  "category": "Hard",
-  "lives": {
-   "random": {
-    "expectedMistakes": 25.935,
-    "winRate": 0,
-    "averageChainClears": 25.935
-   },
-   "nearSighted": {
-    "expectedMistakes": 7.145,
-    "winRate": 0,
-    "averageChainClears": 7.145
-   },
-   "deceptiveArrows": 0,
-   "riskScore": 100
-  }
- },
- {
-  "id": 24,
-  "exact": {
-   "rows": 16,
-   "cols": 12,
-   "arrows": 33,
-   "density": 1,
-   "meanLength": 5.818181818181818,
-   "largestEmptySquare": 0,
-   "initialFree": 4,
-   "blockedShare": 0.8787878787878788,
-   "blockingRelations": 98,
-   "maxBlockers": 7,
-   "longRangeBlocks": 51,
-   "depth": 10,
-   "waves": [
-    4,
-    4,
-    3,
-    3,
-    3,
-    3,
-    4,
-    3,
-    4,
-    2
-   ],
-   "turns": 39,
-   "ambiguousJoins": 0
-  },
-  "estimated": {
-   "averageChoices": 3.068787878787879,
-   "averageFreeShare": 0.28532914647171437,
-   "bottleneckShare": 0.08125003409940983,
-   "wrongTapsPerMove": 3.4244184704184657
-  },
-  "components": [
-   {
-    "name": "search",
-    "value": 0.6312968826231228,
-    "weight": 35
-   },
-   {
-    "name": "depth",
-    "value": 0.6428571428571429,
-    "weight": 20
-   },
-   {
-    "name": "entanglement",
-    "value": 0.6644067796610169,
-    "weight": 15
-   },
-   {
-    "name": "long-range",
-    "value": 0.5204081632653061,
-    "weight": 10
-   },
-   {
-    "name": "size",
-    "value": 0.6226415094339622,
-    "weight": 10
-   },
-   {
-    "name": "visual",
-    "value": 0.8166666666666667,
-    "weight": 10
-   }
-  ],
-  "score": 65,
-  "category": "Hard",
-  "lives": {
-   "random": {
-    "expectedMistakes": 23.84,
-    "winRate": 0,
-    "averageChainClears": 23.84
-   },
-   "nearSighted": {
-    "expectedMistakes": 7.3,
-    "winRate": 0.005,
-    "averageChainClears": 7.3
-   },
-   "deceptiveArrows": 0,
-   "riskScore": 100
-  }
- },
- {
-  "id": 25,
-  "exact": {
-   "rows": 16,
-   "cols": 12,
-   "arrows": 36,
-   "density": 1,
-   "meanLength": 5.333333333333333,
-   "largestEmptySquare": 0,
-   "initialFree": 5,
-   "blockedShare": 0.8611111111111112,
-   "blockingRelations": 93,
-   "maxBlockers": 10,
-   "longRangeBlocks": 49,
-   "depth": 13,
-   "waves": [
-    5,
-    5,
-    4,
-    3,
-    3,
-    3,
-    1,
-    2,
-    3,
-    3,
-    1,
-    1,
-    2
-   ],
-   "turns": 45,
-   "ambiguousJoins": 0
-  },
-  "estimated": {
-   "averageChoices": 3.1769444444444446,
-   "averageFreeShare": 0.2430614313490509,
-   "bottleneckShare": 0.06874684203634397,
-   "wrongTapsPerMove": 3.6248841490299712
-  },
-  "components": [
-   {
-    "name": "search",
-    "value": 0.6444371213681074,
-    "weight": 35
-   },
-   {
-    "name": "depth",
-    "value": 0.7058823529411765,
-    "weight": 20
-   },
-   {
-    "name": "entanglement",
-    "value": 0.6326530612244897,
-    "weight": 15
-   },
-   {
-    "name": "long-range",
-    "value": 0.5268817204301075,
-    "weight": 10
-   },
-   {
-    "name": "size",
-    "value": 0.6428571428571429,
-    "weight": 10
-   },
-   {
-    "name": "visual",
-    "value": 0.8222222222222222,
-    "weight": 10
-   }
-  ],
-  "score": 66,
-  "category": "Hard",
-  "lives": {
-   "random": {
-    "expectedMistakes": 24.93,
-    "winRate": 0,
-    "averageChainClears": 24.93
-   },
-   "nearSighted": {
-    "expectedMistakes": 8.735,
-    "winRate": 0,
-    "averageChainClears": 8.735
-   },
-   "deceptiveArrows": 0,
-   "riskScore": 100
-  }
- },
- {
-  "id": 26,
-  "exact": {
-   "rows": 16,
-   "cols": 12,
-   "arrows": 34,
-   "density": 1,
-   "meanLength": 5.647058823529412,
-   "largestEmptySquare": 0,
-   "initialFree": 7,
-   "blockedShare": 0.7941176470588236,
-   "blockingRelations": 88,
-   "maxBlockers": 8,
-   "longRangeBlocks": 47,
-   "depth": 14,
-   "waves": [
-    7,
-    2,
-    3,
-    2,
-    2,
-    3,
-    2,
-    3,
-    3,
-    1,
-    2,
-    1,
-    1,
-    2
-   ],
-   "turns": 45,
-   "ambiguousJoins": 0
-  },
-  "estimated": {
-   "averageChoices": 2.6773529411764705,
-   "averageFreeShare": 0.21734852272685473,
-   "bottleneckShare": 0.048001452238387025,
-   "wrongTapsPerMove": 4.138506419234349
-  },
-  "components": [
-   {
-    "name": "search",
-    "value": 0.6741878458034652,
-    "weight": 35
-   },
-   {
-    "name": "depth",
-    "value": 0.7222222222222222,
-    "weight": 20
-   },
-   {
-    "name": "entanglement",
-    "value": 0.6330935251798562,
-    "weight": 15
-   },
-   {
-    "name": "long-range",
-    "value": 0.5340909090909091,
-    "weight": 10
-   },
-   {
-    "name": "size",
-    "value": 0.6296296296296297,
-    "weight": 10
-   },
-   {
-    "name": "visual",
-    "value": 0.8278481012658228,
+    "value": 0.8133333333333334,
     "weight": 10
    }
   ],
@@ -2171,155 +3305,173 @@
   "category": "Hard",
   "lives": {
    "random": {
-    "expectedMistakes": 23.44,
+    "expectedMistakes": 25.83,
     "winRate": 0,
-    "averageChainClears": 23.44
+    "averageChainClears": 25.83
    },
    "nearSighted": {
-    "expectedMistakes": 6.785,
-    "winRate": 0.005,
-    "averageChainClears": 6.785
+    "expectedMistakes": 9.75,
+    "winRate": 0,
+    "averageChainClears": 9.75
    },
    "deceptiveArrows": 0,
    "riskScore": 100
   }
  },
  {
-  "id": 27,
+  "id": 40,
   "exact": {
-   "rows": 17,
-   "cols": 12,
-   "arrows": 39,
+   "rows": 20,
+   "cols": 14,
+   "arrows": 54,
    "density": 1,
-   "meanLength": 5.230769230769231,
+   "meanLength": 5.185185185185185,
    "largestEmptySquare": 0,
-   "initialFree": 8,
-   "blockedShare": 0.7948717948717949,
-   "blockingRelations": 117,
-   "maxBlockers": 9,
-   "longRangeBlocks": 68,
-   "depth": 16,
+   "initialFree": 2,
+   "blockedShare": 0.962962962962963,
+   "blockingRelations": 215,
+   "maxBlockers": 11,
+   "longRangeBlocks": 138,
+   "depth": 34,
    "waves": [
-    8,
-    5,
-    3,
-    3,
     2,
-    3,
-    4,
-    1,
     1,
     1,
     1,
     1,
     2,
+    2,
+    2,
+    3,
+    3,
+    2,
+    2,
+    2,
     1,
     2,
+    2,
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    2,
+    1,
+    2,
+    1,
+    2,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
     1
    ],
-   "turns": 39,
+   "turns": 68,
    "ambiguousJoins": 0
   },
   "estimated": {
-   "averageChoices": 3.3705128205128205,
-   "averageFreeShare": 0.2178195151927043,
-   "bottleneckShare": 0.07319310024083678,
-   "wrongTapsPerMove": 3.77968187830687
+   "averageChoices": 1.8431481481481482,
+   "averageFreeShare": 0.1252749875579129,
+   "bottleneckShare": 0.01954805034537081,
+   "wrongTapsPerMove": 9.452501322751381
   },
   "components": [
    {
     "name": "search",
-    "value": 0.653960193292526,
+    "value": 0.8253656608598833,
     "weight": 35
    },
    {
     "name": "depth",
-    "value": 0.75,
+    "value": 0.868421052631579,
     "weight": 20
    },
    {
     "name": "entanglement",
-    "value": 0.6666666666666666,
+    "value": 0.7263513513513514,
     "weight": 15
    },
    {
     "name": "long-range",
-    "value": 0.5811965811965812,
+    "value": 0.641860465116279,
     "weight": 10
    },
    {
     "name": "size",
-    "value": 0.6610169491525424,
+    "value": 0.7297297297297297,
     "weight": 10
    },
    {
     "name": "visual",
-    "value": 0.8,
+    "value": 0.8229508196721311,
     "weight": 10
    }
   ],
-  "score": 68,
-  "category": "Hard",
+  "score": 79,
+  "category": "Very hard",
   "lives": {
    "random": {
-    "expectedMistakes": 26.025,
+    "expectedMistakes": 47.81,
     "winRate": 0,
-    "averageChainClears": 26.025
+    "averageChainClears": 47.81
    },
    "nearSighted": {
-    "expectedMistakes": 12.88,
+    "expectedMistakes": 9.24,
     "winRate": 0,
-    "averageChainClears": 12.88
+    "averageChainClears": 9.24
    },
    "deceptiveArrows": 0,
    "riskScore": 100
   }
  },
  {
-  "id": 28,
+  "id": 41,
   "exact": {
    "rows": 17,
    "cols": 12,
-   "arrows": 37,
+   "arrows": 32,
    "density": 1,
-   "meanLength": 5.513513513513513,
+   "meanLength": 6.375,
    "largestEmptySquare": 0,
-   "initialFree": 8,
-   "blockedShare": 0.7837837837837838,
-   "blockingRelations": 103,
-   "maxBlockers": 9,
-   "longRangeBlocks": 60,
+   "initialFree": 3,
+   "blockedShare": 0.90625,
+   "blockingRelations": 91,
+   "maxBlockers": 11,
+   "longRangeBlocks": 46,
    "depth": 15,
    "waves": [
-    8,
+    3,
+    3,
     4,
-    4,
+    2,
+    3,
+    2,
     3,
     2,
     2,
-    1,
-    1,
-    1,
-    3,
-    2,
-    1,
     2,
     2,
+    1,
+    1,
+    1,
     1
    ],
    "turns": 46,
    "ambiguousJoins": 0
   },
   "estimated": {
-   "averageChoices": 3.273918918918919,
-   "averageFreeShare": 0.23490182366552206,
-   "bottleneckShare": 0.06895841387261048,
-   "wrongTapsPerMove": 3.74474844487346
+   "averageChoices": 2.31546875,
+   "averageFreeShare": 0.20393295750370008,
+   "bottleneckShare": 0.059248621168732724,
+   "wrongTapsPerMove": 4.196032366071455
   },
   "components": [
    {
     "name": "search",
-    "value": 0.6518559482295914,
+    "value": 0.6772127900829408,
     "weight": 35
    },
    {
@@ -2329,22 +3481,22 @@
    },
    {
     "name": "entanglement",
-    "value": 0.6498422712933754,
+    "value": 0.6546762589928058,
     "weight": 15
    },
    {
     "name": "long-range",
-    "value": 0.5825242718446602,
+    "value": 0.5054945054945055,
     "weight": 10
    },
    {
     "name": "size",
-    "value": 0.6491228070175439,
+    "value": 0.6153846153846154,
     "weight": 10
    },
    {
     "name": "visual",
-    "value": 0.8216867469879519,
+    "value": 0.8358974358974359,
     "weight": 10
    }
   ],
@@ -2352,110 +3504,21 @@
   "category": "Hard",
   "lives": {
    "random": {
-    "expectedMistakes": 24.285,
+    "expectedMistakes": 24.265,
     "winRate": 0,
-    "averageChainClears": 24.285
+    "averageChainClears": 24.265
    },
    "nearSighted": {
-    "expectedMistakes": 6.61,
+    "expectedMistakes": 7.34,
     "winRate": 0,
-    "averageChainClears": 6.61
+    "averageChainClears": 7.34
    },
    "deceptiveArrows": 0,
    "riskScore": 100
   }
  },
  {
-  "id": 29,
-  "exact": {
-   "rows": 17,
-   "cols": 12,
-   "arrows": 39,
-   "density": 0.9950980392156863,
-   "meanLength": 5.205128205128205,
-   "largestEmptySquare": 1,
-   "initialFree": 5,
-   "blockedShare": 0.8717948717948718,
-   "blockingRelations": 115,
-   "maxBlockers": 12,
-   "longRangeBlocks": 64,
-   "depth": 14,
-   "waves": [
-    5,
-    3,
-    3,
-    4,
-    6,
-    1,
-    3,
-    4,
-    2,
-    3,
-    2,
-    1,
-    1,
-    1
-   ],
-   "turns": 43,
-   "ambiguousJoins": 0
-  },
-  "estimated": {
-   "averageChoices": 3.1432051282051283,
-   "averageFreeShare": 0.2242212192850319,
-   "bottleneckShare": 0.06657919817883946,
-   "wrongTapsPerMove": 3.9686250508750565
-  },
-  "components": [
-   {
-    "name": "search",
-    "value": 0.6649144513263099,
-    "weight": 35
-   },
-   {
-    "name": "depth",
-    "value": 0.7222222222222222,
-    "weight": 20
-   },
-   {
-    "name": "entanglement",
-    "value": 0.6628242074927954,
-    "weight": 15
-   },
-   {
-    "name": "long-range",
-    "value": 0.5565217391304348,
-    "weight": 10
-   },
-   {
-    "name": "size",
-    "value": 0.6610169491525424,
-    "weight": 10
-   },
-   {
-    "name": "visual",
-    "value": 0.8068149210903874,
-    "weight": 10
-   }
-  ],
-  "score": 68,
-  "category": "Hard",
-  "lives": {
-   "random": {
-    "expectedMistakes": 28.46,
-    "winRate": 0,
-    "averageChainClears": 28.46
-   },
-   "nearSighted": {
-    "expectedMistakes": 8.52,
-    "winRate": 0,
-    "averageChainClears": 8.52
-   },
-   "deceptiveArrows": 0,
-   "riskScore": 100
-  }
- },
- {
-  "id": 30,
+  "id": 42,
   "exact": {
    "rows": 17,
    "cols": 12,
@@ -2465,58 +3528,57 @@
    "largestEmptySquare": 0,
    "initialFree": 2,
    "blockedShare": 0.95,
-   "blockingRelations": 145,
+   "blockingRelations": 116,
    "maxBlockers": 9,
-   "longRangeBlocks": 89,
-   "depth": 18,
+   "longRangeBlocks": 61,
+   "depth": 17,
    "waves": [
     2,
+    3,
+    4,
+    2,
+    5,
     4,
     3,
     3,
+    3,
+    3,
+    1,
+    1,
     2,
     1,
     1,
     1,
-    1,
-    3,
-    3,
-    4,
-    3,
-    1,
-    2,
-    2,
-    3,
     1
    ],
    "turns": 43,
    "ambiguousJoins": 0
   },
   "estimated": {
-   "averageChoices": 2.43975,
-   "averageFreeShare": 0.21451581164517555,
-   "bottleneckShare": 0.0337942739343062,
-   "wrongTapsPerMove": 5.830412797619069
+   "averageChoices": 2.750625,
+   "averageFreeShare": 0.19026047188919795,
+   "bottleneckShare": 0.0429626233376233,
+   "wrongTapsPerMove": 4.798093948412682
   },
   "components": [
    {
     "name": "search",
-    "value": 0.7445856238117965,
+    "value": 0.7057998881485024,
     "weight": 35
    },
    {
     "name": "depth",
-    "value": 0.7727272727272727,
+    "value": 0.7619047619047619,
     "weight": 20
    },
    {
     "name": "entanglement",
-    "value": 0.7073170731707317,
+    "value": 0.6590909090909091,
     "weight": 15
    },
    {
     "name": "long-range",
-    "value": 0.6137931034482759,
+    "value": 0.5258620689655172,
     "weight": 10
    },
    {
@@ -2530,25 +3592,5110 @@
     "weight": 10
    }
   ],
-  "score": 73,
+  "score": 70,
   "category": "Very hard",
   "lives": {
    "random": {
-    "expectedMistakes": 32.96,
+    "expectedMistakes": 32.155,
     "winRate": 0,
-    "averageChainClears": 32.96
+    "averageChainClears": 32.155
    },
    "nearSighted": {
-    "expectedMistakes": 8.31,
+    "expectedMistakes": 11.79,
     "winRate": 0,
-    "averageChainClears": 8.31
+    "averageChainClears": 11.79
    },
    "deceptiveArrows": 0,
    "riskScore": 100
   }
  },
  {
-  "id": 31,
+  "id": 43,
+  "exact": {
+   "rows": 20,
+   "cols": 14,
+   "arrows": 49,
+   "density": 1,
+   "meanLength": 5.714285714285714,
+   "largestEmptySquare": 0,
+   "initialFree": 1,
+   "blockedShare": 0.9795918367346939,
+   "blockingRelations": 195,
+   "maxBlockers": 9,
+   "longRangeBlocks": 122,
+   "depth": 24,
+   "waves": [
+    1,
+    2,
+    2,
+    3,
+    4,
+    3,
+    9,
+    3,
+    1,
+    1,
+    3,
+    2,
+    3,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "turns": 59,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.699795918367347,
+   "averageFreeShare": 0.15267072825301262,
+   "bottleneckShare": 0.02040816326530603,
+   "wrongTapsPerMove": 6.460521814353466
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7636079613190105,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8214285714285714,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.7262569832402235,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.6256410256410256,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.7101449275362319,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8185185185185185,
+    "weight": 10
+   }
+  ],
+  "score": 76,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 42.725,
+    "winRate": 0,
+    "averageChainClears": 42.725
+   },
+   "nearSighted": {
+    "expectedMistakes": 10.355,
+    "winRate": 0,
+    "averageChainClears": 10.355
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 44,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 43,
+   "density": 1,
+   "meanLength": 4.744186046511628,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9302325581395349,
+   "blockingRelations": 126,
+   "maxBlockers": 9,
+   "longRangeBlocks": 68,
+   "depth": 15,
+   "waves": [
+    3,
+    3,
+    4,
+    5,
+    2,
+    4,
+    2,
+    4,
+    3,
+    4,
+    4,
+    1,
+    1,
+    1,
+    2
+   ],
+   "turns": 37,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.9084883720930232,
+   "averageFreeShare": 0.21132397452154655,
+   "bottleneckShare": 0.04396705824429053,
+   "wrongTapsPerMove": 5.003109080841648
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7144125592058269,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.7368421052631579,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6614173228346456,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5396825396825397,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6825396825396826,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.7849999999999999,
+    "weight": 10
+   }
+  ],
+  "score": 70,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 34.33,
+    "winRate": 0,
+    "averageChainClears": 34.33
+   },
+   "nearSighted": {
+    "expectedMistakes": 3.845,
+    "winRate": 0.035,
+    "averageChainClears": 3.845
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 98
+  }
+ },
+ {
+  "id": 45,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 36,
+   "density": 1,
+   "meanLength": 5.666666666666667,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9166666666666666,
+   "blockingRelations": 119,
+   "maxBlockers": 10,
+   "longRangeBlocks": 70,
+   "depth": 15,
+   "waves": [
+    3,
+    3,
+    4,
+    2,
+    3,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    4,
+    2,
+    3
+   ],
+   "turns": 38,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.413611111111111,
+   "averageFreeShare": 0.23106320871003297,
+   "bottleneckShare": 0.04557266861602966,
+   "wrongTapsPerMove": 4.918257936507957
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.710909882465366,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.7368421052631579,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6878612716763005,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5882352941176471,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6428571428571429,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8054054054054054,
+    "weight": 10
+   }
+  ],
+  "score": 70,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 27.745,
+    "winRate": 0,
+    "averageChainClears": 27.745
+   },
+   "nearSighted": {
+    "expectedMistakes": 6.095,
+    "winRate": 0,
+    "averageChainClears": 6.095
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 46,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 36,
+   "density": 1,
+   "meanLength": 5.666666666666667,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9166666666666666,
+   "blockingRelations": 100,
+   "maxBlockers": 9,
+   "longRangeBlocks": 56,
+   "depth": 15,
+   "waves": [
+    3,
+    3,
+    5,
+    6,
+    3,
+    2,
+    1,
+    1,
+    3,
+    3,
+    1,
+    1,
+    1,
+    1,
+    2
+   ],
+   "turns": 46,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.8254166666666665,
+   "averageFreeShare": 0.2184819188848824,
+   "bottleneckShare": 0.05987596399544608,
+   "wrongTapsPerMove": 4.101600088183422
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.6722171281147593,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.7368421052631579,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6493506493506493,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.56,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6428571428571429,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.824390243902439,
+    "weight": 10
+   }
+  ],
+  "score": 68,
+  "category": "Hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 26.855,
+    "winRate": 0,
+    "averageChainClears": 26.855
+   },
+   "nearSighted": {
+    "expectedMistakes": 7.47,
+    "winRate": 0,
+    "averageChainClears": 7.47
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 47,
+  "exact": {
+   "rows": 36,
+   "cols": 28,
+   "arrows": 180,
+   "density": 0.7321428571428571,
+   "meanLength": 4.1,
+   "largestEmptySquare": 6,
+   "initialFree": 19,
+   "blockedShare": 0.8944444444444445,
+   "blockingRelations": 824,
+   "maxBlockers": 15,
+   "longRangeBlocks": 594,
+   "depth": 39,
+   "waves": [
+    19,
+    16,
+    11,
+    9,
+    8,
+    5,
+    10,
+    8,
+    8,
+    6,
+    11,
+    4,
+    3,
+    5,
+    2,
+    5,
+    5,
+    4,
+    7,
+    5,
+    4,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "turns": 120,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 7.440083333333333,
+   "averageFreeShare": 0.10243443456404967,
+   "bottleneckShare": 0.025368491141818918,
+   "wrongTapsPerMove": 9.907684209502577
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.8320412294437605,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8837209302325582,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.753199268738574,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.720873786407767,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.9,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.5992857142857142,
+    "weight": 10
+   }
+  ],
+  "score": 80,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 142.635,
+    "winRate": 0,
+    "averageChainClears": 142.635
+   },
+   "nearSighted": {
+    "expectedMistakes": 38.34,
+    "winRate": 0,
+    "averageChainClears": 38.34
+   },
+   "deceptiveArrows": 3,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 48,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 41,
+   "density": 1,
+   "meanLength": 4.975609756097561,
+   "largestEmptySquare": 0,
+   "initialFree": 2,
+   "blockedShare": 0.9512195121951219,
+   "blockingRelations": 115,
+   "maxBlockers": 7,
+   "longRangeBlocks": 61,
+   "depth": 17,
+   "waves": [
+    2,
+    3,
+    4,
+    4,
+    1,
+    1,
+    1,
+    3,
+    1,
+    2,
+    4,
+    3,
+    3,
+    3,
+    3,
+    2,
+    1
+   ],
+   "turns": 52,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.630121951219512,
+   "averageFreeShare": 0.2129086081922778,
+   "bottleneckShare": 0.034497873925487886,
+   "wrongTapsPerMove": 5.487066347270629
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7328726757271105,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.7619047619047619,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6515580736543909,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5304347826086957,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6721311475409836,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8236559139784946,
+    "weight": 10
+   }
+  ],
+  "score": 71,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 34.135,
+    "winRate": 0,
+    "averageChainClears": 34.135
+   },
+   "nearSighted": {
+    "expectedMistakes": 10.27,
+    "winRate": 0,
+    "averageChainClears": 10.27
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 49,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 36,
+   "density": 1,
+   "meanLength": 5.666666666666667,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9166666666666666,
+   "blockingRelations": 112,
+   "maxBlockers": 8,
+   "longRangeBlocks": 64,
+   "depth": 18,
+   "waves": [
+    3,
+    3,
+    4,
+    3,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    2,
+    3,
+    2,
+    1,
+    2,
+    2,
+    2
+   ],
+   "turns": 42,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.232222222222222,
+   "averageFreeShare": 0.20879374013178112,
+   "bottleneckShare": 0.04228679842856581,
+   "wrongTapsPerMove": 5.25114186507935
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7241813720909578,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.7727272727272727,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.674698795180723,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5714285714285714,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6428571428571429,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8153846153846154,
+    "weight": 10
+   }
+  ],
+  "score": 71,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 27.965,
+    "winRate": 0,
+    "averageChainClears": 27.965
+   },
+   "nearSighted": {
+    "expectedMistakes": 7.47,
+    "winRate": 0,
+    "averageChainClears": 7.47
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 50,
+  "exact": {
+   "rows": 20,
+   "cols": 14,
+   "arrows": 51,
+   "density": 1,
+   "meanLength": 5.490196078431373,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9411764705882353,
+   "blockingRelations": 184,
+   "maxBlockers": 9,
+   "longRangeBlocks": 119,
+   "depth": 24,
+   "waves": [
+    3,
+    3,
+    5,
+    4,
+    2,
+    3,
+    1,
+    2,
+    3,
+    2,
+    2,
+    1,
+    2,
+    1,
+    3,
+    3,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1
+   ],
+   "turns": 71,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.4994117647058824,
+   "averageFreeShare": 0.1582960462874657,
+   "bottleneckShare": 0.03920942623932042,
+   "wrongTapsPerMove": 6.595560924369747
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7673217585684619,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8214285714285714,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.7063339731285989,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.6467391304347826,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.7183098591549296,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8327868852459016,
+    "weight": 10
+   }
+  ],
+  "score": 76,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 41.7,
+    "winRate": 0,
+    "averageChainClears": 41.7
+   },
+   "nearSighted": {
+    "expectedMistakes": 9.735,
+    "winRate": 0,
+    "averageChainClears": 9.735
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 51,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 37,
+   "density": 1,
+   "meanLength": 5.513513513513513,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9189189189189189,
+   "blockingRelations": 109,
+   "maxBlockers": 7,
+   "longRangeBlocks": 59,
+   "depth": 18,
+   "waves": [
+    3,
+    3,
+    3,
+    3,
+    4,
+    2,
+    1,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    2,
+    1,
+    2,
+    2
+   ],
+   "turns": 52,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.368108108108108,
+   "averageFreeShare": 0.20691899506239905,
+   "bottleneckShare": 0.04034822307680274,
+   "wrongTapsPerMove": 5.055038931788923
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7165146756329994,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.7727272727272727,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.662613981762918,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5412844036697247,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6491228070175439,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8337078651685393,
+    "weight": 10
+   }
+  ],
+  "score": 71,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 29.105,
+    "winRate": 0,
+    "averageChainClears": 29.105
+   },
+   "nearSighted": {
+    "expectedMistakes": 8.35,
+    "winRate": 0,
+    "averageChainClears": 8.35
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 52,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 35,
+   "density": 1,
+   "meanLength": 5.828571428571428,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9142857142857143,
+   "blockingRelations": 109,
+   "maxBlockers": 8,
+   "longRangeBlocks": 63,
+   "depth": 18,
+   "waves": [
+    3,
+    2,
+    4,
+    3,
+    1,
+    1,
+    2,
+    3,
+    1,
+    1,
+    1,
+    2,
+    3,
+    2,
+    2,
+    2,
+    1,
+    1
+   ],
+   "turns": 49,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.233142857142857,
+   "averageFreeShare": 0.2032583725075118,
+   "bottleneckShare": 0.04037031728631904,
+   "wrongTapsPerMove": 5.039369387755111
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.715883641014922,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.7727272727272727,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6749226006191951,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5779816513761468,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6363636363636364,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8333333333333334,
+    "weight": 10
+   }
+  ],
+  "score": 71,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 27.675,
+    "winRate": 0,
+    "averageChainClears": 27.675
+   },
+   "nearSighted": {
+    "expectedMistakes": 4.94,
+    "winRate": 0.01,
+    "averageChainClears": 4.94
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 99
+  }
+ },
+ {
+  "id": 53,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 35,
+   "density": 1,
+   "meanLength": 5.828571428571428,
+   "largestEmptySquare": 0,
+   "initialFree": 1,
+   "blockedShare": 0.9714285714285714,
+   "blockingRelations": 109,
+   "maxBlockers": 9,
+   "longRangeBlocks": 63,
+   "depth": 19,
+   "waves": [
+    1,
+    2,
+    2,
+    3,
+    2,
+    2,
+    2,
+    3,
+    2,
+    3,
+    2,
+    3,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "turns": 50,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.0455714285714284,
+   "averageFreeShare": 0.18134848428232894,
+   "bottleneckShare": 0.02857142857142849,
+   "wrongTapsPerMove": 5.444738095238096
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7313538804972511,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.782608695652174,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6749226006191951,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5779816513761468,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6363636363636364,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8352941176470587,
+    "weight": 10
+   }
+  ],
+  "score": 72,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 29.325,
+    "winRate": 0,
+    "averageChainClears": 29.325
+   },
+   "nearSighted": {
+    "expectedMistakes": 7.77,
+    "winRate": 0,
+    "averageChainClears": 7.77
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 54,
+  "exact": {
+   "rows": 38,
+   "cols": 30,
+   "arrows": 175,
+   "density": 0.5894736842105263,
+   "meanLength": 3.84,
+   "largestEmptySquare": 9,
+   "initialFree": 15,
+   "blockedShare": 0.9142857142857143,
+   "blockingRelations": 774,
+   "maxBlockers": 19,
+   "longRangeBlocks": 544,
+   "depth": 43,
+   "waves": [
+    15,
+    19,
+    17,
+    18,
+    10,
+    8,
+    8,
+    6,
+    5,
+    4,
+    5,
+    4,
+    4,
+    3,
+    1,
+    3,
+    2,
+    1,
+    2,
+    2,
+    3,
+    4,
+    2,
+    2,
+    2,
+    3,
+    1,
+    1,
+    2,
+    3,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "turns": 97,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 8.1558,
+   "averageFreeShare": 0.10106596640266555,
+   "bottleneckShare": 0.021054183281829116,
+   "wrongTapsPerMove": 9.233807461972322
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.8219659713084615,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8936170212765957,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.7467438494934877,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.7028423772609819,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.8974358974358975,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.49633126934984517,
+    "weight": 10
+   }
+  ],
+  "score": 79,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 136.34,
+    "winRate": 0,
+    "averageChainClears": 136.34
+   },
+   "nearSighted": {
+    "expectedMistakes": 35.185,
+    "winRate": 0,
+    "averageChainClears": 35.185
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 55,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 37,
+   "density": 1,
+   "meanLength": 5.513513513513513,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9189189189189189,
+   "blockingRelations": 115,
+   "maxBlockers": 11,
+   "longRangeBlocks": 67,
+   "depth": 17,
+   "waves": [
+    3,
+    2,
+    1,
+    1,
+    2,
+    2,
+    3,
+    2,
+    6,
+    3,
+    2,
+    2,
+    3,
+    2,
+    1,
+    1,
+    1
+   ],
+   "turns": 46,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.552837837837838,
+   "averageFreeShare": 0.21244085652747408,
+   "bottleneckShare": 0.03237687139578739,
+   "wrongTapsPerMove": 5.289285070785076
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7256246695556119,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.7619047619047619,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6744868035190615,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5826086956521739,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6491228070175439,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8216867469879519,
+    "weight": 10
+   }
+  ],
+  "score": 71,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 30.385,
+    "winRate": 0,
+    "averageChainClears": 30.385
+   },
+   "nearSighted": {
+    "expectedMistakes": 11.435,
+    "winRate": 0,
+    "averageChainClears": 11.435
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 56,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 36,
+   "density": 1,
+   "meanLength": 5.666666666666667,
+   "largestEmptySquare": 0,
+   "initialFree": 2,
+   "blockedShare": 0.9444444444444444,
+   "blockingRelations": 123,
+   "maxBlockers": 12,
+   "longRangeBlocks": 74,
+   "depth": 17,
+   "waves": [
+    2,
+    2,
+    3,
+    4,
+    4,
+    2,
+    1,
+    3,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1
+   ],
+   "turns": 41,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.3819444444444446,
+   "averageFreeShare": 0.21365699184203055,
+   "bottleneckShare": 0.049716807693214154,
+   "wrongTapsPerMove": 4.903484457671976
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7102912286885268,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.7619047619047619,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6949152542372882,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.6016260162601627,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6428571428571429,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8129870129870129,
+    "weight": 10
+   }
+  ],
+  "score": 71,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 28.405,
+    "winRate": 0,
+    "averageChainClears": 28.405
+   },
+   "nearSighted": {
+    "expectedMistakes": 5.675,
+    "winRate": 0,
+    "averageChainClears": 5.675
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 57,
+  "exact": {
+   "rows": 20,
+   "cols": 14,
+   "arrows": 57,
+   "density": 1,
+   "meanLength": 4.912280701754386,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9473684210526316,
+   "blockingRelations": 214,
+   "maxBlockers": 12,
+   "longRangeBlocks": 139,
+   "depth": 27,
+   "waves": [
+    3,
+    4,
+    4,
+    4,
+    1,
+    2,
+    2,
+    2,
+    1,
+    2,
+    3,
+    2,
+    3,
+    3,
+    2,
+    1,
+    4,
+    2,
+    1,
+    1,
+    1,
+    1,
+    3,
+    1,
+    1,
+    2,
+    1
+   ],
+   "turns": 60,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.430701754385965,
+   "averageFreeShare": 0.14215252187454103,
+   "bottleneckShare": 0.0265408530463031,
+   "wrongTapsPerMove": 7.857959899749439
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7971182658137173,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8387096774193549,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.7145242070116862,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.6495327102803738,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.7402597402597403,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8051282051282052,
+    "weight": 10
+   }
+  ],
+  "score": 77,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 47.82,
+    "winRate": 0,
+    "averageChainClears": 47.82
+   },
+   "nearSighted": {
+    "expectedMistakes": 18.56,
+    "winRate": 0,
+    "averageChainClears": 18.56
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 58,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 40,
+   "density": 1,
+   "meanLength": 5.1,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.925,
+   "blockingRelations": 169,
+   "maxBlockers": 10,
+   "longRangeBlocks": 108,
+   "depth": 19,
+   "waves": [
+    3,
+    2,
+    3,
+    2,
+    3,
+    1,
+    4,
+    3,
+    5,
+    3,
+    2,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1
+   ],
+   "turns": 45,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.4085,
+   "averageFreeShare": 0.1789198366633967,
+   "bottleneckShare": 0.032771448451088266,
+   "wrongTapsPerMove": 5.6170541666667
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.737431301361584,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.782608695652174,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.7379912663755458,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.6390532544378699,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6666666666666666,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8117647058823529,
+    "weight": 10
+   }
+  ],
+  "score": 74,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 33.08,
+    "winRate": 0,
+    "averageChainClears": 33.08
+   },
+   "nearSighted": {
+    "expectedMistakes": 7.965,
+    "winRate": 0,
+    "averageChainClears": 7.965
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 59,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 39,
+   "density": 1,
+   "meanLength": 5.230769230769231,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9230769230769231,
+   "blockingRelations": 115,
+   "maxBlockers": 9,
+   "longRangeBlocks": 65,
+   "depth": 18,
+   "waves": [
+    3,
+    4,
+    4,
+    3,
+    2,
+    1,
+    2,
+    1,
+    1,
+    2,
+    3,
+    3,
+    1,
+    2,
+    3,
+    1,
+    2,
+    1
+   ],
+   "turns": 45,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.4446153846153846,
+   "averageFreeShare": 0.2064567497345631,
+   "bottleneckShare": 0.04269796704970925,
+   "wrongTapsPerMove": 5.286236263736269
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.725509861661495,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.7727272727272727,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6628242074927954,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5652173913043478,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6610169491525424,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8142857142857143,
+    "weight": 10
+   }
+  ],
+  "score": 71,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 30.565,
+    "winRate": 0,
+    "averageChainClears": 30.565
+   },
+   "nearSighted": {
+    "expectedMistakes": 5.51,
+    "winRate": 0.015,
+    "averageChainClears": 5.51
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 99
+  }
+ },
+ {
+  "id": 60,
+  "exact": {
+   "rows": 38,
+   "cols": 30,
+   "arrows": 178,
+   "density": 0.6526315789473685,
+   "meanLength": 4.179775280898877,
+   "largestEmptySquare": 9,
+   "initialFree": 23,
+   "blockedShare": 0.8707865168539326,
+   "blockingRelations": 866,
+   "maxBlockers": 18,
+   "longRangeBlocks": 661,
+   "depth": 43,
+   "waves": [
+    23,
+    12,
+    11,
+    10,
+    9,
+    8,
+    6,
+    4,
+    5,
+    2,
+    3,
+    5,
+    3,
+    2,
+    3,
+    4,
+    6,
+    5,
+    4,
+    4,
+    5,
+    8,
+    4,
+    3,
+    3,
+    1,
+    1,
+    2,
+    1,
+    2,
+    1,
+    1,
+    2,
+    2,
+    3,
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "turns": 151,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 6.912191011235955,
+   "averageFreeShare": 0.09462855895687176,
+   "bottleneckShare": 0.016042183474022115,
+   "wrongTapsPerMove": 11.348582602452947
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.8501713582959378,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8936170212765957,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.764342453662842,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.7632794457274826,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.898989898989899,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.5751655735082387,
+    "weight": 10
+   }
+  ],
+  "score": 81,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 139.285,
+    "winRate": 0,
+    "averageChainClears": 139.285
+   },
+   "nearSighted": {
+    "expectedMistakes": 50.995,
+    "winRate": 0,
+    "averageChainClears": 50.995
+   },
+   "deceptiveArrows": 9,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 61,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 40,
+   "density": 1,
+   "meanLength": 5.1,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.925,
+   "blockingRelations": 140,
+   "maxBlockers": 11,
+   "longRangeBlocks": 87,
+   "depth": 20,
+   "waves": [
+    3,
+    4,
+    2,
+    2,
+    1,
+    2,
+    2,
+    4,
+    4,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1
+   ],
+   "turns": 44,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.271125,
+   "averageFreeShare": 0.17907496958633498,
+   "bottleneckShare": 0.03517137428889119,
+   "wrongTapsPerMove": 5.692954464285715
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.74002185905494,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.7916666666666666,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.7,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.6214285714285714,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6666666666666666,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8095238095238095,
+    "weight": 10
+   }
+  ],
+  "score": 73,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 32.555,
+    "winRate": 0,
+    "averageChainClears": 32.555
+   },
+   "nearSighted": {
+    "expectedMistakes": 9.09,
+    "winRate": 0,
+    "averageChainClears": 9.09
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 62,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 36,
+   "density": 1,
+   "meanLength": 5.666666666666667,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9166666666666666,
+   "blockingRelations": 102,
+   "maxBlockers": 9,
+   "longRangeBlocks": 54,
+   "depth": 18,
+   "waves": [
+    3,
+    3,
+    1,
+    1,
+    2,
+    1,
+    3,
+    3,
+    4,
+    3,
+    1,
+    1,
+    2,
+    2,
+    1,
+    3,
+    1,
+    1
+   ],
+   "turns": 40,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.2006944444444443,
+   "averageFreeShare": 0.20131776599992565,
+   "bottleneckShare": 0.036010901933920904,
+   "wrongTapsPerMove": 5.308921296296305
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7263618092298418,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.7727272727272727,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6538461538461537,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5294117647058824,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6428571428571429,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8105263157894737,
+    "weight": 10
+   }
+  ],
+  "score": 71,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 29.44,
+    "winRate": 0,
+    "averageChainClears": 29.44
+   },
+   "nearSighted": {
+    "expectedMistakes": 5.285,
+    "winRate": 0.04,
+    "averageChainClears": 5.285
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 98
+  }
+ },
+ {
+  "id": 63,
+  "exact": {
+   "rows": 22,
+   "cols": 16,
+   "arrows": 61,
+   "density": 1,
+   "meanLength": 5.770491803278689,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9508196721311475,
+   "blockingRelations": 237,
+   "maxBlockers": 13,
+   "longRangeBlocks": 154,
+   "depth": 26,
+   "waves": [
+    3,
+    4,
+    6,
+    5,
+    1,
+    2,
+    3,
+    2,
+    3,
+    1,
+    1,
+    2,
+    4,
+    3,
+    3,
+    4,
+    2,
+    2,
+    2,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1
+   ],
+   "turns": 93,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.8222131147540983,
+   "averageFreeShare": 0.1367602739316877,
+   "bottleneckShare": 0.027336108155571366,
+   "wrongTapsPerMove": 7.380026932084303
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7867809959949031,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8333333333333334,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.7214611872146119,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.6497890295358649,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.7530864197530864,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8415584415584416,
+    "weight": 10
+   }
+  ],
+  "score": 77,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 50.92,
+    "winRate": 0,
+    "averageChainClears": 50.92
+   },
+   "nearSighted": {
+    "expectedMistakes": 16.355,
+    "winRate": 0,
+    "averageChainClears": 16.355
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 64,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 38,
+   "density": 1,
+   "meanLength": 5.368421052631579,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9210526315789473,
+   "blockingRelations": 115,
+   "maxBlockers": 9,
+   "longRangeBlocks": 63,
+   "depth": 18,
+   "waves": [
+    3,
+    3,
+    5,
+    4,
+    4,
+    3,
+    1,
+    2,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    2,
+    1
+   ],
+   "turns": 47,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.6973684210526314,
+   "averageFreeShare": 0.19811438070019816,
+   "bottleneckShare": 0.059850593662394515,
+   "wrongTapsPerMove": 4.462080096073495
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.6905021339467388,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.7727272727272727,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6686046511627907,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5478260869565217,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6551724137931034,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8211764705882353,
+    "weight": 10
+   }
+  ],
+  "score": 70,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 29.03,
+    "winRate": 0,
+    "averageChainClears": 29.03
+   },
+   "nearSighted": {
+    "expectedMistakes": 7.09,
+    "winRate": 0,
+    "averageChainClears": 7.09
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 65,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 35,
+   "density": 1,
+   "meanLength": 5.828571428571428,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9142857142857143,
+   "blockingRelations": 94,
+   "maxBlockers": 8,
+   "longRangeBlocks": 47,
+   "depth": 20,
+   "waves": [
+    3,
+    6,
+    3,
+    1,
+    4,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1
+   ],
+   "turns": 55,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.524142857142857,
+   "averageFreeShare": 0.19903881224593778,
+   "bottleneckShare": 0.05193154231856438,
+   "wrongTapsPerMove": 4.529199319727876
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.6936837271980608,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.7916666666666666,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6416382252559727,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6363636363636364,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8444444444444444,
+    "weight": 10
+   }
+  ],
+  "score": 70,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 25.97,
+    "winRate": 0,
+    "averageChainClears": 25.97
+   },
+   "nearSighted": {
+    "expectedMistakes": 7.345,
+    "winRate": 0,
+    "averageChainClears": 7.345
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 66,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 38,
+   "density": 1,
+   "meanLength": 5.368421052631579,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9210526315789473,
+   "blockingRelations": 110,
+   "maxBlockers": 11,
+   "longRangeBlocks": 63,
+   "depth": 20,
+   "waves": [
+    3,
+    3,
+    3,
+    1,
+    1,
+    2,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    2,
+    2,
+    1,
+    2,
+    2,
+    2,
+    2
+   ],
+   "turns": 46,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.0496052631578947,
+   "averageFreeShare": 0.1855844373807738,
+   "bottleneckShare": 0.03705288612748968,
+   "wrongTapsPerMove": 5.819182017543866
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7442187692379321,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.7916666666666666,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6586826347305389,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5727272727272728,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6551724137931034,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.819047619047619,
+    "weight": 10
+   }
+  ],
+  "score": 72,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 30.215,
+    "winRate": 0,
+    "averageChainClears": 30.215
+   },
+   "nearSighted": {
+    "expectedMistakes": 11.41,
+    "winRate": 0,
+    "averageChainClears": 11.41
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 67,
+  "exact": {
+   "rows": 36,
+   "cols": 28,
+   "arrows": 182,
+   "density": 0.7619047619047619,
+   "meanLength": 4.21978021978022,
+   "largestEmptySquare": 6,
+   "initialFree": 20,
+   "blockedShare": 0.8901098901098901,
+   "blockingRelations": 857,
+   "maxBlockers": 19,
+   "longRangeBlocks": 630,
+   "depth": 45,
+   "waves": [
+    20,
+    9,
+    9,
+    8,
+    10,
+    7,
+    8,
+    3,
+    5,
+    3,
+    3,
+    7,
+    6,
+    7,
+    9,
+    11,
+    7,
+    1,
+    2,
+    3,
+    2,
+    3,
+    2,
+    3,
+    2,
+    2,
+    2,
+    2,
+    2,
+    4,
+    4,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1
+   ],
+   "turns": 112,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 6.458983516483516,
+   "averageFreeShare": 0.08874250293079099,
+   "bottleneckShare": 0.020167755595568482,
+   "wrongTapsPerMove": 11.715799268359236
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.854182759541125,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8979591836734694,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.7584070796460177,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.73512252042007,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.900990099009901,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.6095238095238095,
+    "weight": 10
+   }
+  ],
+  "score": 82,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 146.67,
+    "winRate": 0,
+    "averageChainClears": 146.67
+   },
+   "nearSighted": {
+    "expectedMistakes": 42.395,
+    "winRate": 0,
+    "averageChainClears": 42.395
+   },
+   "deceptiveArrows": 3,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 68,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 40,
+   "density": 1,
+   "meanLength": 5.1,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.925,
+   "blockingRelations": 112,
+   "maxBlockers": 8,
+   "longRangeBlocks": 59,
+   "depth": 21,
+   "waves": [
+    3,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+    2,
+    3,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    3,
+    1,
+    1,
+    1
+   ],
+   "turns": 51,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.295125,
+   "averageFreeShare": 0.1860616200046752,
+   "bottleneckShare": 0.03182413072336466,
+   "wrongTapsPerMove": 5.708182589285693
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.740535466456129,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6511627906976744,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5267857142857143,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6666666666666666,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8241758241758241,
+    "weight": 10
+   }
+  ],
+  "score": 72,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 32.31,
+    "winRate": 0,
+    "averageChainClears": 32.31
+   },
+   "nearSighted": {
+    "expectedMistakes": 9.92,
+    "winRate": 0,
+    "averageChainClears": 9.92
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 69,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 37,
+   "density": 1,
+   "meanLength": 5.513513513513513,
+   "largestEmptySquare": 0,
+   "initialFree": 2,
+   "blockedShare": 0.9459459459459459,
+   "blockingRelations": 108,
+   "maxBlockers": 9,
+   "longRangeBlocks": 56,
+   "depth": 20,
+   "waves": [
+    2,
+    4,
+    3,
+    3,
+    2,
+    2,
+    2,
+    1,
+    1,
+    3,
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    2
+   ],
+   "turns": 44,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.206081081081081,
+   "averageFreeShare": 0.18793382960122323,
+   "bottleneckShare": 0.04560038602830367,
+   "wrongTapsPerMove": 5.224255148005151
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7231548500121477,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.7916666666666666,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6605504587155963,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5185185185185185,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6491228070175439,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.817283950617284,
+    "weight": 10
+   }
+  ],
+  "score": 71,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 29.67,
+    "winRate": 0,
+    "averageChainClears": 29.67
+   },
+   "nearSighted": {
+    "expectedMistakes": 7.565,
+    "winRate": 0.005,
+    "averageChainClears": 7.565
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 70,
+  "exact": {
+   "rows": 22,
+   "cols": 16,
+   "arrows": 58,
+   "density": 1,
+   "meanLength": 6.068965517241379,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9482758620689655,
+   "blockingRelations": 249,
+   "maxBlockers": 14,
+   "longRangeBlocks": 163,
+   "depth": 27,
+   "waves": [
+    3,
+    3,
+    5,
+    6,
+    4,
+    1,
+    2,
+    2,
+    3,
+    1,
+    1,
+    3,
+    2,
+    2,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1
+   ],
+   "turns": 85,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.5186206896551724,
+   "averageFreeShare": 0.14092918115883932,
+   "bottleneckShare": 0.029846524590402698,
+   "wrongTapsPerMove": 7.674876984126983
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7932790253270109,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8387096774193549,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.7410714285714286,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.6546184738955824,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.7435897435897436,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8377622377622378,
+    "weight": 10
+   }
+  ],
+  "score": 78,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 48.085,
+    "winRate": 0,
+    "averageChainClears": 48.085
+   },
+   "nearSighted": {
+    "expectedMistakes": 14.85,
+    "winRate": 0,
+    "averageChainClears": 14.85
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 71,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 38,
+   "density": 1,
+   "meanLength": 5.368421052631579,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9210526315789473,
+   "blockingRelations": 115,
+   "maxBlockers": 9,
+   "longRangeBlocks": 68,
+   "depth": 18,
+   "waves": [
+    3,
+    4,
+    5,
+    3,
+    2,
+    2,
+    1,
+    3,
+    2,
+    2,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    2,
+    1
+   ],
+   "turns": 47,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.576184210526316,
+   "averageFreeShare": 0.20195446777101522,
+   "bottleneckShare": 0.05438341415550859,
+   "wrongTapsPerMove": 4.65167355889724
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.6993237893755607,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.7727272727272727,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6686046511627907,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.591304347826087,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6551724137931034,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8211764705882353,
+    "weight": 10
+   }
+  ],
+  "score": 71,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 28.86,
+    "winRate": 0,
+    "averageChainClears": 28.86
+   },
+   "nearSighted": {
+    "expectedMistakes": 8.695,
+    "winRate": 0,
+    "averageChainClears": 8.695
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 72,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 32,
+   "density": 1,
+   "meanLength": 6.375,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.90625,
+   "blockingRelations": 100,
+   "maxBlockers": 8,
+   "longRangeBlocks": 58,
+   "depth": 19,
+   "waves": [
+    3,
+    3,
+    4,
+    2,
+    2,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1
+   ],
+   "turns": 51,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 1.94734375,
+   "averageFreeShare": 0.192760590499332,
+   "bottleneckShare": 0.04459884056336454,
+   "wrongTapsPerMove": 4.959862351190461
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.712637994965819,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.782608695652174,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6756756756756757,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.58,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6153846153846154,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8457831325301205,
+    "weight": 10
+   }
+  ],
+  "score": 71,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 25.245,
+    "winRate": 0,
+    "averageChainClears": 25.245
+   },
+   "nearSighted": {
+    "expectedMistakes": 6.91,
+    "winRate": 0,
+    "averageChainClears": 6.91
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 73,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 44,
+   "density": 1,
+   "meanLength": 4.636363636363637,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9318181818181819,
+   "blockingRelations": 138,
+   "maxBlockers": 11,
+   "longRangeBlocks": 80,
+   "depth": 21,
+   "waves": [
+    3,
+    3,
+    2,
+    5,
+    2,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    3,
+    4,
+    3,
+    2,
+    2,
+    2,
+    1
+   ],
+   "turns": 35,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.467159090909091,
+   "averageFreeShare": 0.197511027132714,
+   "bottleneckShare": 0.02976080505094684,
+   "wrongTapsPerMove": 6.394696699134143
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7617543466214465,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.676470588235294,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5797101449275363,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6875,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.7772151898734176,
+    "weight": 10
+   }
+  ],
+  "score": 73,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 36.1,
+    "winRate": 0,
+    "averageChainClears": 36.1
+   },
+   "nearSighted": {
+    "expectedMistakes": 9.16,
+    "winRate": 0,
+    "averageChainClears": 9.16
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 74,
+  "exact": {
+   "rows": 38,
+   "cols": 30,
+   "arrows": 180,
+   "density": 0.5964912280701754,
+   "meanLength": 3.7777777777777777,
+   "largestEmptySquare": 9,
+   "initialFree": 23,
+   "blockedShare": 0.8722222222222222,
+   "blockingRelations": 861,
+   "maxBlockers": 16,
+   "longRangeBlocks": 616,
+   "depth": 47,
+   "waves": [
+    23,
+    18,
+    21,
+    13,
+    6,
+    5,
+    6,
+    5,
+    2,
+    2,
+    4,
+    3,
+    5,
+    3,
+    3,
+    3,
+    3,
+    2,
+    3,
+    8,
+    2,
+    4,
+    2,
+    2,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1,
+    3,
+    2,
+    1,
+    1,
+    1
+   ],
+   "turns": 116,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 8.283277777777778,
+   "averageFreeShare": 0.1000126941678575,
+   "bottleneckShare": 0.019349450207207602,
+   "wrongTapsPerMove": 10.517690909769065
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.8402261236184416,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.9019607843137255,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.7612732095490716,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.7154471544715447,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.9,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.514651493598862,
+    "weight": 10
+   }
+  ],
+  "score": 80,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 136.11,
+    "winRate": 0,
+    "averageChainClears": 136.11
+   },
+   "nearSighted": {
+    "expectedMistakes": 38.43,
+    "winRate": 0,
+    "averageChainClears": 38.43
+   },
+   "deceptiveArrows": 1,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 75,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 38,
+   "density": 1,
+   "meanLength": 5.368421052631579,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9210526315789473,
+   "blockingRelations": 109,
+   "maxBlockers": 9,
+   "longRangeBlocks": 57,
+   "depth": 21,
+   "waves": [
+    3,
+    3,
+    4,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    2,
+    1,
+    3,
+    2,
+    3,
+    3,
+    1
+   ],
+   "turns": 51,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.127236842105263,
+   "averageFreeShare": 0.20124062400551546,
+   "bottleneckShare": 0.038063316544566565,
+   "wrongTapsPerMove": 5.994959273182952
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7498423779707686,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6566265060240963,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5229357798165137,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6551724137931034,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8292134831460674,
+    "weight": 10
+   }
+  ],
+  "score": 72,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 30.585,
+    "winRate": 0,
+    "averageChainClears": 30.585
+   },
+   "nearSighted": {
+    "expectedMistakes": 7.125,
+    "winRate": 0,
+    "averageChainClears": 7.125
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 76,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 41,
+   "density": 1,
+   "meanLength": 4.975609756097561,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.926829268292683,
+   "blockingRelations": 110,
+   "maxBlockers": 9,
+   "longRangeBlocks": 57,
+   "depth": 20,
+   "waves": [
+    3,
+    4,
+    3,
+    2,
+    1,
+    2,
+    2,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    5,
+    1,
+    1,
+    1,
+    2
+   ],
+   "turns": 44,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.352439024390244,
+   "averageFreeShare": 0.20092169979961652,
+   "bottleneckShare": 0.03329555689080352,
+   "wrongTapsPerMove": 5.97961672473869
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7493613955417772,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.7916666666666666,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.641399416909621,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5181818181818182,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6721311475409836,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8070588235294118,
+    "weight": 10
+   }
+  ],
+  "score": 72,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 32.84,
+    "winRate": 0,
+    "averageChainClears": 32.84
+   },
+   "nearSighted": {
+    "expectedMistakes": 7.94,
+    "winRate": 0,
+    "averageChainClears": 7.94
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 77,
+  "exact": {
+   "rows": 22,
+   "cols": 16,
+   "arrows": 66,
+   "density": 1,
+   "meanLength": 5.333333333333333,
+   "largestEmptySquare": 0,
+   "initialFree": 1,
+   "blockedShare": 0.9848484848484849,
+   "blockingRelations": 297,
+   "maxBlockers": 12,
+   "longRangeBlocks": 200,
+   "depth": 33,
+   "waves": [
+    1,
+    1,
+    1,
+    1,
+    2,
+    3,
+    2,
+    2,
+    2,
+    3,
+    3,
+    2,
+    1,
+    3,
+    5,
+    5,
+    4,
+    3,
+    2,
+    1,
+    1,
+    2,
+    2,
+    3,
+    1,
+    1,
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1
+   ],
+   "turns": 81,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.4688636363636363,
+   "averageFreeShare": 0.1278328757128691,
+   "bottleneckShare": 0.01515151515151514,
+   "wrongTapsPerMove": 10.152220869408334
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.8354210294980118,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8648648648648649,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.75,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.6734006734006734,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.7674418604651163,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8204081632653061,
+    "weight": 10
+   }
+  ],
+  "score": 80,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 60.47,
+    "winRate": 0,
+    "averageChainClears": 60.47
+   },
+   "nearSighted": {
+    "expectedMistakes": 15.155,
+    "winRate": 0,
+    "averageChainClears": 15.155
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 78,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 40,
+   "density": 1,
+   "meanLength": 5.1,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.925,
+   "blockingRelations": 126,
+   "maxBlockers": 12,
+   "longRangeBlocks": 74,
+   "depth": 19,
+   "waves": [
+    3,
+    2,
+    3,
+    2,
+    2,
+    3,
+    2,
+    2,
+    3,
+    2,
+    5,
+    4,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "turns": 45,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.603,
+   "averageFreeShare": 0.19413397219217704,
+   "bottleneckShare": 0.039357237210999776,
+   "wrongTapsPerMove": 5.182954017857128
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7215630233706195,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.782608695652174,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6774193548387096,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5873015873015873,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6666666666666666,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8117647058823529,
+    "weight": 10
+   }
+  ],
+  "score": 72,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 32.365,
+    "winRate": 0,
+    "averageChainClears": 32.365
+   },
+   "nearSighted": {
+    "expectedMistakes": 8.68,
+    "winRate": 0,
+    "averageChainClears": 8.68
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 79,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 36,
+   "density": 1,
+   "meanLength": 5.666666666666667,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9166666666666666,
+   "blockingRelations": 88,
+   "maxBlockers": 9,
+   "longRangeBlocks": 44,
+   "depth": 19,
+   "waves": [
+    3,
+    4,
+    4,
+    3,
+    2,
+    1,
+    1,
+    1,
+    2,
+    3,
+    2,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1
+   ],
+   "turns": 43,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.1505555555555556,
+   "averageFreeShare": 0.17345248441619743,
+   "bottleneckShare": 0.04603330902460304,
+   "wrongTapsPerMove": 5.099439814814811
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7182876322401545,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.782608695652174,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.619718309859155,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6428571428571429,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8177215189873417,
+    "weight": 10
+   }
+  ],
+  "score": 70,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 27.595,
+    "winRate": 0,
+    "averageChainClears": 27.595
+   },
+   "nearSighted": {
+    "expectedMistakes": 5.665,
+    "winRate": 0.005,
+    "averageChainClears": 5.665
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 80,
+  "exact": {
+   "rows": 38,
+   "cols": 30,
+   "arrows": 161,
+   "density": 0.5456140350877193,
+   "meanLength": 3.8633540372670807,
+   "largestEmptySquare": 8,
+   "initialFree": 22,
+   "blockedShare": 0.8633540372670807,
+   "blockingRelations": 761,
+   "maxBlockers": 22,
+   "longRangeBlocks": 544,
+   "depth": 47,
+   "waves": [
+    22,
+    16,
+    15,
+    9,
+    6,
+    7,
+    4,
+    3,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3,
+    2,
+    2,
+    2,
+    2,
+    3,
+    1,
+    1,
+    2,
+    4,
+    1,
+    1,
+    2,
+    6,
+    4,
+    2,
+    3,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1
+   ],
+   "turns": 112,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 7.197888198757764,
+   "averageFreeShare": 0.09933609817288484,
+   "bottleneckShare": 0.013680705377258828,
+   "wrongTapsPerMove": 10.999810877197355
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.8461516079816092,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.9019607843137255,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.7591022443890274,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.7148488830486203,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.8895027624309392,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.4914709851551957,
+    "weight": 10
+   }
+  ],
+  "score": 80,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 121.77,
+    "winRate": 0,
+    "averageChainClears": 121.77
+   },
+   "nearSighted": {
+    "expectedMistakes": 45.165,
+    "winRate": 0,
+    "averageChainClears": 45.165
+   },
+   "deceptiveArrows": 5,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 81,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 40,
+   "density": 1,
+   "meanLength": 5.1,
+   "largestEmptySquare": 0,
+   "initialFree": 2,
+   "blockedShare": 0.95,
+   "blockingRelations": 125,
+   "maxBlockers": 10,
+   "longRangeBlocks": 73,
+   "depth": 20,
+   "waves": [
+    2,
+    3,
+    4,
+    5,
+    4,
+    3,
+    1,
+    2,
+    2,
+    2,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "turns": 41,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.5845,
+   "averageFreeShare": 0.1716001037742309,
+   "bottleneckShare": 0.043108708240229915,
+   "wrongTapsPerMove": 4.988520684523807
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7138164011692728,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.7916666666666666,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6756756756756757,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.584,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6666666666666666,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8024691358024691,
+    "weight": 10
+   }
+  ],
+  "score": 71,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 31.995,
+    "winRate": 0,
+    "averageChainClears": 31.995
+   },
+   "nearSighted": {
+    "expectedMistakes": 9.595,
+    "winRate": 0,
+    "averageChainClears": 9.595
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 82,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 34,
+   "density": 1,
+   "meanLength": 6,
+   "largestEmptySquare": 0,
+   "initialFree": 2,
+   "blockedShare": 0.9411764705882353,
+   "blockingRelations": 98,
+   "maxBlockers": 10,
+   "longRangeBlocks": 53,
+   "depth": 21,
+   "waves": [
+    2,
+    1,
+    1,
+    1,
+    3,
+    3,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    3,
+    3,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "turns": 55,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 1.8538235294117646,
+   "averageFreeShare": 0.18325386886415596,
+   "bottleneckShare": 0.031628244053165146,
+   "wrongTapsPerMove": 5.975676470588229
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7492375715871415,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6577181208053691,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5408163265306123,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6296296296296297,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8471910112359551,
+    "weight": 10
+   }
+  ],
+  "score": 72,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 28.55,
+    "winRate": 0,
+    "averageChainClears": 28.55
+   },
+   "nearSighted": {
+    "expectedMistakes": 7.16,
+    "winRate": 0,
+    "averageChainClears": 7.16
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 83,
+  "exact": {
+   "rows": 24,
+   "cols": 18,
+   "arrows": 88,
+   "density": 1,
+   "meanLength": 4.909090909090909,
+   "largestEmptySquare": 0,
+   "initialFree": 5,
+   "blockedShare": 0.9431818181818182,
+   "blockingRelations": 365,
+   "maxBlockers": 12,
+   "longRangeBlocks": 245,
+   "depth": 40,
+   "waves": [
+    5,
+    5,
+    2,
+    4,
+    3,
+    1,
+    2,
+    2,
+    3,
+    4,
+    6,
+    3,
+    1,
+    1,
+    4,
+    2,
+    3,
+    2,
+    2,
+    3,
+    3,
+    2,
+    2,
+    1,
+    2,
+    2,
+    1,
+    2,
+    1,
+    1,
+    2,
+    1,
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "turns": 96,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.8675568181818183,
+   "averageFreeShare": 0.10426779432244944,
+   "bottleneckShare": 0.01847161035453654,
+   "wrongTapsPerMove": 10.845412181883724
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.8443023881459669,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8863636363636364,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.7344064386317908,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.6712328767123288,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.8148148148148148,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.808695652173913,
+    "weight": 10
+   }
+  ],
+  "score": 81,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 76.04,
+    "winRate": 0,
+    "averageChainClears": 76.04
+   },
+   "nearSighted": {
+    "expectedMistakes": 26.78,
+    "winRate": 0,
+    "averageChainClears": 26.78
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 84,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 38,
+   "density": 1,
+   "meanLength": 5.368421052631579,
+   "largestEmptySquare": 0,
+   "initialFree": 2,
+   "blockedShare": 0.9473684210526316,
+   "blockingRelations": 112,
+   "maxBlockers": 10,
+   "longRangeBlocks": 65,
+   "depth": 21,
+   "waves": [
+    2,
+    4,
+    3,
+    2,
+    2,
+    2,
+    2,
+    1,
+    2,
+    2,
+    3,
+    3,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "turns": 53,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.1325,
+   "averageFreeShare": 0.16563027171028497,
+   "bottleneckShare": 0.04409317203529156,
+   "wrongTapsPerMove": 5.448539473684207
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7314909846331582,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6627218934911242,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5803571428571429,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6551724137931034,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.832967032967033,
+    "weight": 10
+   }
+  ],
+  "score": 72,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 30.785,
+    "winRate": 0,
+    "averageChainClears": 30.785
+   },
+   "nearSighted": {
+    "expectedMistakes": 7.75,
+    "winRate": 0,
+    "averageChainClears": 7.75
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 85,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 37,
+   "density": 1,
+   "meanLength": 5.513513513513513,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9189189189189189,
+   "blockingRelations": 129,
+   "maxBlockers": 10,
+   "longRangeBlocks": 79,
+   "depth": 21,
+   "waves": [
+    3,
+    3,
+    2,
+    2,
+    1,
+    2,
+    2,
+    2,
+    4,
+    4,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "turns": 44,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.208918918918919,
+   "averageFreeShare": 0.1735563194391577,
+   "bottleneckShare": 0.035588086287139095,
+   "wrongTapsPerMove": 5.4412593307593555
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7312282893121659,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6991869918699187,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.6124031007751938,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6491228070175439,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.817283950617284,
+    "weight": 10
+   }
+  ],
+  "score": 73,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 29.875,
+    "winRate": 0,
+    "averageChainClears": 29.875
+   },
+   "nearSighted": {
+    "expectedMistakes": 3.8,
+    "winRate": 0.135,
+    "averageChainClears": 3.8
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 92
+  }
+ },
+ {
+  "id": 86,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 45,
+   "density": 1,
+   "meanLength": 4.533333333333333,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9333333333333333,
+   "blockingRelations": 161,
+   "maxBlockers": 10,
+   "longRangeBlocks": 98,
+   "depth": 21,
+   "waves": [
+    3,
+    3,
+    3,
+    4,
+    2,
+    5,
+    2,
+    2,
+    1,
+    3,
+    1,
+    2,
+    3,
+    2,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "turns": 41,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.430111111111111,
+   "averageFreeShare": 0.1644663995968457,
+   "bottleneckShare": 0.03914392619403858,
+   "wrongTapsPerMove": 5.957621693121707
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7486686252340029,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.7045951859956237,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.6086956521739131,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6923076923076923,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.7906976744186046,
+    "weight": 10
+   }
+  ],
+  "score": 74,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 36.885,
+    "winRate": 0,
+    "averageChainClears": 36.885
+   },
+   "nearSighted": {
+    "expectedMistakes": 11.265,
+    "winRate": 0,
+    "averageChainClears": 11.265
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 87,
+  "exact": {
+   "rows": 36,
+   "cols": 28,
+   "arrows": 185,
+   "density": 0.7698412698412699,
+   "meanLength": 4.194594594594594,
+   "largestEmptySquare": 6,
+   "initialFree": 24,
+   "blockedShare": 0.8702702702702703,
+   "blockingRelations": 937,
+   "maxBlockers": 16,
+   "longRangeBlocks": 710,
+   "depth": 49,
+   "waves": [
+    24,
+    23,
+    11,
+    10,
+    5,
+    7,
+    5,
+    5,
+    2,
+    4,
+    3,
+    3,
+    5,
+    4,
+    3,
+    3,
+    5,
+    3,
+    2,
+    4,
+    3,
+    3,
+    3,
+    4,
+    5,
+    3,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "turns": 141,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 7.677297297297297,
+   "averageFreeShare": 0.08987607349531,
+   "bottleneckShare": 0.01793112476181133,
+   "wrongTapsPerMove": 11.379576463230793
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.8505184371496124,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.9056603773584906,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.7715109098394402,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.7577374599786553,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.9024390243902439,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.6349108968740871,
+    "weight": 10
+   }
+  ],
+  "score": 82,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 142.53,
+    "winRate": 0,
+    "averageChainClears": 142.53
+   },
+   "nearSighted": {
+    "expectedMistakes": 41.31,
+    "winRate": 0,
+    "averageChainClears": 41.31
+   },
+   "deceptiveArrows": 3,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 88,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 34,
+   "density": 1,
+   "meanLength": 6,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9117647058823529,
+   "blockingRelations": 114,
+   "maxBlockers": 12,
+   "longRangeBlocks": 65,
+   "depth": 20,
+   "waves": [
+    3,
+    3,
+    1,
+    1,
+    2,
+    3,
+    3,
+    3,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1
+   ],
+   "turns": 47,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.052205882352941,
+   "averageFreeShare": 0.1800464813151747,
+   "bottleneckShare": 0.037433755471227396,
+   "wrongTapsPerMove": 5.150920868347344
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7203157415917228,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.7916666666666666,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6909090909090908,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5701754385964912,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6296296296296297,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8320987654320988,
+    "weight": 10
+   }
+  ],
+  "score": 72,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 27.05,
+    "winRate": 0,
+    "averageChainClears": 27.05
+   },
+   "nearSighted": {
+    "expectedMistakes": 6.555,
+    "winRate": 0,
+    "averageChainClears": 6.555
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 89,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 43,
+   "density": 1,
+   "meanLength": 4.744186046511628,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9302325581395349,
+   "blockingRelations": 156,
+   "maxBlockers": 10,
+   "longRangeBlocks": 99,
+   "depth": 23,
+   "waves": [
+    3,
+    2,
+    3,
+    3,
+    1,
+    3,
+    4,
+    4,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    2,
+    1,
+    1,
+    1
+   ],
+   "turns": 47,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.321046511627907,
+   "averageFreeShare": 0.1658523581773894,
+   "bottleneckShare": 0.03186802497183704,
+   "wrongTapsPerMove": 6.10855633997785
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7533469687890874,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8148148148148148,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.7074829931972789,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.6346153846153846,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6825396825396826,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8088888888888889,
+    "weight": 10
+   }
+  ],
+  "score": 75,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 35.535,
+    "winRate": 0,
+    "averageChainClears": 35.535
+   },
+   "nearSighted": {
+    "expectedMistakes": 7.93,
+    "winRate": 0,
+    "averageChainClears": 7.93
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 90,
+  "exact": {
+   "rows": 38,
+   "cols": 30,
+   "arrows": 192,
+   "density": 0.6842105263157895,
+   "meanLength": 4.0625,
+   "largestEmptySquare": 8,
+   "initialFree": 24,
+   "blockedShare": 0.875,
+   "blockingRelations": 969,
+   "maxBlockers": 18,
+   "longRangeBlocks": 725,
+   "depth": 54,
+   "waves": [
+    24,
+    26,
+    15,
+    6,
+    7,
+    3,
+    2,
+    3,
+    2,
+    4,
+    3,
+    6,
+    4,
+    4,
+    5,
+    3,
+    2,
+    3,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+    2,
+    2,
+    1,
+    1,
+    2,
+    2,
+    3,
+    3,
+    4,
+    3,
+    2,
+    3,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    3,
+    4,
+    1,
+    1,
+    1,
+    3,
+    2,
+    1,
+    1,
+    1
+   ],
+   "turns": 125,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 7.87671875,
+   "averageFreeShare": 0.0924748601147577,
+   "bottleneckShare": 0.012280904236465133,
+   "wrongTapsPerMove": 12.793607761573456
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.8648064736990648,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.9137931034482759,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.7708830548926014,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.7481940144478845,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.9056603773584906,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.5682550224140794,
+    "weight": 10
+   }
+  ],
+  "score": 82,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 147.8,
+    "winRate": 0,
+    "averageChainClears": 147.8
+   },
+   "nearSighted": {
+    "expectedMistakes": 51.54,
+    "winRate": 0,
+    "averageChainClears": 51.54
+   },
+   "deceptiveArrows": 3,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 91,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 41,
+   "density": 1,
+   "meanLength": 4.975609756097561,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.926829268292683,
+   "blockingRelations": 126,
+   "maxBlockers": 9,
+   "longRangeBlocks": 70,
+   "depth": 22,
+   "waves": [
+    3,
+    3,
+    3,
+    3,
+    2,
+    1,
+    3,
+    2,
+    1,
+    3,
+    2,
+    4,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1
+   ],
+   "turns": 45,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.1595121951219514,
+   "averageFreeShare": 0.16320412967722747,
+   "bottleneckShare": 0.032511769907374706,
+   "wrongTapsPerMove": 6.091537166085937
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7528281760377248,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8076923076923077,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.672,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5555555555555556,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6721311475409836,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8093023255813954,
+    "weight": 10
+   }
+  ],
+  "score": 73,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 33.035,
+    "winRate": 0,
+    "averageChainClears": 33.035
+   },
+   "nearSighted": {
+    "expectedMistakes": 8.37,
+    "winRate": 0,
+    "averageChainClears": 8.37
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 92,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 41,
+   "density": 1,
+   "meanLength": 4.975609756097561,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.926829268292683,
+   "blockingRelations": 108,
+   "maxBlockers": 7,
+   "longRangeBlocks": 53,
+   "depth": 21,
+   "waves": [
+    3,
+    2,
+    3,
+    4,
+    2,
+    1,
+    2,
+    3,
+    2,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1,
+    2,
+    3,
+    2,
+    1,
+    1,
+    1
+   ],
+   "turns": 45,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.3052439024390243,
+   "averageFreeShare": 0.18000298162043546,
+   "bottleneckShare": 0.03423282851756162,
+   "wrongTapsPerMove": 5.819974157955847
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.744244679125282,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6371681415929203,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.49074074074074076,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6721311475409836,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8093023255813954,
+    "weight": 10
+   }
+  ],
+  "score": 71,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 33.07,
+    "winRate": 0,
+    "averageChainClears": 33.07
+   },
+   "nearSighted": {
+    "expectedMistakes": 9.14,
+    "winRate": 0,
+    "averageChainClears": 9.14
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 93,
+  "exact": {
+   "rows": 17,
+   "cols": 12,
+   "arrows": 37,
+   "density": 1,
+   "meanLength": 5.513513513513513,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9189189189189189,
+   "blockingRelations": 121,
+   "maxBlockers": 12,
+   "longRangeBlocks": 67,
+   "depth": 22,
+   "waves": [
+    3,
+    5,
+    4,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    2,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1
+   ],
+   "turns": 41,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 2.2286486486486488,
+   "averageFreeShare": 0.17781280144827472,
+   "bottleneckShare": 0.042170375142751244,
+   "wrongTapsPerMove": 5.334527992277988
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7273171495008731,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8076923076923077,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.6855524079320113,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5537190082644629,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6491228070175439,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8102564102564103,
+    "weight": 10
+   }
+  ],
+  "score": 72,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 28.09,
+    "winRate": 0,
+    "averageChainClears": 28.09
+   },
+   "nearSighted": {
+    "expectedMistakes": 8.62,
+    "winRate": 0,
+    "averageChainClears": 8.62
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 94,
   "exact": {
    "rows": 30,
    "cols": 24,
@@ -2678,62 +8825,35 @@
   }
  },
  {
-  "id": 32,
+  "id": 95,
   "exact": {
-   "rows": 36,
-   "cols": 28,
-   "arrows": 185,
-   "density": 0.7698412698412699,
-   "meanLength": 4.194594594594594,
-   "largestEmptySquare": 6,
-   "initialFree": 24,
-   "blockedShare": 0.8702702702702703,
-   "blockingRelations": 937,
-   "maxBlockers": 16,
-   "longRangeBlocks": 710,
-   "depth": 49,
+   "rows": 17,
+   "cols": 12,
+   "arrows": 38,
+   "density": 1,
+   "meanLength": 5.368421052631579,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9210526315789473,
+   "blockingRelations": 119,
+   "maxBlockers": 9,
+   "longRangeBlocks": 73,
+   "depth": 22,
    "waves": [
-    24,
-    23,
-    11,
-    10,
-    5,
-    7,
-    5,
-    5,
-    2,
-    4,
-    3,
     3,
     5,
-    4,
-    3,
-    3,
     5,
-    3,
-    2,
-    4,
-    3,
-    3,
-    3,
-    4,
-    5,
-    3,
-    2,
     2,
     2,
     2,
     2,
     1,
     1,
-    1,
-    1,
     2,
     2,
     1,
-    2,
-    2,
-    2,
+    1,
+    1,
     1,
     1,
     1,
@@ -2743,117 +8863,210 @@
     1,
     1
    ],
-   "turns": 141,
+   "turns": 48,
    "ambiguousJoins": 0
   },
   "estimated": {
-   "averageChoices": 7.677297297297297,
-   "averageFreeShare": 0.08987607349531,
-   "bottleneckShare": 0.01793112476181133,
-   "wrongTapsPerMove": 11.379576463230793
+   "averageChoices": 2.3119736842105265,
+   "averageFreeShare": 0.16089573519938416,
+   "bottleneckShare": 0.05155571304813794,
+   "wrongTapsPerMove": 5.005677631578948
   },
   "components": [
    {
     "name": "search",
-    "value": 0.8505184371496124,
+    "value": 0.7145172665403906,
     "weight": 35
    },
    {
     "name": "depth",
-    "value": 0.9056603773584906,
+    "value": 0.8076923076923077,
     "weight": 20
    },
    {
     "name": "entanglement",
-    "value": 0.7715109098394402,
+    "value": 0.6761363636363636,
     "weight": 15
    },
    {
     "name": "long-range",
-    "value": 0.7577374599786553,
+    "value": 0.6134453781512605,
     "weight": 10
    },
    {
     "name": "size",
-    "value": 0.9024390243902439,
+    "value": 0.6551724137931034,
     "weight": 10
    },
    {
     "name": "visual",
-    "value": 0.6349108968740871,
+    "value": 0.8232558139534883,
     "weight": 10
    }
   ],
-  "score": 82,
+  "score": 72,
   "category": "Very hard",
   "lives": {
    "random": {
-    "expectedMistakes": 142.53,
+    "expectedMistakes": 29.075,
     "winRate": 0,
-    "averageChainClears": 142.53
+    "averageChainClears": 29.075
    },
    "nearSighted": {
-    "expectedMistakes": 41.31,
+    "expectedMistakes": 6.68,
     "winRate": 0,
-    "averageChainClears": 41.31
+    "averageChainClears": 6.68
    },
-   "deceptiveArrows": 3,
+   "deceptiveArrows": 0,
    "riskScore": 100
   }
  },
  {
-  "id": 33,
+  "id": 96,
   "exact": {
-   "rows": 38,
-   "cols": 30,
-   "arrows": 178,
-   "density": 0.6526315789473685,
-   "meanLength": 4.179775280898877,
-   "largestEmptySquare": 9,
-   "initialFree": 23,
-   "blockedShare": 0.8707865168539326,
-   "blockingRelations": 866,
-   "maxBlockers": 18,
-   "longRangeBlocks": 661,
-   "depth": 43,
+   "rows": 17,
+   "cols": 12,
+   "arrows": 43,
+   "density": 1,
+   "meanLength": 4.744186046511628,
+   "largestEmptySquare": 0,
+   "initialFree": 2,
+   "blockedShare": 0.9534883720930233,
+   "blockingRelations": 143,
+   "maxBlockers": 7,
+   "longRangeBlocks": 82,
+   "depth": 25,
    "waves": [
-    23,
-    12,
-    11,
+    2,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    3,
+    2,
+    2,
+    1,
+    2,
+    2,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    2,
+    2,
+    1,
+    1
+   ],
+   "turns": 45,
+   "ambiguousJoins": 0
+  },
+  "estimated": {
+   "averageChoices": 1.9351162790697674,
+   "averageFreeShare": 0.16741432903084535,
+   "bottleneckShare": 0.025065194805689965,
+   "wrongTapsPerMove": 7.350087209302298
+  },
+  "components": [
+   {
+    "name": "search",
+    "value": 0.7860982517884729,
+    "weight": 35
+   },
+   {
+    "name": "depth",
+    "value": 0.8275862068965517,
+    "weight": 20
+   },
+   {
+    "name": "entanglement",
+    "value": 0.689156626506024,
+    "weight": 15
+   },
+   {
+    "name": "long-range",
+    "value": 0.5734265734265734,
+    "weight": 10
+   },
+   {
+    "name": "size",
+    "value": 0.6825396825396826,
+    "weight": 10
+   },
+   {
+    "name": "visual",
+    "value": 0.8045454545454546,
+    "weight": 10
+   }
+  ],
+  "score": 75,
+  "category": "Very hard",
+  "lives": {
+   "random": {
+    "expectedMistakes": 37.01,
+    "winRate": 0,
+    "averageChainClears": 37.01
+   },
+   "nearSighted": {
+    "expectedMistakes": 4.87,
+    "winRate": 0.005,
+    "averageChainClears": 4.87
+   },
+   "deceptiveArrows": 0,
+   "riskScore": 100
+  }
+ },
+ {
+  "id": 97,
+  "exact": {
+   "rows": 24,
+   "cols": 18,
+   "arrows": 96,
+   "density": 1,
+   "meanLength": 4.5,
+   "largestEmptySquare": 0,
+   "initialFree": 4,
+   "blockedShare": 0.9583333333333334,
+   "blockingRelations": 434,
+   "maxBlockers": 13,
+   "longRangeBlocks": 304,
+   "depth": 36,
+   "waves": [
+    4,
+    7,
     10,
-    9,
-    8,
-    6,
-    4,
+    7,
     5,
     2,
     3,
     5,
     3,
     2,
-    3,
-    4,
-    6,
+    1,
+    1,
+    2,
+    1,
+    1,
+    2,
     5,
-    4,
-    4,
+    2,
     5,
-    8,
-    4,
-    3,
-    3,
-    1,
-    1,
-    2,
-    1,
-    2,
-    1,
-    1,
-    2,
-    2,
     3,
     2,
     1,
+    3,
+    3,
+    2,
+    1,
+    1,
+    1,
+    2,
+    2,
     2,
     1,
     1,
@@ -2861,44 +9074,44 @@
     1,
     1
    ],
-   "turns": 151,
+   "turns": 88,
    "ambiguousJoins": 0
   },
   "estimated": {
-   "averageChoices": 6.912191011235955,
-   "averageFreeShare": 0.09462855895687176,
-   "bottleneckShare": 0.016042183474022115,
-   "wrongTapsPerMove": 11.348582602452947
+   "averageChoices": 3.470625,
+   "averageFreeShare": 0.10661165152598602,
+   "bottleneckShare": 0.018021704594694175,
+   "wrongTapsPerMove": 10.377731496512707
   },
   "components": [
    {
     "name": "search",
-    "value": 0.8501713582959378,
+    "value": 0.8384195035606098,
     "weight": 35
    },
    {
     "name": "depth",
-    "value": 0.8936170212765957,
+    "value": 0.875,
     "weight": 20
    },
    {
     "name": "entanglement",
-    "value": 0.764342453662842,
+    "value": 0.7508650519031141,
     "weight": 15
    },
    {
     "name": "long-range",
-    "value": 0.7632794457274826,
+    "value": 0.7004608294930875,
     "weight": 10
    },
    {
     "name": "size",
-    "value": 0.898989898989899,
+    "value": 0.8275862068965517,
     "weight": 10
    },
    {
     "name": "visual",
-    "value": 0.5751655735082387,
+    "value": 0.7913043478260869,
     "weight": 10
    }
   ],
@@ -2906,746 +9119,215 @@
   "category": "Very hard",
   "lives": {
    "random": {
-    "expectedMistakes": 139.285,
+    "expectedMistakes": 81.16,
     "winRate": 0,
-    "averageChainClears": 139.285
+    "averageChainClears": 81.16
    },
    "nearSighted": {
-    "expectedMistakes": 50.995,
+    "expectedMistakes": 17.35,
     "winRate": 0,
-    "averageChainClears": 50.995
-   },
-   "deceptiveArrows": 9,
-   "riskScore": 100
-  }
- },
- {
-  "id": 34,
-  "exact": {
-   "rows": 38,
-   "cols": 30,
-   "arrows": 175,
-   "density": 0.5894736842105263,
-   "meanLength": 3.84,
-   "largestEmptySquare": 9,
-   "initialFree": 15,
-   "blockedShare": 0.9142857142857143,
-   "blockingRelations": 774,
-   "maxBlockers": 19,
-   "longRangeBlocks": 544,
-   "depth": 43,
-   "waves": [
-    15,
-    19,
-    17,
-    18,
-    10,
-    8,
-    8,
-    6,
-    5,
-    4,
-    5,
-    4,
-    4,
-    3,
-    1,
-    3,
-    2,
-    1,
-    2,
-    2,
-    3,
-    4,
-    2,
-    2,
-    2,
-    3,
-    1,
-    1,
-    2,
-    3,
-    1,
-    1,
-    1,
-    1,
-    2,
-    2,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
-   ],
-   "turns": 97,
-   "ambiguousJoins": 0
-  },
-  "estimated": {
-   "averageChoices": 8.1558,
-   "averageFreeShare": 0.10106596640266555,
-   "bottleneckShare": 0.021054183281829116,
-   "wrongTapsPerMove": 9.233807461972322
-  },
-  "components": [
-   {
-    "name": "search",
-    "value": 0.8219659713084615,
-    "weight": 35
-   },
-   {
-    "name": "depth",
-    "value": 0.8936170212765957,
-    "weight": 20
-   },
-   {
-    "name": "entanglement",
-    "value": 0.7467438494934877,
-    "weight": 15
-   },
-   {
-    "name": "long-range",
-    "value": 0.7028423772609819,
-    "weight": 10
-   },
-   {
-    "name": "size",
-    "value": 0.8974358974358975,
-    "weight": 10
-   },
-   {
-    "name": "visual",
-    "value": 0.49633126934984517,
-    "weight": 10
-   }
-  ],
-  "score": 79,
-  "category": "Very hard",
-  "lives": {
-   "random": {
-    "expectedMistakes": 136.34,
-    "winRate": 0,
-    "averageChainClears": 136.34
-   },
-   "nearSighted": {
-    "expectedMistakes": 35.185,
-    "winRate": 0,
-    "averageChainClears": 35.185
+    "averageChainClears": 17.35
    },
    "deceptiveArrows": 0,
    "riskScore": 100
   }
  },
  {
-  "id": 35,
+  "id": 98,
   "exact": {
-   "rows": 38,
-   "cols": 30,
-   "arrows": 192,
-   "density": 0.6842105263157895,
-   "meanLength": 4.0625,
-   "largestEmptySquare": 8,
-   "initialFree": 24,
-   "blockedShare": 0.875,
-   "blockingRelations": 969,
-   "maxBlockers": 18,
-   "longRangeBlocks": 725,
-   "depth": 54,
+   "rows": 17,
+   "cols": 12,
+   "arrows": 41,
+   "density": 0.9950980392156863,
+   "meanLength": 4.951219512195122,
+   "largestEmptySquare": 1,
+   "initialFree": 3,
+   "blockedShare": 0.926829268292683,
+   "blockingRelations": 149,
+   "maxBlockers": 9,
+   "longRangeBlocks": 92,
+   "depth": 22,
    "waves": [
-    24,
-    26,
-    15,
-    6,
-    7,
     3,
-    2,
-    3,
-    2,
-    4,
-    3,
-    6,
-    4,
-    4,
     5,
-    3,
-    2,
-    3,
-    2,
-    2,
-    2,
-    2,
-    3,
-    3,
-    2,
     2,
     1,
-    1,
-    2,
-    2,
-    3,
-    3,
-    4,
-    3,
-    2,
-    3,
-    2,
     2,
     1,
     1,
     1,
-    1,
-    1,
-    1,
-    3,
-    4,
-    1,
-    1,
+    2,
+    2,
+    2,
     1,
     3,
     2,
+    2,
     1,
+    3,
+    1,
+    1,
+    3,
     1,
     1
    ],
-   "turns": 125,
+   "turns": 46,
    "ambiguousJoins": 0
   },
   "estimated": {
-   "averageChoices": 7.87671875,
-   "averageFreeShare": 0.0924748601147577,
-   "bottleneckShare": 0.012280904236465133,
-   "wrongTapsPerMove": 12.793607761573456
+   "averageChoices": 2.263658536585366,
+   "averageFreeShare": 0.1875151789188921,
+   "bottleneckShare": 0.033322159947990086,
+   "wrongTapsPerMove": 6.048246225319391
   },
   "components": [
    {
     "name": "search",
-    "value": 0.8648064736990648,
+    "value": 0.7514986564764758,
     "weight": 35
    },
    {
     "name": "depth",
-    "value": 0.9137931034482759,
+    "value": 0.8076923076923077,
     "weight": 20
    },
    {
     "name": "entanglement",
-    "value": 0.7708830548926014,
+    "value": 0.7078384798099762,
     "weight": 15
    },
    {
     "name": "long-range",
-    "value": 0.7481940144478845,
+    "value": 0.6174496644295302,
     "weight": 10
    },
    {
     "name": "size",
-    "value": 0.9056603773584906,
+    "value": 0.6721311475409836,
     "weight": 10
    },
    {
     "name": "visual",
-    "value": 0.5682550224140794,
+    "value": 0.808553076402975,
     "weight": 10
    }
   ],
-  "score": 82,
+  "score": 74,
   "category": "Very hard",
   "lives": {
    "random": {
-    "expectedMistakes": 147.8,
+    "expectedMistakes": 32.465,
     "winRate": 0,
-    "averageChainClears": 147.8
+    "averageChainClears": 32.465
    },
    "nearSighted": {
-    "expectedMistakes": 51.54,
+    "expectedMistakes": 10.11,
     "winRate": 0,
-    "averageChainClears": 51.54
+    "averageChainClears": 10.11
    },
-   "deceptiveArrows": 3,
+   "deceptiveArrows": 0,
    "riskScore": 100
   }
  },
  {
-  "id": 36,
+  "id": 99,
   "exact": {
-   "rows": 38,
-   "cols": 30,
-   "arrows": 180,
-   "density": 0.5964912280701754,
-   "meanLength": 3.7777777777777777,
-   "largestEmptySquare": 9,
-   "initialFree": 23,
-   "blockedShare": 0.8722222222222222,
-   "blockingRelations": 861,
-   "maxBlockers": 16,
-   "longRangeBlocks": 616,
-   "depth": 47,
+   "rows": 17,
+   "cols": 12,
+   "arrows": 39,
+   "density": 1,
+   "meanLength": 5.230769230769231,
+   "largestEmptySquare": 0,
+   "initialFree": 3,
+   "blockedShare": 0.9230769230769231,
+   "blockingRelations": 123,
+   "maxBlockers": 8,
+   "longRangeBlocks": 71,
+   "depth": 22,
    "waves": [
-    23,
-    18,
-    21,
-    13,
+    3,
     6,
-    5,
-    6,
-    5,
-    2,
-    2,
-    4,
-    3,
-    5,
-    3,
-    3,
-    3,
-    3,
-    2,
-    3,
-    8,
-    2,
-    4,
-    2,
     2,
     1,
-    1,
-    2,
-    2,
-    1,
-    1,
-    1,
-    1,
-    2,
-    1,
-    1,
-    1,
-    1,
-    1,
-    2,
-    2,
     2,
     1,
     3,
     2,
     1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    2,
+    2,
     1,
     1
    ],
-   "turns": 116,
+   "turns": 53,
    "ambiguousJoins": 0
   },
   "estimated": {
-   "averageChoices": 8.283277777777778,
-   "averageFreeShare": 0.1000126941678575,
-   "bottleneckShare": 0.019349450207207602,
-   "wrongTapsPerMove": 10.517690909769065
+   "averageChoices": 2.20525641025641,
+   "averageFreeShare": 0.17008484151743575,
+   "bottleneckShare": 0.03782774883392725,
+   "wrongTapsPerMove": 5.660047008547037
   },
   "components": [
    {
     "name": "search",
-    "value": 0.8402261236184416,
+    "value": 0.7389049965661554,
     "weight": 35
    },
    {
     "name": "depth",
-    "value": 0.9019607843137255,
+    "value": 0.8076923076923077,
     "weight": 20
    },
    {
     "name": "entanglement",
-    "value": 0.7612732095490716,
+    "value": 0.6776859504132232,
     "weight": 15
    },
    {
     "name": "long-range",
-    "value": 0.7154471544715447,
+    "value": 0.5772357723577236,
     "weight": 10
    },
    {
     "name": "size",
-    "value": 0.9,
+    "value": 0.6610169491525424,
     "weight": 10
    },
    {
     "name": "visual",
-    "value": 0.514651493598862,
+    "value": 0.8304347826086956,
     "weight": 10
    }
   ],
-  "score": 80,
+  "score": 73,
   "category": "Very hard",
   "lives": {
    "random": {
-    "expectedMistakes": 136.11,
+    "expectedMistakes": 30.575,
     "winRate": 0,
-    "averageChainClears": 136.11
+    "averageChainClears": 30.575
    },
    "nearSighted": {
-    "expectedMistakes": 38.43,
+    "expectedMistakes": 10.785,
     "winRate": 0,
-    "averageChainClears": 38.43
+    "averageChainClears": 10.785
    },
-   "deceptiveArrows": 1,
+   "deceptiveArrows": 0,
    "riskScore": 100
   }
  },
  {
-  "id": 37,
-  "exact": {
-   "rows": 36,
-   "cols": 28,
-   "arrows": 182,
-   "density": 0.7619047619047619,
-   "meanLength": 4.21978021978022,
-   "largestEmptySquare": 6,
-   "initialFree": 20,
-   "blockedShare": 0.8901098901098901,
-   "blockingRelations": 857,
-   "maxBlockers": 19,
-   "longRangeBlocks": 630,
-   "depth": 45,
-   "waves": [
-    20,
-    9,
-    9,
-    8,
-    10,
-    7,
-    8,
-    3,
-    5,
-    3,
-    3,
-    7,
-    6,
-    7,
-    9,
-    11,
-    7,
-    1,
-    2,
-    3,
-    2,
-    3,
-    2,
-    3,
-    2,
-    2,
-    2,
-    2,
-    2,
-    4,
-    4,
-    1,
-    1,
-    1,
-    2,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    2,
-    1
-   ],
-   "turns": 112,
-   "ambiguousJoins": 0
-  },
-  "estimated": {
-   "averageChoices": 6.458983516483516,
-   "averageFreeShare": 0.08874250293079099,
-   "bottleneckShare": 0.020167755595568482,
-   "wrongTapsPerMove": 11.715799268359236
-  },
-  "components": [
-   {
-    "name": "search",
-    "value": 0.854182759541125,
-    "weight": 35
-   },
-   {
-    "name": "depth",
-    "value": 0.8979591836734694,
-    "weight": 20
-   },
-   {
-    "name": "entanglement",
-    "value": 0.7584070796460177,
-    "weight": 15
-   },
-   {
-    "name": "long-range",
-    "value": 0.73512252042007,
-    "weight": 10
-   },
-   {
-    "name": "size",
-    "value": 0.900990099009901,
-    "weight": 10
-   },
-   {
-    "name": "visual",
-    "value": 0.6095238095238095,
-    "weight": 10
-   }
-  ],
-  "score": 82,
-  "category": "Very hard",
-  "lives": {
-   "random": {
-    "expectedMistakes": 146.67,
-    "winRate": 0,
-    "averageChainClears": 146.67
-   },
-   "nearSighted": {
-    "expectedMistakes": 42.395,
-    "winRate": 0,
-    "averageChainClears": 42.395
-   },
-   "deceptiveArrows": 3,
-   "riskScore": 100
-  }
- },
- {
-  "id": 38,
-  "exact": {
-   "rows": 36,
-   "cols": 28,
-   "arrows": 180,
-   "density": 0.7321428571428571,
-   "meanLength": 4.1,
-   "largestEmptySquare": 6,
-   "initialFree": 19,
-   "blockedShare": 0.8944444444444445,
-   "blockingRelations": 824,
-   "maxBlockers": 15,
-   "longRangeBlocks": 594,
-   "depth": 39,
-   "waves": [
-    19,
-    16,
-    11,
-    9,
-    8,
-    5,
-    10,
-    8,
-    8,
-    6,
-    11,
-    4,
-    3,
-    5,
-    2,
-    5,
-    5,
-    4,
-    7,
-    5,
-    4,
-    1,
-    2,
-    1,
-    1,
-    1,
-    1,
-    2,
-    1,
-    2,
-    2,
-    2,
-    2,
-    2,
-    1,
-    1,
-    1,
-    1,
-    1
-   ],
-   "turns": 120,
-   "ambiguousJoins": 0
-  },
-  "estimated": {
-   "averageChoices": 7.440083333333333,
-   "averageFreeShare": 0.10243443456404967,
-   "bottleneckShare": 0.025368491141818918,
-   "wrongTapsPerMove": 9.907684209502577
-  },
-  "components": [
-   {
-    "name": "search",
-    "value": 0.8320412294437605,
-    "weight": 35
-   },
-   {
-    "name": "depth",
-    "value": 0.8837209302325582,
-    "weight": 20
-   },
-   {
-    "name": "entanglement",
-    "value": 0.753199268738574,
-    "weight": 15
-   },
-   {
-    "name": "long-range",
-    "value": 0.720873786407767,
-    "weight": 10
-   },
-   {
-    "name": "size",
-    "value": 0.9,
-    "weight": 10
-   },
-   {
-    "name": "visual",
-    "value": 0.5992857142857142,
-    "weight": 10
-   }
-  ],
-  "score": 80,
-  "category": "Very hard",
-  "lives": {
-   "random": {
-    "expectedMistakes": 142.635,
-    "winRate": 0,
-    "averageChainClears": 142.635
-   },
-   "nearSighted": {
-    "expectedMistakes": 38.34,
-    "winRate": 0,
-    "averageChainClears": 38.34
-   },
-   "deceptiveArrows": 3,
-   "riskScore": 100
-  }
- },
- {
-  "id": 39,
-  "exact": {
-   "rows": 38,
-   "cols": 30,
-   "arrows": 161,
-   "density": 0.5456140350877193,
-   "meanLength": 3.8633540372670807,
-   "largestEmptySquare": 8,
-   "initialFree": 22,
-   "blockedShare": 0.8633540372670807,
-   "blockingRelations": 761,
-   "maxBlockers": 22,
-   "longRangeBlocks": 544,
-   "depth": 47,
-   "waves": [
-    22,
-    16,
-    15,
-    9,
-    6,
-    7,
-    4,
-    3,
-    2,
-    2,
-    2,
-    3,
-    3,
-    3,
-    3,
-    2,
-    2,
-    2,
-    2,
-    3,
-    1,
-    1,
-    2,
-    4,
-    1,
-    1,
-    2,
-    6,
-    4,
-    2,
-    3,
-    2,
-    2,
-    1,
-    1,
-    1,
-    1,
-    2,
-    2,
-    2,
-    1,
-    2,
-    2,
-    1,
-    1,
-    1,
-    1
-   ],
-   "turns": 112,
-   "ambiguousJoins": 0
-  },
-  "estimated": {
-   "averageChoices": 7.197888198757764,
-   "averageFreeShare": 0.09933609817288484,
-   "bottleneckShare": 0.013680705377258828,
-   "wrongTapsPerMove": 10.999810877197355
-  },
-  "components": [
-   {
-    "name": "search",
-    "value": 0.8461516079816092,
-    "weight": 35
-   },
-   {
-    "name": "depth",
-    "value": 0.9019607843137255,
-    "weight": 20
-   },
-   {
-    "name": "entanglement",
-    "value": 0.7591022443890274,
-    "weight": 15
-   },
-   {
-    "name": "long-range",
-    "value": 0.7148488830486203,
-    "weight": 10
-   },
-   {
-    "name": "size",
-    "value": 0.8895027624309392,
-    "weight": 10
-   },
-   {
-    "name": "visual",
-    "value": 0.4914709851551957,
-    "weight": 10
-   }
-  ],
-  "score": 80,
-  "category": "Very hard",
-  "lives": {
-   "random": {
-    "expectedMistakes": 121.77,
-    "winRate": 0,
-    "averageChainClears": 121.77
-   },
-   "nearSighted": {
-    "expectedMistakes": 45.165,
-    "winRate": 0,
-    "averageChainClears": 45.165
-   },
-   "deceptiveArrows": 5,
-   "riskScore": 100
-  }
- },
- {
-  "id": 40,
+  "id": 100,
   "exact": {
    "rows": 36,
    "cols": 28,

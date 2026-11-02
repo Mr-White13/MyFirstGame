@@ -3,48 +3,49 @@ import { describe, expect, it } from 'vitest';
 import { validateLevel } from '../core/levelValidation';
 import { analyzeDifficulty, countTurns } from '../core/difficulty';
 import { analyzeLevel, findSolution } from '../core/solver';
+import type { LevelData, LevelTier } from '../core/types';
 import { isSelfTouching, layoutSimilarity } from '../levelgen/generateLevel';
+import { CHAPTER_NAMES, CHAPTER_SIZE } from '../progress/chapters';
 import { getLevel, LEVEL_COUNT, LEVELS } from './index';
 import { arrowLabel, levelFromMap, levelToMap } from './levelMap';
 
-/**
- * The curated campaign, Levels 1–30: the difficulty curve and layout rules
- * below apply to these. Levels 31–40 are experimental extreme levels outside
- * the curve (31: THE IMPOSSIBLE GRID; 32–40: shaped boards), with their own
- * checks in level31.test.ts and shapedLevels.test.ts.
+/*
+ * The 100-level campaign: five chapters of 20. Levels 1–3 are the tutorial;
+ * 4–100 follow one rhythm: two or three normal levels, then a hard one, with
+ * a very hard one closing every chapter (and more often in chapters 3–5).
+ * Ten very hard levels are the extreme ones (THE IMPOSSIBLE GRID and nine
+ * shaped boards), with their own checks in impossibleGrid.test.ts and
+ * shapedLevels.test.ts. Scores are a heuristic (see core/difficulty.ts):
+ * these checks keep the campaign consistent with it, not a claim about
+ * human difficulty.
  */
-const CAMPAIGN = LEVELS.slice(0, 30);
+const tierOf = (l: LevelData): LevelTier => l.tier ?? 'normal';
+/** Generated rectangular levels: everything after the tutorial except the extreme levels. */
+const GENERATED = LEVELS.slice(3).filter((l) => l.name === undefined);
+const reports = LEVELS.map((l) => analyzeDifficulty(l, { lives: false }));
+const score = (id: number) => reports[id - 1].score;
+const depth = (id: number) => reports[id - 1].exact.depth;
+const chapterLevels = (chapter: number) => LEVELS.slice((chapter - 1) * CHAPTER_SIZE, chapter * CHAPTER_SIZE);
 
 describe('level registry', () => {
-  it('has 40 levels with ids 1..40 in order', () => {
-    expect(LEVEL_COUNT).toBe(40);
-    expect(LEVELS.map((l) => l.id)).toEqual(Array.from({ length: 40 }, (_, i) => i + 1));
+  it('has 100 levels with ids 1..100 in order, in five named chapters of 20', () => {
+    expect(LEVEL_COUNT).toBe(100);
+    expect(LEVELS.map((l) => l.id)).toEqual(Array.from({ length: 100 }, (_, i) => i + 1));
+    expect(CHAPTER_SIZE).toBe(20);
+    expect(CHAPTER_NAMES).toHaveLength(5);
+    expect(CHAPTER_NAMES[0]).toBe("It's Just the Beginning");
   });
 
   it('looks levels up by id', () => {
     expect(getLevel(1)).toBe(LEVELS[0]);
-    expect(getLevel(10)).toBe(LEVELS[9]);
-    expect(getLevel(30)).toBe(LEVELS[29]);
-    expect(getLevel(31)).toBe(LEVELS[30]);
+    expect(getLevel(50)).toBe(LEVELS[49]);
+    expect(getLevel(100)).toBe(LEVELS[99]);
     expect(getLevel(0)).toBeUndefined();
-    expect(getLevel(40)).toBe(LEVELS[39]);
-    expect(getLevel(41)).toBeUndefined();
+    expect(getLevel(101)).toBeUndefined();
   });
 
-  it('keeps Levels 1–3 square and gives Levels 4–30 tall portrait boards', () => {
-    expect(CAMPAIGN.slice(0, 3).map((l) => `${l.rows}x${l.cols}`)).toEqual(['7x7', '7x7', '7x7']);
-    for (const l of CAMPAIGN.slice(3)) {
-      expect(l.rows, `level ${l.id}`).toBeGreaterThan(l.cols);
-      expect(l.cols).toBeLessThanOrEqual(12); // readable on a phone without zooming in most levels
-      expect(l.rows).toBeLessThanOrEqual(17);
-    }
-    // Boards grow (never shrink) through the game.
-    for (let i = 4; i < 31; i++) expect(LEVELS[i].rows * LEVELS[i].cols).toBeGreaterThanOrEqual(LEVELS[i - 1].rows * LEVELS[i - 1].cols);
-  });
-
-  it('names only the experimental Levels 31–40', () => {
-    expect(LEVELS.filter((l) => l.name !== undefined).map((l) => l.id)).toEqual(Array.from({ length: 10 }, (_, i) => 31 + i));
-    expect(LEVELS[30].name).toBe('THE IMPOSSIBLE GRID');
+  it('names only the ten extreme levels', () => {
+    expect(LEVELS.filter((l) => l.name !== undefined).map((l) => l.id)).toEqual([47, 54, 60, 67, 74, 80, 87, 90, 94, 100]);
   });
 });
 
@@ -65,49 +66,96 @@ describe.each(LEVELS.map((level) => [level.id, level] as const))('level %i', (_i
   });
 });
 
-describe('difficulty curve', () => {
-  const stats = CAMPAIGN.map((l) => analyzeLevel(l)!);
-  // Scores are a heuristic (see core/difficulty.ts); these checks keep the
-  // curated order consistent with it, not a claim about human difficulty.
-  const reports = CAMPAIGN.map((l) => analyzeDifficulty(l, { lives: false }));
-  const score = (id: number) => reports[id - 1].score;
-  const depth = (id: number) => reports[id - 1].exact.depth;
-  const SPIKES = [10, 20, 30];
+describe('campaign rhythm', () => {
+  it('runs two or three normal levels, then a harder one, in every chapter', () => {
+    for (let chapter = 1; chapter <= 5; chapter++) {
+      // Chapter 1 opens with the three tutorial levels, then the same rhythm.
+      const levels = chapterLevels(chapter).slice(chapter === 1 ? 3 : 0);
+      let run = 0;
+      for (const level of levels) {
+        if (tierOf(level) === 'normal') {
+          run++;
+          continue;
+        }
+        expect([2, 3], `normal levels before level ${level.id}`).toContain(run);
+        run = 0;
+      }
+      expect(run, `chapter ${chapter} ends on a harder level`).toBe(0);
+    }
+  });
+
+  it('closes every chapter with a very hard level, and has very hard levels more often in chapters 3–5', () => {
+    for (let chapter = 1; chapter <= 5; chapter++) {
+      const levels = chapterLevels(chapter);
+      expect(tierOf(levels.at(-1)!), `chapter ${chapter}`).toBe('very hard');
+      const veryHard = levels.filter((l) => tierOf(l) === 'very hard').length;
+      expect(veryHard, `chapter ${chapter}`).toBe(chapter <= 2 ? 1 : chapter === 5 ? 4 : 3);
+    }
+  });
+
+  it('makes every harder level harder than the normal levels before it: deeper, and scoring at least as high', () => {
+    let run: LevelData[] = [];
+    for (const level of LEVELS.slice(3)) {
+      if (tierOf(level) === 'normal') {
+        run.push(level);
+        continue;
+      }
+      for (const normal of run) {
+        expect(depth(level.id), `level ${level.id} vs ${normal.id}`).toBeGreaterThan(depth(normal.id));
+        expect(score(level.id), `level ${level.id} vs ${normal.id}`).toBeGreaterThanOrEqual(score(normal.id));
+      }
+      run = [];
+    }
+  });
+
+  it('makes each very hard level the deepest of its chapter', () => {
+    for (let chapter = 1; chapter <= 5; chapter++) {
+      const levels = chapterLevels(chapter);
+      const deepestOther = Math.max(...levels.filter((l) => tierOf(l) !== 'very hard').map((l) => depth(l.id)));
+      for (const l of levels.filter((x) => tierOf(x) === 'very hard')) expect(depth(l.id), `level ${l.id}`).toBeGreaterThan(deepestOther);
+    }
+  });
+
+  it('gets harder chapter by chapter: normal levels are deeper and score higher on average', () => {
+    const average = (chapter: number, of: (id: number) => number) => {
+      const normal = chapterLevels(chapter).filter((l) => l.id > 3 && tierOf(l) === 'normal');
+      return normal.reduce((sum, l) => sum + of(l.id), 0) / normal.length;
+    };
+    for (let chapter = 2; chapter <= 5; chapter++) {
+      expect(average(chapter, depth), `chapter ${chapter} depth`).toBeGreaterThan(average(chapter - 1, depth));
+      expect(average(chapter, score), `chapter ${chapter} score`).toBeGreaterThanOrEqual(average(chapter - 1, score) - 1);
+    }
+  });
 
   it('starts genuinely easy', () => {
-    expect(stats[0].arrows).toBeLessThanOrEqual(6);
-    expect(stats[0].depth).toBeLessThanOrEqual(2);
-    expect(stats[0].maxBlockers).toBe(1);
+    const first = analyzeLevel(LEVELS[0])!;
+    expect(first.arrows).toBeLessThanOrEqual(6);
+    expect(first.depth).toBeLessThanOrEqual(2);
+    expect(first.maxBlockers).toBe(1);
     expect(reports[0].category).toBe('Very easy');
   });
 
-  it('rises gradually between the spikes (never easier than the level before)', () => {
-    for (const [from, to] of [[1, 9], [11, 19], [21, 29]]) {
-      for (let id = from + 1; id <= to; id++) expect(score(id), `level ${id}`).toBeGreaterThanOrEqual(score(id - 1));
+  it('keeps normal levels readable on a phone without zooming: tall boards up to 17×12 that never shrink', () => {
+    expect(LEVELS.slice(0, 3).map((l) => `${l.rows}x${l.cols}`)).toEqual(['7x7', '7x7', '7x7']);
+    const normal = LEVELS.slice(3).filter((l) => tierOf(l) === 'normal');
+    for (const l of normal) {
+      expect(l.rows, `level ${l.id}`).toBeGreaterThan(l.cols);
+      expect(l.cols, `level ${l.id}`).toBeLessThanOrEqual(12);
+      expect(l.rows, `level ${l.id}`).toBeLessThanOrEqual(17);
     }
-    expect(score(11)).toBeGreaterThanOrEqual(score(9));
-    expect(score(21)).toBeGreaterThanOrEqual(score(19));
+    for (let i = 1; i < normal.length; i++) expect(normal[i].rows * normal[i].cols, `level ${normal[i].id}`).toBeGreaterThanOrEqual(normal[i - 1].rows * normal[i - 1].cols);
   });
 
-  it('has difficulty spikes at Levels 10, 20 and 30, then returns to the curve', () => {
-    for (const id of SPIKES) {
-      expect(score(id), `level ${id}`).toBeGreaterThanOrEqual(score(id - 1) + 3);
-      expect(depth(id), `level ${id}`).toBeGreaterThan(depth(id - 1));
-      expect(reports[id - 1].exact.initialFree, `level ${id}`).toBeLessThanOrEqual(3);
-      if (id < 30) {
-        expect(score(id + 1), `level ${id + 1}`).toBeLessThanOrEqual(score(id) - 3); // back down after the spike
-        expect(depth(id + 1)).toBeLessThan(depth(id));
-      }
+  it('gives harder levels a board at least as big as the normal level before them', () => {
+    let last = LEVELS[2];
+    for (const level of LEVELS.slice(3)) {
+      if (tierOf(level) === 'normal') last = level;
+      else expect(level.rows * level.cols, `level ${level.id}`).toBeGreaterThanOrEqual(last.rows * last.cols);
     }
-  });
-
-  it('ends much deeper than it starts, and ends in the hard band', () => {
-    expect(depth(30)).toBeGreaterThanOrEqual(depth(1) * 8);
-    for (const id of SPIKES) expect(['Hard', 'Very hard']).toContain(reports[id - 1].category);
   });
 
   it('has no arrows that read as one (tail-to-tail joins)', () => {
-    expect(reports.map((r) => r.exact.ambiguousJoins)).toEqual(CAMPAIGN.map(() => 0));
+    expect(reports.map((r) => r.exact.ambiguousJoins)).toEqual(LEVELS.map(() => 0));
   });
 
   it('has no two levels that are near-duplicates', () => {
@@ -118,16 +166,15 @@ describe('difficulty curve', () => {
     }
   });
 
-  it('marks redesigned layouts with a new revision', () => {
-    // 1 unchanged; 2–3 as rebalanced in Step 12; 4–30 redesigned in Step 13 and again (full coverage) in Step 14.
-    expect(CAMPAIGN.map((l) => l.revision ?? 1)).toEqual([1, 3, 3, ...Array(7).fill(5), ...Array(20).fill(3)]);
-    expect(LEVELS.slice(30).map((l) => l.revision)).toEqual(Array(10).fill(undefined)); // Levels 31–40: their first layouts
+  it('marks rebuilt layouts with a new revision', () => {
+    // 1 unchanged; 2–3 as rebalanced in Step 12; 4–30 redesigned in Steps 13 and 14 and again in the
+    // 100-level rebuild; 31–40 rebuilt once (they were the experimental levels); 41–100 are new.
+    expect(LEVELS.map((l) => l.revision ?? 1)).toEqual([1, 3, 3, ...Array(7).fill(6), ...Array(20).fill(4), ...Array(10).fill(2), ...Array(60).fill(1)]);
   });
 
   it('does not simply add arrows every level', () => {
-    const counts = stats.map((s) => s.arrows);
-    const alwaysGrowing = counts.every((n, i) => i === 0 || n > counts[i - 1]);
-    expect(alwaysGrowing).toBe(false);
+    const counts = LEVELS.map((l) => l.arrows.length);
+    expect(counts.every((n, i) => i === 0 || n > counts[i - 1])).toBe(false);
   });
 });
 
@@ -142,51 +189,49 @@ describe('Levels 1–3 stay exactly as they were', () => {
   });
 });
 
-describe('redesigned Levels 4–30', () => {
-  const redesigned = CAMPAIGN.slice(3);
-  const reports = redesigned.map((l) => analyzeDifficulty(l, { lives: false }));
+describe('generated Levels 4–100 (all but the extreme levels)', () => {
+  const generated = GENERATED.map((l) => [l, reports[l.id - 1]] as const);
 
   it('cover the board: at least 97 % of cells, no empty square, and full coverage on almost every level', () => {
-    for (const [i, r] of reports.entries()) {
-      expect(r.exact.density, `level ${redesigned[i].id}`).toBeGreaterThanOrEqual(0.97);
-      expect(r.exact.largestEmptySquare, `level ${redesigned[i].id}`).toBeLessThanOrEqual(1);
+    for (const [l, r] of generated) {
+      expect(r.exact.density, `level ${l.id}`).toBeGreaterThanOrEqual(0.97);
+      expect(r.exact.largestEmptySquare, `level ${l.id}`).toBeLessThanOrEqual(1);
     }
-    const full = reports.filter((r) => r.exact.density === 1).length;
-    expect(full / reports.length).toBeGreaterThanOrEqual(0.9);
+    expect(generated.filter(([, r]) => r.exact.density === 1).length / generated.length).toBeGreaterThanOrEqual(0.9);
   });
 
   it('never overlap: every cell belongs to at most one arrow', () => {
-    for (const level of redesigned) {
+    for (const level of GENERATED) {
       const cells = level.arrows.flatMap((a) => a.cells.map((c) => `${c.row},${c.col}`));
       expect(new Set(cells).size, `level ${level.id}`).toBe(cells.length);
     }
   });
 
   it('favour long, winding arrows over many short ones', () => {
-    for (const level of redesigned) {
+    for (const level of GENERATED) {
       // Full coverage leaves a few 2-cell arrows where a path had to split; never single cells.
       expect(level.arrows.every((a) => a.cells.length >= 2), `level ${level.id}`).toBe(true);
       expect(level.arrows.filter((a) => a.cells.length < 3).length / level.arrows.length, `level ${level.id}`).toBeLessThanOrEqual(0.15);
       const mean = level.arrows.reduce((n, a) => n + a.cells.length, 0) / level.arrows.length;
       expect(mean, `level ${level.id}`).toBeGreaterThanOrEqual(4.2);
     }
-    const all = redesigned.flatMap((l) => l.arrows);
+    const all = GENERATED.flatMap((l) => l.arrows);
     expect(all.filter((a) => countTurns(a) >= 1).length / all.length).toBeGreaterThan(0.5); // most arrows bend
     expect(all.filter((a) => countTurns(a) >= 3).length).toBeGreaterThan(0); // some wind a lot
   });
 
   it('are richer in blocking than in arrows: more blocking links than arrows', () => {
-    for (const [i, r] of reports.entries()) expect(r.exact.blockingRelations, `level ${redesigned[i].id}`).toBeGreaterThan(r.exact.arrows);
+    for (const [l, r] of generated) expect(r.exact.blockingRelations, `level ${l.id}`).toBeGreaterThan(r.exact.arrows);
   });
 
   it('stay readable: no arrow runs alongside itself', () => {
-    for (const level of redesigned) {
+    for (const level of GENERATED) {
       for (const a of level.arrows) expect(isSelfTouching(a.cells), `level ${level.id} arrow ${a.id}`).toBe(false);
     }
   });
 
   it('keep the opening a search: few arrows are free at the start', () => {
-    for (const r of reports) expect(r.exact.initialFree / r.exact.arrows).toBeLessThanOrEqual(0.34);
+    for (const [l, r] of generated) expect(r.exact.initialFree / r.exact.arrows, `level ${l.id}`).toBeLessThanOrEqual(0.34);
   });
 });
 

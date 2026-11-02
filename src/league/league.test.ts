@@ -68,7 +68,9 @@ describe('daily challenges', () => {
     expect(challengePool(LEVELS, 2).map((l) => l.id)).toEqual([4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]); // before the rebalance
     expect(challengePool(LEVELS, 3).map((l) => l.id)).toEqual([6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]); // Step 12
     expect(challengePool(LEVELS, 4).map((l) => l.id)).toEqual([5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]); // Step 13
-    expect(pool).toEqual([4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]); // current: full-coverage boards up to 11 × 15
+    expect(challengePool(LEVELS, 5).map((l) => l.id)).toEqual([4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]); // Step 14 (archived)
+    // Current: the 100-level campaign's boards up to 11 × 15 (normal and hard levels of chapters 1–2).
+    expect(pool).toEqual([...Array.from({ length: 23 }, (_, i) => i + 4), 28, 29, 31, 32]);
     for (let i = 0; i < 400; i++) {
       const set = dailyChallenges(addDays('2026-01-01', i), LEVELS);
       expect(new Set(set.map((c) => c.sourceLevelId)).size).toBe(3);

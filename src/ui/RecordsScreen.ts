@@ -1,6 +1,6 @@
 import { formatPrecise } from '../core/time';
 import type { LevelData } from '../core/types';
-import { chapterCount, chapterOf, chapterSummary, clampChapter, queryRecords, type RecordEntry, type RecordsQuery } from '../progress/chapters';
+import { chapterCount, chapterOf, chapterName, chapterSummary, clampChapter, queryRecords, type RecordEntry, type RecordsQuery } from '../progress/chapters';
 import type { Progress } from '../progress/Progress';
 import { chapterMeta, shownChapter } from './chapterNav';
 import { requireElement, starIcons } from './dom';
@@ -15,6 +15,7 @@ export class RecordsScreen {
   private readonly list = requireElement<HTMLOListElement>('records-list');
   private readonly note = requireElement('records-note');
   private readonly search = requireElement<HTMLInputElement>('records-search');
+  private readonly number = requireElement('records-chapter-number');
   private readonly title = requireElement('records-chapter-title');
   private readonly meta = requireElement('records-chapter-meta');
   private readonly prev = requireElement<HTMLButtonElement>('btn-records-chapter-prev');
@@ -75,7 +76,8 @@ export class RecordsScreen {
 
     const chapter = page.chapter ?? (page.entries[0] ? chapterOf(page.entries[0].levelId) : this.shownChapter);
     const summary = chapterSummary(progress, chapter, count);
-    this.title.textContent = page.chapter === null ? 'Search' : `Chapter ${summary.chapter}`;
+    this.number.textContent = page.chapter === null ? 'Records' : `Chapter ${summary.chapter}`;
+    this.title.textContent = page.chapter === null ? 'Search' : chapterName(summary.chapter);
     this.meta.textContent =
       page.chapter === null
         ? `${page.matches} matching ${page.matches === 1 ? 'level' : 'levels'}`

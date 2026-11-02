@@ -114,7 +114,7 @@ describe('Hud markup coupling', () => {
   });
 
   it("shows a named level's name under the title, and hides it for other levels and challenges", () => {
-    const hud = new Hud((id) => (id === 31 ? 'THE IMPOSSIBLE GRID' : undefined));
+    const hud = new Hud((id) => (id === 31 ? { name: 'THE IMPOSSIBLE GRID' } : undefined));
     const name = byId('hud-name');
     expect(name.hidden).toBe(true);
     hud.update(snapshot({ levelId: 31 }));
@@ -126,6 +126,21 @@ describe('Hud markup coupling', () => {
     expect(name.hidden).toBe(true);
     hud.setChallenge(null);
     expect([name.hidden, name.textContent]).toEqual([false, 'THE IMPOSSIBLE GRID']);
+  });
+
+  it('marks hard and very hard levels under the title, in their tier colour; a name wins over the tier label', () => {
+    const levels: Record<number, { name?: string; tier?: 'hard' | 'very hard' }> = { 6: { tier: 'hard' }, 20: { tier: 'very hard' }, 94: { name: 'THE IMPOSSIBLE GRID', tier: 'very hard' } };
+    const hud = new Hud((id) => levels[id]);
+    const name = byId('hud-name');
+    const shown = () => [name.hidden, name.textContent, name.classList.contains('hud__name--hard'), name.classList.contains('hud__name--very-hard')];
+    hud.update(snapshot({ levelId: 6 }));
+    expect(shown()).toEqual([false, 'HARD', true, false]);
+    hud.update(snapshot({ levelId: 20 }));
+    expect(shown()).toEqual([false, 'VERY HARD', false, true]);
+    hud.update(snapshot({ levelId: 94 }));
+    expect(shown()).toEqual([false, 'THE IMPOSSIBLE GRID', false, true]);
+    hud.update(snapshot({ levelId: 7 }));
+    expect(shown()).toEqual([true, '', false, false]);
   });
 
   it('wires back, restart and reset view', () => {

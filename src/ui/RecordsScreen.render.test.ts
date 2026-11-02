@@ -73,20 +73,20 @@ describe('RecordsScreen interactions', () => {
     const { view, backs } = make();
     view.render(PROGRESS.chapter2);
     const title = () => byId('records-chapter-title').textContent;
-    expect(title()).toBe('Chapter 1'); // level 20 is the next to play
+    expect(title()).toBe("It's Just the Beginning"); // level 20 is the next to play
     byId('btn-records-chapter-next').click();
-    expect(title()).toBe('Chapter 2');
+    expect(title()).toBe('Tangled Lines');
     byId('btn-records-chapter-next').click();
-    expect(title()).toBe('Chapter 2');
+    expect(title()).toBe('Tangled Lines');
     type('7');
     expect(title()).toBe('Search');
     expect(view.query).toEqual({ search: '7' });
     byId('btn-records-chapter-prev').click(); // disabled in the page; a click still pages from the chosen chapter
-    expect(title()).toBe('Chapter 1');
+    expect(title()).toBe("It's Just the Beginning");
     expect(byId('records-search').value).toBe('');
     byId('btn-records-chapter-next').click();
     view.reset();
-    expect(title()).toBe('Chapter 1');
+    expect(title()).toBe("It's Just the Beginning");
     byId('btn-records-back').click();
     expect(backs()).toBe(1);
   });

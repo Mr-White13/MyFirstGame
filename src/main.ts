@@ -63,7 +63,7 @@ document.getElementById('app')?.addEventListener('click', (event) => {
 });
 
 const state = new GameState(LEVELS[0]);
-const hud = new Hud((id) => LEVELS[id - 1]?.name);
+const hud = new Hud((id) => LEVELS[id - 1]);
 state.subscribe((snapshot) => hud.update(snapshot));
 
 // The scene and the UI report back to the app, which is created right after them.

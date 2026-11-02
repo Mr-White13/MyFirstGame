@@ -1,5 +1,5 @@
 import type { LevelData } from '../core/types';
-import { chapterCount, chapterOf, chapterSummary, chapterTiles, clampChapter, currentChapter, type LevelTile } from '../progress/chapters';
+import { chapterCount, chapterOf, chapterSummary, chapterName, chapterTiles, chapterTitle, clampChapter, currentChapter, type LevelTile } from '../progress/chapters';
 import { completedCount, MAX_STARS, nextLevelToPlay, totalStars, type Progress } from '../progress/Progress';
 import { UNLOCK_ALL_LEVELS_FOR_TESTING } from '../progress/testUnlock';
 import { chapterMeta, shownChapter } from './chapterNav';
@@ -19,6 +19,7 @@ export class LevelSelect {
   private readonly stars = requireElement('progress-stars');
   private readonly starsTotal = requireElement('progress-stars-total');
   private readonly continueButton = requireElement<HTMLButtonElement>('btn-continue');
+  private readonly chapterNumber = requireElement('chapter-number');
   private readonly chapterTitle = requireElement('chapter-title');
   private readonly chapterMeta = requireElement('chapter-meta');
   private readonly prevButton = requireElement<HTMLButtonElement>('btn-chapter-prev');
@@ -100,12 +101,13 @@ export class LevelSelect {
     const chapter = clampChapter(this.shownChapter, levelCount);
     const chapters = chapterCount(levelCount);
     const summary = chapterSummary(progress, chapter, levelCount);
-    this.chapterTitle.textContent = `Chapter ${chapter}`;
+    this.chapterNumber.textContent = `Chapter ${chapter}`;
+    this.chapterTitle.textContent = chapterName(chapter);
     this.chapterMeta.textContent = chapterMeta(summary);
     this.prevButton.disabled = chapter <= 1;
     this.nextButton.disabled = chapter >= chapters;
     this.currentButton.disabled = chapter === currentChapter(progress, levelCount);
-    this.grid.setAttribute('aria-label', `Chapter ${chapter} of ${chapters}: levels ${summary.first} to ${summary.last}`);
+    this.grid.setAttribute('aria-label', `${chapterTitle(chapter)}, chapter ${chapter} of ${chapters}: levels ${summary.first} to ${summary.last}`);
     this.grid.replaceChildren(...chapterTiles(progress, chapter, levelCount).map((tile) => this.tile(tile)));
   }
 
@@ -130,6 +132,9 @@ export class LevelSelect {
     button.classList.toggle('level-tile--current', state === 'current');
     // Testing flag: really locked levels can still be opened (shown with a dashed outline; results not saved).
     button.classList.toggle('level-tile--test', state === 'test');
+    // Difficulty tier (see LevelData.tier): hard levels orange, very hard ones red.
+    button.classList.toggle('level-tile--hard', level.tier === 'hard');
+    button.classList.toggle('level-tile--very-hard', level.tier === 'very hard');
     button.disabled = state === 'locked';
     const description =
       state === 'test'
@@ -141,7 +146,8 @@ export class LevelSelect {
             : bestStars === null
               ? 'completed, not yet rated'
               : `completed with ${bestStars} of ${MAX_STARS} stars`;
-    button.setAttribute('aria-label', `Level ${tile.id}${level.name ? `, ${level.name}` : ''}, ${level.rows} by ${level.cols}, ${description}`);
+    const tier = level.tier ? `, ${level.tier}` : '';
+    button.setAttribute('aria-label', `Level ${tile.id}${level.name ? `, ${level.name}` : ''}${tier}, ${level.rows} by ${level.cols}, ${description}`);
     if (level.name) button.title = level.name;
 
     const number = document.createElement('span');

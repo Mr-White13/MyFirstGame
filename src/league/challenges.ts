@@ -1,7 +1,7 @@
 import { createRandom, mixSeed, type Random } from '../core/random';
 import type { LevelData } from '../core/types';
 import type { DayKey } from '../daily/dayKey';
-import { REVISION_2_LAYOUTS, STEP_12_LEVELS, STEP_13_LEVELS } from '../levels/archive';
+import { REVISION_2_LAYOUTS, STEP_12_LEVELS, STEP_13_LEVELS, STEP_14_LEVELS } from '../levels/archive';
 
 /** Challenges per competition day. */
 export const CHALLENGES_PER_DAY = 3;
@@ -24,8 +24,10 @@ export const MIN_CHALLENGE_ARROWS = 10;
  * 4: the Step 13 redesign: 10+ arrows on boards up to 11 columns and 15 rows
  *    (tall portrait boards), so challenges still fit a phone without zooming.
  * 5: the same rule on the Step 14 full-coverage levels (levels 4–21).
+ * 6: the same rule on the 100-level campaign (normal and hard levels small
+ *    enough for a phone without zooming).
  *
- * Pools 1–4 draw from frozen copies of the layouts they were defined on
+ * Pools 1–5 draw from frozen copies of the layouts they were defined on
  * (levels/archive), never from the current levels, so a day that began
  * before a redesign keeps its exact layouts and Energy Arrow ids.
  */
@@ -46,9 +48,10 @@ export const CHALLENGE_POOLS: Readonly<Record<number, ChallengePoolVersion>> = {
   2: { eligible: maxTwelve, source: [...REVISION_2, ...STEP_12_LEVELS.filter((l) => l.id > 10)] },
   3: { eligible: maxTwelve, source: STEP_12_LEVELS },
   4: { eligible: phoneSized, source: STEP_13_LEVELS },
-  5: { eligible: phoneSized },
+  5: { eligible: phoneSized, source: STEP_14_LEVELS },
+  6: { eligible: phoneSized },
 };
-export const CURRENT_POOL = 5;
+export const CURRENT_POOL = 6;
 export const isPoolVersion = (v: unknown): v is number => typeof v === 'number' && v in CHALLENGE_POOLS;
 
 /** One of the day's three Daily League challenges. */

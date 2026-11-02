@@ -16,24 +16,26 @@ import { MemoryStore } from '../testing/memoryStore';
 import { getLevel, LEVELS } from './index';
 
 /**
- * Level 31, THE IMPOSSIBLE GRID: an experimental extreme level (a stress
- * test of the engine, outside the 1–30 difficulty curve). It must still be
- * fair: valid, solvable, and completable without losing a life.
+ * Level 94, THE IMPOSSIBLE GRID: built as the Level 31 experiment (a stress
+ * test of the engine), now one of the very hard levels of chapter 5. It must
+ * still be fair: valid, solvable, and completable without losing a life.
  */
-const level = getLevel(31)!;
+const level = getLevel(94)!;
 const report = analyzeDifficulty(level, { lives: false });
 const graph = dependencyGraph(level);
+/** Depths of every normal and hard level (computed once: analysing 90 levels is the slow part). */
+const otherDepths = LEVELS.filter((l) => l.tier !== 'very hard').map((l) => analyzeDifficulty(l, { lives: false }).exact.depth);
 
-describe('Level 31 — THE IMPOSSIBLE GRID', () => {
-  it('exists exactly once, right after the campaign, with its name', () => {
-    expect(LEVELS.filter((l) => l.id === 31)).toHaveLength(1);
-    expect(LEVELS[30]).toBe(level);
-    expect(level.name).toBe('THE IMPOSSIBLE GRID');
+describe('Level 94 — THE IMPOSSIBLE GRID', () => {
+  it('exists exactly once, as a very hard level with its name', () => {
+    expect(LEVELS.filter((l) => l.name === 'THE IMPOSSIBLE GRID')).toHaveLength(1);
+    expect(LEVELS[93]).toBe(level);
+    expect(level).toMatchObject({ id: 94, name: 'THE IMPOSSIBLE GRID', tier: 'very hard' });
   });
 
   it('no longer uses the silhouette experiment: no shape masks, and every cell of the board is used', () => {
     expect(existsSync(new URL('./shapes', import.meta.url))).toBe(false);
-    expect(readFileSync(new URL('./level31.ts', import.meta.url), 'utf8')).not.toMatch(/fox|silhouette|shapes/i);
+    expect(readFileSync(new URL('./level94.ts', import.meta.url), 'utf8')).not.toMatch(/fox|silhouette|shapes/i);
     expect(report.exact.density).toBe(1);
   });
 
@@ -70,10 +72,9 @@ describe('Level 31 — THE IMPOSSIBLE GRID', () => {
     expect(stats.initialFree).toBeGreaterThanOrEqual(1);
   });
 
-  it('is far deeper and more tangled than anything in Levels 1–30', () => {
-    const campaign = LEVELS.slice(0, 30).map((l) => analyzeDifficulty(l, { lives: false }).exact);
+  it('is far deeper and more tangled than any normal or hard level', () => {
     expect(report.exact.depth).toBeGreaterThanOrEqual(50);
-    expect(report.exact.depth).toBeGreaterThan(2 * Math.max(...campaign.map((e) => e.depth)));
+    expect(report.exact.depth).toBeGreaterThan(Math.max(...otherDepths));
     expect(report.exact.initialFree).toBeLessThanOrEqual(10); // few ways in: the opening is a search
     expect(report.exact.blockingRelations).toBeGreaterThan(5 * level.arrows.length);
     expect(['Hard', 'Very hard']).toContain(report.category);
@@ -138,17 +139,17 @@ describe('Level 31 — THE IMPOSSIBLE GRID', () => {
   });
 
   it('stays out of the Daily League pool (too big for a quick challenge)', () => {
-    expect(challengePool(LEVELS).some((l) => l.id === 31)).toBe(false);
+    expect(challengePool(LEVELS).some((l) => l.id === 94)).toBe(false);
   });
 
-  it('opens for a player who finished all 30 levels, without touching their records', () => {
+  it('opens once Level 93 is done, without touching earlier records', () => {
     const completed: Record<number, unknown> = {};
-    for (let id = 1; id <= 30; id++) completed[id] = { bestMoves: 10, revision: LEVELS[id - 1].revision ?? 1, bestStars: 3, bestMistakes: 0, bestTimeMs: 50_000 + id };
+    for (let id = 1; id <= 93; id++) completed[id] = { bestMoves: 10, revision: LEVELS[id - 1].revision ?? 1, bestStars: 3, bestMistakes: 0, bestTimeMs: 50_000 + id };
     const store = new MemoryStore();
-    store.setItem(STORAGE_KEY, JSON.stringify({ version: 4, highestUnlocked: 30, completed }));
+    store.setItem(STORAGE_KEY, JSON.stringify({ version: 4, highestUnlocked: 93, completed }));
     const progress = new ProgressStorage(LEVELS.length, store).load();
-    expect(isUnlocked(progress, 31)).toBe(true);
-    expect(progress.completed[31]).toBeUndefined();
-    for (let id = 1; id <= 30; id++) expect(progress.completed[id]).toMatchObject({ bestStars: 3, bestTimeMs: 50_000 + id });
+    expect(isUnlocked(progress, 94)).toBe(true);
+    expect(progress.completed[94]).toBeUndefined();
+    for (let id = 1; id <= 93; id++) expect(progress.completed[id]).toMatchObject({ bestStars: 3, bestTimeMs: 50_000 + id });
   });
 });

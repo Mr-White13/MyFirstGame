@@ -2,12 +2,14 @@ import { describe, expect, it } from 'vitest';
 import type { LevelData } from '../core/types';
 import { addDays } from '../daily/dayKey';
 import { LEVELS } from '../levels';
+import { STEP_14_LEVELS } from '../levels/archive';
 import { golden } from '../testing/golden';
 import { CHALLENGE_POOLS, challengePool, CURRENT_POOL, dailyChallenges } from './challenges';
 
 /**
- * Pool 5 is the LIVE Daily League pool: unlike pools 1–4 it has no frozen
- * archive and draws straight from the current levels. Players' competition
+ * Pool 5 was the live Daily League pool until the 100-level rebuild; it now
+ * draws from its frozen archive (levels/archive/step14) and pool 6 is live.
+ * The checks below are unchanged: pool 5 must keep its exact layouts. Players' competition
  * days remember their pool version, and Energy Points are keyed by challenge
  * and arrow id, so changing any level in this pool would silently change days
  * already in progress (layouts, Energy Arrows, collected points).
@@ -24,7 +26,7 @@ const signature = (l: LevelData) => l.arrows.map((a) => `${a.id}${a.direction[0]
 /** Days around the time pool 5 went live, plus later ones. */
 const DAYS = [...Array.from({ length: 21 }, (_, i) => addDays('2026-10-25', i)), '2026-12-31', '2027-02-28', '2028-02-29'];
 
-describe('Daily League pool 5 (live, unarchived)', () => {
+describe('Daily League pool 5 (archived in Step 14)', () => {
   const layouts = challengePool(LEVELS, 5).map((l) => ({ id: l.id, revision: l.revision ?? 1, rows: l.rows, cols: l.cols, arrows: signature(l) }));
   const days = Object.fromEntries(
     DAYS.map((day) => [day, dailyChallenges(day, LEVELS, 5).map((c) => ({ id: c.id, energy: c.energyArrowIds.join(' ') }))]),
@@ -53,9 +55,10 @@ describe('Daily League pool 5 (live, unarchived)', () => {
     }
   });
 
-  it('pool versions 1–5 all exist and 5 is still the current pool (archive pool 5 before moving on)', () => {
-    expect(Object.keys(CHALLENGE_POOLS).map(Number)).toEqual([1, 2, 3, 4, 5]);
-    expect(CURRENT_POOL).toBe(5);
-    expect(CHALLENGE_POOLS[5].source).toBeUndefined();
+  it('pool 5 draws from its frozen archive, and pool 6 is the live pool', () => {
+    expect(Object.keys(CHALLENGE_POOLS).map(Number)).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(CHALLENGE_POOLS[5].source).toBe(STEP_14_LEVELS);
+    expect(CURRENT_POOL).toBe(6);
+    expect(CHALLENGE_POOLS[6].source).toBeUndefined();
   });
 });

@@ -49,7 +49,7 @@ describe('fill-first level generator', () => {
     if (!big.ok) return;
     expect(findSolution(big.level)).not.toBeNull();
     expect(coverage(big.level)).toBeGreaterThanOrEqual(0.97);
-  });
+  }, 30_000); // two 25×25 fills: a few seconds alone, more when the whole suite runs in parallel
 
   it('is reproducible: the same options give the same level', () => {
     const make = () => fillLevel({ rows: 10, cols: 8, seed: 42, minScore: 0, maxScore: 100, attempts: 5 });

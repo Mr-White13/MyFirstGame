@@ -11,6 +11,26 @@ import { canPlayLevel } from './testUnlock';
 
 /** Levels per chapter. */
 export const CHAPTER_SIZE = 20;
+
+/** Chapter names, in order (chapters without one are just numbered). */
+export const CHAPTER_NAMES: readonly string[] = [
+  "It's Just the Beginning",
+  'Tangled Lines',
+  'Shapes in the Dark',
+  'The Neon Labyrinth',
+  'The Last Escape',
+];
+
+/** A chapter's name ("It's Just the Beginning"), or "Chapter 6" for one without a name. */
+export function chapterName(chapter: number): string {
+  return CHAPTER_NAMES[chapter - 1] ?? `Chapter ${chapter}`;
+}
+
+/** A chapter's full heading: "Chapter 1 · It's Just the Beginning", or "Chapter 6" without a name. */
+export function chapterTitle(chapter: number): string {
+  const name = CHAPTER_NAMES[chapter - 1];
+  return name ? `Chapter ${chapter} · ${name}` : `Chapter ${chapter}`;
+}
 /** Most rows a records search shows at once. */
 export const RECORDS_PAGE_SIZE = CHAPTER_SIZE;
 

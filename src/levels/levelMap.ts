@@ -36,13 +36,14 @@ export function arrowLabel(index: number): string {
  *
  * Pass `{ revision }` when a level's layout is redesigned (see LevelData.revision),
  * `{ name }` for a special level with a display name (see LevelData.name),
- * `{ outline: true }` for a shaped board (see LevelData.outline).
+ * `{ outline: true }` for a shaped board (see LevelData.outline),
+ * `{ tier }` for a hard or very hard level (see LevelData.tier).
  *
  * The body order (tail → head) is recovered by walking back from the head,
  * so every arrow must be a simple, unbranched chain. The result is a plain
  * `LevelData`; validity and solvability are still checked by `validateLevel`.
  */
-export function levelFromMap(id: number, map: readonly string[], options: { revision?: number; name?: string; outline?: boolean } = {}): LevelData {
+export function levelFromMap(id: number, map: readonly string[], options: { revision?: number; name?: string; outline?: boolean; tier?: LevelData['tier'] } = {}): LevelData {
   const grid = map.map((row) => row.trim().split(/\s+/));
   const rows = grid.length;
   const cols = grid[0]?.length ?? 0;
@@ -81,6 +82,7 @@ export function levelFromMap(id: number, map: readonly string[], options: { revi
     ...(options.revision === undefined ? {} : { revision: options.revision }),
     ...(options.name === undefined ? {} : { name: options.name }),
     ...(options.outline ? { outline: true } : {}),
+    ...(options.tier === undefined ? {} : { tier: options.tier }),
     rows,
     cols,
     arrows,

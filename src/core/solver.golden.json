@@ -31,346 +31,436 @@
  },
  {
   "id": 4,
-  "solution": "b a c j g d e f i h l k",
+  "solution": "a b c f g j k l h e d i",
   "stats": {
    "arrows": 12,
-   "initialFree": 3,
-   "depth": 4,
-   "maxBlockers": 5
+   "initialFree": 4,
+   "depth": 5,
+   "maxBlockers": 3
   }
  },
  {
   "id": 5,
-  "solution": "b a g m n j e c d f h i k l",
+  "solution": "a b c d i j m n f g k l h e",
   "stats": {
    "arrows": 14,
-   "initialFree": 2,
-   "depth": 5,
-   "maxBlockers": 3
+   "initialFree": 3,
+   "depth": 6,
+   "maxBlockers": 2
   }
  },
  {
   "id": 6,
-  "solution": "e j l a b c d g f i k n m h",
+  "solution": "h k m j l i c d g a b f e",
   "stats": {
-   "arrows": 14,
-   "initialFree": 3,
-   "depth": 5,
-   "maxBlockers": 3
+   "arrows": 13,
+   "initialFree": 2,
+   "depth": 10,
+   "maxBlockers": 4
   }
  },
  {
   "id": 7,
-  "solution": "i n g a b d e h k p q o m f c j l",
+  "solution": "a h i c b j k n d p l g e f o m",
   "stats": {
-   "arrows": 17,
+   "arrows": 16,
    "initialFree": 4,
    "depth": 6,
-   "maxBlockers": 6
-  }
- },
- {
-  "id": 8,
-  "solution": "a c b g l r j e d f h i k m q n o p",
-  "stats": {
-   "arrows": 18,
-   "initialFree": 3,
-   "depth": 7,
    "maxBlockers": 5
   }
  },
  {
-  "id": 9,
-  "solution": "a b c d f g j k e h s o q p r l i n m",
+  "id": 8,
+  "solution": "a b c e l g d m h f n k j i",
   "stats": {
-   "arrows": 19,
-   "initialFree": 2,
-   "depth": 8,
-   "maxBlockers": 6
+   "arrows": 14,
+   "initialFree": 4,
+   "depth": 7,
+   "maxBlockers": 3
+  }
+ },
+ {
+  "id": 9,
+  "solution": "a b d f g l i m n j e c h k o",
+  "stats": {
+   "arrows": 15,
+   "initialFree": 4,
+   "depth": 6,
+   "maxBlockers": 5
   }
  },
  {
   "id": 10,
-  "solution": "g p r o j s q d f e c b a i h k l m n",
+  "solution": "a b d c f g e j i h k m l n p q r o s t",
   "stats": {
-   "arrows": 19,
-   "initialFree": 3,
-   "depth": 13,
+   "arrows": 20,
+   "initialFree": 2,
+   "depth": 9,
    "maxBlockers": 7
   }
  },
  {
   "id": 11,
-  "solution": "a d e b f g h i o u q s w r l v k n p m j t c",
+  "solution": "b a c d e f h j o r m n g i p k l q s",
   "stats": {
-   "arrows": 23,
-   "initialFree": 4,
-   "depth": 9,
-   "maxBlockers": 5
+   "arrows": 19,
+   "initialFree": 3,
+   "depth": 5,
+   "maxBlockers": 6
   }
  },
  {
   "id": 12,
-  "solution": "b a c e g u m h d f l q s r k p t n i j o",
+  "solution": "a b c d e g i k m f l h n j o p",
   "stats": {
-   "arrows": 21,
-   "initialFree": 3,
-   "depth": 9,
-   "maxBlockers": 7
+   "arrows": 16,
+   "initialFree": 4,
+   "depth": 7,
+   "maxBlockers": 6
   }
  },
  {
   "id": 13,
-  "solution": "a d h m w x n g c b e i j p r q s t o u f v k l",
+  "solution": "a b h j c d e f g i k l n o p r s u v w x y t q m",
   "stats": {
-   "arrows": 24,
-   "initialFree": 5,
-   "depth": 9,
-   "maxBlockers": 7
+   "arrows": 25,
+   "initialFree": 2,
+   "depth": 10,
+   "maxBlockers": 6
   }
  },
  {
   "id": 14,
-  "solution": "a e d i l k m o n q p w r s v u h g f b c j t x",
+  "solution": "b a f i j k r n s p q m t h c d g e l o",
   "stats": {
-   "arrows": 24,
-   "initialFree": 5,
-   "depth": 11,
+   "arrows": 20,
+   "initialFree": 4,
+   "depth": 6,
    "maxBlockers": 7
   }
  },
  {
   "id": 15,
-  "solution": "A a b c d i o p s k f g z t q j e h v r m l n y w x u",
+  "solution": "a q r s n h c e d f g j m o l k b i p",
   "stats": {
-   "arrows": 27,
-   "initialFree": 5,
-   "depth": 10,
-   "maxBlockers": 9
+   "arrows": 19,
+   "initialFree": 4,
+   "depth": 8,
+   "maxBlockers": 4
   }
  },
  {
   "id": 16,
-  "solution": "a b c d e g h f i j k m l n o p r q s t u v z A x w y",
+  "solution": "b c d a e i f h g s t k m j l o r q n p",
   "stats": {
-   "arrows": 27,
-   "initialFree": 6,
-   "depth": 11,
-   "maxBlockers": 8
+   "arrows": 20,
+   "initialFree": 4,
+   "depth": 7,
+   "maxBlockers": 5
   }
  },
  {
   "id": 17,
-  "solution": "G a b c d e f g i j k m n r t u v q p w B C E F A D x y s o z l h",
+  "solution": "a b c e f h x r l s y z A q p k d g i j n m o t u v w",
   "stats": {
-   "arrows": 33,
-   "initialFree": 6,
-   "depth": 10,
-   "maxBlockers": 7
+   "arrows": 27,
+   "initialFree": 2,
+   "depth": 16,
+   "maxBlockers": 8
   }
  },
  {
   "id": 18,
-  "solution": "D E F a b c e g l t w x A B C G y z d f h i j k p q v o r s m n u",
+  "solution": "a b c d e f h k y t u o p x w r n m j g v l i s q",
   "stats": {
-   "arrows": 33,
-   "initialFree": 6,
-   "depth": 11,
-   "maxBlockers": 6
+   "arrows": 25,
+   "initialFree": 4,
+   "depth": 8,
+   "maxBlockers": 5
   }
  },
  {
   "id": 19,
-  "solution": "C a l t o e d n r y z A B p q x k c b i f g j h m u w s v",
+  "solution": "c b a e d f g h i j k m o s v w p x y n l r t u q",
   "stats": {
-   "arrows": 29,
-   "initialFree": 3,
-   "depth": 13,
-   "maxBlockers": 7
+   "arrows": 25,
+   "initialFree": 4,
+   "depth": 11,
+   "maxBlockers": 5
   }
  },
  {
   "id": 20,
-  "solution": "c b a d f g j l o p q t A x z B C s m v y u e k h i n w r",
+  "solution": "E D C B A c b a d l t w x k r o h e f g j i m n p q z y v s u",
   "stats": {
-   "arrows": 29,
+   "arrows": 31,
    "initialFree": 2,
-   "depth": 15,
+   "depth": 17,
    "maxBlockers": 7
   }
  },
  {
   "id": 21,
-  "solution": "B C D E F A G a c j s r m p b e d g h t y v z o n u i q f k l w x",
+  "solution": "B C D a d c b e f g h i j k l m n o p q r s u A v x y t w z",
   "stats": {
-   "arrows": 33,
-   "initialFree": 6,
-   "depth": 11,
-   "maxBlockers": 8
+   "arrows": 30,
+   "initialFree": 3,
+   "depth": 8,
+   "maxBlockers": 7
   }
  },
  {
   "id": 22,
-  "solution": "A a b c h j m o n p q r s w t z i f e d g l k v u y x",
+  "solution": "a y z A u e d g j p w x o l k h m i q b c f s r v n t",
   "stats": {
    "arrows": 27,
-   "initialFree": 5,
-   "depth": 11,
+   "initialFree": 3,
+   "depth": 8,
    "maxBlockers": 8
   }
  },
  {
   "id": 23,
-  "solution": "J I G A F a e f d c b h n p g i j k l m o r u C v x w D E H B y t q s z",
+  "solution": "A c b a d e j w y x v t p k z u f g o n m q i h r s l",
   "stats": {
-   "arrows": 36,
-   "initialFree": 4,
-   "depth": 11,
-   "maxBlockers": 10
+   "arrows": 27,
+   "initialFree": 2,
+   "depth": 18,
+   "maxBlockers": 7
   }
  },
  {
   "id": 24,
-  "solution": "E B C F G c d b a h g f e i l n q s y z w A D r v k p m o t u x j",
+  "solution": "a b f u x t h i k j m g c e n q r o p s l w v d",
   "stats": {
-   "arrows": 33,
-   "initialFree": 4,
-   "depth": 10,
+   "arrows": 24,
+   "initialFree": 3,
+   "depth": 9,
    "maxBlockers": 7
   }
  },
  {
   "id": 25,
-  "solution": "G J A I F H C D a b d e i j l m n p q s t x w E B y u k o v r z h c f g",
+  "solution": "a h i r s x y w q g c t o j d b e l u k n f p m v",
   "stats": {
-   "arrows": 36,
-   "initialFree": 5,
-   "depth": 13,
-   "maxBlockers": 10
+   "arrows": 25,
+   "initialFree": 3,
+   "depth": 9,
+   "maxBlockers": 6
   }
  },
  {
   "id": 26,
-  "solution": "D E F G c e j o s u w B C A H t n i x y z g v p l q r m h k f a b d",
+  "solution": "a b l f g i j k q c w x p d e r z u v m h o t y s n",
   "stats": {
-   "arrows": 34,
-   "initialFree": 7,
-   "depth": 14,
-   "maxBlockers": 8
+   "arrows": 26,
+   "initialFree": 3,
+   "depth": 10,
+   "maxBlockers": 6
   }
  },
  {
   "id": 27,
-  "solution": "I C K E D M L F J G H a c e d b f g h i j m n t u z o p v x y B A q w r k s l",
+  "solution": "b e a c d f g i j k l m n o r h u q s p t v w x y A B F I D H G E z C",
   "stats": {
-   "arrows": 39,
-   "initialFree": 8,
-   "depth": 16,
-   "maxBlockers": 9
+   "arrows": 35,
+   "initialFree": 2,
+   "depth": 17,
+   "maxBlockers": 11
   }
  },
  {
   "id": 28,
-  "solution": "H K J G B F I a b c f g i k r p x v m y C E D w A n j l e s u t z q h d o",
+  "solution": "B a b c d f k l e j i m u p g h C n o r q s t A w x y v z",
   "stats": {
-   "arrows": 37,
-   "initialFree": 8,
+   "arrows": 29,
+   "initialFree": 3,
+   "depth": 9,
+   "maxBlockers": 8
+  }
+ },
+ {
+  "id": 29,
+  "solution": "C a b c e d f i j h A l m q z B r u y w n k x p o g t v s",
+  "stats": {
+   "arrows": 29,
+   "initialFree": 3,
+   "depth": 12,
+   "maxBlockers": 5
+  }
+ },
+ {
+  "id": 30,
+  "solution": "F b j t A C E D B v z y w u s x q k g c i l o p r n h a d e f m",
+  "stats": {
+   "arrows": 32,
+   "initialFree": 2,
+   "depth": 22,
+   "maxBlockers": 8
+  }
+ },
+ {
+  "id": 31,
+  "solution": "E H C B G F a b t w q i e g l k d o s v y z r h f j n m p x u D A c",
+  "stats": {
+   "arrows": 34,
+   "initialFree": 3,
+   "depth": 9,
+   "maxBlockers": 6
+  }
+ },
+ {
+  "id": 32,
+  "solution": "B c a b d e f g h i k n A o p q r s u w z C v x y t j l m",
+  "stats": {
+   "arrows": 29,
+   "initialFree": 3,
+   "depth": 12,
+   "maxBlockers": 7
+  }
+ },
+ {
+  "id": 33,
+  "solution": "H B G C a b c d f g h i j k u v p s o y A D F I E r x q w z m e l t n",
+  "stats": {
+   "arrows": 35,
+   "initialFree": 3,
+   "depth": 10,
+   "maxBlockers": 7
+  }
+ },
+ {
+  "id": 34,
+  "solution": "a e j k q p t D C G H B A E F r n z y w m i h l v x u o g d b c f s",
+  "stats": {
+   "arrows": 34,
+   "initialFree": 2,
+   "depth": 23,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 35,
+  "solution": "B C E c g h f e b a d k l m i o p q u w D x y t r j s n v z A",
+  "stats": {
+   "arrows": 31,
+   "initialFree": 3,
+   "depth": 9,
+   "maxBlockers": 8
+  }
+ },
+ {
+  "id": 36,
+  "solution": "E A B D d c b e h k n m r w z C G F u v x y s o p l j t a q i g f",
+  "stats": {
+   "arrows": 33,
+   "initialFree": 3,
+   "depth": 12,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 37,
+  "solution": "F B J L a b c d e f g h i j l o D C p s E H K A I v u x G z t q r k w y m n",
+  "stats": {
+   "arrows": 38,
+   "initialFree": 3,
+   "depth": 21,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 38,
+  "solution": "D E G b c i a s u o w n q p e y z A t x v B C F r g d f l h j k m",
+  "stats": {
+   "arrows": 33,
+   "initialFree": 3,
+   "depth": 11,
+   "maxBlockers": 7
+  }
+ },
+ {
+  "id": 39,
+  "solution": "H C D E F d c b a f g i u w x y z A h o s e j l k m p q n G I r t v B",
+  "stats": {
+   "arrows": 35,
+   "initialFree": 3,
+   "depth": 12,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 40,
+  "solution": "b0 d c b a e f g h i j k l n p q G F N r A K S x R W X Z V J Q a0 Y z v u o m s t w y I M P D C B E H L O T U",
+  "stats": {
+   "arrows": 54,
+   "initialFree": 2,
+   "depth": 34,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 41,
+  "solution": "F D E b c d l o q w i g h m x j k y r s v u z t B A n p C f a e",
+  "stats": {
+   "arrows": 32,
+   "initialFree": 3,
+   "depth": 15,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 42,
+  "solution": "D N M a b c d e h g f i j k l m n o p q r s u w v t A z C G y E F J I L K H B x",
+  "stats": {
+   "arrows": 40,
+   "initialFree": 2,
+   "depth": 17,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 43,
+  "solution": "T Q B U R K G H L C D E S V W q i a f u r j m n s v h c I O M J N F P d k g o t l e b p y A w x z",
+  "stats": {
+   "arrows": 49,
+   "initialFree": 1,
+   "depth": 24,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 44,
+  "solution": "O B P M C a k c e f g d h j m q o r z I F G N Q H J K L D E u v l i n s b p w A y t x",
+  "stats": {
+   "arrows": 43,
+   "initialFree": 3,
    "depth": 15,
    "maxBlockers": 9
   }
  },
  {
-  "id": 29,
-  "solution": "I M L K J D a b d e f g h i k l m n o p r q t s w v u x y E H G C F A c z B j",
+  "id": 45,
+  "solution": "D J G F I C a b c d n y E H B A s o v x z r g e h k m l p t u q i w f j",
   "stats": {
-   "arrows": 39,
-   "initialFree": 5,
-   "depth": 14,
-   "maxBlockers": 12
+   "arrows": 36,
+   "initialFree": 3,
+   "depth": 15,
+   "maxBlockers": 10
   }
  },
  {
-  "id": 30,
-  "solution": "L M B H N J K I F E G A D C o x z y q l e t w m f u n j v p s r a b c d i g h k",
+  "id": 46,
+  "solution": "H I J E a b c d e f g h i j l m n o p q s r t w y D A u v B C x F G k z",
   "stats": {
-   "arrows": 40,
-   "initialFree": 2,
-   "depth": 18,
+   "arrows": 36,
+   "initialFree": 3,
+   "depth": 15,
    "maxBlockers": 9
   }
  },
  {
-  "id": 31,
-  "solution": "L1 K1 J1 S0 T0 U0 V0 W0 Z0 a a1 b b1 c c1 d1 g K h i j d e f j0 N0 k k2 C1 l B m n o o1 p q q2 p2 j2 o2 n2 m2 l2 b2 M1 c2 S1 d2 W1 e2 E1 T1 f2 X1 Y1 g2 h2 Z1 i2 a2 R1 Q1 I1 P1 H1 G1 F1 O1 N1 D1 U1 V1 B1 i1 r s t G u1 v1 w N x y1 k1 Y0 C0 B0 W X0 n1 s1 R0 j1 Q0 P0 M0 L0 e0 d0 c0 b0 r1 O0 q1 x0 V U T y0 Q C y J I P i0 v u A H v0 e1 w0 u0 m0 h0 l0 s0 z D E F L M A0 O R X Z f0 g0 S a0 Y k0 n0 o0 p0 q0 r0 F0 t0 z0 x1 w1 A1 z1 t1 l1 p1 I0 D0 H0 E0 G0 J0 K0 f1 g1 h1 m1",
-  "stats": {
-   "arrows": 173,
-   "initialFree": 7,
-   "depth": 55,
-   "maxBlockers": 16
-  }
- },
- {
-  "id": 32,
-  "solution": "B A C C2 J K L R R1 S S1 T Y1 Z1 a b b0 b1 c d e e2 f f2 g h h2 O1 V1 i i0 i2 j j0 D0 j2 k M k0 F0 k2 l n2 d2 M1 F1 L1 p o q c0 r n r0 E0 V0 p1 q1 G1 r2 s0 u2 l2 v u m t s N v1 x0 l1 H1 o2 A2 B2 x2 p2 y0 z y x D E F d0 e0 m0 w U G0 H0 I0 J0 l0 z0 A0 N0 z2 C1 B1 A1 w2 y2 X1 m2 q2 c2 v2 g2 t2 a2 b2 s2 T1 N1 U1 J1 W1 P1 E1 D1 Q1 K1 I1 c1 d1 w1 g0 G H I Q V z1 y1 x1 W0 O0 P0 R0 S0 T0 X0 Y0 e1 f1 m1 n1 r1 s1 t0 n0 t1 g1 u0 o0 W O X Y Z v0 w0 h1 i1 j1 k1 o1 u1 a1 K0 Z0 Q0 U0 h0 P a0 q0 f0 B0 L0 M0 C0 p0",
-  "stats": {
-   "arrows": 185,
-   "initialFree": 24,
-   "depth": 49,
-   "maxBlockers": 16
-  }
- },
- {
-  "id": 33,
-  "solution": "C1 D0 D1 H I L O0 P0 S T U U0 R0 S0 Q0 T0 V0 Y a a1 b c d0 g1 j i h k l o1 n1 m1 l1 p0 p2 r s s1 s2 t t2 a2 u u2 v2 G F Z1 R1 X Y1 X1 W1 V1 h2 g2 f2 e2 k0 W E D r2 q2 v R j0 w J1 S1 m2 i2 K1 L1 j2 n2 o2 w0 x j1 t1 T1 b2 c2 U1 E1 F1 d2 M1 G1 N1 k2 l2 Q1 P1 I1 H1 O1 A1 B1 f1 e1 A0 Z0 d1 i0 h0 c0 q g f e d p o n m J N O V r1 u1 v0 v1 k1 y z A B C K Q P M Z a0 b0 e0 f0 g0 l0 m0 o0 z0 z1 x1 y1 c1 b1 Y0 L0 W0 X0 p1 q1 s0 w1 x0 q0 r0 H0 K0 M0 G0 C0 t0 u0 B0 E0 F0 J0 I0 N0 h1 i1 n0 y0",
-  "stats": {
-   "arrows": 178,
-   "initialFree": 23,
-   "depth": 43,
-   "maxBlockers": 18
-  }
- },
- {
-  "id": 34,
-  "solution": "D1 Q R S W V U X Y a b f e d c f0 e0 g h i j0 k m A F m2 Z1 S1 F1 n n2 a2 T1 B1 o0 A0 o2 b2 U1 I1 J1 M1 N1 p p0 q0 S0 i1 E1 r2 s2 f2 q2 g2 l2 e2 p2 h2 V1 O1 P1 Q1 R1 L1 C1 H1 K1 X1 W1 j2 k2 i2 c2 Y1 G1 d2 n1 V0 W0 o1 u1 d1 w w1 x1 R0 Q0 B0 v0 h1 y1 Z0 C0 g0 h0 q1 w0 a1 z C B E I z0 P0 Y0 g1 f1 p1 N0 O0 e1 M0 L0 X0 U0 c1 z1 A1 j1 I0 r1 s1 k1 J0 i0 l1 b1 T0 m1 x0 D0 E0 F0 G0 H0 K0 r0 k0 l0 s0 t0 m0 u0 d0 T c0 y t l j s r v u x D G H K L M y0 Z a0 b0 O P N J n0 q o t1 v1",
-  "stats": {
-   "arrows": 175,
-   "initialFree": 15,
-   "depth": 43,
-   "maxBlockers": 19
-  }
- },
- {
-  "id": 35,
-  "solution": "A0 B1 F2 I1 J2 H2 I2 T X0 a a0 Z b b2 c c2 d0 d2 e0 f e d f1 M0 e1 g h2 i i1 j k h k2 l l0 m n n1 o p G H q r D r2 R1 H1 a2 q2 s s2 t t1 m1 a1 Q0 u B I N v V v0 B0 H0 I0 N0 O0 R0 w0 m0 q0 y k0 y2 T1 w1 o1 p1 q1 r1 z x F E M L R S j0 w C A J K O P Q U W X Y b0 c0 f0 g0 C0 i0 r0 S0 T0 b1 j1 k1 l1 W0 u1 v1 C1 x1 y0 y1 z0 p0 o0 n0 u0 G0 t0 F0 E0 L0 P0 V0 Z0 d1 h1 g1 s0 K0 s1 G1 N1 O1 Z1 Y1 g2 z1 A1 F1 E1 M1 L1 K1 Q1 j2 p2 o2 x2 A2 B2 E2 D2 w2 f2 X1 e2 n2 W1 V1 m2 v2 C2 G2 P1 t2 U1 z2 u2 i2 S1 c1 U0 J0 Y0 D1 J1 D0 l2 h0 x0",
-  "stats": {
-   "arrows": 192,
-   "initialFree": 24,
-   "depth": 54,
-   "maxBlockers": 18
-  }
- },
- {
-  "id": 36,
-  "solution": "A0 F K1 L0 P1 J1 O1 R0 M0 B0 N0 S0 T0 T1 A1 V0 K0 Y Y1 S1 N1 M1 X1 W1 Z1 c2 I1 D1 H1 b2 e f g g0 h h0 i1 C0 j2 l d c b a j k E i m G U W0 X0 m0 n n0 N o o0 o2 l2 p q r s s0 t t2 u u2 r2 v M L S T R X W V f0 v1 w w2 x1 x2 v2 p2 q2 s2 n2 k2 i2 a2 m2 e2 f2 g2 d2 h2 V1 U1 L1 Q1 R1 G1 F1 E1 z1 B1 C1 o1 O0 i0 Z O q1 Y0 P0 r1 Z0 j1 D0 E0 a1 p0 s1 k1 e1 t0 q0 t1 b1 c1 d1 p1 u0 u1 l1 F0 f1 g1 m1 w1 n1 J0 y1 h1 z0 y0 I0 Q0 U0 H0 x0 G0 w0 l0 e0 k0 D z y x A B C H I J K Q d0 c0 j0 r0 b0 a0 P v0",
-  "stats": {
-   "arrows": 180,
-   "initialFree": 23,
-   "depth": 47,
-   "maxBlockers": 16
-  }
- },
- {
-  "id": 37,
-  "solution": "B0 F I I1 a b c d e f g i h j l m K k n E o G o2 p p2 q q2 r r2 s S A0 Z0 e1 r1 s2 t2 u P w x2 T1 y D O T H0 I0 P0 T0 m1 C1 f2 z2 y2 e2 n2 B1 Y0 i2 h2 g2 m2 l2 k2 u0 Z C B N Q R Y A X f0 e0 l0 o0 F0 p0 q0 G0 O0 X0 l1 n0 q1 t0 w1 w2 c2 v2 u2 Z1 a2 N1 A1 j2 W1 D1 X1 Y1 K1 L1 b2 Q1 d2 S1 V1 R1 U1 H1 O1 P1 i1 j1 S0 N0 W V d0 c0 b0 s1 f1 g1 v0 t v1 x D0 E0 J H k0 m0 d1 j0 i0 v M h0 g0 z L U a0 r0 s0 x0 y0 C0 J0 L0 M0 h1 o1 z0 w0 E1 J1 F1 U0 V0 a1 t1 n1 u1 x1 M1 G1 y1 p1 W0 K0 R0 Q0 b1 c1 k1 z1",
-  "stats": {
-   "arrows": 182,
-   "initialFree": 20,
-   "depth": 45,
-   "maxBlockers": 19
-  }
- },
- {
-  "id": 38,
+  "id": 47,
   "solution": "F0 I1 O1 A1 B1 C1 J1 K1 P1 Q1 S0 T0 N0 U1 V1 W0 M0 C0 B0 L0 V0 Z1 a2 b D W b2 c1 b1 U0 e2 T1 f2 g g1 f1 e1 h1 j0 k2 n1 o2 p1 q q0 t1 t2 p2 E1 q2 r2 w0 w2 s2 n2 u2 m2 v2 x0 X r c d a C V c0 e f h i i0 j k N l m n o p M s t u v w x Y x2 l2 g2 h2 d2 c2 j2 L1 W1 X1 F1 R1 Y1 S1 i2 k1 r1 y E F z A B G H I J K L A0 O P Q R T U S b0 a0 Z f0 g0 h0 m0 n0 o0 D0 R0 Q0 p0 E0 v0 m1 l1 u0 x1 N1 H1 M1 G1 D1 q1 u1 v1 s1 w1 z0 y0 z1 I0 y1 o1 j1 O0 H0 t0 e0 d0 k0 l0 r0 G0 s0 J0 K0 P0 X0 i1 Y0 d1 Z0 a1",
   "stats": {
    "arrows": 180,
@@ -380,7 +470,327 @@
   }
  },
  {
-  "id": 39,
+  "id": 48,
+  "solution": "a b c d e f g h i j k l n m o D p s x F L H O K B N J G I M E u v w C y q z A r t",
+  "stats": {
+   "arrows": 41,
+   "initialFree": 2,
+   "depth": 17,
+   "maxBlockers": 7
+  }
+ },
+ {
+  "id": 49,
+  "solution": "G H C I D E J F B a c o i j x A z u v y w r p k q b f n s h t e m d g l",
+  "stats": {
+   "arrows": 36,
+   "initialFree": 3,
+   "depth": 18,
+   "maxBlockers": 8
+  }
+ },
+ {
+  "id": 50,
+  "solution": "W Q O R S P M Y X U V T d c i h p E K L H J G t v y D z s o n l b a f g e j k m q w x r B C A F I N u",
+  "stats": {
+   "arrows": 51,
+   "initialFree": 3,
+   "depth": 24,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 51,
+  "solution": "K E J D G I F C H a c e t i w x u h j k l o q p r A B y v z n g b d f m s",
+  "stats": {
+   "arrows": 37,
+   "initialFree": 3,
+   "depth": 18,
+   "maxBlockers": 7
+  }
+ },
+ {
+  "id": 52,
+  "solution": "I F A C B E H G D u w g y z o i n r t x v s p q j e k m l a b c d f h",
+  "stats": {
+   "arrows": 35,
+   "initialFree": 3,
+   "depth": 18,
+   "maxBlockers": 8
+  }
+ },
+ {
+  "id": 53,
+  "solution": "b i h m w C G A I H E B z t e a c d g f j k o r u D F v s l q p n y x",
+  "stats": {
+   "arrows": 35,
+   "initialFree": 1,
+   "depth": 19,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 54,
+  "solution": "D1 Q R S W V U X Y a b f e d c f0 e0 g h i j0 k m A F m2 Z1 S1 F1 n n2 a2 T1 B1 o0 A0 o2 b2 U1 I1 J1 M1 N1 p p0 q0 S0 i1 E1 r2 s2 f2 q2 g2 l2 e2 p2 h2 V1 O1 P1 Q1 R1 L1 C1 H1 K1 X1 W1 j2 k2 i2 c2 Y1 G1 d2 n1 V0 W0 o1 u1 d1 w w1 x1 R0 Q0 B0 v0 h1 y1 Z0 C0 g0 h0 q1 w0 a1 z C B E I z0 P0 Y0 g1 f1 p1 N0 O0 e1 M0 L0 X0 U0 c1 z1 A1 j1 I0 r1 s1 k1 J0 i0 l1 b1 T0 m1 x0 D0 E0 F0 G0 H0 K0 r0 k0 l0 s0 t0 m0 u0 d0 T c0 y t l j s r v u x D G H K L M y0 Z a0 b0 O P N J n0 q o t1 v1",
+  "stats": {
+   "arrows": 175,
+   "initialFree": 15,
+   "depth": 43,
+   "maxBlockers": 19
+  }
+ },
+ {
+  "id": 55,
+  "solution": "J D c d b a e f g h j k o r B A E G H K I t s u q l i p y z F C n w v m x",
+  "stats": {
+   "arrows": 37,
+   "initialFree": 3,
+   "depth": 17,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 56,
+  "solution": "H I J E C D a d c h k m p o t s r n l q v w A B u z i b j x e f F G g y",
+  "stats": {
+   "arrows": 36,
+   "initialFree": 2,
+   "depth": 17,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 57,
+  "solution": "a a0 e0 Z T I d0 c0 X b0 p r D N x i d c b e f g h j k l m o B C q s u F O v t w A E y H z G J L P S R Q U V W Y K M n",
+  "stats": {
+   "arrows": 57,
+   "initialFree": 3,
+   "depth": 27,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 58,
+  "solution": "a b c f g h e d i j m l k n o p C I q s r t u v w J x y z A B D F L H K N M E G",
+  "stats": {
+   "arrows": 40,
+   "initialFree": 3,
+   "depth": 19,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 59,
+  "solution": "a c b d g h i j l m o p q r z I J C G D K E F M L B y H x v s u A n e k f t w",
+  "stats": {
+   "arrows": 39,
+   "initialFree": 3,
+   "depth": 18,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 60,
+  "solution": "C1 D0 D1 H I L O0 P0 S T U U0 R0 S0 Q0 T0 V0 Y a a1 b c d0 g1 j i h k l o1 n1 m1 l1 p0 p2 r s s1 s2 t t2 a2 u u2 v2 G F Z1 R1 X Y1 X1 W1 V1 h2 g2 f2 e2 k0 W E D r2 q2 v R j0 w J1 S1 m2 i2 K1 L1 j2 n2 o2 w0 x j1 t1 T1 b2 c2 U1 E1 F1 d2 M1 G1 N1 k2 l2 Q1 P1 I1 H1 O1 A1 B1 f1 e1 A0 Z0 d1 i0 h0 c0 q g f e d p o n m J N O V r1 u1 v0 v1 k1 y z A B C K Q P M Z a0 b0 e0 f0 g0 l0 m0 o0 z0 z1 x1 y1 c1 b1 Y0 L0 W0 X0 p1 q1 s0 w1 x0 q0 r0 H0 K0 M0 G0 C0 t0 u0 B0 E0 F0 J0 I0 N0 h1 i1 n0 y0",
+  "stats": {
+   "arrows": 178,
+   "initialFree": 23,
+   "depth": 43,
+   "maxBlockers": 18
+  }
+ },
+ {
+  "id": 61,
+  "solution": "L D M a c b d f e g h i j k m l r s q t C B A w G N J H K E I n o p v u x F y z",
+  "stats": {
+   "arrows": 40,
+   "initialFree": 3,
+   "depth": 20,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 62,
+  "solution": "a c f g d b e h i j k l m n o p q t u s r v y D F w z x G J I C E H B A",
+  "stats": {
+   "arrows": 36,
+   "initialFree": 3,
+   "depth": 18,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 63,
+  "solution": "a e d i0 e0 h0 S X a0 T g0 d0 j o y G I J Y Z f0 R Q b0 c0 W H U V P O N K B C L M D E F t i b u v x s r z A q c h k m n l p f g w",
+  "stats": {
+   "arrows": 61,
+   "initialFree": 3,
+   "depth": 26,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 64,
+  "solution": "L K J H E I A G F a c b d e g f h k j i l v x q z s o n p r t u C D B w m y",
+  "stats": {
+   "arrows": 38,
+   "initialFree": 3,
+   "depth": 18,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 65,
+  "solution": "G H I a c b d e f g i k t F s u y o l n r z E C D A B w m v p q j h x",
+  "stats": {
+   "arrows": 35,
+   "initialFree": 3,
+   "depth": 20,
+   "maxBlockers": 8
+  }
+ },
+ {
+  "id": 66,
+  "solution": "K a b c e i j k l m o y z I G H C A B L J F E r f d q t x w u v n s g h p D",
+  "stats": {
+   "arrows": 38,
+   "initialFree": 3,
+   "depth": 20,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 67,
+  "solution": "B0 F I I1 a b c d e f g i h j l m K k n E o G o2 p p2 q q2 r r2 s S A0 Z0 e1 r1 s2 t2 u P w x2 T1 y D O T H0 I0 P0 T0 m1 C1 f2 z2 y2 e2 n2 B1 Y0 i2 h2 g2 m2 l2 k2 u0 Z C B N Q R Y A X f0 e0 l0 o0 F0 p0 q0 G0 O0 X0 l1 n0 q1 t0 w1 w2 c2 v2 u2 Z1 a2 N1 A1 j2 W1 D1 X1 Y1 K1 L1 b2 Q1 d2 S1 V1 R1 U1 H1 O1 P1 i1 j1 S0 N0 W V d0 c0 b0 s1 f1 g1 v0 t v1 x D0 E0 J H k0 m0 d1 j0 i0 v M h0 g0 z L U a0 r0 s0 x0 y0 C0 J0 L0 M0 h1 o1 z0 w0 E1 J1 F1 U0 V0 a1 t1 n1 u1 x1 M1 G1 y1 p1 W0 K0 R0 Q0 b1 c1 k1 z1",
+  "stats": {
+   "arrows": 182,
+   "initialFree": 20,
+   "depth": 45,
+   "maxBlockers": 19
+  }
+ },
+ {
+  "id": 68,
+  "solution": "L A F M N o i f j a b c e d g m n p r t u J I G D E K C H B x y k s v q l z w h",
+  "stats": {
+   "arrows": 40,
+   "initialFree": 3,
+   "depth": 21,
+   "maxBlockers": 8
+  }
+ },
+ {
+  "id": 69,
+  "solution": "K C J G I A H a b c e f d h i j g l m q r t w s u p k n o v y E F D B x z",
+  "stats": {
+   "arrows": 37,
+   "initialFree": 2,
+   "depth": 20,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 70,
+  "solution": "c0 N A d0 O E K X f0 b0 U R D Q T S a0 M L J G k u x y z n i o m j b c f g h l s I H W V Z Y P F e0 p e w v C B r d a t q",
+  "stats": {
+   "arrows": 58,
+   "initialFree": 3,
+   "depth": 27,
+   "maxBlockers": 14
+  }
+ },
+ {
+  "id": 71,
+  "solution": "J C K F L I B H E a b c e j i k l r G t w y z u x m o n v f d g A h p D q s",
+  "stats": {
+   "arrows": 38,
+   "initialFree": 3,
+   "depth": 18,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 72,
+  "solution": "D E F m d a b e f p c g u t v x A B C k h l o z y q n j i w s r",
+  "stats": {
+   "arrows": 32,
+   "initialFree": 3,
+   "depth": 19,
+   "maxBlockers": 8
+  }
+ },
+ {
+  "id": 73,
+  "solution": "Q b c i a d e f g h j m o r q p k l n u v s t w x B N y A D C E K L O P J I M G H R z F",
+  "stats": {
+   "arrows": 44,
+   "initialFree": 3,
+   "depth": 21,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 74,
+  "solution": "A0 F K1 L0 P1 J1 O1 R0 M0 B0 N0 S0 T0 T1 A1 V0 K0 Y Y1 S1 N1 M1 X1 W1 Z1 c2 I1 D1 H1 b2 e f g g0 h h0 i1 C0 j2 l d c b a j k E i m G U W0 X0 m0 n n0 N o o0 o2 l2 p q r s s0 t t2 u u2 r2 v M L S T R X W V f0 v1 w w2 x1 x2 v2 p2 q2 s2 n2 k2 i2 a2 m2 e2 f2 g2 d2 h2 V1 U1 L1 Q1 R1 G1 F1 E1 z1 B1 C1 o1 O0 i0 Z O q1 Y0 P0 r1 Z0 j1 D0 E0 a1 p0 s1 k1 e1 t0 q0 t1 b1 c1 d1 p1 u0 u1 l1 F0 f1 g1 m1 w1 n1 J0 y1 h1 z0 y0 I0 Q0 U0 H0 x0 G0 w0 l0 e0 k0 D z y x A B C H I J K Q d0 c0 j0 r0 b0 a0 P v0",
+  "stats": {
+   "arrows": 180,
+   "initialFree": 23,
+   "depth": 47,
+   "maxBlockers": 16
+  }
+ },
+ {
+  "id": 75,
+  "solution": "I L K G J F d c h i n o q t w H E C D B A x z g b a e f k l m p j r s u y v",
+  "stats": {
+   "arrows": 38,
+   "initialFree": 3,
+   "depth": 21,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 76,
+  "solution": "A B a e d c b g i h f j l n o s u t v w x y z F C N M K L O G H I p k D E J r m q",
+  "stats": {
+   "arrows": 41,
+   "initialFree": 3,
+   "depth": 20,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 77,
+  "solution": "n0 m0 l0 k0 f0 W g0 X Y T K U P Q R c0 h0 a0 i0 d0 e0 j0 b0 Z F B L V J A S O N k j n t w l a b e u G C D m f c y v x p z s i h q r g d o E M I H",
+  "stats": {
+   "arrows": 66,
+   "initialFree": 1,
+   "depth": 33,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 78,
+  "solution": "K N M L a b c i k r v F G H E D C A B I J p q u o g f h j n t w y z x l m d e s",
+  "stats": {
+   "arrows": 40,
+   "initialFree": 3,
+   "depth": 19,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 79,
+  "solution": "J I a b d c e f h g j i k l m n p o t C E H B s r q x w u v y z A D G F",
+  "stats": {
+   "arrows": 36,
+   "initialFree": 3,
+   "depth": 19,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 80,
   "solution": "B0 C0 D0 I1 A1 B1 J1 K1 C1 D1 M N O1 N1 F1 G1 H1 M1 X R W V a a1 b b2 U1 P1 V1 c d d0 c0 e e0 e2 X1 g j i f h k l B m m1 n n1 o p r0 s t q D r t1 u v G Q w w0 x E x0 f1 g1 y J U z A C z1 r1 V0 q0 i0 p0 L0 s1 l1 e1 k1 q1 Q0 K0 P0 o0 v0 U0 T0 u0 A0 L K F I H O P T S Y Z a0 b0 f0 g0 h0 k0 l0 m0 n0 j0 W0 X0 R0 F0 M0 h1 b1 c1 s0 t0 H0 I0 x1 w1 p1 y1 z0 E0 O0 y0 G0 J0 N0 S0 Z0 Y0 d1 i1 E1 o1 j1 Y1 c2 Z1 R1 S1 d2 a2 Q1 L1 W1 u1 v1 T1",
   "stats": {
    "arrows": 161,
@@ -390,7 +800,197 @@
   }
  },
  {
-  "id": 40,
+  "id": 81,
+  "solution": "L K H M N B A E I q a j n s w G v z D C J F u x o r l f p d c i k g h m e b t y",
+  "stats": {
+   "arrows": 40,
+   "initialFree": 2,
+   "depth": 20,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 82,
+  "solution": "H a b c f e d h g i j k l m n p o q A D s u t r x B z w y E G F C v",
+  "stats": {
+   "arrows": 34,
+   "initialFree": 2,
+   "depth": 21,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 83,
+  "solution": "B0 C0 D0 G0 I0 J0 H0 s0 t0 Z G P O r h c b d g i a e f k q D W V U Y d0 g0 r0 s C w0 F0 E0 v0 q0 m0 y0 n0 b0 z0 A0 u0 x0 h0 k0 a0 X R E c0 p0 l0 Q K S T e0 x y t H N i0 o0 j0 F f0 M B p l j o n m v w u z A J I L",
+  "stats": {
+   "arrows": 88,
+   "initialFree": 5,
+   "depth": 40,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 84,
+  "solution": "J K H C a b c e f o p E x j g h i k l m q r s t w z A B D y n d v u F L I G",
+  "stats": {
+   "arrows": 38,
+   "initialFree": 2,
+   "depth": 21,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 85,
+  "solution": "H I B K D J F E C A G m j b a e g i t u x o k l n f p w v s r z y q d c h",
+  "stats": {
+   "arrows": 37,
+   "initialFree": 3,
+   "depth": 21,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 86,
+  "solution": "S P a b c d e f j k m i r A q v H M K J L u G O R Q I E B N F x y z D C l n o p t w s g h",
+  "stats": {
+   "arrows": 45,
+   "initialFree": 3,
+   "depth": 21,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 87,
+  "solution": "B A C C2 J K L R R1 S S1 T Y1 Z1 a b b0 b1 c d e e2 f f2 g h h2 O1 V1 i i0 i2 j j0 D0 j2 k M k0 F0 k2 l n2 d2 M1 F1 L1 p o q c0 r n r0 E0 V0 p1 q1 G1 r2 s0 u2 l2 v u m t s N v1 x0 l1 H1 o2 A2 B2 x2 p2 y0 z y x D E F d0 e0 m0 w U G0 H0 I0 J0 l0 z0 A0 N0 z2 C1 B1 A1 w2 y2 X1 m2 q2 c2 v2 g2 t2 a2 b2 s2 T1 N1 U1 J1 W1 P1 E1 D1 Q1 K1 I1 c1 d1 w1 g0 G H I Q V z1 y1 x1 W0 O0 P0 R0 S0 T0 X0 Y0 e1 f1 m1 n1 r1 s1 t0 n0 t1 g1 u0 o0 W O X Y Z v0 w0 h1 i1 j1 k1 o1 u1 a1 K0 Z0 Q0 U0 h0 P a0 q0 f0 B0 L0 M0 C0 p0",
+  "stats": {
+   "arrows": 185,
+   "initialFree": 24,
+   "depth": 49,
+   "maxBlockers": 16
+  }
+ },
+ {
+  "id": 88,
+  "solution": "E B F G H D C m v z A p k s l b f j w t u o y r q h g e c a d i x n",
+  "stats": {
+   "arrows": 34,
+   "initialFree": 3,
+   "depth": 20,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 89,
+  "solution": "C Q N K J P M O H D E L I A G c o h p t u r m s q n a b d g y z l f e i k x F w B v j",
+  "stats": {
+   "arrows": 43,
+   "initialFree": 3,
+   "depth": 23,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 90,
+  "solution": "A0 B1 F2 I1 J2 H2 I2 T X0 a a0 Z b b2 c c2 d0 d2 e0 f e d f1 M0 e1 g h2 i i1 j k h k2 l l0 m n n1 o p G H q r D r2 R1 H1 a2 q2 s s2 t t1 m1 a1 Q0 u B I N v V v0 B0 H0 I0 N0 O0 R0 w0 m0 q0 y k0 y2 T1 w1 o1 p1 q1 r1 z x F E M L R S j0 w C A J K O P Q U W X Y b0 c0 f0 g0 C0 i0 r0 S0 T0 b1 j1 k1 l1 W0 u1 v1 C1 x1 y0 y1 z0 p0 o0 n0 u0 G0 t0 F0 E0 L0 P0 V0 Z0 d1 h1 g1 s0 K0 s1 G1 N1 O1 Z1 Y1 g2 z1 A1 F1 E1 M1 L1 K1 Q1 j2 p2 o2 x2 A2 B2 E2 D2 w2 f2 X1 e2 n2 W1 V1 m2 v2 C2 G2 P1 t2 U1 z2 u2 i2 S1 c1 U0 J0 Y0 D1 J1 D0 l2 h0 x0",
+  "stats": {
+   "arrows": 192,
+   "initialFree": 24,
+   "depth": 54,
+   "maxBlockers": 18
+  }
+ },
+ {
+  "id": 91,
+  "solution": "O L G J A F K H I C M N D E a b c u v k f i j h d e m l p t x y r o n q w g s z B",
+  "stats": {
+   "arrows": 41,
+   "initialFree": 3,
+   "depth": 22,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 92,
+  "solution": "G N O l m a b c d f g e h i j k n p r s B v w x C F J M D L K I H A E z u y q o t",
+  "stats": {
+   "arrows": 41,
+   "initialFree": 3,
+   "depth": 21,
+   "maxBlockers": 7
+  }
+ },
+ {
+  "id": 93,
+  "solution": "G K J I a b c d e f g h j k i l m n o p r s q t w v x u y z A B C D E F H",
+  "stats": {
+   "arrows": 37,
+   "initialFree": 3,
+   "depth": 22,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 94,
+  "solution": "L1 K1 J1 S0 T0 U0 V0 W0 Z0 a a1 b b1 c c1 d1 g K h i j d e f j0 N0 k k2 C1 l B m n o o1 p q q2 p2 j2 o2 n2 m2 l2 b2 M1 c2 S1 d2 W1 e2 E1 T1 f2 X1 Y1 g2 h2 Z1 i2 a2 R1 Q1 I1 P1 H1 G1 F1 O1 N1 D1 U1 V1 B1 i1 r s t G u1 v1 w N x y1 k1 Y0 C0 B0 W X0 n1 s1 R0 j1 Q0 P0 M0 L0 e0 d0 c0 b0 r1 O0 q1 x0 V U T y0 Q C y J I P i0 v u A H v0 e1 w0 u0 m0 h0 l0 s0 z D E F L M A0 O R X Z f0 g0 S a0 Y k0 n0 o0 p0 q0 r0 F0 t0 z0 x1 w1 A1 z1 t1 l1 p1 I0 D0 H0 E0 G0 J0 K0 f1 g1 h1 m1",
+  "stats": {
+   "arrows": 173,
+   "initialFree": 7,
+   "depth": 55,
+   "maxBlockers": 16
+  }
+ },
+ {
+  "id": 95,
+  "solution": "K G B L H a d c b j k q u A C D E F I J w t m i s r v x n p o z y l e g h f",
+  "stats": {
+   "arrows": 38,
+   "initialFree": 3,
+   "depth": 22,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 96,
+  "solution": "B Q P O K L M N I F J H E D A C G w z x b j n c a d e f g h i k l m p s q o r y t v u",
+  "stats": {
+   "arrows": 43,
+   "initialFree": 2,
+   "depth": 25,
+   "maxBlockers": 7
+  }
+ },
+ {
+  "id": 97,
+  "solution": "N0 R0 Q0 M0 P0 I0 a b c g f e d h k D l I O N Q P u i j m n o p t C K s H M r q u0 Z R S T q0 v B x G w A z F E y J L U V W X a0 b0 D0 G0 K0 L0 O0 c0 B0 d0 h0 i0 r0 v0 w0 H0 E0 n0 e0 Y f0 j0 x0 s0 C0 k0 g0 l0 m0 A0 o0 t0 z0 y0 p0 F0 J0",
+  "stats": {
+   "arrows": 96,
+   "initialFree": 4,
+   "depth": 36,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 98,
+  "solution": "K J L G M N I O C D H F B j k n x v z A E w y f r s u q p o c g a b d l h m t i e",
+  "stats": {
+   "arrows": 41,
+   "initialFree": 3,
+   "depth": 22,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 99,
+  "solution": "M K L a b c d e f i h g k j l o q p r s t n m u v y z A B C E G H I J w x D F",
+  "stats": {
+   "arrows": 39,
+   "initialFree": 3,
+   "depth": 22,
+   "maxBlockers": 8
+  }
+ },
+ {
+  "id": 100,
   "solution": "F0 Q2 Z2 L2 M2 D2 E2 N2 R2 S2 T2 a a3 G2 b3 H2 c3 V2 W2 X2 F2 d e e3 d3 Y2 B2 C2 A2 U2 K2 P2 O2 I2 J2 c2 g K k0 k2 l k q2 r Q j0 s0 t2 u2 G1 m2 g2 A1 b1 N0 f2 i0 V J l2 p2 b2 v2 n2 H1 o1 w2 r2 y2 j2 z y I H G q x w Z C0 p o z2 a2 L1 M1 Z1 F1 T1 U1 E1 K1 J1 S1 R1 Y1 X1 W1 k1 m1 n1 w1 a1 l1 x2 i2 s2 o2 V1 N1 O1 P1 h2 I1 p1 q1 O0 P0 Q0 l0 R m0 A W m n h D i b j c f P O N T U a0 h0 q0 r0 p0 u f0 u0 v g0 B0 e0 d0 t F s B C E L M X b0 v0 w0 G0 U0 c1 y0 E0 T0 W0 x0 M0 V0 z0 d1 f1 r1 B1 d2 e2 C1 Q1 h1 X0 s1 e1 t1 g1 i1 u1 D1 v1 y1 z1 x1 J0 Y S c0 H0 j1 S0 Y0 K0 Z0 n0 o0 t0 A0 D0 L0 I0 R0",
   "stats": {
    "arrows": 213,

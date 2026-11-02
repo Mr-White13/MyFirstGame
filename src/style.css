@@ -632,6 +632,14 @@ body.is-navigating #app {
   white-space: nowrap;
 }
 
+.hud__name--hard {
+  color: var(--orange);
+}
+
+.hud__name--very-hard {
+  color: var(--red);
+}
+
 .hud__stats {
   display: grid;
   grid-template-columns: auto 1fr auto auto;
@@ -4100,6 +4108,72 @@ body.is-navigating #app {
   color: var(--text-muted);
 }
 
+/*
+ * Difficulty tiers (LevelData.tier): hard levels orange, very hard ones red.
+ * A tinted tile, border and number, in every state (locked and test tiles
+ * keep their dashed border, only tinted); the current level keeps its cyan ring.
+ */
+.level-tile--hard {
+  --tier: var(--orange);
+  --tier-rgb: var(--orange-rgb);
+}
+
+.level-tile--very-hard {
+  --tier: var(--red);
+  --tier-rgb: var(--red-rgb);
+}
+
+.level-tile--hard,
+.level-tile--very-hard {
+  border-color: rgb(var(--tier-rgb) / 0.6);
+  background: linear-gradient(180deg, rgb(var(--tier-rgb) / 0.2), rgb(var(--tier-rgb) / 0.05)), var(--surface);
+}
+
+.level-tile--hard .level-tile__number,
+.level-tile--very-hard .level-tile__number {
+  color: var(--tier);
+}
+
+.level-tile--locked.level-tile--hard,
+.level-tile--locked.level-tile--very-hard {
+  border-color: rgb(var(--tier-rgb) / 0.35);
+  background: rgb(var(--tier-rgb) / 0.07);
+}
+
+.levels__legend {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin: 0;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.legend-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-chip::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  border: 1px solid var(--chip);
+  background: rgb(var(--chip-rgb) / 0.3);
+}
+
+.legend-chip--hard {
+  --chip: var(--orange);
+  --chip-rgb: var(--orange-rgb);
+}
+
+.legend-chip--very-hard {
+  --chip: var(--red);
+  --chip-rgb: var(--red-rgb);
+}
+
 /* Streak progress in the HUD (src/ui/Hud.ts): five pips, lit one per successful tap in the
    rolling 4 s window; dim while the bonus recharges; a bonus flashes them and floats "+N". */
 .momentum {
@@ -4205,11 +4279,23 @@ body.is-navigating #app {
   text-align: center;
 }
 
+.chapter-nav__label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
 .chapter-nav__title {
   font-family: var(--font-display);
   font-size: 0.95rem;
   font-weight: 800;
   letter-spacing: 0.04em;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .chapter-nav__meta {

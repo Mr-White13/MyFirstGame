@@ -1,25 +1,23 @@
 import { levelFromMap } from './levelMap';
 
-/** Level 24 — generated from tools/level-plan.json (seed 2450, attempt 0), score 65 (Hard). */
+/** Level 24 — chapter 2, normal level, generated from tools/level-plan.json (seed 2450, attempt 3), score 61 (Hard). */
 export default levelFromMap(
   24,
   [
-    'a  a  a> b  b  b> c^ d  d  d  d  d>',
-    'e  e  e  e> f  f> c  d  g  g  g> h^',
-    'f  f  f  f  f  i^ c  d  h  j  k  h',
-    'l^ i  i  i  i  i  c  d  h  jv k  h',
-    'l  v  v  v  c  c  c  d  h  k< k  h',
-    'l  m  m> v  n^ p  p  p  h  h  h  h',
-    'l  m  o^ v  n  pv n  p  q^ r  r  r',
-    'l  m  o  v  n  n  n  p  q  r  x^ rv',
-    's^ m  o  v  v  v  t^ u^ q  x  x  A',
-    's  o  o  z  z  v  t  u  q  x  A  A',
-    's  o  s  z  q  vv u  u  q  x  A  D',
-    's  s  s  z  q  q  q  q  q  x  A  D',
-    'B  y  y  z  w< w  w  w  x  x  A  D',
-    'B  yv z< z  E  E  E  w  A< A  A  D',
-    'Bv C< C  C  E  F  F  w  D< D  D  D',
-    'E< E  E  E  E  Fv G< G  G  G  G  G',
+    'a^ b< b  b  b  c  c  c> g  i',
+    'a  d  e  f^ b  b  b  b  g  i',
+    'a  d  e  f  f  f  f  f  g  i',
+    'a  dv e  e  e  e  e> f  gv i',
+    'a  a  a  h  h  h  i< i  i  i',
+    'j  j> a  k  k> h  h  h  h  h',
+    'j  k  k  k  n  l  m  m  m> hv',
+    'j  j  n< n  n  l  l  t  t  t',
+    'r^ o< o  o  o  o  lv t  u  t',
+    'r  p< p  p  p  q  q> t  u  t',
+    'r  w< w  s  p  q  t  t  u  t',
+    'v  v> w  s  p  q  t  s^ u  tv',
+    'v  w  w  s  q  q  s  s  u  u>',
+    'v  w  .  s  s  s  s  x  x  x>',
   ],
-  { revision: 3 },
+  { revision: 4 },
 );

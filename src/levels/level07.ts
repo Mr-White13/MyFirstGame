@@ -1,20 +1,19 @@
 import { levelFromMap } from './levelMap';
 
-/** Level 7 — generated from tools/level-plan.json (seed 750, attempt 2), score 50 (Medium–hard). */
+/** Level 7 — chapter 1, normal level, generated from tools/level-plan.json (seed 750, attempt 4), score 46 (Medium). */
 export default levelFromMap(
   7,
   [
-    'g  g  g  g  g  a< a  a',
-    'g  b^ f  f  f  f  f  a',
-    'g  b  b  c  c  c> f  a',
-    'g  d^ b  e< e  e  fv a',
-    'g  d  b  b  b  e  a  a',
-    'gv d  h< h  h  e  m  m',
-    'i< i  i  j^ h  m  m  q',
-    'n  n  k  j  h  m  p  q',
-    'n  k< k  j  j  m  p  q',
-    'n  l  l  l  l> mv p  q',
-    'nv l  o  o  o  o> pv qv',
+    'a^ d  d  d  b  b  b> c',
+    'a  d  f  d  e  g  g  c',
+    'a  d  f  d  e  e> g  c',
+    'a  dv f  f  f  f> gv c',
+    'a  a  a  i  c< c  c  c',
+    'h^ i< i  i  j  j  j  j>',
+    'h  n  n  n> j  k  k  k>',
+    'h  n  m  m  j  k  l  l',
+    'h  n  o  mv j  k  k  lv',
+    'h  n  o  o  o> p  p  p>',
   ],
-  { revision: 5 },
+  { revision: 6 },
 );

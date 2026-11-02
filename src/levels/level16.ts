@@ -1,23 +1,21 @@
 import { levelFromMap } from './levelMap';
 
-/** Level 16 — generated from tools/level-plan.json (seed 1650, attempt 0), score 61 (Hard). */
+/** Level 16 — chapter 1, normal level, generated from tools/level-plan.json (seed 1650, attempt 1), score 55 (Medium–hard). */
 export default levelFromMap(
   16,
   [
-    'a< a  a  b^ c< c  c  c  c  d^',
-    'e^ h^ a  b  f< f  f  f  c  d',
-    'e  h  a  b  g  g> b  b  c  d',
-    'h  h  a  b  b  b  b  i< i  i',
-    'j^ k^ a  a  l  l  l  l  l> m^',
-    'j  k  n^ a  o< o  o  o  s^ m',
-    'j  k  n  a  p^ q  q  o  s  m',
-    'j  k  n  p  p  q  o  o  s  m',
-    'r< r  r  p  q< q  o  x  s  s',
-    't< t  r  p  u^ v^ o  x  w< w',
-    'y  t  r  p  u  v  o  x  u  w',
-    'y  t  r  p  u  v  v  xv u  w',
-    'y  y> r  r  u  u  u  u  u  w',
-    'z< z  z  z  z  z  A< A  A  w',
+    'a  a> b^ c^ d  d  d  d  d>',
+    'b  b  b  c  d  i< i  f< f',
+    'b  e< e  c  d  c  i  h^ f',
+    'g  g> e  c  d  c  i  h  h',
+    'g  e  e  c  c  c  i  j  s^',
+    'g  k  k  k  m< m  j< j  s',
+    'n  n  n  k  l^ m  m  s  s',
+    'n  p  n  k  l  r  r  s  o',
+    'p  p  n  k  l  l  r  s  o',
+    'p  n  n  k  k  k  r  s  ov',
+    'pv nv q  q  q> kv rv s  s',
+    'q  q  q  t  t  t  t  t  t>',
   ],
-  { revision: 3 },
+  { revision: 4 },
 );

@@ -7,26 +7,32 @@ import { findSolution } from '../core/solver';
 import { STARTING_LIVES } from '../core/types';
 import { isSelfTouching } from '../levelgen/generateLevel';
 import { challengePool } from '../league/challenges';
+import { chapterOf } from '../progress/chapters';
 import { getLevel, LEVELS } from './index';
 
 /**
- * Levels 32–40: experimental extreme levels on shaped boards. Each fills one
- * outline from tools/shapes.ts with ordinary arrows under the normal rules,
- * and must stay fair: valid, solvable, and completable without losing a life.
+ * The nine shaped extreme levels (built as Levels 32–40), now very hard
+ * levels spread through chapters 3–5, easiest first. Each fills one outline
+ * from tools/shapes.ts with ordinary arrows under the normal rules, and must
+ * stay fair: valid, solvable, and completable without losing a life.
  */
 const SHAPED = [
-  [32, 'THE ARROWHEAD', 'arrowhead'],
-  [33, 'THE HOURGLASS', 'hourglass'],
-  [34, 'THE CROSSROADS', 'cross'],
-  [35, 'THE RING', 'ring'],
-  [36, 'THE NEON HEART', 'heart'],
-  [37, 'THE CROWN', 'crown'],
-  [38, 'THE SHIELD', 'shield'],
-  [39, 'THE NEON PINE', 'tree'],
-  [40, 'THE FORTRESS', 'castle'],
+  [47, 'THE SHIELD', 'shield'],
+  [54, 'THE CROSSROADS', 'cross'],
+  [60, 'THE HOURGLASS', 'hourglass'],
+  [67, 'THE CROWN', 'crown'],
+  [74, 'THE NEON HEART', 'heart'],
+  [80, 'THE NEON PINE', 'tree'],
+  [87, 'THE ARROWHEAD', 'arrowhead'],
+  [90, 'THE RING', 'ring'],
+  [100, 'THE FORTRESS', 'castle'],
 ] as const;
 
-const campaignDepth = Math.max(...LEVELS.slice(0, 30).map((l) => analyzeDifficulty(l, { lives: false }).exact.depth));
+/** Depth of every level, computed once (analysing all levels is the slow part). */
+const DEPTHS = LEVELS.map((l) => analyzeDifficulty(l, { lives: false }).exact.depth);
+/** The deepest normal or hard level in a level's chapter: every very hard shaped level goes deeper. */
+const deepestOtherInChapter = (id: number) =>
+  Math.max(...LEVELS.filter((l) => chapterOf(l.id) === chapterOf(id) && l.tier !== 'very hard').map((l) => DEPTHS[l.id - 1]));
 
 describe.each(SHAPED)('Level %i — %s', (id, name, shape) => {
   const level = getLevel(id)!;
@@ -36,7 +42,7 @@ describe.each(SHAPED)('Level %i — %s', (id, name, shape) => {
   const cells = level.arrows.flatMap((a) => a.cells.map((c) => `${c.row},${c.col}`));
 
   it('is the named, shaped level', () => {
-    expect(level).toMatchObject({ id, name, outline: true });
+    expect(level).toMatchObject({ id, name, outline: true, tier: 'very hard' });
   });
 
   it('fills its outline: every arrow inside the shape, at least 97 % of the shape covered, no overlaps', () => {
@@ -61,8 +67,8 @@ describe.each(SHAPED)('Level %i — %s', (id, name, shape) => {
     expect(report.exact.initialFree).toBeGreaterThanOrEqual(1);
   });
 
-  it('is far deeper than anything in Levels 1–30, with a long critical chain', () => {
-    expect(report.exact.depth).toBeGreaterThan(2 * campaignDepth);
+  it('is deeper than any normal or hard level of its chapter, with a long critical chain', () => {
+    expect(report.exact.depth).toBeGreaterThan(deepestOtherInChapter(id));
     expect(dependencyGraph(level).criticalPath).toHaveLength(report.exact.depth);
     expect(['Hard', 'Very hard']).toContain(report.category);
   });
@@ -78,13 +84,13 @@ describe.each(SHAPED)('Level %i — %s', (id, name, shape) => {
   });
 });
 
-describe('shaped Levels 32–40', () => {
-  it('are nine different shapes, and Level 40 is the last level', () => {
+describe('the shaped levels', () => {
+  it('are nine different shapes, and THE FORTRESS is the last level of the game', () => {
     expect(new Set(SHAPED.map(([, , shape]) => shape)).size).toBe(9);
-    expect(LEVELS.at(-1)?.id).toBe(40);
+    expect(LEVELS.at(-1)?.name).toBe('THE FORTRESS');
   });
 
-  it('leave Levels 1–31 without an outline', () => {
-    expect(LEVELS.slice(0, 31).some((l) => l.outline)).toBe(false);
+  it('are the only levels with an outline', () => {
+    expect(LEVELS.filter((l) => l.outline).map((l) => l.id)).toEqual(SHAPED.map(([id]) => id));
   });
 });
