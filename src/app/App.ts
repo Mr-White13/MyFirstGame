@@ -36,7 +36,10 @@ import type { AchievementsScreen } from '../ui/AchievementsScreen';
 import type { DailyDialog } from '../ui/DailyDialog';
 import type { Screens } from '../ui/Screens';
 import type { Toast } from '../ui/Toast';
+import type { BoosterId } from '../boosters/Boosters';
+import type { BoosterBar } from '../ui/BoosterBar';
 import { AttemptTracker, type AttemptSummary } from './AttemptTracker';
+import { BOOSTER_TIP, BoosterController } from './BoosterController';
 import { routeBack, type BackLayer } from './backLayers';
 import { LeagueController } from './LeagueController';
 import { RecordsKeeper } from './RecordsKeeper';
@@ -79,6 +82,8 @@ export interface AppParts {
   readonly league: LeagueService;
   readonly leagueScreen: LeagueScreen;
   readonly leagueResult: LeagueResultDialog;
+  /** The HUD's booster row (Hint, Reveal, Extra Heart). */
+  readonly boosterBar: BoosterBar;
 }
 
 /** How often the HUD clock is refreshed. The time itself comes from a monotonic clock. */
@@ -97,6 +102,7 @@ const CLOCK_REFRESH_MS = 250;
 export class App {
   private readonly records: RecordsKeeper;
   private readonly leagueController: LeagueController;
+  private readonly boosters: BoosterController;
   private profile: PlayerProfile;
   private navigating = false;
   /** The startup splash / recap covering Home: Back answers it and league notices wait for it. */
@@ -139,6 +145,19 @@ export class App {
       progress: () => this.records.progress,
       busy: () => this.navigating || this.intro !== null,
     });
+    const { rewards, dayClock } = parts;
+    this.boosters = new BoosterController({
+      state: parts.state,
+      scene: parts.scene,
+      wallet: { get credits() { return rewards.credits; }, spend: (id) => rewards.spendBooster(dayClock.refresh(), id) },
+      attempt: this.attempt,
+      bar: parts.boosterBar,
+      // Challenges are played without boosters; test plays get them free (never real credits).
+      mode: () => ({ challenge: this.attemptIsChallenge, testPlay: this.attemptIsTestPlay }),
+      notify: (message) => parts.toast.show(message, 2600),
+      onUsed: () => parts.feedback({ type: 'booster' }),
+      later: (fn, ms) => window.setTimeout(fn, ms),
+    });
   }
 
   /**
@@ -174,6 +193,9 @@ export class App {
     this.parts.league.subscribe(() => this.leagueController.render());
     this.parts.state.onRemove((arrow) => this.leagueController.collect(arrow));
     this.leagueController.settle();
+
+    // Boosters: which ones would work changes with the board, lives and balance.
+    this.parts.state.subscribe(() => this.boosters.render());
 
     // Pins the first tracked day, so later summaries know which days are complete.
     this.records.saveDailyLog();
@@ -308,7 +330,25 @@ export class App {
       // Only now is the level interactive: loading and the screen transition don't count.
       this.attempt.interactive();
       this.startClock();
+      this.introduceBoosters();
     });
+  }
+
+  /** A booster button was tapped (only acts during a level; see BoosterController). */
+  useBooster(id: BoosterId): void {
+    if (this.navigating || this.parts.screens.active !== 'game') return;
+    this.boosters.use(id);
+  }
+
+  /**
+   * Once ever, from Level 2 on (Level 1 stays a clean tutorial): a short,
+   * self-dismissing tip on what the boosters do and cost.
+   */
+  private introduceBoosters(): void {
+    const { rewards, dayClock, toast, state } = this.parts;
+    if (this.challenge || state.levelId < 2 || rewards.current.boosters.introduced) return;
+    toast.show(BOOSTER_TIP, 5000);
+    rewards.markBoostersIntroduced(dayClock.today);
   }
 
   /** Back from gameplay, asking first if an unfinished attempt would be lost. */
@@ -604,6 +644,7 @@ export class App {
     this.lastChallenge = null;
     this.attempt.begin(level.levelId, this.parts.levels[level.levelId - 1]?.revision ?? 1);
     this.leagueController.renderChallengeHud();
+    this.boosters.render();
   }
 
   /** Home's daily card and counters, Profile's rewards card, the achievements list and the open calendar. */
@@ -633,6 +674,7 @@ export class App {
     });
     achievementsScreen.render(views, rewards.credits);
     if (dailyDialog.isOpen) dailyDialog.render(daily, today, rewards.credits);
+    this.boosters.render();
   }
 
   /** A small, non-blocking notice for newly unlocked achievements (several at once are combined). */

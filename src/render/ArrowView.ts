@@ -31,6 +31,15 @@ const CORNER_STEP_PX = 4;
 const MAX_CORNER_STEPS = 24;
 /** Opacity of an arrow waiting for the power-up wave: visible, but clearly "off". */
 const POWER_UP_DIM = 0.16;
+/** How much of their colour the arrows Reveal does not point at keep, so the free ones stand out on dense boards. */
+const ASSIST_DIM = 0.35;
+
+/**
+ * Booster highlights (see boosters/Boosters.ts). `hint`: the one arrow a Hint
+ * points at. `free`: an arrow Reveal shows as able to escape. `dim`: every
+ * other arrow while Reveal is showing.
+ */
+export type AssistMode = 'none' | 'hint' | 'free' | 'dim';
 
 /** Unit-circle points for the triangle-fan discs (caps, sockets): enough for a smooth edge at arrow sizes. */
 const DISC_STEPS = 14;
@@ -68,6 +77,10 @@ export class ArrowView {
   private flashTimer?: Phaser.Time.TimerEvent;
   /** Exit/bump animations are counter tweens (they target no object), so track them to stop them. */
   private motion?: Phaser.Tweens.Tween;
+  private assist: AssistMode = 'none';
+  /** Strength of the booster glow, 0..1 (pulses unless motion is reduced). */
+  private assistGlow = 0;
+  private assistTween?: Phaser.Tweens.Tween;
 
   constructor(
     private readonly scene: Phaser.Scene,
@@ -93,11 +106,49 @@ export class ArrowView {
    * short, because its pixel distances belong to the old layout.
    */
   setLayout(layout: BoardLayout): void {
+    const assist = this.assist;
     this.stopAnimations();
     this.resetPose();
     this.layout = layout;
     this.rebuildPath();
+    this.setAssist(assist);
     this.redraw();
+  }
+
+  /**
+   * Shows or clears a booster highlight. Glowing arrows take the theme's
+   * success colour (the colour of "this can leave") with a brighter halo and
+   * a soft pulse (steady with reduced motion); dimmed ones fade back. Nothing
+   * about the arrow changes: it is tapped and moves exactly as before.
+   */
+  setAssist(mode: AssistMode): void {
+    if (mode === this.assist) return;
+    this.assistTween?.remove();
+    this.assistTween = undefined;
+    this.assist = mode;
+    const glowing = mode === 'hint' || mode === 'free';
+    this.assistGlow = glowing ? 1 : 0;
+    if (glowing && !reducedMotion()) {
+      this.assistTween = this.scene.tweens.addCounter({
+        from: 1,
+        to: 0.4,
+        duration: mode === 'hint' ? 650 : 480,
+        ease: 'Sine.easeInOut',
+        yoyo: true,
+        repeat: -1,
+        onUpdate: (tween) => {
+          this.assistGlow = tween.getValue() ?? 1;
+          this.redraw();
+        },
+      });
+    }
+    this.redraw();
+  }
+
+  /** A ring at the arrow's tip, marking where a Hint points (decoration: none with reduced motion or effects off). */
+  pulseRing(): void {
+    const tip = this.restPath[this.restPath.length - 1];
+    if (tip) this.fx.ring(tip.x, tip.y, lighten(palette().success, 0.25), this.layout.cellSize, 0.2, 1.1, 520);
   }
 
   /**
@@ -106,7 +157,15 @@ export class ArrowView {
    * the shared cache; the rest are live Graphics.
    */
   get isStatic(): boolean {
-    return !this.motion && !this.flashTimer && !this.pressed && this.offset === 0 && this.trail === 0 && !this.scene.tweens.isTweening(this.graphics);
+    return (
+      !this.motion &&
+      !this.flashTimer &&
+      !this.pressed &&
+      this.assist === 'none' &&
+      this.offset === 0 &&
+      this.trail === 0 &&
+      !this.scene.tweens.isTweening(this.graphics)
+    );
   }
 
   /** Distance in pixels from a point to the resting arrow body. */
@@ -362,6 +421,11 @@ export class ArrowView {
   }
 
   private stopAnimations(): void {
+    // Any animation of the arrow itself (leaving, bumping, re-fitting) ends its booster highlight.
+    this.assistTween?.remove();
+    this.assistTween = undefined;
+    this.assist = 'none';
+    this.assistGlow = 0;
     this.flashTimer?.remove();
     this.flashTimer = undefined;
     this.motion?.remove();
@@ -453,8 +517,16 @@ export class ArrowView {
     const headLength = cell * style.headLength;
     const halfWidth = cell * style.headHalfWidth;
     const bodyWidth = cell * style.bodyWidth;
-    const color = this.pressed ? lighten(this.color, 0.35) : this.color;
-    const haloBoost = this.pressed ? 1.6 : 1;
+    let color = this.pressed ? lighten(this.color, 0.35) : this.color;
+    // Booster glow: a bright, near-white tint of the success colour, so it stands out
+    // even where the arrows are already cyan or green. Only on the resting colour, so
+    // collisions and exits look as always.
+    if (this.assistGlow > 0 && this.color === this.baseColor) color = mixColors(color, lighten(mixColors(color, p.success, 0.6), 0.55), this.assistGlow);
+    // Dimmed (Reveal points elsewhere): blended toward the board, not made translucent,
+    // so the layered glow strokes don't show through each other.
+    const dimmed = this.assist === 'dim' && this.color === this.baseColor && !this.pressed;
+    if (dimmed) color = mixColors(p.well, color, ASSIST_DIM);
+    const haloBoost = this.pressed ? 1.6 : dimmed ? 0.5 : 1 + 1.4 * this.assistGlow;
     const moving = this.motion !== undefined && this.offset > 0;
 
     // Energy trail: three tapered, fading pieces over the cells just vacated.

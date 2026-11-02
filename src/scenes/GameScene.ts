@@ -60,6 +60,8 @@ const FAIL_DIALOG_DELAY = 550;
 const BONUS_STAGGER_MS = 90;
 /** The arrows' intro is spread over at most this long, whatever their number. */
 const INTRO_SPREAD_MS = 280;
+/** While a Hint waits to be tapped, a ring marks its arrow's tip this often. */
+const HINT_RING_MS = 1400;
 
 /**
  * Glue between input, game logic and rendering. All rules live in GameState;
@@ -108,6 +110,12 @@ export class GameScene extends Phaser.Scene {
   /** Set when a very hard level is opened: its arrows play the power-up wave instead of the usual intro (not on restart). */
   private powerUpNext = false;
   private waveTimer?: Phaser.Time.TimerEvent;
+  /** The arrow a Hint points at, until it leaves (or the level restarts or ends). */
+  private hinted: string | null = null;
+  /** Ends the Reveal highlight; set while it is showing. */
+  private revealTimer?: Phaser.Time.TimerEvent;
+  /** Repeats the ring at the hinted arrow's tip while the hint waits. */
+  private hintRingTimer?: Phaser.Time.TimerEvent;
   private readonly viewport = new BoardViewport();
   /** A shaped level's cells ("row,col"): only they show board dots. Null for rectangular boards. */
   private outline: ReadonlySet<string> | null = null;
@@ -200,6 +208,75 @@ export class GameScene extends Phaser.Scene {
     this.applyView();
   }
 
+  // ---------------------------------------------------------------- boosters
+
+  /** True while a Hint is pointing at an arrow still on the board. */
+  get hintShowing(): boolean {
+    return this.hinted !== null && this.state.has(this.hinted);
+  }
+
+  get revealShowing(): boolean {
+    return this.revealTimer !== undefined;
+  }
+
+  /**
+   * Hint: makes one arrow glow until it is tapped. Only the look changes:
+   * the board, lives and timer are untouched. Returns false (nothing shown)
+   * if the arrow is not on the board.
+   */
+  showHint(arrowId: string): boolean {
+    const view = this.views.get(arrowId);
+    if (!view || this.ended) return false;
+    if (this.hinted && this.hinted !== arrowId) this.views.get(this.hinted)?.setAssist(this.revealShowing ? 'dim' : 'none');
+    this.hinted = arrowId;
+    view.setAssist('hint');
+    view.pulseRing();
+    this.hintRingTimer?.remove();
+    this.hintRingTimer = this.time.addEvent({
+      delay: HINT_RING_MS,
+      loop: true,
+      callback: () => {
+        const hinted = this.hinted ? this.views.get(this.hinted) : undefined;
+        if (hinted) hinted.pulseRing();
+        else this.stopHintRing(); // tapped (or the level moved on): the hint is used up
+      },
+    });
+    return true;
+  }
+
+  private stopHintRing(): void {
+    this.hintRingTimer?.remove();
+    this.hintRingTimer = undefined;
+  }
+
+  /**
+   * Reveal: for `ms`, every arrow in `arrowIds` glows and the others are
+   * dimmed. Returns false (nothing shown) if none of them is on the board.
+   */
+  showReveal(arrowIds: readonly string[], ms: number): boolean {
+    const free = new Set(arrowIds.filter((id) => this.views.has(id)));
+    if (free.size === 0 || this.ended) return false;
+    this.revealTimer?.remove();
+    this.views.forEach((view, id) => view.setAssist(free.has(id) ? 'free' : 'dim'));
+    this.revealTimer = this.time.delayedCall(ms, () => this.endReveal());
+    return true;
+  }
+
+  /** Clears every booster highlight (restart, new level, end of the level). */
+  clearAssist(): void {
+    this.revealTimer?.remove();
+    this.revealTimer = undefined;
+    this.stopHintRing();
+    this.hinted = null;
+    this.views.forEach((view) => view.setAssist('none'));
+  }
+
+  /** Reveal is over: back to the normal look, keeping a Hint that is still waiting. */
+  private endReveal(): void {
+    this.revealTimer = undefined;
+    this.views.forEach((view, id) => view.setAssist(id === this.hinted ? 'hint' : 'none'));
+  }
+
   /** Resets visuals and interaction state to match the (freshly reset) game state. */
   private rebuild(keepView: boolean): void {
     if (!this.board) return; // scene not created yet; create() will build from the fresh state
@@ -214,6 +291,7 @@ export class GameScene extends Phaser.Scene {
     this.endTimer = undefined;
     this.waveTimer?.remove();
     this.waveTimer = undefined;
+    this.clearAssist();
     this.ended = false;
     this.sequencer.cancel();
     this.owners.clear();
@@ -432,6 +510,7 @@ export class GameScene extends Phaser.Scene {
     return this.viewStep(view, (done) => {
       this.options.onFeedback?.(feedback);
       if (this.pressed === view) this.pressed = undefined; // it may be highlighted while waiting for its turn
+      if (this.hinted === view.data.id) this.hinted = null; // the hint is used up
       this.views.delete(view.data.id);
       this.leaving.add(view);
       view.playExit({ onLeftBoard: done, onComplete: () => this.leaving.delete(view) }, kind);
@@ -447,6 +526,7 @@ export class GameScene extends Phaser.Scene {
 
   private beginWin(): void {
     this.ended = true;
+    this.clearAssist();
     this.releasePress();
     this.options.onLevelSolved();
     this.board.playWin();
@@ -458,6 +538,7 @@ export class GameScene extends Phaser.Scene {
 
   private beginFailure(): void {
     this.ended = true;
+    this.clearAssist();
     this.releasePress();
     this.options.onLevelLost();
     this.board.playFailure();
@@ -478,6 +559,7 @@ export class GameScene extends Phaser.Scene {
       if (!present.has(id)) {
         view.destroy();
         this.views.delete(id);
+        if (this.hinted === id) this.hinted = null;
       } else {
         view.setActivated(this.state.isActivated(id));
       }

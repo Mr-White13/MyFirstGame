@@ -39,6 +39,7 @@ import { RecordsScreen } from './ui/RecordsScreen';
 import { RecapDialog } from './ui/RecapDialog';
 import { Screens } from './ui/Screens';
 import { SettingsScreen } from './ui/SettingsScreen';
+import { BoosterBar } from './ui/BoosterBar';
 import { QuickSettings } from './ui/QuickSettings';
 import { ThemePicker } from './ui/ThemePicker';
 import { Toast } from './ui/Toast';
@@ -181,6 +182,7 @@ app = new App({
   leagueResult: new LeagueResultDialog(),
   dailyDialog,
   achievementsScreen,
+  boosterBar: new BoosterBar((id) => app?.useBooster(id)),
 });
 // Cold launch: the Mr. White Games splash (already on screen from index.html),
 // then optionally one recap insight, then Home, which is ready underneath.

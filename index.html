@@ -84,6 +84,8 @@
       <symbol id="icon-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" /><path d="M12 11v5.2" /><path d="M12 7.8v.1" /></symbol>
       <symbol id="icon-trophy" viewBox="0 0 24 24"><path d="M7.5 4.5h9v4.5a4.5 4.5 0 0 1-9 0z" /><path d="M7.5 6.5H5a2.5 2.5 0 0 0 2.6 3M16.5 6.5H19a2.5 2.5 0 0 1-2.6 3" /><path d="M12 13.5v3.5M8.5 20h7M10 17h4" /></symbol>
       <symbol id="icon-calendar" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5" /><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4" /><path d="M9.5 14.5l1.8 1.8 3.4-3.4" /></symbol>
+      <symbol id="icon-bulb" viewBox="0 0 24 24"><path d="M9 17.5h6M10 20.5h4" /><path d="M12 3.5a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.4 1.1 2.2v1h5v-1c0-.8.4-1.6 1.1-2.2A6 6 0 0 0 12 3.5z" /></symbol>
+      <symbol id="icon-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" /><circle cx="12" cy="12" r="3" /></symbol>
       <symbol id="icon-credit" viewBox="0 0 24 24"><path d="M12 3l7.8 4.5v9L12 21l-7.8-4.5v-9z" /><path d="M12.8 7.5L9.5 12.5h3l-.8 4 3.3-5h-3z" /></symbol>
       <symbol id="icon-fit" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" /><rect x="8.5" y="8.5" width="7" height="7" rx="1.5" /></symbol>
       <!-- Mr. White Games studio mark: an M and its mirror image, a W, across a dotted line. -->
@@ -319,6 +321,24 @@
                 <span class="stat__label">Left</span>
                 <span class="stat__value" id="hud-remaining" aria-live="polite">0</span>
               </div>
+            </div>
+            <!-- Boosters: optional help paid with Energy Credits (hidden in Daily League challenges, where the league strip shows instead). -->
+            <div class="boosters" id="boosters" role="toolbar" aria-label="Boosters">
+              <span class="boosters__credits" id="booster-credits" role="status" aria-label="Energy Credits: 0">
+                <svg class="icon" aria-hidden="true"><use href="#icon-credit" /></svg><strong id="booster-credits-value">0</strong>
+              </span>
+              <button type="button" class="booster" data-booster="hint">
+                <svg class="icon" aria-hidden="true"><use href="#icon-bulb" /></svg>
+                <span class="booster__name">Hint</span><span class="booster__cost" data-cost>20</span>
+              </button>
+              <button type="button" class="booster" data-booster="reveal">
+                <svg class="icon" aria-hidden="true"><use href="#icon-eye" /></svg>
+                <span class="booster__name">Reveal</span><span class="booster__cost" data-cost>40</span>
+              </button>
+              <button type="button" class="booster" data-booster="heart">
+                <svg class="icon" aria-hidden="true"><use href="#icon-heart" /></svg>
+                <span class="booster__name">+1</span><span class="booster__cost" data-cost>80</span>
+              </button>
             </div>
             <div class="hud__league" id="hud-league" hidden>
               <span class="hud__energy" id="hud-energy-wrap">

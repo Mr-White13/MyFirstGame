@@ -24,7 +24,9 @@ export type FeedbackEvent =
   /** An Energy Arrow was collected (the point is already saved). */
   | { readonly type: 'energy' }
   /** A league promotion was shown. */
-  | { readonly type: 'promoted' };
+  | { readonly type: 'promoted' }
+  /** A booster (Hint, Reveal, Extra Heart) was used. */
+  | { readonly type: 'booster' };
 
 export interface SoundPlayer {
   play(id: SoundId, options?: SoundOptions & { delay?: number }): boolean;
@@ -105,6 +107,10 @@ export class Feedback {
       case 'promoted':
         this.sound.play('promoted');
         this.haptics.play('promoted');
+        return;
+      case 'booster':
+        this.sound.play('unlock');
+        this.haptics.play('release');
         return;
     }
   }
