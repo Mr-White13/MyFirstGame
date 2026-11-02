@@ -261,3 +261,37 @@ describe('rewarded ads: saved data', () => {
     vi.restoreAllMocks();
   });
 });
+
+describe('rewarded ads: Continue after Game Over', () => {
+  it('pays no credits and is not limited by the daily credit cap; consent still applies', async () => {
+    const { ads, rewards } = setup();
+    await ads.start();
+    for (let i = 0; i < MAX_REWARDED_ADS_PER_DAY; i++) await ads.watch();
+    expect(await ads.watch()).toEqual({ kind: 'limit' });
+    expect(ads.canOfferContinue).toBe(true);
+    const credits = rewards.credits;
+    expect(await ads.watchForContinue()).toEqual({ kind: 'rewarded', credits: 0, saved: true });
+    expect(rewards.credits).toBe(credits);
+    expect(rewards.current.adRewards.count).toBe(MAX_REWARDED_ADS_PER_DAY);
+
+    const declined = setup(fakeBackend({ consent: { canRequestAds: false, privacyOptionsRequired: false } }));
+    await declined.ads.start();
+    expect(await declined.ads.watchForContinue()).toEqual({ kind: 'not-permitted' });
+    expect(declined.ads.canOfferContinue).toBe(false);
+  });
+
+  it('closed early gives nothing; before ads have started nothing is shown at all', async () => {
+    const { ads } = setup(fakeBackend({ rewardCalls: 0 }));
+    expect(await ads.watchForContinue()).toEqual({ kind: 'busy' }); // not started (for example the ad-free start)
+    await ads.start();
+    expect(await ads.watchForContinue()).toEqual({ kind: 'dismissed' });
+  });
+
+  it('the Shop explains the ad-free start', () => {
+    expect(presentEarn({ state: 'ready', remaining: 5, limit: 5, credits: 30, lockedMinutes: 18 })).toEqual({
+      status: 'No ads while you get started: this unlocks after 18 more minutes of play.',
+      button: null,
+    });
+    expect(presentEarn({ state: 'ready', remaining: 5, limit: 5, credits: 30, lockedMinutes: 1 }).status).toMatch(/1 more minute of/);
+  });
+});

@@ -303,6 +303,18 @@ export class GameScene extends Phaser.Scene {
     return true;
   }
 
+  /**
+   * The lost level continues (GameState.revive, after a rewarded ad): the
+   * board looks normal again and takes taps; arrows stay exactly where they were.
+   */
+  continueAfterFailure(): void {
+    if (!this.ended || !this.state.isPlaying) return;
+    this.endTimer?.remove();
+    this.endTimer = undefined;
+    this.ended = false;
+    this.board.reset();
+  }
+
   /** Clears every booster highlight (restart, new level, end of the level). */
   clearAssist(): void {
     this.revealTimer?.remove();

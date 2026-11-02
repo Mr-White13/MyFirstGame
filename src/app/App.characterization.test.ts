@@ -90,6 +90,8 @@ interface Options {
   credits?: number;
   /** A fake rewarded-ads service (default: none, as in browsers). */
   ads?: { result?: { kind: string; credits?: number; saved?: boolean }; canOffer?: boolean };
+  /** Lifetime play time in the statistics (default 0: inside the ad-free start). */
+  playTimeMs?: number;
   /** Whether the one-time rule tips were already shown (default true, so older tests see none). */
   tipsSeen?: boolean;
 }
@@ -101,7 +103,7 @@ function createHarness(options: Options = {}) {
   const boosterViews: unknown[] = [];
   /** Every view the Shop screen was asked to show (not logged as effects). */
   const shopViews: unknown[] = [];
-  const initial = { progress: options.progress ?? createProgress(), stats: createStats(new Date(0)), dailyLog: createDailyLog(TODAY), profile: createProfile() };
+  const initial = { progress: options.progress ?? createProgress(), stats: { ...createStats(new Date(0)), playTimeMs: options.playTimeMs ?? 0 }, dailyLog: createDailyLog(TODAY), profile: createProfile() };
 
   let now = 0;
   vi.spyOn(performance, 'now').mockImplementation(() => now);
@@ -153,6 +155,11 @@ function createHarness(options: Options = {}) {
     getArrows: () => [] as ArrowData[],
     blockerOf: () => null,
     restoreLife: () => false,
+    revive() {
+      if (this.snap.status !== 'failed') return false;
+      this.snap = { ...this.snap, status: 'playing', lives: 1 };
+      return true;
+    },
     /** The rules moved on: patch the live snapshot. */
     set(patch: Partial<GameSnapshot>) {
       this.snap = { ...this.snap, ...patch };
@@ -170,6 +177,7 @@ function createHarness(options: Options = {}) {
     revealShowing: false,
     showHint: (id: string) => (rec('scene.showHint', id), true),
     showReveal: (ids: readonly string[]) => (rec('scene.showReveal', ids.length), true),
+    continueAfterFailure: () => rec('scene.continueAfterFailure'),
   };
   const gameEvents = new Map<string, { fn: () => void; once: boolean }[]>();
   const game = {
@@ -422,8 +430,12 @@ function createHarness(options: Options = {}) {
       dailyLimit: 5,
       credits: 30,
       canOffer: options.ads.canOffer ?? true,
+      canOfferContinue: options.ads.canOffer ?? true,
+      supported: true,
       privacyOptionsRequired: false,
+      start: async () => rec('ads.start'),
       watch: async () => (rec('ads.watch'), options.ads!.result ?? { kind: 'rewarded', credits: 30, saved: true }),
+      watchForContinue: async () => (rec('ads.watchForContinue'), options.ads!.result ?? { kind: 'rewarded', credits: 0, saved: true }),
       showPrivacyOptions: async () => rec('ads.showPrivacyOptions'),
     },
   };
@@ -645,13 +657,18 @@ describe('level completion (win)', () => {
 });
 
 describe('level failure', () => {
-  it('stops the clock, saves stats (never progress), the daily log and rewards, then the Game Over feedback', async () => {
+  it('stops the clock and plays Game Over; the failed attempt is saved (stats, daily log, rewards, never progress) once the player chooses', async () => {
     const h = createHarness();
     await enterLevel(h, 1);
     h.advance(7_000);
     h.state.set({ status: 'failed', lives: 0, moves: 4, directClears: 3, mistakes: 3, remaining: 7 });
     h.app.handleLevelLost();
-    expect(h.effects()).toEqual(['hud.setTime 7000', 'stats.save', 'dailyLog.save', `rewards.afterAttempt ${TODAY} 0`, 'feedback gameOver']);
+    // Nothing is recorded yet: Continue could still bring this run back.
+    expect(h.effects()).toEqual(['hud.setTime 7000', 'feedback gameOver']);
+    h.advance(30_000); // the Game Over screen isn't play time
+    h.clear();
+    h.app.restartLevel(); // Try again
+    expect(h.effects().slice(0, 3)).toEqual(['stats.save', 'dailyLog.save', `rewards.afterAttempt ${TODAY} 0`]);
     const failed = summary({ levelId: 1, outcome: 'failed', timeMs: 7_000, moves: 4, directClears: 3, mistakes: 3 });
     const expected = applyAttempt({ progress: h.initial.progress, stats: h.initial.stats }, failed, LEVEL_COUNT);
     expect(expected.completion).toBeNull();
@@ -668,10 +685,14 @@ describe('level failure', () => {
     h.clear();
     h.app.handleLevelFailed();
     expect(h.effects()).toEqual(['gameOverDialog.show']);
-    expect(h.calls('gameOverDialog.show')[0][0]).toEqual({ levelId: 1, cleared: 3, total: 10, mistakes: 3, challenge: undefined });
+    expect(h.calls('gameOverDialog.show')[0][0]).toEqual({ levelId: 1, cleared: 3, total: 10, mistakes: 3, challenge: undefined, canContinue: false });
     h.clear();
     h.app.restartLevel();
-    expect(h.effects()).toEqual([...END_DIALOGS, 'scene.restartLevel', 'hud.setTime 0']);
+    expect(h.effects()).toEqual([...ABANDON_SAVES, ...END_DIALOGS, 'scene.restartLevel', 'hud.setTime 0']);
+    expect(h.calls('stats.save')[0][0]).toMatchObject({ failedRuns: 1, successfulRuns: 0 });
+    h.clear();
+    h.app.restartLevel(); // the new attempt ends untouched: abandoned, the failure isn't counted twice
+    expect(h.calls('stats.save')[0][0]).toMatchObject({ failedRuns: 1 });
   });
 
   it('Game Over is not shown once the player has left the game screen', async () => {
@@ -1185,6 +1206,7 @@ describe('background and resume', () => {
     h.clear();
     h.state.set({ status: 'failed', lives: 0, mistakes: 3 });
     h.app.handleLevelLost();
+    h.app.restartLevel(); // the player chooses Try again: now the failure is saved
     const failed = summary({ levelId: 1, outcome: 'failed', timeMs: 7_000, uncountedTimeMs: 2_000, mistakes: 3 });
     expect(h.calls('stats.save')[0][0]).toEqual(applyAttempt({ progress: h.initial.progress, stats }, failed, LEVEL_COUNT).records.stats);
     expect(h.calls('dailyLog.save')[0][0]).toEqual(recordDayAttempt(dailyLog, TODAY, failed));
@@ -1259,7 +1281,7 @@ describe('boosters', () => {
     await h.app.openLevel(4);
     await flush();
     expect(h.effects().filter((e) => e.startsWith('toast.show') || e.startsWith('rewards.mark'))).toEqual([
-      'toast.show Stuck? Boosters: Hint 20 · Reveal 40 · Extra Heart 80 credits 5000',
+      'toast.show Stuck? Boosters: Hint 20 · Reveal 40 credits 5000',
       `rewards.markBoostersIntroduced ${TODAY}`,
     ]);
     h.clear();
@@ -1456,11 +1478,14 @@ describe('rule tips', () => {
   });
 });
 
+/** Lifetime play time past the 30-minute ad-free start. */
+const PLAYED = 30 * 60_000;
+
 describe('rewarded ads', () => {
   const blocked = { id: 'a1', direction: 'right', cells: [{ row: 0, col: 0 }] } as ArrowData;
 
   it('Shop: a rewarded ad celebrates, plays feedback and says what was earned', async () => {
-    const h = createHarness({ ads: {} });
+    const h = createHarness({ ads: {}, playTimeMs: PLAYED });
     h.app.start();
     await h.app.showShop();
     await flush();
@@ -1476,7 +1501,7 @@ describe('rewarded ads', () => {
       ['unavailable', 'No ad is available right now. Check your connection and try again later.'],
       ['limit', 'Daily ad limit reached. Come back tomorrow for more.'],
     ] as const) {
-      const h = createHarness({ ads: { result: { kind } } });
+      const h = createHarness({ ads: { result: { kind } }, playTimeMs: PLAYED });
       h.app.start();
       h.clear();
       await h.app.watchAd();
@@ -1496,7 +1521,7 @@ describe('rewarded ads', () => {
   });
 
   it('a booster without enough credits keeps its explanation, then offers an ad; the booster is never used by itself', async () => {
-    const h = createHarness({ ads: {}, credits: 5, progress: progressThrough(3) });
+    const h = createHarness({ ads: {}, credits: 5, progress: progressThrough(3), playTimeMs: PLAYED });
     await enterLevel(h, 4);
     h.state.escapableArrows = () => [blocked];
     h.state.getArrows = () => [blocked];
@@ -1515,7 +1540,7 @@ describe('rewarded ads', () => {
   });
 
   it('"Not now" carries on without an ad; with no ad possible, only the explanation shows', async () => {
-    const h = createHarness({ ads: {}, credits: 5, progress: progressThrough(3) });
+    const h = createHarness({ ads: {}, credits: 5, progress: progressThrough(3), playTimeMs: PLAYED });
     await enterLevel(h, 4);
     h.state.escapableArrows = () => [blocked];
     h.rewards.credits = 5;
@@ -1526,7 +1551,7 @@ describe('rewarded ads', () => {
     await flush();
     expect(h.effects()).toEqual(['confirmDialog.close false']);
 
-    const none = createHarness({ ads: { canOffer: false }, credits: 5, progress: progressThrough(3) });
+    const none = createHarness({ ads: { canOffer: false }, credits: 5, progress: progressThrough(3), playTimeMs: PLAYED });
     await enterLevel(none, 4);
     none.state.escapableArrows = () => [blocked];
     none.rewards.credits = 5;
@@ -1536,7 +1561,7 @@ describe('rewarded ads', () => {
   });
 
   it('while an ad covers the game the level clock pauses and Back is ignored; both resume afterwards', async () => {
-    const h = createHarness({ ads: {} });
+    const h = createHarness({ ads: {}, playTimeMs: PLAYED });
     await enterLevel(h, 1);
     h.advance(1_000);
     h.app.setAdShowing(true);
@@ -1547,5 +1572,112 @@ describe('rewarded ads', () => {
     h.app.setAdShowing(false);
     h.advance(500);
     expect(h.app.timer.elapsed()).toBe(1_500);
+  });
+});
+
+describe('Game Over: Continue with a rewarded ad', () => {
+  /** Level 2 (really unlocked, so it is recorded), lost after 5 s; returns what the Game Over dialog was given. */
+  async function lose(options: Options = {}) {
+    const h = createHarness({ ads: {}, playTimeMs: PLAYED, progress: progressThrough(1), ...options });
+    await enterLevel(h, 2);
+    h.advance(5_000);
+    h.state.set({ status: 'failed', lives: 0, mistakes: 3, remaining: 4 });
+    h.app.handleLevelLost();
+    h.app.handleLevelFailed();
+    const shown = h.calls('gameOverDialog.show').at(-1)?.[0];
+    h.clear();
+    return Object.assign(h, { shown });
+  }
+
+  it('is offered on Game Over; after the ad the same run continues with one heart, the clock running again', async () => {
+    const h = await lose();
+    expect(h.shown).toMatchObject({ canContinue: true });
+    await h.app.continueWithAd();
+    expect(h.effects()).toEqual(['ads.watchForContinue', 'gameOverDialog.hide', 'scene.continueAfterFailure', 'feedback claim', 'toast.show +1 heart: keep going! 2200 achievement']);
+    expect(h.state.snap).toMatchObject({ status: 'playing', lives: 1 });
+    h.advance(1_000);
+    expect(h.app.timer.elapsed()).toBe(6_000); // 5 s before + 1 s after (the Game Over screen didn't count)
+  });
+
+  it('once per attempt: a second loss offers only Try again; the run is then saved as one failed attempt', async () => {
+    const h = await lose();
+    await h.app.continueWithAd();
+    h.state.set({ status: 'failed', lives: 0, mistakes: 4 });
+    h.app.handleLevelLost();
+    h.app.handleLevelFailed();
+    expect(h.calls('gameOverDialog.show').at(-1)![0]).toMatchObject({ canContinue: false });
+    h.clear();
+    await h.app.continueWithAd();
+    expect(h.effects()).toEqual([]);
+    h.app.restartLevel();
+    expect(h.calls('stats.save')).toHaveLength(1);
+    expect(h.calls('stats.save')[0][0]).toMatchObject({ failedRuns: 1 });
+  });
+
+  it('an ad closed early (or unavailable) brings nothing back; the dialog stays for Try again or Levels', async () => {
+    const h = await lose({ ads: { result: { kind: 'dismissed' } } });
+    await h.app.continueWithAd();
+    expect(h.effects()).toEqual(['ads.watchForContinue', 'toast.show The ad was closed before the end, so no extra heart this time. 3200']);
+    expect(h.state.snap.status).toBe('failed');
+    h.clear();
+    await h.app.showLevelsOrLeague();
+    await flush();
+    expect(h.calls('stats.save')[0][0]).toMatchObject({ failedRuns: 1 }); // leaving saves the loss
+  });
+
+  it('not offered without ads (browser), in the ad-free start, or in Daily League challenges', async () => {
+    const browser = await lose({ ads: undefined });
+    expect(browser.shown).toMatchObject({ canContinue: false });
+    expect(browser.app.canContinue).toBe(false);
+
+    const early = await lose({ playTimeMs: PLAYED - 1 });
+    expect(early.app.canContinue).toBe(false);
+    await early.app.continueWithAd();
+    expect(early.effects()).toEqual([]);
+
+    const h = createHarness({ ads: {}, playTimeMs: PLAYED, progress: progressThrough(10), challenges: [CHALLENGE] });
+    h.app.start();
+    await h.app.openChallenge(1);
+    await flush();
+    h.state.set({ status: 'failed', lives: 0, mistakes: 3 });
+    h.app.handleLevelLost();
+    expect(h.app.canContinue).toBe(false);
+  });
+});
+
+describe('ad-free start (first 30 minutes of play)', () => {
+  it('no ads, no consent form, no offers before 30 minutes of play; the Shop says how long', async () => {
+    const h = createHarness({ ads: {}, playTimeMs: 12 * 60_000, credits: 5, progress: progressThrough(3) });
+    h.app.start();
+    h.app.startAdsIfEligible();
+    expect(h.effects()).not.toContain('ads.start');
+    await h.app.showShop();
+    await flush();
+    expect(h.shopViews.at(-1)).toMatchObject({ earn: { lockedMinutes: 18 } });
+    h.clear();
+    await h.app.watchAd();
+    expect(h.effects()).toEqual([]);
+    await h.app.openLevel(4);
+    await flush();
+    h.clear();
+    h.state.escapableArrows = () => [{ id: 'a1', direction: 'right', cells: [{ row: 0, col: 0 }] } as ArrowData];
+    h.rewards.credits = 5;
+    h.app.useBooster('hint');
+    await flush();
+    expect(h.effects().filter((e) => e.startsWith('confirmDialog.ask'))).toEqual([]); // no ad offer, only the explanation
+  });
+
+  it('ads start once the player is past 30 minutes (at launch, or when an attempt pushes them over)', async () => {
+    const ready = createHarness({ ads: {}, playTimeMs: PLAYED });
+    ready.app.start();
+    ready.clear();
+    ready.app.startAdsIfEligible();
+    expect(ready.effects()).toEqual(['ads.start']);
+
+    const almost = createHarness({ ads: {}, playTimeMs: PLAYED - 2_000 });
+    await enterLevel(almost, 1);
+    almost.advance(3_000);
+    almost.app.restartLevel(); // the abandoned attempt adds 3 s of play
+    expect(almost.effects()).toContain('ads.start');
   });
 });

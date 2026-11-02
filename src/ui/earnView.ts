@@ -8,6 +8,8 @@ export interface EarnView {
   readonly limit: number;
   /** Credits per ad. */
   readonly credits: number;
+  /** Minutes of play left before ads are offered at all (ad-free start); 0 or missing: none. */
+  readonly lockedMinutes?: number;
 }
 
 /** The section's text and button for a given state. Pure, so every state is testable. */
@@ -20,6 +22,10 @@ export interface EarnPresentation {
 export function presentEarn(view: EarnView): EarnPresentation {
   const left = `${view.remaining} of ${view.limit} ads left today.`;
   if (view.state === 'unsupported') return { status: 'Ads that earn credits are available in the Android app.', button: null };
+  if ((view.lockedMinutes ?? 0) > 0) {
+    const m = view.lockedMinutes!;
+    return { status: `No ads while you get started: this unlocks after ${m} more ${m === 1 ? 'minute' : 'minutes'} of play.`, button: null };
+  }
   if (view.state === 'not-permitted') {
     return { status: 'Ads are off because of your privacy choices or region. You can change your choices in Settings.', button: null };
   }

@@ -3502,10 +3502,10 @@ body.is-navigating #app {
 
 /* ---------- Boosters (Hint, Reveal, Extra Heart), see src/ui/BoosterBar.ts ---------- */
 
-/* Balance, then three equal buttons that share the HUD's width: the row never makes the HUD wider. */
+/* Balance, then two equal buttons (Hint, Reveal) that share the HUD's width: the row never makes the HUD wider. */
 .boosters {
   display: grid;
-  grid-template-columns: auto repeat(3, minmax(0, 1fr));
+  grid-template-columns: auto repeat(2, minmax(0, 1fr));
   align-items: center;
   gap: 6px;
 }
@@ -3566,12 +3566,6 @@ body.is-navigating #app {
   width: 16px;
   height: 16px;
   color: var(--cyan);
-}
-
-.booster[data-booster='heart'] .icon {
-  fill: var(--pink);
-  stroke: var(--pink);
-  stroke-width: 1.4;
 }
 
 .booster__cost {
@@ -4990,4 +4984,32 @@ body.is-navigating #app {
 
 .ad-shield[hidden] {
   display: none;
+}
+
+/* Game Over "Continue": watch a rewarded ad (the screen-with-play icon) for one heart. */
+.gameover__continue {
+  gap: 8px;
+}
+
+.gameover__continue[hidden] {
+  display: none;
+}
+
+.gameover__continue-reward {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 2px;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  font-variant-numeric: tabular-nums;
+  background: rgb(0 0 0 / 0.16);
+}
+
+.gameover__continue-reward .icon {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 1.2;
 }

@@ -120,6 +120,7 @@ const completeDialog = new CompleteDialog({
 const gameOverDialog = new GameOverDialog({
   onTryAgain: () => app?.restartLevel(),
   onLevels: () => void app?.showLevelsOrLeague(),
+  onContinue: () => void app?.continueWithAd(),
 });
 const home = new HomeScreen(LEVELS, {
   onPlay: (id) => void app?.openLevel(id),
@@ -320,7 +321,7 @@ ads = new RewardedAds({
   log: (message) => console.warn(message),
 });
 app.renderShop();
-introDone.then(() => void ads!.start());
+introDone.then(() => app!.startAdsIfEligible()); // not before the ad-free start is over
 
 // Android: the Back button/gesture follows the game's own navigation and dialogs.
 connectNativeApp({ onBack: () => app!.handleBack(true), onBackground: setBackground });

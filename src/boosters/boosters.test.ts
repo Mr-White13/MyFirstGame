@@ -8,7 +8,7 @@ import { createStats, type PlayerStats } from '../profile/Stats';
 import { boosterTransactionId, readRewards, REWARDS_KEY, Rewards, serializeRewards, createRewards } from '../rewards/Rewards';
 import { createWallet, earn, spend } from '../rewards/Wallet';
 import { MemoryStore } from '../testing/memoryStore';
-import { BOOSTER_LOCK_MS, BOOSTERS, BOOSTERS_FROM_LEVEL, checkBooster, hintTarget, REVEAL_MS, type BoosterContext, type BoosterId } from './Boosters';
+import { BOOSTER_IDS, BOOSTER_LOCK_MS, BOOSTERS, BOOSTERS_FROM_LEVEL, checkBooster, hintTarget, REVEAL_MS, type BoosterContext, type BoosterId } from './Boosters';
 
 const DAY = '2026-11-02';
 const level = (id: number) => LEVELS[id - 1];
@@ -141,23 +141,23 @@ describe('Extra Heart (GameState.restoreLife)', () => {
 });
 
 describe('checkBooster', () => {
-  const ctx: BoosterContext = { playing: true, challenge: false, testPlay: false, credits: 100, lives: 2, maxLives: 3, escapable: 4, hintShowing: false, revealShowing: false, locked: false };
+  const ctx: BoosterContext = { playing: true, challenge: false, testPlay: false, credits: 100, escapable: 4, hintShowing: false, revealShowing: false, locked: false };
 
   it('charges each booster its cost when it can do something', () => {
-    for (const id of ['hint', 'reveal', 'heart'] as BoosterId[]) {
+    for (const id of ['hint', 'reveal'] as BoosterId[]) {
       expect(checkBooster(id, ctx)).toEqual({ ok: true, payment: { kind: 'credits', cost: BOOSTERS[id].cost } });
     }
-    expect([BOOSTERS.hint.cost, BOOSTERS.reveal.cost, BOOSTERS.heart.cost]).toEqual([20, 40, 80]);
+    expect([BOOSTERS.hint.cost, BOOSTERS.reveal.cost]).toEqual([20, 40]);
+    expect(BOOSTER_IDS).toEqual(['hint', 'reveal']); // Extra Heart is no longer a level booster (Game Over Continue replaces it)
   });
 
   it('refuses with the most useful reason, before asking for credits', () => {
     const poor = { ...ctx, credits: 0 };
-    expect(checkBooster('heart', { ...poor, lives: 3 })).toEqual({ ok: false, reason: 'full-hearts' });
     expect(checkBooster('hint', { ...poor, escapable: 0 })).toEqual({ ok: false, reason: 'no-target' });
     expect(checkBooster('reveal', { ...poor, escapable: 0 })).toEqual({ ok: false, reason: 'no-target' });
     expect(checkBooster('hint', poor)).toEqual({ ok: false, reason: 'insufficient' });
-    expect(checkBooster('heart', { ...ctx, credits: 79 })).toEqual({ ok: false, reason: 'insufficient' });
-    expect(checkBooster('heart', { ...ctx, credits: 80 }).ok).toBe(true);
+    expect(checkBooster('reveal', { ...ctx, credits: 39 })).toEqual({ ok: false, reason: 'insufficient' });
+    expect(checkBooster('reveal', { ...ctx, credits: 40 }).ok).toBe(true);
     expect(checkBooster('hint', { ...ctx, playing: false })).toEqual({ ok: false, reason: 'not-playing' });
     expect(checkBooster('hint', { ...ctx, challenge: true })).toEqual({ ok: false, reason: 'challenge' });
     expect(checkBooster('hint', { ...ctx, hintShowing: true })).toEqual({ ok: false, reason: 'active' });
@@ -166,7 +166,7 @@ describe('checkBooster', () => {
   });
 
   it('test plays are free, even with no credits', () => {
-    expect(checkBooster('heart', { ...ctx, testPlay: true, credits: 0 })).toEqual({ ok: true, payment: { kind: 'free', reason: 'test-play' } });
+    expect(checkBooster('reveal', { ...ctx, testPlay: true, credits: 0 })).toEqual({ ok: true, payment: { kind: 'free', reason: 'test-play' } });
   });
 });
 
@@ -237,17 +237,6 @@ describe('BoosterController', () => {
     expect(scene.revealUntil).toBe(REVEAL_MS);
   });
 
-  it('Extra Heart: refused at full hearts (no charge), then charges 80 for one heart after a mistake', () => {
-    const { controller, rewards, state, notes } = setup({ credits: 200 });
-    expect(controller.use('heart')).toEqual({ used: false, reason: 'full-hearts' });
-    expect(rewards.credits).toBe(200);
-    expect(notes.at(-1)).toMatch(/already full/);
-    state.tryMove(blockedArrow(state));
-    expect(controller.use('heart')).toEqual({ used: true, charged: 80 });
-    expect(rewards.credits).toBe(120);
-    expect(state.lives).toBe(3);
-  });
-
   it('insufficient credits: nothing is charged or shown, and the message explains', () => {
     const { controller, rewards, scene, notes, store } = setup({ credits: 30 });
     const saved = store!.getItem(REWARDS_KEY);
@@ -259,16 +248,13 @@ describe('BoosterController', () => {
   });
 
   it('rapid repeated taps are charged once', () => {
-    const { controller, rewards, state, advance } = setup({ credits: 500 });
-    state.tryMove(blockedArrow(state));
-    state.tryMove(blockedArrow(state));
-    const results = [controller.use('heart'), controller.use('heart'), controller.use('hint'), controller.use('hint')];
+    const { controller, rewards, advance } = setup({ credits: 500 });
+    const results = [controller.use('reveal'), controller.use('reveal'), controller.use('hint'), controller.use('hint')];
     expect(results.filter((r) => r.used)).toHaveLength(1);
-    expect(rewards.credits).toBe(420);
-    expect(state.lives).toBe(2);
+    expect(rewards.credits).toBe(460);
     advance(BOOSTER_LOCK_MS);
-    expect(controller.use('heart').used).toBe(true); // a deliberate second use later is fine
-    expect(rewards.credits).toBe(340);
+    expect(controller.use('hint').used).toBe(true); // a deliberate second use later is fine
+    expect(rewards.credits).toBe(440);
   });
 
   it('a Hint still waiting is not bought again; once its arrow is tapped, a new one can be', () => {
@@ -287,7 +273,7 @@ describe('BoosterController', () => {
     // (a free red arrow is released at once), so this uses a stand-in state.
     const { rewards, notes } = setup({ credits: 100 });
     const empty = new BoosterController({
-      state: { isPlaying: true, lives: 3, maxLives: 3, escapableArrows: () => [], getArrows: () => [], blockerOf: () => null, restoreLife: () => false },
+      state: { isPlaying: true, escapableArrows: () => [], getArrows: () => [], blockerOf: () => null },
       scene: { hintShowing: false, revealShowing: false, showHint: () => true, showReveal: () => true },
       wallet: { get credits() { return rewards.credits; }, spend: (id) => rewards.spendBooster(DAY, id) },
       attempt: { isOpen: true, useBooster: () => {} },
@@ -304,13 +290,13 @@ describe('BoosterController', () => {
   it('nothing works after Game Over, after a win, or once the attempt has ended (left or restarted)', () => {
     const lost = setup({ credits: 500 });
     for (let i = 0; i < 3; i++) lost.state.tryMove(blockedArrow(lost.state));
-    for (const id of ['hint', 'reveal', 'heart'] as BoosterId[]) expect(lost.controller.use(id)).toEqual({ used: false, reason: 'not-playing' });
+    for (const id of ['hint', 'reveal'] as BoosterId[]) expect(lost.controller.use(id)).toEqual({ used: false, reason: 'not-playing' });
     expect(lost.rewards.credits).toBe(500);
 
     const won = setup({ credits: 500, levelId: 1 });
     won.state.tryMove(blockedArrow(won.state));
     while (won.state.isPlaying) won.state.tryMove(won.state.escapableArrows()[0].id);
-    expect(won.controller.use('heart')).toEqual({ used: false, reason: 'not-playing' });
+    expect(won.controller.use('reveal')).toEqual({ used: false, reason: 'not-playing' });
 
     const left = setup({ credits: 500 });
     left.attempt.finish('abandoned', left.state.snapshot());
@@ -333,7 +319,7 @@ describe('BoosterController', () => {
     const saved = store!.getItem(REWARDS_KEY);
     state.tryMove(blockedArrow(state));
     expect(controller.use('hint')).toEqual({ used: true, charged: 0 });
-    expect(controller.use('heart').used).toBe(false); // locked: rapid tap
+    expect(controller.use('reveal').used).toBe(false); // locked: rapid tap
     expect(rewards.credits).toBe(0);
     expect(rewards.current.boosters.used).toEqual({ hint: 0, reveal: 0, heart: 0 });
     expect(store!.getItem(REWARDS_KEY)).toBe(saved);
@@ -351,10 +337,11 @@ describe('BoosterController', () => {
   it('the toolbar shows the balance and marks what would work now', () => {
     const { controller, bar, state } = setup({ credits: 50 });
     controller.render();
-    expect(bar.render).toHaveBeenLastCalledWith({ visible: true, credits: 50, free: false, available: { hint: true, reveal: true, heart: false } });
-    state.tryMove(blockedArrow(state));
-    controller.render();
-    expect(bar.render).toHaveBeenLastCalledWith(expect.objectContaining({ available: { hint: true, reveal: true, heart: false } })); // 50 < 80
+    expect(bar.render).toHaveBeenLastCalledWith({ visible: true, credits: 50, free: false, available: { hint: true, reveal: true } });
+    const poor = setup({ credits: 30 });
+    poor.controller.render();
+    expect(poor.bar.render).toHaveBeenLastCalledWith(expect.objectContaining({ available: { hint: true, reveal: false } })); // 30 < 40
+    void state;
   });
 });
 
@@ -375,13 +362,13 @@ describe('booster spending and saved data', () => {
 
   it('never goes negative, and a refused spend changes nothing', () => {
     const rewards = new Rewards({ levels: LEVELS, records: () => ({ progress: createProgress(), stats: createStats() }) }, new MemoryStore());
-    rewards.grant(DAY, { id: 'test:seed', amount: 79 });
-    expect(rewards.spendBooster(DAY, 'heart')).toBe(false);
-    expect(rewards.credits).toBe(79);
-    expect(rewards.current.boosters.used.heart).toBe(0);
+    rewards.grant(DAY, { id: 'test:seed', amount: 39 });
+    expect(rewards.spendBooster(DAY, 'reveal')).toBe(false);
+    expect(rewards.credits).toBe(39);
+    expect(rewards.current.boosters.used.reveal).toBe(0);
     for (let i = 0; i < 10; i++) rewards.spendBooster(DAY, 'hint');
     expect(rewards.credits).toBe(19);
-    expect(rewards.current.boosters.used.hint).toBe(3);
+    expect(rewards.current.boosters.used.hint).toBe(1);
   });
 
   it('saves from before boosters read as no uses and the tip not shown, keeping every other field', () => {
@@ -444,5 +431,35 @@ describe('rule tips (saved data)', () => {
     expect(readRewards(JSON.stringify(raw)).value.tips).toEqual(['tap', 'chain']);
     const { tips: _, ...older } = raw;
     expect(readRewards(JSON.stringify(older)).value.tips).toEqual([]); // saves from before tips: none shown yet
+  });
+});
+
+describe('Continue after Game Over (GameState.revive)', () => {
+  it('a lost level plays on with one heart, the board as it was; stars still count every mistake', () => {
+    const state = new GameState(level(10), { validate: false });
+    for (let i = 0; i < 3; i++) state.tryMove(blockedArrow(state));
+    const before = state.getArrows().map((a) => a.id);
+    expect(state.isFailed).toBe(true);
+    expect(state.revive()).toBe(true);
+    expect(state.snapshot()).toMatchObject({ status: 'playing', lives: 1, mistakes: 3 });
+    expect(state.getArrows().map((a) => a.id)).toEqual(before);
+    expect(state.revive()).toBe(false); // only a lost level can be revived
+    while (state.isPlaying) state.tryMove(state.escapableArrows()[0].id);
+    expect(state.snapshot()).toMatchObject({ won: true, stars: 1 });
+  });
+
+  it('a mistake after continuing ends the level again; a restart clears it', () => {
+    const state = new GameState(level(10), { validate: false });
+    for (let i = 0; i < 3; i++) state.tryMove(blockedArrow(state));
+    state.revive();
+    state.tryMove(blockedArrow(state));
+    expect(state.isFailed).toBe(true);
+    state.reset();
+    expect(state.snapshot()).toMatchObject({ lives: 3, mistakes: 0, status: 'playing' });
+  });
+
+  it('saves that counted Extra Heart uses keep that number', () => {
+    const raw = { ...JSON.parse(serializeRewards(createRewards())), boosters: { used: { hint: 2, reveal: 1, heart: 4 }, introduced: true } };
+    expect(readRewards(JSON.stringify(raw)).value.boosters.used).toEqual({ hint: 2, reveal: 1, heart: 4 });
   });
 });

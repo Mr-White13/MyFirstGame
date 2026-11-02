@@ -33,7 +33,17 @@ export const ACTIVE_AD_CONFIG: AdConfig = TEST_AD_CONFIG;
 
 /** Energy Credits paid for one rewarded ad watched to the end. */
 export const REWARDED_AD_CREDITS = 30;
-/** Rewarded ads that pay per device-local calendar day, across every place an ad can be offered. */
+/**
+ * Rewarded ads that pay credits per device-local calendar day, across every
+ * place they're offered (Shop, booster offer). Continue ads after Game Over
+ * pay a life, not credits, and don't count; Continue is limited to once per attempt.
+ */
 export const MAX_REWARDED_ADS_PER_DAY = 5;
+/**
+ * No ads at all during a player's first 30 minutes of actual play (the
+ * statistics' play time: menus and idle time don't count). Until then no ad
+ * is offered and the consent form isn't shown either.
+ */
+export const AD_FREE_PLAY_MS = 30 * 60_000;
 /** Give up loading an ad after this long (no connection, slow network): the ad is "unavailable". */
 export const AD_LOAD_TIMEOUT_MS = 15_000;
