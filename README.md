@@ -4,7 +4,7 @@ A 2D arrow-clearing puzzle game for mobile, built with **Phaser 3**, **TypeScrip
 
 Tap an arrow to send it flying off the board in the direction it points. It can only leave if nothing is in its way. Clear every arrow to finish the level.
 
-It opens on a **Home** screen with your local **player profile** (nickname, avatar, country) and lifetime **statistics**. Every level is **timed**, with personal bests. A **Settings** screen offers four visual themes, reduced motion and effects options, synthesised sound effects and ambient music, vibration and gameplay preferences. A **daily check-in** with a 7-day reward cycle, login streaks, **Energy Credits** and **12 achievements** reward coming back. After Level 10, the **Daily League** offers three daily challenges with collectible **Energy Arrows** and a six-tier league (Bronze to Neon Elite) based on transparent, offline daily targets. The game has **100 levels in five named chapters of 20**: three small tutorials, then generated and reviewed portrait boards that grow from 9×7 to 17×12, with **hard** and **very hard** levels marked in the level list and the HUD. Twelve very hard levels close the chapters, including **THE IMPOSSIBLE GRID** (30×24, 173 arrows) and nine **shaped boards** up to 38×30 such as THE FORTRESS; each very hard level opens with a **power-up wave**. Thin adaptive arrows and pinch-zoom keep large boards playable. During a level, a **quick settings** card switches the theme, music, sound effects and vibration (Off, Soft or Strong) without leaving it, and three optional **boosters** paid with Energy Credits help when stuck: **Hint** (20), **Reveal** (40) and **Extra Heart** (80). It includes a level select screen, unlockable progression and progress saved in the browser.
+It opens on a **Home** screen with your local **player profile** (nickname, avatar, country) and lifetime **statistics**. Every level is **timed**, with personal bests. A **Settings** screen offers four visual themes, reduced motion and effects options, synthesised sound effects and ambient music, vibration and gameplay preferences. A **daily check-in** with a 7-day reward cycle, login streaks, **Energy Credits** and **12 achievements** reward coming back. After Level 10, the **Daily League** offers three daily challenges with collectible **Energy Arrows** and a six-tier league (Bronze to Neon Elite) based on transparent, offline daily targets. The game has **100 levels in five named chapters of 20**: three small tutorials, then generated and reviewed portrait boards that grow from 9×7 to 17×12, with **hard** and **very hard** levels marked in the level list and the HUD. Twelve very hard levels close the chapters, including **THE IMPOSSIBLE GRID** (30×24, 173 arrows) and nine **shaped boards** up to 38×30 such as THE FORTRESS; each very hard level opens with a **power-up wave**. Thin adaptive arrows and pinch-zoom keep large boards playable. During a level, a **quick settings** card switches the theme, music, sound effects and vibration (Off, Soft or Strong) without leaving it, and two optional **boosters** paid with Energy Credits help when stuck: **Hint** (20) and **Reveal** (40). In the Android app, a lost level can be **continued** with one heart by watching a rewarded ad. It includes a level select screen, unlockable progression and progress saved in the browser.
 
 ## Requirements
 
@@ -245,6 +245,10 @@ Every level starts with **three hearts**. Only the first blocked tap on an arrow
 
 When the third life is lost, the level ends: the board frame turns red and **Game Over** shows the level, how many arrows you cleared and your mistakes. **Try again** restarts the level with full lives. **Levels** goes back to level selection. A failure never changes saved progress or locks anything.
 
+**Continue** (Android app, once per attempt): a green button with an ad icon (a screen with a play symbol) and "♥ +1". It plays a rewarded ad; when the ad reports its reward, the **same run continues** with one heart: the board, the red arrows, the time and the mistakes are exactly as they were (the Game Over screen itself isn't counted as play time). An ad closed early brings nothing back and the dialog stays, so Try again and Levels still work. Continue isn't offered in Daily League challenges, in the browser, during the first 30 minutes of play (see "Rewarded ads"), when consent doesn't allow ads, or a second time in the same attempt. Stars still count every mistake, so a continued run that is won rates 1 star.
+
+Because a lost run can be continued, the failed attempt is **recorded when you choose** (Try again, Levels, Back, leaving the level), not the moment the last heart goes. It is recorded once, as failed; a continued run that is then won counts as one successful run.
+
 ### Red arrows and chain reactions
 
 A red arrow has been "activated": you tried to release it, but something was in the way. It still occupies its cells and still blocks other arrows. The difference is that it is now **waiting to leave**. As soon as its path becomes clear, it leaves on its own.
@@ -274,7 +278,7 @@ Bonus clears cost no lives and are not your moves. They count once towards "arro
 
 ### Stars
 
-Finishing a level awards one spark-shaped star per life left: **3 lives = 3 stars, 2 = 2, 1 = 1**. Losing all three fails the level. Strictly, stars count **mistakes** (3 − mistakes, at least 1 for a win): without an Extra Heart that is the same as lives left, and with one, a heart given back never raises the rating (see "Hints and boosters"). The completion dialog reveals the stars one by one and lists the run's statistics. The level select shows each level's best rating and your total.
+Finishing a level awards one spark-shaped star per life left: **3 lives = 3 stars, 2 = 2, 1 = 1**. Losing all three fails the level. Strictly, stars count **mistakes** (3 − mistakes, at least 1 for a win): without a Continue that is the same as lives left, and after one, the heart given back never raises the rating (see "Lives"). The completion dialog reveals the stars one by one and lists the run's statistics. The level select shows each level's best rating and your total.
 
 ### Statistics
 
@@ -633,22 +637,23 @@ All of this is **one** record, `neon-escape.rewards` (version 1), separate from 
 
 ## Hints and boosters
 
-Three optional helpers during a level, paid with **Energy Credits** from the existing wallet (no new currency, nothing to buy). They sit in a compact row in the HUD, under the hearts: your credit balance, then each booster with its cost.
+Two optional helpers during a level, paid with **Energy Credits** from the existing wallet (no new currency, nothing to buy). They sit in a compact row in the HUD, under the hearts: your credit balance, then each booster with its cost.
 
 | Booster | Cost | What it does |
 | --- | --- | --- |
 | **Hint** (bulb) | 20 | One arrow that can escape right now **glows** (a bright pulse in the theme's success colour, plus a ring at its tip every 1.4 s) until you tap it. It prefers the free arrow that blocks the most others. |
 | **Reveal** (eye) | 40 | For **3 seconds**, every arrow that can escape right now glows and all the others are dimmed, so the free ones stand out even on the densest boards (THE IMPOSSIBLE GRID shows 7 of 173). |
-| **Extra Heart** (+1) | 80 | Gives back **one** lost heart, never above three. Only while the level is being played and a heart is missing. |
+
+(An **Extra Heart** booster, 80 credits, used to be in this row. It was replaced by **Continue** on the Game Over screen; see "Lives". Saves keep its past use count.)
 
 How they behave:
 
-- **Nothing moves by itself.** Hint and Reveal only change how arrows look; you still tap the arrow. The board, lives, streak and timer are untouched (the timer keeps running). Extra Heart changes only the lives: the level and the timer carry on.
+- **Nothing moves by itself.** Hint and Reveal only change how arrows look; you still tap the arrow. The board, lives, streak and timer are untouched (the timer keeps running).
 - **Real board, real rules.** "Can escape" uses the same exit check as a tap, on the current board (after everything you've cleared), not the original layout. A level can always be finished by following hints alone without losing a heart (tested on Levels 1–100 samples, including THE FORTRESS).
-- **Never charged for nothing.** A booster that can't do anything says why and costs nothing: no heart missing, no arrow that can escape, the level is over (won or Game Over), you've left the level, the hint is still waiting to be tapped, or Reveal is still showing. The target is found **before** payment, and the effect is applied in the same moment with the same checks.
+- **Never charged for nothing.** A booster that can't do anything says why and costs nothing: no arrow that can escape, the level is over (won or Game Over), you've left the level, the hint is still waiting to be tapped, or Reveal is still showing. The target is found **before** payment, and the effect is applied in the same moment with the same checks.
 - **Not enough credits:** the booster is dimmed; tapping it explains the cost and your balance ("Reveal costs 40 Energy Credits; you have 30. Earn more from daily rewards and achievements."). Unavailable boosters are dimmed but still tappable, so they can explain themselves.
 - **No double spending.** After an activation, booster taps are ignored for 0.6 s, so a double tap pays once. Each paid use has its own transaction id, and the wallet refuses a duplicate. The balance can't go negative (`spend` refuses it).
-- **Stars and records.** Boosters do not change how stars, personal records or achievements are counted, with one clarification: stars count **mistakes**, so a heart given back by Extra Heart lets you finish but never raises the rating (a mistake costs its star even if you buy the heart back). A win always rates at least one star. Runs without an Extra Heart rate exactly as before.
+- **Stars and records.** Boosters do not change how stars, personal records or achievements are counted. Stars count **mistakes**, so a heart given back by Continue lets you finish but never raises the rating. A win always rates at least one star.
 - **Restart, new level, leaving:** highlights are cleared, the next attempt starts with three hearts and no boosters counted.
 - **Statistics for later:** each attempt counts the boosters used (`AttemptSummary.boosters`, paid or free), and the rewards record keeps lifetime paid uses. Neither changes any rule or screen yet.
 - **Daily League challenges:** boosters are **off**. The league's gold strip takes the toolbar's place (so challenge boards aren't smaller), and the scoring rules are unchanged. This keeps league days comparable and avoids turning league credits straight back into league help.
@@ -656,7 +661,7 @@ How they behave:
 - **Not in the tutorial:** Levels 1–3 have no booster row (`BOOSTERS_FROM_LEVEL` = 4), so new players first learn arrows, hearts and red arrows without extras.
 - **First-time tip:** the first time you open Level 4 or later, a short toast says what the boosters cost. It shows once (`boosters.introduced`).
 - **Hints on zoomed boards:** if the hinted arrow is off screen while zoomed in, the view glides (about 0.4 s, instant with reduced motion) to centre it, keeping the zoom; touching the board stops the glide.
-- **Feedback:** a short pop on the button, a soft sound and tick, and a restored heart grows back in on the HUD. With reduced motion the glows are steady (no pulse) and the rings and pops are skipped; colours follow every theme.
+- **Feedback:** a short pop on the button, a soft sound and tick; a heart given back by Continue grows back in on the HUD. With reduced motion the glows are steady (no pulse) and the rings and pops are skipped; colours follow every theme.
 - **Small screens:** the row never makes the HUD wider. Below 420 px the buttons show icon and cost only (the full name is in each button's label and tooltip); touch targets stay 44 px. In landscape the HUD is a side column, so the board doesn't shrink at all.
 
 **Code:** rules in `src/boosters/Boosters.ts` (costs, availability, hint choice) and `GameState` (`escapableArrows`, `blockerOf`, `restoreLife`); payment in `Rewards.spendBooster`; the flow in `src/app/BoosterController.ts`; the toolbar in `src/ui/BoosterBar.ts`; highlights in `ArrowView.setAssist` and `GameScene.showHint` / `showReveal`. How a use is paid (`BoosterPayment`: credits, or free) is separate from what it does, so a later source such as a rewarded ad can grant the same boosters.
@@ -710,7 +715,9 @@ Every item has a **slot** (`frame` today). A new category, such as arrow trails,
 
 ## Rewarded ads (Android app, test ads only)
 
-Optional **rewarded ads** pay **30 Energy Credits** each, at most **5 per device-local day** (`REWARDED_AD_CREDITS`, `MAX_REWARDED_ADS_PER_DAY` in `src/ads/config.ts`). They exist only in the Android app. There are no interstitials, no banners and no real-money purchases, and an ad is **never shown automatically**: only after the player taps "Watch ad". **Only Google's test ads are configured** (see below), so nothing earns or costs money yet.
+Optional **rewarded ads** pay **30 Energy Credits** each, at most **5 per device-local day** (`REWARDED_AD_CREDITS`, `MAX_REWARDED_ADS_PER_DAY` in `src/ads/config.ts`), or **one heart** to continue a lost level (Game Over → Continue, once per attempt; these pay no credits and don't count toward the daily credit limit). They exist only in the Android app.
+
+**No ads in the first 30 minutes.** A new player sees no ads at all until they have **30 minutes of actual play** (`AD_FREE_PLAY_MS`; the statistics' play time, so menus and idle time don't count): no Watch button (the Shop says how many minutes are left), no booster offer, no Continue, and not even Google's consent form, because the ad SDK starts only after that (at launch, or as soon as a finished attempt pushes the player past 30 minutes). Existing players with more play time see ads as before. There are no interstitials, no banners and no real-money purchases, and an ad is **never shown automatically**: only after the player taps "Watch ad". **Only Google's test ads are configured** (see below), so nothing earns or costs money yet.
 
 ### Where players see them
 
@@ -1105,7 +1112,7 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     ├── app/
     │   ├── App.ts         Navigation, progression and records: screens, level loading, attempts, saving
     │   ├── AttemptTracker.ts  One attempt's timer and bookkeeping (incl. boosters used); applyAttempt() updates progress + stats
-    │   ├── BoosterController.ts Hint / Reveal / Extra Heart: check, pay (or free in test plays), apply, count
+    │   ├── BoosterController.ts Hint / Reveal: check, pay (or free in test plays), apply, count
     │   ├── Feedback.ts    Game events → sound effects and haptics
     │   ├── confirmPolicy.ts When leaving or restarting needs a confirmation
     │   ├── Intro.ts       Startup sequence: studio splash, then the optional recap, then Home
@@ -1158,7 +1165,7 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     │   ├── RewardedAds.ts     Consent, load, show, pay once per reward, daily cap (pure; backend injected)
     │   └── admobBackend.ts    Android backend: @capacitor-community/admob, imported lazily
     ├── boosters/
-    │   └── Boosters.ts        Hint, Reveal, Extra Heart: costs, availability, hint choice (pure rules)
+    │   └── Boosters.ts        Hint, Reveal: costs, availability, hint choice (pure rules)
     ├── rewards/           Energy Credits and achievements
     │   ├── Rewards.ts         One saved record (daily + wallet + achievements + booster uses); atomic claims and spends
     │   ├── Wallet.ts          Energy Credits: validated, de-duplicated transactions
@@ -1234,7 +1241,7 @@ count. The only real challenge is **finding an arrow that can escape**, again an
         ├── LevelSelect.ts     Level tiles and progress summary
         ├── Hud.ts             In-game timer, hearts, arrows left, back and restart buttons
         ├── ThemePicker.ts     HUD quick settings button and card, theme choice (pauses the timer)
-        ├── BoosterBar.ts      HUD booster row: credit balance, Hint, Reveal, Extra Heart
+        ├── BoosterBar.ts      HUD booster row: credit balance, Hint, Reveal
         ├── ShopScreen.ts      Energy Credits Shop: balance, item cards (Buy / Equip / Equipped), purchase confirmation text
         ├── QuickSettings.ts   Music, sound effects and vibration controls in that card
         ├── RecapDialog.ts     Startup recap card with Continue and Skip

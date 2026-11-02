@@ -64,9 +64,10 @@ export interface GameStateOptions {
  *   are not player moves. No randomness: the same taps at the same times
  *   always give the same result.
  * - The level is won when the board is empty and lost when lives reach 0.
- * - Extra Heart (a booster): restoreLife() gives back one lost life while
- *   the level is being played, never above the starting lives. It does not
- *   undo the mistake: stars still count mistakes (see snapshot()).
+ * - Continue (a rewarded ad on Game Over): revive() makes a lost level
+ *   playable again with one life. restoreLife() gives back one lost life
+ *   while playing, never above the starting lives. Neither undoes a
+ *   mistake: stars still count mistakes (see snapshot()).
  */
 export class GameState {
   private level: LevelData;
@@ -170,6 +171,20 @@ export class GameState {
    */
   restoreLife(): boolean {
     if (this.status !== 'playing' || this.lives >= this.startingLives) return false;
+    this.restored++;
+    this.emit();
+    return true;
+  }
+
+  /**
+   * Continue after Game Over (a rewarded ad, see App.continueWithAd): the
+   * lost level is playing again with one life, the board exactly as it was
+   * (red arrows stay red). The mistakes still count, so stars are as earned.
+   * Returns false and changes nothing unless the level was lost.
+   */
+  revive(): boolean {
+    if (this.status !== 'failed') return false;
+    this.status = 'playing';
     this.restored++;
     this.emit();
     return true;

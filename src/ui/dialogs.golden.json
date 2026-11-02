@@ -277,6 +277,7 @@
    "gameover-detail": "<p class=\"card__detail\" id=\"gameover-detail\">1 arrow was still on the board. Each tap on a blocked arrow costs a life.</>",
    "gameover-cleared": "<dd id=\"gameover-cleared\">19 / 20</>",
    "gameover-mistakes": "<dd id=\"gameover-mistakes\">3</>",
+   "btn-continue-ad": "<button aria-label=\"Continue: watch an ad to get one heart back and keep playing this level\" class=\"btn btn--solid gameover__continue\" hidden id=\"btn-continue-ad\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-ad\"></></> <span>Continue</> <span class=\"gameover__continue-reward\"><svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-heart\"></></>+1</> </>",
    "btn-try-again": "<button class=\"btn btn--danger\" id=\"btn-try-again\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-restart\"></></> Try again </>",
    "btn-gameover-levels-label": "<span id=\"btn-gameover-levels-label\">Levels</>"
   },
@@ -288,6 +289,7 @@
    "gameover-detail": "<p class=\"card__detail\" id=\"gameover-detail\">26 arrows were still on the board. Each tap on a blocked arrow costs a life.</>",
    "gameover-cleared": "<dd id=\"gameover-cleared\">4 / 30</>",
    "gameover-mistakes": "<dd id=\"gameover-mistakes\">3</>",
+   "btn-continue-ad": "<button aria-label=\"Continue: watch an ad to get one heart back and keep playing this level\" class=\"btn btn--solid gameover__continue\" hidden id=\"btn-continue-ad\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-ad\"></></> <span>Continue</> <span class=\"gameover__continue-reward\"><svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-heart\"></></>+1</> </>",
    "btn-try-again": "<button class=\"btn btn--danger\" id=\"btn-try-again\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-restart\"></></> Try again </>",
    "btn-gameover-levels-label": "<span id=\"btn-gameover-levels-label\">Levels</>"
   },
@@ -299,6 +301,7 @@
    "gameover-detail": "<p class=\"card__detail\" id=\"gameover-detail\">Energy Points you collected are kept: 2 / 12 today. Try again to finish the challenge.</>",
    "gameover-cleared": "<dd id=\"gameover-cleared\">10 / 25</>",
    "gameover-mistakes": "<dd id=\"gameover-mistakes\">3</>",
+   "btn-continue-ad": "<button aria-label=\"Continue: watch an ad to get one heart back and keep playing this level\" class=\"btn btn--solid gameover__continue\" hidden id=\"btn-continue-ad\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-ad\"></></> <span>Continue</> <span class=\"gameover__continue-reward\"><svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-heart\"></></>+1</> </>",
    "btn-try-again": "<button class=\"btn btn--danger\" id=\"btn-try-again\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-restart\"></></> Try again </>",
    "btn-gameover-levels-label": "<span id=\"btn-gameover-levels-label\">League</>"
   },
@@ -310,6 +313,7 @@
    "gameover-detail": "<p class=\"card__detail\" id=\"gameover-detail\">20 arrows were still on the board. Each tap on a blocked arrow costs a life.</>",
    "gameover-cleared": "<dd id=\"gameover-cleared\">0 / 20</>",
    "gameover-mistakes": "<dd id=\"gameover-mistakes\">3</>",
+   "btn-continue-ad": "<button aria-label=\"Continue: watch an ad to get one heart back and keep playing this level\" class=\"btn btn--solid gameover__continue\" hidden id=\"btn-continue-ad\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-ad\"></></> <span>Continue</> <span class=\"gameover__continue-reward\"><svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-heart\"></></>+1</> </>",
    "btn-try-again": "<button class=\"btn btn--danger\" id=\"btn-try-again\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-restart\"></></> Try again </>",
    "btn-gameover-levels-label": "<span id=\"btn-gameover-levels-label\">Levels</>"
   }

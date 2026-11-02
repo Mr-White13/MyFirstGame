@@ -111,6 +111,11 @@ export class RewardedAds {
     return this.stateValue;
   }
 
+  /** False in browsers (no ad SDK). */
+  get supported(): boolean {
+    return this.deps.backend.supported;
+  }
+
   get credits(): number {
     return REWARDED_AD_CREDITS;
   }
@@ -156,18 +161,37 @@ export class RewardedAds {
     await this.preload();
   }
 
+  /** True when an ad for Continue (Game Over) could be shown now: like canOffer, without the credit limit. */
+  get canOfferContinue(): boolean {
+    return this.stateValue === 'ready' || this.stateValue === 'unavailable' || this.stateValue === 'loading';
+  }
+
   /**
-   * The player asked to watch an ad. Refuses at once (no ad shown) when ads
-   * aren't possible; otherwise loads if needed, shows, and pays on the reward.
+   * The player asked to watch an ad for credits. Refuses at once (no ad
+   * shown) when ads aren't possible or today's limit is reached; otherwise
+   * loads if needed, shows, and pays on the reward.
    */
-  async watch(): Promise<WatchResult> {
+  watch(): Promise<WatchResult> {
+    return this.run('credits');
+  }
+
+  /**
+   * The player asked to watch an ad to continue after Game Over. Same flow,
+   * but the reward is a life (applied by the caller after a 'rewarded'
+   * result), so no credits are paid and the daily credit limit doesn't apply.
+   */
+  watchForContinue(): Promise<WatchResult> {
+    return this.run('continue');
+  }
+
+  private async run(purpose: 'credits' | 'continue'): Promise<WatchResult> {
     if (!this.deps.backend.supported) return { kind: 'unsupported' };
     if (this.busy) return { kind: 'busy' };
     if (this.stateValue === 'not-permitted' || (this.started && !this.consent.canRequestAds)) return { kind: 'not-permitted' };
-    if (this.stateValue === 'starting') return { kind: 'busy' };
+    if (this.stateValue === 'starting' || !this.started) return { kind: 'busy' };
     const today = this.deps.today();
-    const rewardId = this.deps.ledger.nextRewardId(today);
-    if (!rewardId || this.deps.ledger.remaining(today) <= 0) return { kind: 'limit' };
+    const rewardId = purpose === 'credits' ? this.deps.ledger.nextRewardId(today) : null;
+    if (purpose === 'credits' && (!rewardId || this.deps.ledger.remaining(today) <= 0)) return { kind: 'limit' };
 
     this.busy = true;
     try {
@@ -181,7 +205,11 @@ export class RewardedAds {
       try {
         await this.deps.backend.show(() => {
           if (reward) return; // a repeated callback for the same ad: already paid
-          const grant = this.deps.ledger.grant(today, rewardId);
+          if (purpose === 'continue') {
+            reward = { kind: 'rewarded', credits: 0, saved: true };
+            return;
+          }
+          const grant = this.deps.ledger.grant(today, rewardId!);
           reward = grant.ok ? { kind: 'rewarded', credits: grant.credits, saved: grant.saved } : grant.reason === 'limit' ? { kind: 'limit' } : { kind: 'dismissed' };
           this.deps.onChange?.();
         });

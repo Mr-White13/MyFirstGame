@@ -40,6 +40,7 @@ import type { Screens } from '../ui/Screens';
 import type { Toast } from '../ui/Toast';
 import { BOOSTERS, BOOSTERS_FROM_LEVEL, type BoosterId } from '../boosters/Boosters';
 import type { RewardedAds, WatchResult } from '../ads/RewardedAds';
+import { AD_FREE_PLAY_MS } from '../ads/config';
 import type { BoosterBar } from '../ui/BoosterBar';
 import { AttemptTracker, type AttemptSummary } from './AttemptTracker';
 import { BOOSTER_TIP, BoosterController } from './BoosterController';
@@ -127,6 +128,10 @@ export class App {
   private watchingAd = false;
   /** True while a rewarded ad covers the game: Back is ignored and the level timer is paused. */
   private adShowing = false;
+  /** The last life is gone and the player hasn't chosen yet: the failed attempt isn't recorded until then (Continue may revive it). */
+  private pendingFailure = false;
+  /** This attempt already used its Continue. */
+  private continued = false;
   /** The regular level opened most recently this session (challenges don't count), or null before the first. */
   private lastLevelOpened: number | null = null;
   /** The Daily League challenge being played, or null for a regular level. */
@@ -315,7 +320,7 @@ export class App {
    */
   async watchAd(): Promise<void> {
     const ads = this.parts.ads;
-    if (!ads || this.watchingAd || this.navigating) return;
+    if (!ads || !this.adsEligible || this.watchingAd || this.navigating) return;
     this.watchingAd = true;
     try {
       const result = await ads.watch();
@@ -359,7 +364,15 @@ export class App {
       credits: rewards.credits,
       avatar: this.profile.avatar,
       cosmetics: rewards.current.cosmetics,
-      earn: ads ? { state: ads.state, remaining: ads.remainingToday, limit: ads.dailyLimit, credits: ads.credits } : undefined,
+      earn: ads
+        ? {
+            state: ads.state,
+            remaining: ads.remainingToday,
+            limit: ads.dailyLimit,
+            credits: ads.credits,
+            lockedMinutes: this.adsEligible || !ads.supported ? 0 : Math.max(1, Math.ceil((AD_FREE_PLAY_MS - this.records.stats.playTimeMs) / 60_000)),
+          }
+        : undefined,
     });
   }
 
@@ -370,7 +383,7 @@ export class App {
    */
   private async offerAdForBooster(id: BoosterId): Promise<void> {
     const { ads, confirmDialog, rewards } = this.parts;
-    if (!ads || !ads.canOffer || this.watchingAd) return;
+    if (!ads || !this.adsEligible || !ads.canOffer || this.watchingAd) return;
     const booster = BOOSTERS[id];
     this.attempt.timer.pause('confirm');
     const watch = await confirmDialog.ask({
@@ -588,6 +601,7 @@ export class App {
       return;
     }
     const completion = this.records.record(summary);
+    this.startAdsIfEligible();
     this.lastCompletion = completion && {
       unlocked: completion.unlocked,
       newBestStars: completion.newBestStars,
@@ -646,11 +660,17 @@ export class App {
     this.parts.feedback({ type: 'stars', stars: snapshot.stars, unlocked: c.unlocked !== null, reduced: prefersReducedMotion() });
   }
 
-  /** The last life is gone: stop the clock and count the failed attempt. Progress is untouched. */
+  /**
+   * The last life is gone: stop the clock. The failed attempt is recorded
+   * only when the player decides (Try again, Levels, leaving the level; see
+   * endAttempt), because Continue (a rewarded ad) can still bring the same
+   * run back. Progress is untouched either way.
+   */
   handleLevelLost(): void {
-    const summary = this.attempt.finish('failed', this.parts.state.snapshot());
-    if (summary) this.parts.hud.setTime(summary.timeMs);
-    this.recordEnded(summary);
+    if (!this.attempt.isOpen) return;
+    this.pendingFailure = true;
+    this.attempt.timer.pause('over');
+    this.parts.hud.setTime(this.attempt.timer.elapsed());
     this.parts.feedback({ type: 'gameOver' });
   }
 
@@ -666,7 +686,63 @@ export class App {
       challenge: this.challenge
         ? { number: this.challenge.number, today: points(this.parts.league.current.current), maxToday: MAX_DAILY_POINTS }
         : undefined,
+      canContinue: this.canContinue,
     });
+  }
+
+  /**
+   * Continue is offered once per attempt, on regular levels (not Daily
+   * League challenges), when rewarded ads are possible for this player
+   * (after the ad-free start, with consent, in the Android app).
+   */
+  get canContinue(): boolean {
+    const ads = this.parts.ads;
+    return this.pendingFailure && !this.continued && !this.attemptIsChallenge && this.adsEligible && !!ads && ads.canOfferContinue;
+  }
+
+  /**
+   * Game Over → "Continue": watch a rewarded ad, then the same run goes on
+   * with one heart (the board, time and mistakes as they were). Nothing
+   * happens without the ad's reward; the dialog stays so the player can
+   * still try again or leave.
+   */
+  async continueWithAd(): Promise<void> {
+    const ads = this.parts.ads;
+    if (!ads || !this.canContinue || this.watchingAd || this.navigating) return;
+    this.watchingAd = true;
+    try {
+      const result = await ads.watchForContinue();
+      if (result.kind !== 'rewarded') {
+        const message = AD_RESULT_MESSAGES[result.kind];
+        if (message) this.parts.toast.show(message === AD_RESULT_MESSAGES.dismissed ? 'The ad was closed before the end, so no extra heart this time.' : message, 3200);
+        return;
+      }
+      // The player may have left during the ad; only a still-lost level continues.
+      if (!this.pendingFailure || this.parts.screens.active !== 'game' || !this.parts.state.revive()) return;
+      this.pendingFailure = false;
+      this.continued = true;
+      this.parts.gameOverDialog.hide();
+      this.parts.scene.continueAfterFailure();
+      this.attempt.timer.resume('over');
+      this.parts.feedback({ type: 'claim' });
+      this.parts.toast.show('+1 heart: keep going!', 2200, 'achievement');
+    } finally {
+      this.watchingAd = false;
+    }
+  }
+
+  /** Rewarded ads are offered only after AD_FREE_PLAY_MS of play (statistics' play time): no ads in the first minutes. */
+  get adsEligible(): boolean {
+    return this.records.stats.playTimeMs >= AD_FREE_PLAY_MS;
+  }
+
+  /**
+   * Starts rewarded ads (consent, then the SDK) once the player is past the
+   * ad-free start; before that, not even the consent form appears. Called
+   * after the intro and whenever an attempt adds play time. Idempotent.
+   */
+  startAdsIfEligible(): void {
+    if (this.adsEligible) void this.parts.ads?.start();
   }
 
   /** Called by the completion dialog's buttons. */
@@ -782,13 +858,18 @@ export class App {
   }
 
   /** Ends the open attempt (if any) with the given outcome and saves the statistics. */
+  /** Ends the open attempt and records it; a lost run not continued counts as failed, whatever ended it. */
   private endAttempt(outcome: AttemptOutcome): void {
-    this.recordEnded(this.attempt.finish(outcome, this.parts.state.snapshot()));
+    const final = this.pendingFailure ? 'failed' : outcome;
+    this.pendingFailure = false;
+    this.attempt.timer.resume('over');
+    this.recordEnded(this.attempt.finish(final, this.parts.state.snapshot()));
   }
 
   private recordEnded(summary: AttemptSummary | null): void {
     if (!summary || this.attemptIsChallenge || this.attemptIsTestPlay) return; // challenges keep their own records; test plays none
     this.records.record(summary);
+    this.startAdsIfEligible(); // this attempt's play time may end the ad-free start
   }
 
   private renderAll(): void {
@@ -804,6 +885,8 @@ export class App {
   // ------------------------------------------------------------ league
 
   private beginAttempt(): void {
+    this.pendingFailure = false;
+    this.continued = false;
     const level = this.parts.state;
     this.attemptIsChallenge = this.challenge !== null;
     this.attemptIsTestPlay = !this.challenge && isTestPlay(this.records.progress, level.levelId);

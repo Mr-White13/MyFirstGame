@@ -13,11 +13,11 @@ export interface BoosterBarView {
 }
 
 /**
- * The HUD's booster row: the Energy Credits balance, then Hint, Reveal and
- * Extra Heart, each with its cost. A DOM view only: what a tap does is up
- * to BoosterController. Unavailable boosters use aria-disabled rather than
+ * The HUD's booster row: the Energy Credits balance, then Hint and Reveal,
+ * each with its cost. A DOM view only: what a tap does is up to
+ * BoosterController. Unavailable boosters use aria-disabled rather than
  * `disabled`, so a tap still reaches the controller, which explains why
- * (not enough credits, no lost heart…).
+ * (not enough credits, no free arrow…).
  */
 export class BoosterBar {
   private readonly root = requireElement('boosters');
@@ -32,7 +32,7 @@ export class BoosterBar {
       button.addEventListener('click', () => onUse(id));
       return button;
     };
-    this.buttons = { hint: find('hint'), reveal: find('reveal'), heart: find('heart') };
+    this.buttons = { hint: find('hint'), reveal: find('reveal') };
   }
 
   render(view: BoosterBarView): void {

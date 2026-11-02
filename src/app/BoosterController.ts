@@ -15,7 +15,7 @@ import type { BoosterBarView } from '../ui/BoosterBar';
 
 /** What the controller needs, as small interfaces (tests pass plain objects). */
 export interface BoosterDeps {
-  readonly state: Pick<GameState, 'isPlaying' | 'lives' | 'maxLives' | 'escapableArrows' | 'getArrows' | 'blockerOf' | 'restoreLife'>;
+  readonly state: Pick<GameState, 'isPlaying' | 'escapableArrows' | 'getArrows' | 'blockerOf'>;
   readonly scene: {
     readonly hintShowing: boolean;
     readonly revealShowing: boolean;
@@ -41,7 +41,7 @@ export interface BoosterDeps {
 export type BoosterOutcome = { readonly used: true; readonly charged: number } | { readonly used: false; readonly reason: BoosterBlock };
 
 /**
- * Hint, Reveal and Extra Heart during a level. For each tap it:
+ * Hint and Reveal during a level. For each tap it:
  * 1. checks the booster can do something now (BoosterContext), and finds its
  *    target on the current board, before any payment;
  * 2. pays: credits through the existing wallet (one saved write), or free in
@@ -72,12 +72,10 @@ export class BoosterController {
       const target = hintTarget(state);
       if (!target) return this.refuse(id, 'no-target');
       apply = () => scene.showHint(target);
-    } else if (id === 'reveal') {
+    } else {
       const targets = state.escapableArrows().map((a) => a.id);
       if (targets.length === 0) return this.refuse(id, 'no-target');
       apply = () => scene.showReveal(targets, REVEAL_MS);
-    } else {
-      apply = () => state.restoreLife();
     }
 
     const charged = check.payment.kind === 'credits' ? check.payment.cost : 0;
@@ -91,7 +89,6 @@ export class BoosterController {
     this.lockedUntil = this.now() + BOOSTER_LOCK_MS;
     this.deps.bar.flash(id);
     this.deps.onUsed?.(id);
-    if (id === 'heart') this.deps.notify(mode().testPlay ? 'Extra Heart: +1 heart (free in test play)' : `Extra Heart: +1 heart · −${charged} credits`);
     if (id === 'reveal') this.deps.later?.(() => this.render(), REVEAL_MS + 50);
     this.render();
     return { used: true, charged };
@@ -114,8 +111,6 @@ export class BoosterController {
       challenge,
       testPlay,
       credits: wallet.credits,
-      lives: state.lives,
-      maxLives: state.maxLives,
       escapable: playing ? state.escapableArrows().length : 0,
       hintShowing: scene.hintShowing,
       revealShowing: scene.revealShowing,

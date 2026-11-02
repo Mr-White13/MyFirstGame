@@ -7,14 +7,16 @@ import type { GameState } from '../core/GameState';
  *
  * - Hint: points at one arrow that can escape right now. Nothing moves.
  * - Reveal: shows every arrow that can escape right now, for a few seconds.
- * - Extra Heart: gives back one lost heart (never above the maximum).
+ *
+ * (Extra Heart was a booster too; a lost run is now continued from the Game
+ * Over dialog with a rewarded ad instead, see App.continueWithAd.)
  *
  * How a booster is paid for is separate from what it does (BoosterPayment),
  * so a later source (a rewarded ad, a gift) can grant the same boosters.
  */
-export type BoosterId = 'hint' | 'reveal' | 'heart';
+export type BoosterId = 'hint' | 'reveal';
 
-export const BOOSTER_IDS: readonly BoosterId[] = ['hint', 'reveal', 'heart'];
+export const BOOSTER_IDS: readonly BoosterId[] = ['hint', 'reveal'];
 
 export interface BoosterDefinition {
   readonly id: BoosterId;
@@ -28,7 +30,6 @@ export interface BoosterDefinition {
 export const BOOSTERS: Readonly<Record<BoosterId, BoosterDefinition>> = {
   hint: { id: 'hint', name: 'Hint', cost: 20, description: 'shows one arrow that can escape' },
   reveal: { id: 'reveal', name: 'Reveal', cost: 40, description: 'shows every free arrow for 3 seconds' },
-  heart: { id: 'heart', name: 'Extra Heart', cost: 80, description: 'gives back one lost heart' },
 };
 
 /**
@@ -54,8 +55,6 @@ export type BoosterBlock =
   | 'challenge'
   /** Hint / Reveal: no arrow can escape (only red ones are left, or the board is empty). */
   | 'no-target'
-  /** Extra Heart: no heart is missing. */
-  | 'full-hearts'
   /** Hint: the hinted arrow is still waiting to be tapped. Reveal: still showing. */
   | 'active'
   /** Just used one: rapid repeated taps are ignored. */
@@ -68,8 +67,6 @@ export interface BoosterContext {
   /** Test play: boosters are free (no real credits are spent). */
   readonly testPlay: boolean;
   readonly credits: number;
-  readonly lives: number;
-  readonly maxLives: number;
   /** Arrows that can escape right now. */
   readonly escapable: number;
   readonly hintShowing: boolean;
@@ -88,8 +85,7 @@ export function checkBooster(id: BoosterId, ctx: BoosterContext): BoosterCheck {
   if (!ctx.playing) return { ok: false, reason: 'not-playing' };
   if (ctx.challenge) return { ok: false, reason: 'challenge' };
   if (ctx.locked) return { ok: false, reason: 'locked' };
-  if (id === 'heart' && ctx.lives >= ctx.maxLives) return { ok: false, reason: 'full-hearts' };
-  if (id !== 'heart' && ctx.escapable === 0) return { ok: false, reason: 'no-target' };
+  if (ctx.escapable === 0) return { ok: false, reason: 'no-target' };
   if ((id === 'hint' && ctx.hintShowing) || (id === 'reveal' && ctx.revealShowing)) return { ok: false, reason: 'active' };
   if (ctx.testPlay) return { ok: true, payment: { kind: 'free', reason: 'test-play' } };
   const cost = BOOSTERS[id].cost;
@@ -103,8 +99,6 @@ export function blockMessage(id: BoosterId, reason: BoosterBlock, credits: numbe
   switch (reason) {
     case 'insufficient':
       return `${b.name} costs ${b.cost} Energy Credits; you have ${credits}. Earn more from daily rewards and achievements.`;
-    case 'full-hearts':
-      return 'Extra Heart: your hearts are already full.';
     case 'no-target':
       return 'No arrow can escape right now.';
     case 'active':
@@ -137,8 +131,11 @@ export function hintTarget(state: Pick<GameState, 'escapableArrows' | 'getArrows
   return best.id;
 }
 
-/** Booster uses in one attempt (or in total), for statistics and balancing. */
-export type BoosterCounts = Readonly<Record<BoosterId, number>>;
+/**
+ * Booster uses in one attempt (or in total), for statistics and balancing.
+ * `heart` keeps the paid uses of the retired Extra Heart booster in saves; it no longer grows.
+ */
+export type BoosterCounts = Readonly<Record<BoosterId | 'heart', number>>;
 
 export const NO_BOOSTERS: BoosterCounts = Object.freeze({ hint: 0, reveal: 0, heart: 0 });
 

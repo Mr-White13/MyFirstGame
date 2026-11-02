@@ -7,11 +7,15 @@ export interface FailureSummary {
   readonly mistakes: number;
   /** Set for a Daily League challenge: its number and the points kept today. */
   readonly challenge?: { readonly number: number; readonly today: number; readonly maxToday: number };
+  /** Offer "Continue" (watch a rewarded ad for one heart). */
+  readonly canContinue?: boolean;
 }
 
 export interface FailureActions {
   onTryAgain(): void;
   onLevels(): void;
+  /** "Continue": watch a rewarded ad, then the same run goes on with one heart. */
+  onContinue?(): void;
 }
 
 /** Shown when the last life is lost. Saved progress is never touched by a failure. */
@@ -22,9 +26,12 @@ export class GameOverDialog {
   private readonly cleared = requireElement('gameover-cleared');
   private readonly mistakes = requireElement('gameover-mistakes');
   private readonly tryAgainButton = requireElement<HTMLButtonElement>('btn-try-again');
+  private readonly continueButton = requireElement<HTMLButtonElement>('btn-continue-ad');
 
   constructor(actions: FailureActions) {
     this.tryAgainButton.addEventListener('click', () => actions.onTryAgain());
+    this.continueButton.addEventListener('click', () => actions.onContinue?.());
+    this.continueButton.setAttribute('aria-label', 'Continue: watch an ad to get one heart back and keep playing this level');
     requireElement('btn-gameover-levels').addEventListener('click', () => actions.onLevels());
   }
 
@@ -42,7 +49,8 @@ export class GameOverDialog {
     requireElement('btn-gameover-levels-label').textContent = c ? 'League' : 'Levels';
     this.cleared.textContent = `${summary.cleared} / ${summary.total}`;
     this.mistakes.textContent = String(summary.mistakes);
-    this.overlay.show(this.tryAgainButton);
+    this.continueButton.hidden = !summary.canContinue;
+    this.overlay.show(summary.canContinue ? this.continueButton : this.tryAgainButton);
   }
 
   hide(): void {
