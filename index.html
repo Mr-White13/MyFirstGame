@@ -651,9 +651,17 @@
               </div>
               <div>
                 <dt>Privacy</dt>
-                <dd>No account, ads or tracking. Your profile, progress, statistics and settings are stored only in this browser and never leave the device.</dd>
+                <dd>
+                  No account. Your profile, progress, statistics, settings and Energy Credits are stored only on this device; the game itself never sends them anywhere.
+                  In the Android app you can choose to watch rewarded ads (Google AdMob) for credits. Ads are only shown when you tap to watch one, and only if your consent choices allow ads.
+                  Google's ad SDK then collects device and usage data (such as the advertising ID, IP address and ad interactions) as described in Google's privacy policy. The browser version has no ads.
+                </dd>
               </div>
             </dl>
+            <button type="button" class="btn btn--ghost btn--small" id="btn-ad-privacy" hidden>
+              <svg class="icon" aria-hidden="true"><use href="#icon-info" /></svg>
+              Privacy options (ads)
+            </button>
             <button type="button" class="btn btn--ghost btn--small btn--reset" id="btn-reset-settings">
               <svg class="icon" aria-hidden="true"><use href="#icon-restart" /></svg>
               Reset settings
@@ -680,6 +688,15 @@
               <span class="credits-inline shop__credits" id="shop-credits-wrap"><svg class="icon" aria-hidden="true"><use href="#icon-credit" /></svg><strong id="shop-credits">0</strong></span>
               <p class="shop__note">Cosmetics are permanent: buy once, keep forever. They only change how things look.</p>
             </div>
+          </section>
+          <!-- Optional rewarded ads (Android app only; src/ads/). Never shown automatically. -->
+          <section class="shop-earn surface" id="shop-earn" aria-labelledby="shop-earn-title">
+            <div class="shop-earn__text">
+              <h2 class="shop-section__title" id="shop-earn-title">Earn credits</h2>
+              <p class="shop-earn__offer" id="shop-earn-offer">Watch a short ad: <strong>+30</strong> Energy Credits</p>
+              <p class="shop-earn__status" id="shop-earn-status" role="status" aria-live="polite"></p>
+            </div>
+            <button type="button" class="btn btn--primary btn--small shop-earn__btn" id="btn-shop-watch-ad">Watch ad</button>
           </section>
           <div class="shop__catalog" id="shop-catalog"></div>
           <button type="button" class="btn btn--primary shop__play" id="btn-shop-play">
@@ -926,6 +943,8 @@
       </div>
 
       <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+      <!-- Shown while a rewarded ad is opening or on screen: no taps reach the game underneath. -->
+      <div class="ad-shield" id="ad-shield" hidden></div>
 
       <!-- Leave-level confirmation -->
       <div class="overlay" id="confirm-dialog" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-text" hidden>

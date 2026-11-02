@@ -16,6 +16,7 @@ import {
 import { createWallet, earn, readWallet, spend, type Transaction, type Wallet } from './Wallet';
 import { BOOSTERS, countBooster, NO_BOOSTERS, type BoosterCounts, type BoosterId } from '../boosters/Boosters';
 import { isTipId, type TipId } from '../app/tips';
+import { MAX_REWARDED_ADS_PER_DAY, REWARDED_AD_CREDITS } from '../ads/config';
 import {
   canEquip,
   cosmeticById,
@@ -56,7 +57,31 @@ export interface RewardsRecord {
   readonly cosmetics: CosmeticsState;
   /** One-time rule tips already shown (see app/tips.ts). Added within version 1: older saves have none. */
   readonly tips: readonly TipId[];
+  /**
+   * Rewarded ads paid today (device-local date), for the daily limit. Saved
+   * with the wallet, so a reward's credits and its count are one write.
+   * Added within version 1: older saves have none.
+   */
+  readonly adRewards: AdRewardsRecord;
 }
+
+export interface AdRewardsRecord {
+  /** The day `count` belongs to (null: none yet). */
+  readonly day: DayKey | null;
+  readonly count: number;
+}
+
+/** The wallet transaction id of the n-th rewarded ad on `day` (n from 1): unique, so it can only be paid once. */
+export const adRewardTransactionId = (day: DayKey, n: number): string => `ad:${day}:${n}`;
+
+function readAdRewards(data: unknown): AdRewardsRecord {
+  const a = typeof data === 'object' && data !== null ? (data as Record<string, unknown>) : {};
+  const day = typeof a.day === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(a.day) ? a.day : null;
+  const count = typeof a.count === 'number' && Number.isInteger(a.count) && a.count >= 0 ? Math.min(a.count, MAX_REWARDED_ADS_PER_DAY) : 0;
+  return day ? { day, count } : { day: null, count: 0 };
+}
+
+export type AdRewardGrant = { readonly ok: true; readonly credits: number; readonly saved: boolean } | { readonly ok: false; readonly reason: 'limit' | 'duplicate' | 'invalid' };
 
 /** The result of a Shop purchase. On failure nothing was charged or changed. */
 export type PurchaseResult = { readonly ok: true; readonly item: CosmeticItem } | { readonly ok: false; readonly reason: PurchaseBlock };
@@ -91,6 +116,7 @@ export function createRewards(): RewardsRecord {
     boosters: { used: NO_BOOSTERS, introduced: false },
     cosmetics: createCosmetics(),
     tips: [],
+    adRewards: { day: null, count: 0 },
   };
 }
 
@@ -122,6 +148,7 @@ export function readRewards(raw: string | null): { value: RewardsRecord; status:
       boosters: readBoosters(data.boosters),
       cosmetics: readCosmetics(data.cosmetics, applied),
       tips: Array.isArray(data.tips) ? [...new Set(data.tips.filter(isTipId))] : [],
+      adRewards: readAdRewards(data.adRewards),
     },
     status: 'current',
   };
@@ -275,6 +302,38 @@ export class Rewards {
     if (cosmetics.equipped[slot] === id) return true;
     this.commit({ ...this.record, cosmetics: { ...cosmetics, equipped: { ...cosmetics.equipped, [slot]: id } } }, today);
     return true;
+  }
+
+  /** Rewarded ads that can still pay today (0..MAX_REWARDED_ADS_PER_DAY). */
+  remainingAdRewards(today: DayKey): number {
+    const { day, count } = this.record.adRewards;
+    return Math.max(0, MAX_REWARDED_ADS_PER_DAY - (day === today ? count : 0));
+  }
+
+  /** The transaction id the next rewarded ad today would be paid under, or null when today's limit is reached. */
+  nextAdRewardId(today: DayKey): string | null {
+    if (this.remainingAdRewards(today) <= 0) return null;
+    const used = this.record.adRewards.day === today ? this.record.adRewards.count : 0;
+    return adRewardTransactionId(today, used + 1);
+  }
+
+  /**
+   * Pays one rewarded ad (REWARDED_AD_CREDITS) through the wallet's validated
+   * `earn`, under the id chosen when the ad started. The same id is never paid
+   * twice (the wallet refuses it), today's limit is respected, and the credits
+   * and today's count are saved in one write. If that write fails, the
+   * reward still counts in this session (the ad was really watched) and is
+   * saved with the next successful write; `saved` reports it.
+   */
+  grantAdReward(today: DayKey, rewardId: string): AdRewardGrant {
+    if (this.record.wallet.applied.includes(rewardId)) return { ok: false, reason: 'duplicate' };
+    if (this.remainingAdRewards(today) <= 0) return { ok: false, reason: 'limit' };
+    if (!rewardId.startsWith('ad:')) return { ok: false, reason: 'invalid' };
+    const paid = earn(this.record.wallet, { id: rewardId, amount: REWARDED_AD_CREDITS });
+    if (!paid.ok) return { ok: false, reason: paid.reason === 'duplicate' ? 'duplicate' : 'invalid' };
+    const count = (this.record.adRewards.day === today ? this.record.adRewards.count : 0) + 1;
+    this.commit({ ...this.record, wallet: paid.wallet, adRewards: { day: today, count } }, today);
+    return { ok: true, credits: REWARDED_AD_CREDITS, saved: this.lastSaveOk };
   }
 
   /** A one-time rule tip has been shown; it never shows again. */

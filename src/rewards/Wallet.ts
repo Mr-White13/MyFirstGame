@@ -33,7 +33,7 @@ export const MAX_TRANSACTION = 1000;
  * (achievements, league milestones) are kept forever. Booster ids are
  * numbered per booster (`booster:hint:12`), so a trimmed id never comes back.
  */
-const KEEP_RECENT_IDS: Readonly<Record<string, number>> = { 'daily:': 30, 'booster:': 50 };
+const KEEP_RECENT_IDS: Readonly<Record<string, number>> = { 'daily:': 30, 'booster:': 50, 'ad:': 50 };
 
 export function createWallet(): Wallet {
   return { credits: 0, earned: 0, applied: [] };

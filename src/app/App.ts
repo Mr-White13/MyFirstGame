@@ -38,7 +38,8 @@ import type { AchievementsScreen } from '../ui/AchievementsScreen';
 import type { DailyDialog } from '../ui/DailyDialog';
 import type { Screens } from '../ui/Screens';
 import type { Toast } from '../ui/Toast';
-import { BOOSTERS_FROM_LEVEL, type BoosterId } from '../boosters/Boosters';
+import { BOOSTERS, BOOSTERS_FROM_LEVEL, type BoosterId } from '../boosters/Boosters';
+import type { RewardedAds, WatchResult } from '../ads/RewardedAds';
 import type { BoosterBar } from '../ui/BoosterBar';
 import { AttemptTracker, type AttemptSummary } from './AttemptTracker';
 import { BOOSTER_TIP, BoosterController } from './BoosterController';
@@ -89,6 +90,8 @@ export interface AppParts {
   readonly boosterBar: BoosterBar;
   /** The Energy Credits Shop (permanent cosmetics). */
   readonly shopScreen: ShopScreen;
+  /** Optional rewarded ads for credits (Android app; missing or unsupported elsewhere). */
+  readonly ads?: RewardedAds;
 }
 
 /** How often the HUD clock is refreshed. The time itself comes from a monotonic clock. */
@@ -120,6 +123,10 @@ export class App {
   private zoomHintShown = false;
   /** True from a Shop "Buy" tap until its confirmation is answered: further Buy taps are ignored. */
   private purchasing = false;
+  /** True from a "Watch ad" tap (or the booster offer) until the ad flow ends: further taps are ignored. */
+  private watchingAd = false;
+  /** True while a rewarded ad covers the game: Back is ignored and the level timer is paused. */
+  private adShowing = false;
   /** The regular level opened most recently this session (challenges don't count), or null before the first. */
   private lastLevelOpened: number | null = null;
   /** The Daily League challenge being played, or null for a regular level. */
@@ -300,6 +307,82 @@ export class App {
     this.parts.rewards.equipCosmetic(this.parts.dayClock.today, slot, id);
   }
 
+  /**
+   * "Watch ad" (Shop, or the booster offer): an explicit tap is the only way
+   * an ad is ever shown. Pays only when the ad SDK reports the reward (see
+   * RewardedAds), then says what happened. A booster is never used by itself
+   * afterwards: the player taps it again when ready.
+   */
+  async watchAd(): Promise<void> {
+    const ads = this.parts.ads;
+    if (!ads || this.watchingAd || this.navigating) return;
+    this.watchingAd = true;
+    try {
+      const result = await ads.watch();
+      const { toast, shopScreen, feedback } = this.parts;
+      if (result.kind === 'rewarded') {
+        shopScreen.celebrateEarn();
+        feedback({ type: 'claim' });
+        toast.show(
+          result.saved ? `+${result.credits} Energy Credits` : `+${result.credits} Energy Credits (they'll be saved as soon as this device's storage works again)`,
+          2600,
+          'achievement',
+        );
+      } else {
+        const message = AD_RESULT_MESSAGES[result.kind];
+        if (message) toast.show(message, 3200);
+      }
+    } finally {
+      this.watchingAd = false;
+      this.renderShop();
+    }
+  }
+
+  /** An ad covers the game (true) or is gone (false): pause or resume the level clock; Back waits. */
+  setAdShowing(showing: boolean): void {
+    if (showing === this.adShowing) return;
+    this.adShowing = showing;
+    if (showing) this.attempt.timer.pause('ad');
+    else this.attempt.timer.resume('ad');
+  }
+
+  /** Settings → Privacy options (ads): the consent SDK's own form. */
+  async openAdPrivacyOptions(): Promise<void> {
+    await this.parts.ads?.showPrivacyOptions();
+    this.renderShop();
+  }
+
+  /** The Shop with its Earn credits section (also refreshed when the ad state changes). */
+  renderShop(): void {
+    const { rewards, ads, shopScreen } = this.parts;
+    shopScreen.render({
+      credits: rewards.credits,
+      avatar: this.profile.avatar,
+      cosmetics: rewards.current.cosmetics,
+      earn: ads ? { state: ads.state, remaining: ads.remainingToday, limit: ads.dailyLimit, credits: ads.credits } : undefined,
+    });
+  }
+
+  /**
+   * Too few credits for a booster: after the usual explanation, optionally
+   * offer an ad, saying exactly what it pays. "Not now" (or Back) carries on
+   * as before; the booster is never used automatically after the ad.
+   */
+  private async offerAdForBooster(id: BoosterId): Promise<void> {
+    const { ads, confirmDialog, rewards } = this.parts;
+    if (!ads || !ads.canOffer || this.watchingAd) return;
+    const booster = BOOSTERS[id];
+    this.attempt.timer.pause('confirm');
+    const watch = await confirmDialog.ask({
+      title: 'Need more credits?',
+      text: `${booster.name} costs ${booster.cost} Energy Credits; you have ${rewards.credits}. Watch a short ad to earn +${ads.credits} Energy Credits (${ads.remainingToday} left today). The ${booster.name} is not used automatically: tap it again when you're ready.`,
+      confirm: `Watch ad (+${ads.credits})`,
+      cancel: 'Not now',
+    });
+    this.attempt.timer.resume('confirm');
+    if (watch && this.parts.screens.active === 'game') await this.watchAd();
+  }
+
   /** The Shop's "Continue playing": the same level Home's Play button opens. */
   continueFromShop(): Promise<void> {
     const count = this.parts.levels.length;
@@ -401,7 +484,8 @@ export class App {
   /** A booster button was tapped (only acts during a level; see BoosterController). */
   useBooster(id: BoosterId): void {
     if (this.navigating || this.parts.screens.active !== 'game') return;
-    this.boosters.use(id);
+    const outcome = this.boosters.use(id);
+    if (!outcome.used && outcome.reason === 'insufficient') void this.offerAdForBooster(id);
   }
 
   /**
@@ -758,7 +842,7 @@ export class App {
       total: views.length,
       frame: cosmetics.equipped.frame,
     });
-    this.parts.shopScreen.render({ credits: rewards.credits, avatar: this.profile.avatar, cosmetics });
+    this.renderShop();
     achievementsScreen.render(views, rewards.credits);
     if (dailyDialog.isOpen) dailyDialog.render(daily, today, rewards.credits);
     this.boosters.render();
@@ -872,6 +956,8 @@ export class App {
     return [
       // The splash ignores it; the recap takes it as Skip.
       { active: () => this.intro !== null, back: () => this.intro!.back() },
+      // A rewarded ad covers the game: the ad handles Back itself; the game waits.
+      { active: () => this.adShowing, back: () => {} },
       { active: () => themePicker.isOpen, back: () => themePicker.close() },
       { active: () => confirmDialog.isOpen, back: () => confirmDialog.close(false) },
       { active: () => dailyDialog.isOpen, back: () => dailyDialog.close() },
@@ -885,3 +971,13 @@ export class App {
     ];
   }
 }
+
+/** What the player is told when a "Watch ad" tap earns nothing (null: say nothing). */
+const AD_RESULT_MESSAGES: Readonly<Record<Exclude<WatchResult['kind'], 'rewarded'>, string | null>> = {
+  dismissed: 'The ad was closed before the end, so no credits this time.',
+  unavailable: 'No ad is available right now. Check your connection and try again later.',
+  limit: 'Daily ad limit reached. Come back tomorrow for more.',
+  busy: null,
+  'not-permitted': 'Ads are off because of your privacy choices or region. You can change your choices in Settings.',
+  unsupported: 'Ads that earn credits are available in the Android app.',
+};

@@ -88,6 +88,8 @@ interface Options {
   boosterTipSeen?: boolean;
   /** Energy Credits in the wallet (default 100). */
   credits?: number;
+  /** A fake rewarded-ads service (default: none, as in browsers). */
+  ads?: { result?: { kind: string; credits?: number; saved?: boolean }; canOffer?: boolean };
   /** Whether the one-time rule tips were already shown (default true, so older tests see none). */
   tipsSeen?: boolean;
 }
@@ -409,7 +411,21 @@ function createHarness(options: Options = {}) {
     leagueScreen: { render: () => rec('leagueScreen.render') },
     leagueResult,
     boosterBar: { render: (view: unknown) => (boosterViews.push(view), undefined), flash: (id: string) => rec('boosterBar.flash', id) },
-    shopScreen: { render: (view: unknown) => (shopViews.push(view), undefined), celebrate: (id: string) => rec('shopScreen.celebrate', id) },
+    shopScreen: {
+      render: (view: unknown) => (shopViews.push(view), undefined),
+      celebrate: (id: string) => rec('shopScreen.celebrate', id),
+      celebrateEarn: () => rec('shopScreen.celebrateEarn'),
+    },
+    ads: options.ads && {
+      state: 'ready',
+      remainingToday: 4,
+      dailyLimit: 5,
+      credits: 30,
+      canOffer: options.ads.canOffer ?? true,
+      privacyOptionsRequired: false,
+      watch: async () => (rec('ads.watch'), options.ads!.result ?? { kind: 'rewarded', credits: 30, saved: true }),
+      showPrivacyOptions: async () => rec('ads.showPrivacyOptions'),
+    },
   };
   const app = new App(parts as unknown as AppParts);
 
@@ -1437,5 +1453,99 @@ describe('rule tips', () => {
     h.clear();
     h.app.handleGameEvent({ type: 'blocked', lifeLost: true });
     expect(h.effects()).toEqual([]);
+  });
+});
+
+describe('rewarded ads', () => {
+  const blocked = { id: 'a1', direction: 'right', cells: [{ row: 0, col: 0 }] } as ArrowData;
+
+  it('Shop: a rewarded ad celebrates, plays feedback and says what was earned', async () => {
+    const h = createHarness({ ads: {} });
+    h.app.start();
+    await h.app.showShop();
+    await flush();
+    expect(h.shopViews.at(-1)).toMatchObject({ earn: { state: 'ready', remaining: 4, limit: 5, credits: 30 } });
+    h.clear();
+    await h.app.watchAd();
+    expect(h.effects()).toEqual(['ads.watch', 'shopScreen.celebrateEarn', 'feedback claim', 'toast.show +30 Energy Credits 2600 achievement']);
+  });
+
+  it('an ad closed early, unavailable or over the limit pays nothing and explains', async () => {
+    for (const [kind, text] of [
+      ['dismissed', 'The ad was closed before the end, so no credits this time.'],
+      ['unavailable', 'No ad is available right now. Check your connection and try again later.'],
+      ['limit', 'Daily ad limit reached. Come back tomorrow for more.'],
+    ] as const) {
+      const h = createHarness({ ads: { result: { kind } } });
+      h.app.start();
+      h.clear();
+      await h.app.watchAd();
+      expect(h.effects()).toEqual(['ads.watch', `toast.show ${text} 3200`]);
+    }
+  });
+
+  it('without an ad service (browsers) the Shop shows no Earn section and watching does nothing', async () => {
+    const h = createHarness();
+    h.app.start();
+    await h.app.showShop();
+    await flush();
+    expect(h.shopViews.at(-1)).toMatchObject({ earn: undefined });
+    h.clear();
+    await h.app.watchAd();
+    expect(h.effects()).toEqual([]);
+  });
+
+  it('a booster without enough credits keeps its explanation, then offers an ad; the booster is never used by itself', async () => {
+    const h = createHarness({ ads: {}, credits: 5, progress: progressThrough(3) });
+    await enterLevel(h, 4);
+    h.state.escapableArrows = () => [blocked];
+    h.state.getArrows = () => [blocked];
+    h.rewards.credits = 5;
+    h.app.useBooster('hint');
+    await flush();
+    expect(h.effects()).toEqual([
+      'toast.show Hint costs 20 Energy Credits; you have 5. Earn more from daily rewards and achievements. 2600',
+      'confirmDialog.ask Need more credits?',
+    ]);
+    h.clear();
+    h.parts.confirmDialog.close(true);
+    await flush();
+    expect(h.effects()).toEqual(['confirmDialog.close true', 'ads.watch', 'shopScreen.celebrateEarn', 'feedback claim', 'toast.show +30 Energy Credits 2600 achievement']);
+    expect(h.effects()).not.toContain(`rewards.spendBooster ${TODAY} hint`);
+  });
+
+  it('"Not now" carries on without an ad; with no ad possible, only the explanation shows', async () => {
+    const h = createHarness({ ads: {}, credits: 5, progress: progressThrough(3) });
+    await enterLevel(h, 4);
+    h.state.escapableArrows = () => [blocked];
+    h.rewards.credits = 5;
+    h.app.useBooster('reveal');
+    await flush();
+    h.clear();
+    h.parts.confirmDialog.close(false);
+    await flush();
+    expect(h.effects()).toEqual(['confirmDialog.close false']);
+
+    const none = createHarness({ ads: { canOffer: false }, credits: 5, progress: progressThrough(3) });
+    await enterLevel(none, 4);
+    none.state.escapableArrows = () => [blocked];
+    none.rewards.credits = 5;
+    none.app.useBooster('reveal');
+    await flush();
+    expect(none.effects()).toEqual(['toast.show Reveal costs 40 Energy Credits; you have 5. Earn more from daily rewards and achievements. 2600']);
+  });
+
+  it('while an ad covers the game the level clock pauses and Back is ignored; both resume afterwards', async () => {
+    const h = createHarness({ ads: {} });
+    await enterLevel(h, 1);
+    h.advance(1_000);
+    h.app.setAdShowing(true);
+    h.app.setAdShowing(true); // repeated: no double pause
+    h.advance(5_000);
+    expect(h.app.handleBack(true)).toBe(true);
+    expect(h.effects()).toEqual([]);
+    h.app.setAdShowing(false);
+    h.advance(500);
+    expect(h.app.timer.elapsed()).toBe(1_500);
   });
 });

@@ -594,7 +594,9 @@ All of this is **one** record, `neon-escape.rewards` (version 1), separate from 
   "achievements": { "first-escape": "2026-10-20" },
   "bestChain": 2,
   "boosters": { "used": { "hint": 3, "reveal": 1, "heart": 0 }, "introduced": true },
-  "cosmetics": { "owned": ["frame-cyber", "frame-plasma"], "equipped": { "frame": "frame-plasma" } } }
+  "cosmetics": { "owned": ["frame-cyber", "frame-plasma"], "equipped": { "frame": "frame-plasma" } },
+  "tips": ["tap", "blocked"],
+  "adRewards": { "day": "2026-11-02", "count": 2 } }
 ```
 
 - **Boosters** (`boosters`): how many times each booster was paid for, and whether the first-time tip was shown. It sits in the same record as the wallet, so spending credits and counting the use are one write. Added within version 1: older saves read as zero uses and the tip not shown. Booster spends use transaction ids `booster:<id>:<n>` (numbered per booster, so they never repeat); like daily ids, only the most recent 50 are kept.
@@ -705,6 +707,56 @@ A **"Continue playing"** button opens the next level (like Home's Play), and Bac
 Every item has a **slot** (`frame` today). A new category, such as arrow trails, special effects or seasonal items, adds a slot, its items and prices in `src/shop/catalog.ts`, and its look where it is drawn. Buying, owning, equipping, saving and the Shop screen work per slot unchanged. Boosters are deliberately **not** sold here: they stay a direct, per-use purchase during a level.
 
 **Manual test in Chrome:** earn credits (claim daily rewards, unlock achievements) or use a test save, open Shop. Tap a frame you can't afford (message, no charge), buy one you can (confirm, balance drops once, the card glows, "Equipped"), equip another owned frame and "No frame", go to Home and Profile (the frame is there), reload (still owned and equipped), and double-tap Buy (one confirmation).
+
+## Rewarded ads (Android app, test ads only)
+
+Optional **rewarded ads** pay **30 Energy Credits** each, at most **5 per device-local day** (`REWARDED_AD_CREDITS`, `MAX_REWARDED_ADS_PER_DAY` in `src/ads/config.ts`). They exist only in the Android app. There are no interstitials, no banners and no real-money purchases, and an ad is **never shown automatically**: only after the player taps "Watch ad". **Only Google's test ads are configured** (see below), so nothing earns or costs money yet.
+
+### Where players see them
+
+- **Shop → Earn credits:** "Watch a short ad: **+30** Energy Credits", how many ads are left today, and a button that reflects the state: *Watch ad*, *Loading…*, *Try again* (no ad or no connection), *Come back tomorrow* (daily limit), or no button with an explanation (browser, or ads off because of privacy choices). After a reward the balance glows, a sound and short vibration play, and a toast confirms the credits.
+- **Boosters:** when a booster costs more than the balance, the usual explanation shows first, then (only if an ad is possible) a question: "Need more credits? … Watch a short ad to earn +30 Energy Credits (n left today). The Hint is not used automatically: tap it again when you're ready." Choosing *Not now* or Back just carries on.
+
+### How a reward is paid (once, never lost or doubled)
+
+1. The tap starts the flow; further taps are ignored until it ends (one ad at a time).
+2. If no ad is loaded yet, one is loaded (15 s timeout; no connection or no ad = "unavailable", nothing shown, nothing paid).
+3. Before showing, the ad gets a durable reward id, `ad:<day>:<n>` (the n-th paid ad that day).
+4. Credits are paid **only when the ad SDK reports the reward** (`Rewarded` event), through the wallet's validated `earn()`, together with today's count, in one write. An ad closed early pays nothing.
+5. The wallet refuses an id it has already applied, and the controller pays at most once per shown ad, so duplicate callbacks can't pay twice. Paying at the moment of the reward (not when the ad closes) means backgrounding the app or Android recreating the activity afterwards can't lose it. A reward that arrives just after the close (within 0.5 s) still counts.
+6. If storage can't be written, the reward still counts in this session (the ad was really watched) and is saved with the next successful write; the toast says so. Existing credits are never reset: ad credits add to the balance and to "earned".
+
+The daily count is saved as `adRewards` in `neon-escape.rewards` (added within version 1: older saves have none; bad values are repaired, never inflated) and applies to every place an ad is offered. **This is an offline wallet:** anyone editing local storage could change their credits or the count. The checks above protect against bugs, double callbacks and failed writes, not deliberate tampering. Server-side verification (AdMob SSV) would need a backend.
+
+### While an ad is on screen
+
+The level clock pauses (the `ad` pause reason), game audio is silent, vibration stops, a shield blocks taps on the game, and Android Back is left to the ad (the game ignores it). Everything is restored when the ad closes, whether it was watched, closed early or failed to show. Repeated pause or resume signals have no extra effect.
+
+### Consent and privacy (Google UMP)
+
+- At every launch, once the studio splash and recap are done, the app updates consent information with Google's **User Messaging Platform** and shows Google's consent form when it is required (for example in the EEA, UK and Switzerland). No custom consent dialog is used.
+- The ad SDK is started and ads are requested **only when UMP says ads may be requested** (`canRequestAds`). Declined consent, consent errors or no connection simply mean no ads; the whole game, the Shop and the boosters keep working.
+- **Settings → Information → Privacy options (ads)** appears when UMP requires a way to change choices, and opens Google's privacy options form.
+- The Settings privacy text explains the difference: **game data** (profile, progress, statistics, settings, Energy Credits) stays on the device and the game never sends it anywhere; **advertising data** is collected by Google's ad SDK in the Android app (device identifiers such as the advertising ID, IP address, ad interactions, diagnostics) under Google's policies, subject to consent.
+
+### Integration choice
+
+`@capacitor-community/admob` **8.2.1** (pinned exactly): MIT, maintained by the Capacitor community (its maintainers include the Ionic/Capacitor core team), built for Capacitor 8 (`@capacitor/core ^8`), same Android `minSdk 24` / `compileSdk 36` as this project. It bundles Google Mobile Ads SDK **25.4.0** and UMP **4.0.0**, and covers rewarded ads and the UMP consent forms. 8.2.1 was chosen over the four-day-old 8.3.0, which added a brand-new extra dependency, since this step needs nothing from it. The plugin is imported lazily (`src/ads/admobBackend.ts`) and only in the native app, so the browser build never loads it and nothing else in the game depends on it. Show is driven by the plugin's events: its `showRewardVideoAd()` promise resolves only on a reward and never settles if the ad is closed early.
+
+### Test configuration (current) and production (later)
+
+- `TEST_AD_CONFIG` uses Google's public sample IDs: app `ca-app-pub-3940256099942544~3347511713`, rewarded unit `ca-app-pub-3940256099942544/5224354917`, marked as test requests. The same app ID is in `android/app/src/main/res/values/strings.xml` (`admob_app_id`), referenced by the manifest's `com.google.android.gms.ads.APPLICATION_ID`.
+- `PRODUCTION_AD_CONFIG` is `null` and `ACTIVE_AD_CONFIG` is the test configuration in every build. Never request or click live ads while developing.
+- **Automated tests** use a fake ad backend that exists only in test files; the game itself has no simulated or mock ads, so no build can pay credits without the real SDK's reward.
+
+### Before real ads (account and Play setup, not done yet)
+
+1. Create the AdMob account and the Android app; create a **rewarded** ad unit (reward: 30 credits, to match the game).
+2. Set `admob_app_id` (strings.xml) and a production config in `src/ads/config.ts` (switch `ACTIVE_AD_CONFIG` only for release builds), and register your test devices in AdMob before using real IDs on them.
+3. In AdMob → Privacy & messaging, create the **GDPR** message (and the US state regulations message if needed). UMP shows only what is configured there.
+4. Link the app to the Play listing, and add **app-ads.txt** to the developer website.
+5. **Privacy policy** (required, linked from Play and from the game): say that the browser game collects nothing, that the Android app uses Google AdMob for optional rewarded ads, what Google collects (advertising ID, IP address, device and usage data, ad interactions, crash and diagnostics data), the purposes (advertising, ad measurement, fraud prevention), consent and how to change it (Privacy options), and that game data stays on the device.
+6. **Google Play Data Safety:** declare data collected and shared by the AdMob SDK: *Device or other IDs* (advertising ID), *Approximate location* (from IP), *App interactions* / *App activity*, *Diagnostics*. Purposes: advertising or marketing, analytics, fraud prevention. Data is encrypted in transit; game data itself isn't collected. Also answer **Advertising ID: yes** (the SDK adds `com.google.android.gms.permission.AD_ID`) and **Contains ads: yes**, and review the target audience (not designed for children unless child-directed treatment is set).
 
 ## Daily League
 
@@ -1101,6 +1153,10 @@ count. The only real challenge is **finding an arrow that can escape**, again an
     │   ├── DailyLog.ts        Per-day play statistics, storage, 7-day summaries
     │   └── insights.ts        Facts from the player's own records, rotation, rotation storage
     │
+    ├── ads/
+    │   ├── config.ts          Ad IDs (test only), credits per ad, daily limit
+    │   ├── RewardedAds.ts     Consent, load, show, pay once per reward, daily cap (pure; backend injected)
+    │   └── admobBackend.ts    Android backend: @capacitor-community/admob, imported lazily
     ├── boosters/
     │   └── Boosters.ts        Hint, Reveal, Extra Heart: costs, availability, hint choice (pure rules)
     ├── rewards/           Energy Credits and achievements
@@ -1311,6 +1367,6 @@ layout aren't compared with the new one.
 
 ## Not in this prototype
 
-Release signing and store publishing, a custom app icon and splash screen, in-game level generation (the generator is an offline developer tool), real-money purchases, online leagues or leaderboards, accounts, ads and monetisation are intentionally left out. Energy Credits cannot be bought.
+Release signing and store publishing, a custom app icon and splash screen, in-game level generation (the generator is an offline developer tool), real-money purchases, interstitial or banner ads, live (production) ads, online leagues or leaderboards and accounts are intentionally left out. Energy Credits cannot be bought; they can be earned from optional rewarded test ads in the Android app (see "Rewarded ads").
 
 **About scoring:** the star rating (lives left) is the measure of skill. The move counter is kept for compatibility. It counts arrows you cleared by tapping, so it equals the arrow count minus chain-reaction releases, and it isn't used for ratings.
