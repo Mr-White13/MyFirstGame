@@ -1,6 +1,7 @@
 import type { LeagueNotice } from '../league/League';
 import { league, leagueBadgeSvg } from '../league/leagues';
 import { Overlay, requireElement } from './dom';
+import { t } from '../i18n/translate';
 
 export type NoticeKind = 'promoted' | 'relegated' | 'mixed' | 'retained';
 
@@ -14,21 +15,29 @@ export function noticeKind(n: LeagueNotice): NoticeKind {
 
 /** One line summarising a notice (also used for the compact "league kept" toast). */
 export function noticeText(n: LeagueNotice): string {
-  const to = league(n.toTier).name;
-  const played = n.lastPlayed ? `You scored ${n.lastPlayed.points} ${n.lastPlayed.points === 1 ? 'point' : 'points'} on your last league day. ` : '';
-  const span = n.daysSettled > 1 ? `Over the last ${n.daysSettled} days: ` : '';
-  switch (noticeKind(n)) {
-    case 'promoted':
-      return `${played}${span}Welcome to ${to}. New targets apply from today.`;
-    case 'relegated':
-      return n.lastPlayed && n.daysSettled === 1
-        ? `${played}That was below the target to stay, so you continue in ${to} today. Earn points to climb back.`
-        : `${played}${span}days without points moved you to ${to}. Play a challenge to start climbing again.`;
-    case 'mixed':
-      return `${played}${span}you moved up and down and are back in ${to}.`;
-    case 'retained':
-      return `${played}You stay in ${to}.`;
+  const name = league(n.toTier).name;
+  const over = n.daysSettled > 1;
+  const days = { count: n.daysSettled, league: name };
+  const kind = noticeKind(n);
+  if (kind === 'relegated' && n.lastPlayed && n.daysSettled === 1) {
+    return t('league.noticeRelegatedLastDay', { count: n.lastPlayed.points, league: name });
   }
+  const body =
+    kind === 'promoted'
+      ? over
+        ? t('league.noticePromotedOver', days)
+        : t('league.noticePromoted', { league: name })
+      : kind === 'relegated'
+        ? over
+          ? t('league.noticeRelegatedAwayOver', days)
+          : t('league.noticeRelegatedAway', { league: name })
+        : kind === 'mixed'
+          ? over
+            ? t('league.noticeMixedOver', days)
+            : t('league.noticeMixed', { league: name })
+          : t('league.noticeRetained', { league: name });
+  // The last day's score is a sentence of its own, ahead of the result.
+  return n.lastPlayed ? `${t('league.noticeLastDay', { count: n.lastPlayed.points })} ${body}` : body;
 }
 
 /** The result of settled league days, shown once and then acknowledged. Neutral wording for moving down. */
@@ -51,9 +60,9 @@ export class LeagueResultDialog {
     const to = league(notice.toTier);
     this.onClose = onClose;
     requireElement('league-result-badge').innerHTML = leagueBadgeSvg(to.order, 84);
-    requireElement('league-result-eyebrow').textContent = 'Daily League';
+    requireElement('league-result-eyebrow').textContent = t('league.resultEyebrow');
     requireElement('league-result-title').textContent =
-      kind === 'promoted' ? `Promoted to ${to.name}!` : kind === 'relegated' ? `Now in ${to.name}` : `League: ${to.name}`;
+      kind === 'promoted' ? t('league.resultTitlePromoted', { league: to.name }) : kind === 'relegated' ? t('league.resultTitleRelegated', { league: to.name }) : t('league.resultTitleLeague', { league: to.name });
     requireElement('league-result-text').textContent = noticeText(notice);
     this.overlay.element.dataset.kind = kind;
     this.overlay.show(this.okButton);

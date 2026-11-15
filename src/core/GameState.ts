@@ -17,6 +17,17 @@ import {
 
 type Listener = (snapshot: GameSnapshot) => void;
 
+/**
+ * One thing the player did in an attempt, in order: a tap (with its clock
+ * time, which the streak rule reads), an Extra Heart, or a Continue after
+ * Game Over. Replaying them on a fresh board rebuilds the attempt exactly
+ * (see GameState.replay), so an unfinished level can be saved and resumed.
+ */
+export type RunEvent =
+  | { readonly kind: 'tap'; readonly arrowId: string; readonly at: number }
+  | { readonly kind: 'life' }
+  | { readonly kind: 'revive' };
+
 export interface GameStateOptions {
   /**
    * Validate (and solve) the level on load. Simulations that create many
@@ -94,6 +105,10 @@ export class GameState {
   private mistakes = 0;
   /** Lives given back by Extra Heart in this attempt. */
   private restored = 0;
+  /** Everything the player did in this attempt, in order (see RunEvent). */
+  private log: RunEvent[] = [];
+  /** True while replay() rebuilds an attempt: no listeners are told about each step. */
+  private replaying = false;
 
   constructor(level: LevelData, options: GameStateOptions = {}) {
     this.validate = options.validate ?? true;
@@ -172,6 +187,7 @@ export class GameState {
   restoreLife(): boolean {
     if (this.status !== 'playing' || this.lives >= this.startingLives) return false;
     this.restored++;
+    this.log.push({ kind: 'life' });
     this.emit();
     return true;
   }
@@ -186,6 +202,7 @@ export class GameState {
     if (this.status !== 'failed') return false;
     this.status = 'playing';
     this.restored++;
+    this.log.push({ kind: 'revive' });
     this.emit();
     return true;
   }
@@ -227,7 +244,39 @@ export class GameState {
     this.longestChain = 0;
     this.mistakes = 0;
     this.restored = 0;
+    this.log = [];
     this.emit();
+  }
+
+  /** What the player has done in this attempt so far, in order. */
+  get history(): readonly RunEvent[] {
+    return this.log;
+  }
+
+  /**
+   * Rebuilds an attempt from its history on a fresh board (resuming a saved
+   * level): every tap at its original clock time, every Extra Heart and
+   * Continue in order, so the board, lives, mistakes and counters come back
+   * exactly as they were. Steps that no longer apply are skipped. Listeners
+   * hear only the final state; the streak starts fresh, because the old tap
+   * times belong to another session's clock. Returns true if the level is
+   * still being played afterwards.
+   */
+  replay(events: readonly RunEvent[]): boolean {
+    this.replaying = true;
+    try {
+      this.reset();
+      for (const event of events) {
+        if (event.kind === 'tap') this.tryMove(event.arrowId, event.at);
+        else if (event.kind === 'life') this.restoreLife();
+        else this.revive();
+      }
+    } finally {
+      this.replaying = false;
+    }
+    this.resetStreak();
+    this.emit();
+    return this.status === 'playing';
   }
 
   /** Handles a player tap on an arrow at clock time `at`. See the class comment for the rules. */
@@ -235,6 +284,7 @@ export class GameState {
     if (this.status !== 'playing') return { kind: 'ignored', reason: 'level-over' };
     const arrow = this.arrows.get(arrowId);
     if (!arrow) return { kind: 'ignored', reason: 'unknown-arrow' };
+    this.log.push({ kind: 'tap', arrowId, at });
 
     const check = checkExitPath(this.grid, arrow);
     if (!check.clear) {
@@ -254,7 +304,7 @@ export class GameState {
     }
 
     this.remove(arrow);
-    this.removeListeners.forEach((l) => l(arrow, false));
+    if (!this.replaying) this.removeListeners.forEach((l) => l(arrow, false));
     this.directClears++;
     // Rolling window: keep the taps of the last STREAK_WINDOW_MS, at most STREAK_TAPS of them.
     this.tapTimes = this.tapTimes.filter((t) => at - t <= STREAK_WINDOW_MS);
@@ -344,7 +394,7 @@ export class GameState {
         const check = checkExitPath(this.grid, arrow);
         if (check.clear) {
           this.remove(arrow);
-          this.removeListeners.forEach((l) => l(arrow, true));
+          if (!this.replaying) this.removeListeners.forEach((l) => l(arrow, true));
           released = { arrowId: arrow.id, exitPath: check.path };
           break;
         }
@@ -366,7 +416,7 @@ export class GameState {
     return removable.slice(0, BONUS_CLEARS).map((arrow) => {
       const check = checkExitPath(this.grid, arrow);
       this.remove(arrow);
-      this.removeListeners.forEach((l) => l(arrow, true));
+      if (!this.replaying) this.removeListeners.forEach((l) => l(arrow, true));
       return { arrowId: arrow.id, exitPath: check.path };
     });
   }
@@ -376,6 +426,7 @@ export class GameState {
   }
 
   private emit(): void {
+    if (this.replaying) return;
     const snapshot = this.snapshot();
     this.listeners.forEach((l) => l(snapshot));
   }

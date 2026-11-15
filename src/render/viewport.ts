@@ -21,19 +21,24 @@ export class BoardViewport {
   private slot: Rect = { x: 0, y: 0, width: 1, height: 1 };
   private area: Rect = { x: 0, y: 0, width: 1, height: 1 };
   private max = 1;
+  /** Breathing room (screen pixels) a zoomed view may show past the board's edges. */
+  private edge = 0;
   private z = 1;
   private sx = 0;
   private sy = 0;
 
   /**
    * Sets the canvas, the board slot, the zoom area (all in canvas pixels; the
-   * area defaults to the slot) and the zoom limit, and fits the board.
+   * area defaults to the slot), the zoom limit and the edge margin (screen
+   * pixels a zoomed view may scroll past the board's edges, so arrows at the
+   * edge never touch the screen border), and fits the board.
    */
-  configure(canvas: Rect, slot: Rect, maxZoom: number, area: Rect = slot): void {
+  configure(canvas: Rect, slot: Rect, maxZoom: number, area: Rect = slot, edge = 0): void {
     this.canvas = canvas;
     this.slot = slot;
     this.area = area;
     this.max = Math.max(1, maxZoom);
+    this.edge = Math.max(0, edge);
     this.reset();
   }
 
@@ -131,11 +136,16 @@ export class BoardViewport {
     this.clamp();
   }
 
-  /** Keeps the view on the board: no scrolling past its edges, and centred where it doesn't fill the area. */
+  /** Keeps the view on the board (plus the edge margin): no scrolling further, and centred where it doesn't fill the area. */
   private clamp(): void {
     const s = this.slot;
+    const m = this.edge / this.z; // the margin in world pixels: a constant gap on screen at any zoom
     const clampAxis = (scroll: number, start: number, size: number, viewSize: number) => {
       const visible = viewSize / this.z;
+      if (size > visible) {
+        start -= m;
+        size += 2 * m;
+      }
       const min = start;
       const max = start + size - visible;
       return max < min ? start + (size - visible) / 2 : Math.min(max, Math.max(min, scroll));

@@ -110,7 +110,7 @@
         <svg class="studio-splash__mark"><use href="#mw-mark" /></svg>
       </span>
       <span class="studio-splash__name" aria-hidden="true">MR. WHITE GAMES</span>
-      <span class="studio-splash__hint" aria-hidden="true">Tap to skip</span>
+      <span class="studio-splash__hint" aria-hidden="true" data-i18n="html.splashHint">Tap to skip</span>
     </div>
 
     <div class="ambient" aria-hidden="true">
@@ -120,104 +120,74 @@
     <div id="app">
       <!-- Home: the start screen -->
       <section class="screen screen--home" id="screen-home" aria-labelledby="home-title">
-        <header class="topbar">
-          <button type="button" class="icon-btn" id="btn-home-settings" aria-label="Settings">
-            <svg class="icon" aria-hidden="true"><use href="#icon-settings" /></svg>
+        <h1 class="visually-hidden" id="home-title">NEON ESCAPE</h1>
+        <header class="home__top">
+          <button type="button" class="avatar-chip" id="btn-home-avatar" aria-label="Open profile" data-i18n-aria="html.homeProfileAria">
+            <span class="avatar avatar--small" id="home-avatar"></span>
+            <span class="avatar-chip__name" id="home-nickname">Player</span>
           </button>
           <button type="button" class="credits-chip" id="btn-home-credits" aria-label="Energy Credits: 0. Open daily rewards">
             <svg class="icon" aria-hidden="true"><use href="#icon-credit" /></svg><span id="home-credits">0</span>
+            <span class="home__dot" id="home-daily-dot" hidden></span>
           </button>
-          <button type="button" class="avatar-chip" id="btn-home-avatar" aria-label="Open profile">
-            <span class="avatar-chip__name" id="home-nickname">Player</span>
-            <span class="avatar avatar--small" id="home-avatar"></span>
+          <button type="button" class="icon-btn" id="btn-home-settings" aria-label="Settings" data-i18n-aria="html.settings">
+            <svg class="icon" aria-hidden="true"><use href="#icon-settings" /></svg>
           </button>
         </header>
 
-        <div class="home__brand">
-          <h1 class="title" id="home-title">NEON ESCAPE</h1>
-          <p class="home__tagline">Find the path. Escape the grid.</p>
+        <div class="journey" id="home-journey">
+          <div class="journey__map" id="home-journey-map">
+            <svg class="journey__path" id="home-journey-path" aria-hidden="true" preserveAspectRatio="none"><path class="journey__trail" /><path class="journey__trail-done" /></svg>
+            <div class="journey__marks" id="home-journey-marks"></div>
+            <ol class="journey__stops" id="home-journey-stops" aria-label="Levels"></ol>
+          </div>
         </div>
 
-        <section class="home__play surface" aria-label="Play">
-          <div class="home__next">
-            <span class="eyebrow" id="home-next-label">Next level</span>
-            <span class="home__next-level">Level <strong id="home-next-level">1</strong></span>
-            <span class="home__next-grid" id="home-next-grid">7×7</span>
-          </div>
-          <button type="button" class="btn btn--primary btn--hero" id="btn-home-play">
-            <svg class="icon" aria-hidden="true"><use href="#icon-next" /></svg>
-            <span id="home-play-label">Play</span>
-          </button>
-          <div class="home__progress">
-            <div class="progress__row">
-              <span class="progress__count"><strong id="home-progress-count">0</strong> / <span id="home-progress-total">10</span> levels</span>
-              <span class="progress__stars"><svg class="star-mini" aria-hidden="true"><use href="#icon-spark" /></svg><strong id="home-stars">0</strong> / <span id="home-stars-total">30</span></span>
-            </div>
-            <div class="meter"><div class="meter__fill" id="home-progress-fill"></div></div>
-          </div>
-        </section>
-
-        <section class="daily-card surface" aria-labelledby="home-daily-title">
-          <div class="daily-card__info">
-            <h2 class="visually-hidden" id="home-daily-title">Daily reward</h2>
-            <span class="daily-card__streak">
-              <svg class="icon" aria-hidden="true"><use href="#icon-flame" /></svg>
-              <span id="home-streak">1-day streak</span>
-            </span>
-            <span class="daily-card__status" id="home-daily-status">Day 1 reward ready</span>
-          </div>
-          <button type="button" class="btn btn--small daily-card__btn" id="btn-home-daily">
-            <svg class="icon" aria-hidden="true"><use href="#icon-calendar" /></svg>
-            <span id="home-daily-label">Claim +10</span>
-          </button>
-        </section>
-
-        <button type="button" class="league-card surface" id="btn-home-league">
-          <span class="league-card__badge" id="home-league-badge" aria-hidden="true"></span>
-          <span class="league-card__info">
-            <span class="league-card__name" id="home-league-name">Daily League</span>
-            <span class="league-card__status" id="home-league-status">Unlocks after Level 10</span>
-          </span>
-          <span class="league-card__meter meter" aria-hidden="true"><span class="meter__fill" id="home-league-fill"></span></span>
+        <button type="button" class="btn btn--primary btn--hero home__play-btn" id="btn-home-play">
+          <svg class="icon" aria-hidden="true"><use href="#icon-next" /></svg>
+          <span id="home-play-label">Play</span>
         </button>
 
-        <nav class="home__nav" aria-label="Main menu">
-          <button type="button" class="nav-tile" id="btn-home-levels">
-            <svg class="icon" aria-hidden="true"><use href="#icon-grid" /></svg><span>Levels</span>
+        <nav class="dock" aria-label="Main menu" data-i18n-aria="html.homeMenuAria">
+          <button type="button" class="dock__item" id="btn-home-league">
+            <span class="dock__icon" id="home-league-badge" aria-hidden="true"></span>
+            <span class="dock__label" id="home-league-name">League</span>
+            <em class="dock__badge" id="home-league-status"></em>
           </button>
-          <button type="button" class="nav-tile" id="btn-home-profile">
-            <svg class="icon" aria-hidden="true"><use href="#icon-user" /></svg><span>Profile</span>
+          <button type="button" class="dock__item" id="btn-home-achievements">
+            <span class="dock__icon" aria-hidden="true"><svg class="icon"><use href="#icon-trophy" /></svg></span>
+            <span class="dock__label" data-i18n="html.homeAwards">Awards</span>
+            <em class="dock__badge" id="home-achievements">0/0</em>
           </button>
-          <button type="button" class="nav-tile" id="btn-home-achievements">
-            <svg class="icon" aria-hidden="true"><use href="#icon-trophy" /></svg><span>Awards</span><em class="nav-tile__badge" id="home-achievements">0/12</em>
+          <button type="button" class="dock__item" id="btn-home-shop">
+            <span class="dock__icon" aria-hidden="true"><svg class="icon"><use href="#icon-credit" /></svg></span>
+            <span class="dock__label" data-i18n="html.shop">Shop</span>
           </button>
-          <button type="button" class="nav-tile" id="btn-home-shop">
-            <svg class="icon" aria-hidden="true"><use href="#icon-credit" /></svg><span>Shop</span>
-          </button>
-          <button type="button" class="nav-tile" id="btn-home-settings-tile">
-            <svg class="icon" aria-hidden="true"><use href="#icon-settings" /></svg><span>Settings</span>
+          <button type="button" class="dock__item" id="btn-home-profile">
+            <span class="dock__icon" aria-hidden="true"><svg class="icon"><use href="#icon-user" /></svg></span>
+            <span class="dock__label" data-i18n="html.profile">Profile</span>
           </button>
         </nav>
       </section>
 
       <!-- Screen 1: level selection -->
       <section class="screen screen--levels" id="screen-levels" aria-labelledby="levels-title">
-        <button type="button" class="icon-btn levels__back" id="btn-levels-back" aria-label="Back">
+        <button type="button" class="icon-btn levels__back" id="btn-levels-back" aria-label="Back" data-i18n-aria="html.back">
           <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
         </button>
         <header class="levels__header">
-          <p class="eyebrow">Arrow puzzle</p>
+          <p class="eyebrow" data-i18n="html.levelsEyebrow">Arrow puzzle</p>
           <h1 class="title" id="levels-title">NEON ESCAPE</h1>
           <div class="progress" aria-live="polite">
             <div class="progress__row">
-              <span class="progress__count"><strong id="progress-count">0</strong> / <span id="progress-total">10</span> levels completed</span>
-              <span class="progress__stars" aria-label="Stars collected"><svg class="star-mini" aria-hidden="true"><use href="#icon-spark" /></svg><strong id="progress-stars">0</strong> / <span id="progress-stars-total">30</span></span>
+              <span class="progress__count" data-i18n-last="html.levelsCompleted"><strong id="progress-count">0</strong> / <span id="progress-total">10</span> levels completed</span>
+              <span class="progress__stars" aria-label="Stars collected" data-i18n-aria="html.levelsStarsAria"><svg class="star-mini" aria-hidden="true"><use href="#icon-spark" /></svg><strong id="progress-stars">0</strong> / <span id="progress-stars-total">30</span></span>
             </div>
             <div class="meter"><div class="meter__fill" id="progress-fill"></div></div>
           </div>
           <!-- One chapter of 20 levels at a time (src/progress/chapters.ts). -->
-          <div class="chapter-nav" role="group" aria-label="Chapters">
-            <button type="button" class="icon-btn icon-btn--small" id="btn-chapter-prev" aria-label="Previous chapter">
+          <div class="chapter-nav" role="group" aria-label="Chapters" data-i18n-aria="html.chaptersAria">
+            <button type="button" class="icon-btn icon-btn--small" id="btn-chapter-prev" aria-label="Previous chapter" data-i18n-aria="html.chapterPrevAria">
               <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
             </button>
             <div class="chapter-nav__info" aria-live="polite">
@@ -225,19 +195,19 @@
               <span class="chapter-nav__title" id="chapter-title">Chapter 1</span>
               <span class="chapter-nav__meta" id="chapter-meta"></span>
             </div>
-            <button type="button" class="icon-btn icon-btn--small chapter-nav__next" id="btn-chapter-next" aria-label="Next chapter">
+            <button type="button" class="icon-btn icon-btn--small chapter-nav__next" id="btn-chapter-next" aria-label="Next chapter" data-i18n-aria="html.chapterNextAria">
               <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
             </button>
-            <button type="button" class="icon-btn icon-btn--small" id="btn-chapter-current" aria-label="Jump to the current level">
+            <button type="button" class="icon-btn icon-btn--small" id="btn-chapter-current" aria-label="Jump to the current level" data-i18n-aria="html.chapterCurrentAria">
               <svg class="icon" aria-hidden="true"><use href="#icon-target" /></svg>
             </button>
           </div>
         </header>
-        <p class="levels__testing" id="levels-testing" hidden>Testing build: every level is open. Levels you haven't unlocked are test plays and aren't saved.</p>
+        <p class="levels__testing" id="levels-testing" data-i18n="html.levelsTesting" hidden>Testing build: every level is open. Levels you haven't unlocked are test plays and aren't saved.</p>
         <ol class="level-grid" id="level-grid" aria-label="Levels"></ol>
         <p class="levels__legend" aria-hidden="true">
-          <span class="legend-chip legend-chip--hard">Hard</span>
-          <span class="legend-chip legend-chip--very-hard">Very hard</span>
+          <span class="legend-chip legend-chip--hard" data-i18n="html.levelsHard">Hard</span>
+          <span class="legend-chip legend-chip--very-hard" data-i18n="html.levelsVeryHard">Very hard</span>
         </p>
         <footer class="levels__footer">
           <button type="button" class="btn btn--primary" id="btn-continue">Play</button>
@@ -246,68 +216,68 @@
 
       <!-- Screen 2: gameplay. The canvas fills the whole screen (so arrows can fly
            off past the board); the HUD and an empty board slot sit on top of it. -->
-      <section class="screen screen--game" id="screen-game" aria-label="Game">
+      <section class="screen screen--game" id="screen-game" aria-label="Game" data-i18n-aria="html.gameAria">
         <div class="stage" id="stage"></div>
         <div class="game-ui" id="game-ui">
           <header class="hud" id="hud">
             <div class="hud__bar">
-              <button type="button" class="icon-btn" id="btn-back" aria-label="Back to levels">
+              <button type="button" class="icon-btn" id="btn-back" aria-label="Back to levels" data-i18n-aria="html.gameBackAria">
                 <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
               </button>
               <div class="hud__heading">
-                <h1 class="hud__level"><span id="hud-title">Level</span> <span id="hud-level">1</span></h1>
+                <h1 class="hud__level"><span id="hud-title" data-i18n="html.gameLevel">Level</span> <span id="hud-level">1</span></h1>
                 <span class="hud__name" id="hud-name" hidden></span>
-                <span class="hud__timer" id="hud-timer" role="timer" aria-label="Level time">
+                <span class="hud__timer" id="hud-timer" role="timer" aria-label="Level time" data-i18n-aria="html.gameTimeAria">
                   <svg class="icon" aria-hidden="true"><use href="#icon-clock" /></svg><span id="hud-time">00:00</span>
                 </span>
               </div>
               <div class="hud__actions">
-                <button type="button" class="icon-btn" id="btn-theme" aria-label="Quick settings: theme, sound and vibration" aria-haspopup="dialog" aria-expanded="false" aria-controls="theme-popover">
+                <button type="button" class="icon-btn" id="btn-theme" aria-label="Quick settings: theme, sound and vibration" data-i18n-aria="html.gameQuickAria" aria-haspopup="dialog" aria-expanded="false" aria-controls="theme-popover">
                   <svg class="icon" aria-hidden="true"><use href="#icon-settings" /></svg>
                 </button>
-                <button type="button" class="icon-btn icon-btn--restart" id="btn-restart" aria-label="Restart level">
+                <button type="button" class="icon-btn icon-btn--restart" id="btn-restart" aria-label="Restart level" data-i18n-aria="html.gameRestartAria">
                   <svg class="icon" aria-hidden="true"><use href="#icon-restart" /></svg>
                 </button>
               </div>
             </div>
             <!-- In-game quick settings: theme, music, sound effects and vibration. Opens under the settings button; the timer is paused while it is open. -->
-            <div class="theme-popover surface" id="theme-popover" role="dialog" aria-label="Quick settings" hidden>
-              <div class="theme-picker theme-picker--compact" role="radiogroup" aria-label="Theme">
+            <div class="theme-popover surface" id="theme-popover" role="dialog" aria-label="Quick settings" data-i18n-aria="html.quickSettingsAria" hidden>
+              <div class="theme-picker theme-picker--compact" role="radiogroup" aria-label="Theme" data-i18n-aria="html.theme">
                 <button type="button" class="theme-option theme-option--dark" role="radio" data-theme-choice="dark" aria-checked="false">
                   <span class="theme-option__swatch" aria-hidden="true"><i></i><i></i><i></i></span>
-                  <span class="theme-option__name">Dark Neon</span>
+                  <span class="theme-option__name" data-i18n="html.themeDark">Dark Neon</span>
                 </button>
                 <button type="button" class="theme-option theme-option--light" role="radio" data-theme-choice="light" aria-checked="false">
                   <span class="theme-option__swatch" aria-hidden="true"><i></i><i></i><i></i></span>
-                  <span class="theme-option__name">Light</span>
+                  <span class="theme-option__name" data-i18n="html.themeLight">Light</span>
                 </button>
                 <button type="button" class="theme-option theme-option--colorful" role="radio" data-theme-choice="colorful" aria-checked="false">
                   <span class="theme-option__swatch" aria-hidden="true"><i></i><i></i><i></i></span>
-                  <span class="theme-option__name">Colorful</span>
+                  <span class="theme-option__name" data-i18n="html.themeColorful">Colorful</span>
                 </button>
                 <button type="button" class="theme-option theme-option--system" role="radio" data-theme-choice="system" aria-checked="false">
                   <span class="theme-option__swatch" aria-hidden="true"><i></i><i></i><i></i></span>
-                  <span class="theme-option__name">System</span>
+                  <span class="theme-option__name" data-i18n="html.themeSystem">System</span>
                 </button>
               </div>
               <div class="quick-settings" id="quick-settings">
                 <label class="quick-setting">
                   <svg class="icon" aria-hidden="true"><use href="#icon-sound" /></svg>
-                  <span class="quick-setting__label">Music</span>
+                  <span class="quick-setting__label" data-i18n="html.music">Music</span>
                   <input type="checkbox" class="switch" role="switch" id="quick-music" />
                 </label>
                 <label class="quick-setting">
                   <svg class="icon" aria-hidden="true"><use href="#icon-spark" /></svg>
-                  <span class="quick-setting__label">Sound effects</span>
+                  <span class="quick-setting__label" data-i18n="html.soundEffects">Sound effects</span>
                   <input type="checkbox" class="switch" role="switch" id="quick-sfx" />
                 </label>
                 <div class="quick-setting quick-setting--choice" role="radiogroup" aria-labelledby="label-quick-vibration">
                   <svg class="icon" aria-hidden="true"><use href="#icon-vibrate" /></svg>
-                  <span class="quick-setting__label" id="label-quick-vibration">Vibration</span>
+                  <span class="quick-setting__label" id="label-quick-vibration" data-i18n="html.vibration">Vibration</span>
                   <div class="segmented segmented--inline">
-                    <label><input type="radio" name="quick-vibration" value="off" /><span>Off</span></label>
-                    <label><input type="radio" name="quick-vibration" value="soft" /><span>Soft</span></label>
-                    <label><input type="radio" name="quick-vibration" value="strong" /><span>Strong</span></label>
+                    <label><input type="radio" name="quick-vibration" value="off" /><span data-i18n="html.off">Off</span></label>
+                    <label><input type="radio" name="quick-vibration" value="soft" /><span data-i18n="html.vibrationSoft">Soft</span></label>
+                    <label><input type="radio" name="quick-vibration" value="strong" /><span data-i18n="html.vibrationStrong">Strong</span></label>
                   </div>
                 </div>
               </div>
@@ -319,26 +289,26 @@
                 <svg class="heart" aria-hidden="true"><use href="#icon-heart" /></svg>
               </div>
               <div class="hud__meter meter" aria-hidden="true"><div class="meter__fill" id="hud-progress"></div></div>
-              <span class="momentum" id="hud-momentum" role="img" aria-label="Streak: 0 of 5 taps within 4 s" title="5 successful taps within 4 s: 2 free arrows leave on their own (then 8 more clears before the next bonus)">
+              <span class="momentum" id="hud-momentum" role="img" aria-label="Streak: 0 of 5 taps within 4 s" title="5 successful taps within 4 s: 2 free arrows leave on their own (then 8 more clears before the next bonus)" data-i18n-title="html.gameStreakTitle">
                 <i></i><i></i><i></i><i></i><i></i><b class="momentum__bonus" id="hud-bonus" aria-hidden="true"></b>
               </span>
               <div class="stat stat--end">
-                <span class="stat__label">Left</span>
+                <span class="stat__label" data-i18n="html.gameLeft">Left</span>
                 <span class="stat__value" id="hud-remaining" aria-live="polite">0</span>
               </div>
             </div>
             <!-- Boosters: optional help paid with Energy Credits (hidden in Daily League challenges, where the league strip shows instead). -->
-            <div class="boosters" id="boosters" role="toolbar" aria-label="Boosters">
+            <div class="boosters" id="boosters" role="toolbar" aria-label="Boosters" data-i18n-aria="html.boostersAria">
               <span class="boosters__credits" id="booster-credits" role="status" aria-label="Energy Credits: 0">
                 <svg class="icon" aria-hidden="true"><use href="#icon-credit" /></svg><strong id="booster-credits-value">0</strong>
               </span>
               <button type="button" class="booster" data-booster="hint">
                 <svg class="icon" aria-hidden="true"><use href="#icon-bulb" /></svg>
-                <span class="booster__name">Hint</span><span class="booster__cost" data-cost>20</span>
+                <span class="booster__name" data-i18n="html.boosterHint">Hint</span><span class="booster__cost" data-cost>20</span>
               </button>
               <button type="button" class="booster" data-booster="reveal">
                 <svg class="icon" aria-hidden="true"><use href="#icon-eye" /></svg>
-                <span class="booster__name">Reveal</span><span class="booster__cost" data-cost>40</span>
+                <span class="booster__name" data-i18n="html.boosterReveal">Reveal</span><span class="booster__cost" data-cost>40</span>
               </button>
             </div>
             <div class="hud__league" id="hud-league" hidden>
@@ -346,13 +316,13 @@
                 <svg class="icon" aria-hidden="true"><use href="#icon-bolt" /></svg><strong id="hud-energy">0</strong>/4
               </span>
               <span class="hud__league-name" id="hud-league-name">Bronze</span>
-              <span class="hud__points">Today <strong id="hud-points">0</strong>/12</span>
+              <span class="hud__points" data-i18n="html.today">Today <strong id="hud-points">0</strong>/12</span>
             </div>
           </header>
           <!-- Catches the tap that closes the theme picker, so it never reaches the board. -->
           <div class="theme-backdrop" id="theme-backdrop" hidden></div>
-          <div class="board-slot" id="board-slot" role="img" aria-label="Puzzle board">
-            <button type="button" class="icon-btn icon-btn--small view-reset" id="btn-reset-view" aria-label="Reset zoom" hidden>
+          <div class="board-slot" id="board-slot" role="img" aria-label="Puzzle board" data-i18n-aria="html.gameBoardAria">
+            <button type="button" class="icon-btn icon-btn--small view-reset" id="btn-reset-view" aria-label="Reset zoom" data-i18n-aria="html.resetZoomAria" hidden>
               <svg class="icon" aria-hidden="true"><use href="#icon-fit" /></svg>
             </button>
           </div>
@@ -362,28 +332,28 @@
       <!-- Profile -->
       <section class="screen screen--profile" id="screen-profile" aria-labelledby="profile-title">
         <header class="topbar">
-          <button type="button" class="icon-btn" id="btn-profile-back" aria-label="Back">
+          <button type="button" class="icon-btn" id="btn-profile-back" aria-label="Back" data-i18n-aria="html.back">
             <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
           </button>
-          <h1 class="topbar__title" id="profile-title">Profile</h1>
+          <h1 class="topbar__title" id="profile-title" data-i18n="html.profile">Profile</h1>
           <span class="topbar__spacer" aria-hidden="true"></span>
         </header>
 
         <div class="profile__scroll">
-          <section class="profile__identity surface" aria-label="Player">
-            <button type="button" class="avatar avatar--large avatar--button" id="profile-avatar" aria-label="Change avatar"></button>
+          <section class="profile__identity surface" aria-label="Player" data-i18n-aria="html.profilePlayerAria">
+            <button type="button" class="avatar avatar--large avatar--button" id="profile-avatar" aria-label="Change avatar" data-i18n-aria="html.changeAvatarAria"></button>
             <div class="profile__who">
               <div class="profile__name-row" id="profile-name-view">
                 <span class="profile__name" id="profile-nickname">Player</span>
-                <button type="button" class="icon-btn icon-btn--small" id="btn-edit-name" aria-label="Edit nickname">
+                <button type="button" class="icon-btn icon-btn--small" id="btn-edit-name" aria-label="Edit nickname" data-i18n-aria="html.profileEditNameAria">
                   <svg class="icon" aria-hidden="true"><use href="#icon-edit" /></svg>
                 </button>
               </div>
               <form class="profile__name-form" id="profile-name-form" hidden>
-                <label class="visually-hidden" for="profile-name-input">Nickname</label>
+                <label class="visually-hidden" for="profile-name-input" data-i18n="html.profileNickname">Nickname</label>
                 <input id="profile-name-input" class="text-input" type="text" maxlength="32" autocomplete="off" spellcheck="false" />
-                <button type="submit" class="btn btn--primary btn--small">Save</button>
-                <button type="button" class="btn btn--ghost btn--small" id="btn-name-cancel">Cancel</button>
+                <button type="submit" class="btn btn--primary btn--small" data-i18n="html.save">Save</button>
+                <button type="button" class="btn btn--ghost btn--small" id="btn-name-cancel" data-i18n="html.cancel">Cancel</button>
                 <p class="field-error" id="profile-name-error" role="alert"></p>
               </form>
               <button type="button" class="profile__country" id="btn-country">
@@ -394,62 +364,62 @@
             </div>
           </section>
 
-          <section class="profile__summary" aria-label="Progress">
-            <div class="summary-tile"><strong id="profile-levels">0</strong><span>of <span id="profile-levels-total">10</span> levels</span></div>
-            <div class="summary-tile"><strong id="profile-stars">0</strong><span>of <span id="profile-stars-total">30</span> stars</span></div>
-            <div class="summary-tile"><strong id="profile-perfect">0</strong><span>perfect levels</span></div>
+          <section class="profile__summary" aria-label="Progress" data-i18n-aria="html.profileProgressAria">
+            <div class="summary-tile"><strong id="profile-levels">0</strong><span data-i18n="html.of" data-i18n-last="html.levelsWord">of <span id="profile-levels-total">10</span> levels</span></div>
+            <div class="summary-tile"><strong id="profile-stars">0</strong><span data-i18n="html.of" data-i18n-last="html.starsWord">of <span id="profile-stars-total">30</span> stars</span></div>
+            <div class="summary-tile"><strong id="profile-perfect">0</strong><span data-i18n="html.profilePerfectLevels">perfect levels</span></div>
           </section>
 
           <section class="profile__card surface" aria-labelledby="profile-stats-title">
-            <h2 class="card-heading" id="profile-stats-title">Statistics</h2>
+            <h2 class="card-heading" id="profile-stats-title" data-i18n="html.profileStatistics">Statistics</h2>
             <dl class="stat-grid">
-              <div><dt>Play time</dt><dd id="stat-time">0 s</dd></div>
-              <div><dt>Levels cleared</dt><dd id="stat-clears">0</dd></div>
-              <div><dt>Failed attempts</dt><dd id="stat-failed">0</dd></div>
-              <div><dt>Flawless runs</dt><dd id="stat-flawless">0</dd></div>
-              <div><dt>Arrows cleared</dt><dd id="stat-arrows">0</dd></div>
-              <div><dt>Chain reactions</dt><dd id="stat-chains">0</dd></div>
+              <div><dt data-i18n="html.profilePlayTime">Play time</dt><dd id="stat-time">0 s</dd></div>
+              <div><dt data-i18n="html.profileLevelsCleared">Levels cleared</dt><dd id="stat-clears">0</dd></div>
+              <div><dt data-i18n="html.profileFailedAttempts">Failed attempts</dt><dd id="stat-failed">0</dd></div>
+              <div><dt data-i18n="html.profileFlawlessRuns">Flawless runs</dt><dd id="stat-flawless">0</dd></div>
+              <div><dt data-i18n="html.arrowsCleared">Arrows cleared</dt><dd id="stat-arrows">0</dd></div>
+              <div><dt data-i18n="html.profileChainReactions">Chain reactions</dt><dd id="stat-chains">0</dd></div>
             </dl>
             <p class="card-note" id="profile-tracked-since"></p>
           </section>
 
           <section class="profile__card surface" aria-labelledby="profile-league-title">
-            <h2 class="card-heading" id="profile-league-title">Daily League</h2>
+            <h2 class="card-heading" id="profile-league-title" data-i18n="html.dailyLeague">Daily League</h2>
             <dl class="stat-grid">
-              <div><dt>Current league</dt><dd id="stat-league">Bronze</dd></div>
-              <div><dt>Highest league</dt><dd id="stat-league-best">Bronze</dd></div>
-              <div><dt>Energy Points (lifetime)</dt><dd id="stat-points">0</dd></div>
-              <div><dt>Challenges completed</dt><dd id="stat-challenges">0</dd></div>
-              <div><dt>Promotions</dt><dd id="stat-promotions">0</dd></div>
-              <div><dt>Relegations</dt><dd id="stat-relegations">0</dd></div>
+              <div><dt data-i18n="html.currentLeague">Current league</dt><dd id="stat-league">Bronze</dd></div>
+              <div><dt data-i18n="html.profileHighestLeague">Highest league</dt><dd id="stat-league-best">Bronze</dd></div>
+              <div><dt data-i18n="html.profileLifetimePoints">Energy Points (lifetime)</dt><dd id="stat-points">0</dd></div>
+              <div><dt data-i18n="html.profileChallengesCompleted">Challenges completed</dt><dd id="stat-challenges">0</dd></div>
+              <div><dt data-i18n="html.profilePromotions">Promotions</dt><dd id="stat-promotions">0</dd></div>
+              <div><dt data-i18n="html.profileRelegations">Relegations</dt><dd id="stat-relegations">0</dd></div>
             </dl>
           </section>
 
           <section class="profile__card surface" aria-labelledby="profile-rewards-title">
-            <h2 class="card-heading" id="profile-rewards-title">Daily &amp; rewards</h2>
+            <h2 class="card-heading" id="profile-rewards-title" data-i18n="html.profileDailyRewards">Daily &amp; rewards</h2>
             <dl class="stat-grid">
-              <div><dt>Energy Credits</dt><dd id="stat-credits">0</dd></div>
-              <div><dt>Login streak</dt><dd id="stat-streak">0 days</dd></div>
-              <div><dt>Longest streak</dt><dd id="stat-longest">0 days</dd></div>
-              <div><dt>Days played</dt><dd id="stat-days">0</dd></div>
+              <div><dt data-i18n="html.energyCredits">Energy Credits</dt><dd id="stat-credits">0</dd></div>
+              <div><dt data-i18n="html.profileLoginStreak">Login streak</dt><dd id="stat-streak">0 days</dd></div>
+              <div><dt data-i18n="html.profileLongestStreak">Longest streak</dt><dd id="stat-longest">0 days</dd></div>
+              <div><dt data-i18n="html.profileDaysPlayed">Days played</dt><dd id="stat-days">0</dd></div>
             </dl>
             <button type="button" class="btn btn--ghost btn--small profile__achievements" id="btn-profile-achievements">
               <svg class="icon" aria-hidden="true"><use href="#icon-trophy" /></svg>
-              <span>Achievements <strong id="profile-achievements">0 / 12</strong></span>
+              <span data-i18n="html.achievements">Achievements <strong id="profile-achievements">0 / 12</strong></span>
             </button>
           </section>
 
           <section class="profile__card surface" aria-labelledby="profile-records-title">
-            <h2 class="card-heading" id="profile-records-title">Personal records</h2>
+            <h2 class="card-heading" id="profile-records-title" data-i18n="html.personalRecords">Personal records</h2>
             <dl class="stat-grid">
-              <div><dt>Levels completed</dt><dd id="records-completed">0</dd></div>
-              <div><dt>Stars</dt><dd id="records-stars">0</dd></div>
-              <div><dt>Perfect levels</dt><dd id="records-perfect">0</dd></div>
-              <div><dt>Best times set</dt><dd id="records-timed">0</dd></div>
+              <div><dt data-i18n="html.profileLevelsCompleted">Levels completed</dt><dd id="records-completed">0</dd></div>
+              <div><dt data-i18n="html.profileStars">Stars</dt><dd id="records-stars">0</dd></div>
+              <div><dt data-i18n="html.profilePerfectLevelsLabel">Perfect levels</dt><dd id="records-perfect">0</dd></div>
+              <div><dt data-i18n="html.profileBestTimes">Best times set</dt><dd id="records-timed">0</dd></div>
             </dl>
             <button type="button" class="btn btn--ghost btn--small profile__records" id="btn-profile-records">
               <svg class="icon" aria-hidden="true"><use href="#icon-clock" /></svg>
-              <span>All records</span>
+              <span data-i18n="html.profileAllRecords">All records</span>
             </button>
           </section>
         </div>
@@ -458,16 +428,16 @@
       <!-- Personal records: one chapter, or a level-number search, at a time (src/ui/RecordsScreen.ts). -->
       <section class="screen screen--records" id="screen-records" aria-labelledby="records-title">
         <header class="topbar">
-          <button type="button" class="icon-btn" id="btn-records-back" aria-label="Back">
+          <button type="button" class="icon-btn" id="btn-records-back" aria-label="Back" data-i18n-aria="html.back">
             <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
           </button>
-          <h1 class="topbar__title" id="records-title">Personal records</h1>
+          <h1 class="topbar__title" id="records-title" data-i18n="html.personalRecords">Personal records</h1>
           <span class="topbar__spacer" aria-hidden="true"></span>
         </header>
         <div class="records__body">
           <div class="records__controls surface">
-            <div class="chapter-nav" role="group" aria-label="Chapters">
-            <button type="button" class="icon-btn icon-btn--small" id="btn-records-chapter-prev" aria-label="Previous chapter">
+            <div class="chapter-nav" role="group" aria-label="Chapters" data-i18n-aria="html.chaptersAria">
+            <button type="button" class="icon-btn icon-btn--small" id="btn-records-chapter-prev" aria-label="Previous chapter" data-i18n-aria="html.chapterPrevAria">
               <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
             </button>
             <div class="chapter-nav__info" aria-live="polite">
@@ -475,13 +445,13 @@
               <span class="chapter-nav__title" id="records-chapter-title">Chapter 1</span>
               <span class="chapter-nav__meta" id="records-chapter-meta"></span>
             </div>
-            <button type="button" class="icon-btn icon-btn--small chapter-nav__next" id="btn-records-chapter-next" aria-label="Next chapter">
+            <button type="button" class="icon-btn icon-btn--small chapter-nav__next" id="btn-records-chapter-next" aria-label="Next chapter" data-i18n-aria="html.chapterNextAria">
               <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
             </button>
             </div>
             <label class="records__search">
               <svg class="icon" aria-hidden="true"><use href="#icon-search" /></svg>
-              <input type="search" id="records-search" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="Find a level number" aria-label="Find a level by number" />
+              <input type="search" id="records-search" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="Find a level number" aria-label="Find a level by number" data-i18n-placeholder="html.recordsSearchPlaceholder" data-i18n-aria="html.recordsSearchAria" />
             </label>
           </div>
           <p class="records__note" id="records-note" aria-live="polite"></p>
@@ -492,92 +462,103 @@
       <!-- Settings -->
       <section class="screen screen--settings" id="screen-settings" aria-labelledby="settings-title">
         <header class="topbar">
-          <button type="button" class="icon-btn" id="btn-settings-back" aria-label="Back">
+          <button type="button" class="icon-btn" id="btn-settings-back" aria-label="Back" data-i18n-aria="html.back">
             <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
           </button>
-          <h1 class="topbar__title" id="settings-title">Settings</h1>
+          <h1 class="topbar__title" id="settings-title" data-i18n="html.settings">Settings</h1>
           <span class="topbar__spacer" aria-hidden="true"></span>
         </header>
 
         <div class="settings__scroll">
           <section class="settings-group surface" aria-labelledby="settings-appearance">
-            <h2 class="settings-group__title" id="settings-appearance">
+            <h2 class="settings-group__title" id="settings-appearance" data-i18n="html.settingsAppearance">
               <svg class="icon" aria-hidden="true"><use href="#icon-palette" /></svg>Appearance
             </h2>
             <div class="setting setting--stack" role="radiogroup" aria-labelledby="label-theme">
-              <span class="setting__label" id="label-theme">Theme</span>
+              <span class="setting__label" id="label-theme" data-i18n="html.theme">Theme</span>
               <div class="theme-picker">
                 <label class="theme-option theme-option--dark">
                   <input type="radio" name="theme" value="dark" />
                   <span class="theme-option__swatch" aria-hidden="true"><i></i><i></i><i></i></span>
-                  <span class="theme-option__name">Dark Neon</span>
+                  <span class="theme-option__name" data-i18n="html.themeDark">Dark Neon</span>
                 </label>
                 <label class="theme-option theme-option--light">
                   <input type="radio" name="theme" value="light" />
                   <span class="theme-option__swatch" aria-hidden="true"><i></i><i></i><i></i></span>
-                  <span class="theme-option__name">Light</span>
+                  <span class="theme-option__name" data-i18n="html.themeLight">Light</span>
                 </label>
                 <label class="theme-option theme-option--colorful">
                   <input type="radio" name="theme" value="colorful" />
                   <span class="theme-option__swatch" aria-hidden="true"><i></i><i></i><i></i></span>
-                  <span class="theme-option__name">Colorful</span>
+                  <span class="theme-option__name" data-i18n="html.themeColorful">Colorful</span>
                 </label>
                 <label class="theme-option theme-option--system">
                   <input type="radio" name="theme" value="system" />
                   <span class="theme-option__swatch" aria-hidden="true"><i></i><i></i><i></i></span>
-                  <span class="theme-option__name">System</span>
+                  <span class="theme-option__name" data-i18n="html.themeSystem">System</span>
                 </label>
               </div>
               <p class="setting__hint" id="theme-hint"></p>
             </div>
 
             <div class="setting setting--stack" role="radiogroup" aria-labelledby="label-motion" aria-describedby="motion-hint">
-              <span class="setting__label" id="label-motion">Reduced motion</span>
+              <span class="setting__label" id="label-motion" data-i18n="html.settingsMotion">Reduced motion</span>
               <div class="segmented">
-                <label><input type="radio" name="motion" value="auto" /><span>Auto</span></label>
-                <label><input type="radio" name="motion" value="reduce" /><span>On</span></label>
-                <label><input type="radio" name="motion" value="full" /><span>Off</span></label>
+                <label><input type="radio" name="motion" value="auto" /><span data-i18n="html.auto">Auto</span></label>
+                <label><input type="radio" name="motion" value="reduce" /><span data-i18n="html.on">On</span></label>
+                <label><input type="radio" name="motion" value="full" /><span data-i18n="html.off">Off</span></label>
               </div>
               <p class="setting__hint" id="motion-hint"></p>
             </div>
 
             <div class="setting setting--stack" role="radiogroup" aria-labelledby="label-effects" aria-describedby="effects-hint">
-              <span class="setting__label" id="label-effects">Visual effects</span>
+              <span class="setting__label" id="label-effects" data-i18n="html.settingsEffects">Visual effects</span>
               <div class="segmented">
-                <label><input type="radio" name="effects" value="off" /><span>Off</span></label>
-                <label><input type="radio" name="effects" value="low" /><span>Low</span></label>
-                <label><input type="radio" name="effects" value="normal" /><span>Normal</span></label>
+                <label><input type="radio" name="effects" value="off" /><span data-i18n="html.off">Off</span></label>
+                <label><input type="radio" name="effects" value="low" /><span data-i18n="html.settingsEffectsLow">Low</span></label>
+                <label><input type="radio" name="effects" value="normal" /><span data-i18n="html.settingsEffectsNormal">Normal</span></label>
               </div>
-              <p class="setting__hint" id="effects-hint">Sparks, energy trails and background motes. Collision feedback always stays.</p>
+              <p class="setting__hint" id="effects-hint" data-i18n="html.settingsEffectsHint">Sparks, energy trails and background motes. Collision feedback always stays.</p>
+            </div>
+
+            <div class="setting setting--stack" role="radiogroup" aria-labelledby="label-language" aria-describedby="language-hint">
+              <span class="setting__label" id="label-language">Language</span>
+              <div class="segmented">
+                <label><input type="radio" name="language" value="auto" /><span id="language-auto">Auto</span></label>
+                <label><input type="radio" name="language" value="en" lang="en" /><span>English</span></label>
+                <label><input type="radio" name="language" value="es" lang="es" /><span>Español</span></label>
+                <label><input type="radio" name="language" value="ro" lang="ro" /><span>Română</span></label>
+              </div>
+              <p class="setting__hint" id="language-hint"></p>
             </div>
           </section>
 
           <section class="settings-group surface" aria-labelledby="settings-audio">
-            <h2 class="settings-group__title" id="settings-audio">
+            <h2 class="settings-group__title" id="settings-audio" data-i18n="html.settingsAudio">
               <svg class="icon" aria-hidden="true"><use href="#icon-sound" /></svg>Audio
             </h2>
             <label class="setting setting--switch">
               <span class="setting__text">
-                <span class="setting__label">Sound</span>
-                <span class="setting__hint">Master switch for music and effects</span>
+                <span class="setting__label" data-i18n="html.settingsSound">Sound</span>
+                <span class="setting__hint" data-i18n="html.settingsSoundHint">Master switch for music and effects</span>
               </span>
               <input type="checkbox" class="switch" role="switch" id="set-sound" />
             </label>
             <label class="setting setting--switch">
-              <span class="setting__text"><span class="setting__label">Music</span></span>
+              <span class="setting__text"><span class="setting__label" data-i18n="html.music">Music</span></span>
               <input type="checkbox" class="switch" role="switch" id="set-music" />
             </label>
             <div class="setting setting--slider">
-              <label class="setting__label" for="set-music-volume">Music volume</label>
+              <label class="setting__label" for="set-music-volume" data-i18n="html.settingsMusicVolume">Music volume</label>
               <input type="range" class="slider" id="set-music-volume" min="0" max="100" step="5" />
               <output class="slider__value" id="set-music-volume-value" for="set-music-volume">35%</output>
             </div>
             <label class="setting setting--switch">
-              <span class="setting__text"><span class="setting__label">Sound effects</span></span>
+              <span class="setting__text"><span class="setting__label" data-i18n="html.soundEffects">Sound effects</span></span>
               <input type="checkbox" class="switch" role="switch" id="set-sfx" />
             </label>
             <div class="setting setting--slider">
-              <label class="setting__label" for="set-sfx-volume">Effects volume</label>
+              <label class="setting__label" for="set-sfx-volume" data-i18n="html.settingsEffectsVolume">Effects volume</label>
               <input type="range" class="slider" id="set-sfx-volume" min="0" max="100" step="5" />
               <output class="slider__value" id="set-sfx-volume-value" for="set-sfx-volume">70%</output>
             </div>
@@ -585,20 +566,20 @@
           </section>
 
           <section class="settings-group surface" aria-labelledby="settings-feedback">
-            <h2 class="settings-group__title" id="settings-feedback">
+            <h2 class="settings-group__title" id="settings-feedback" data-i18n="html.settingsFeedback">
               <svg class="icon" aria-hidden="true"><use href="#icon-vibrate" /></svg>Feedback
             </h2>
             <div class="setting setting--stack" role="radiogroup" aria-labelledby="label-vibration" aria-describedby="haptics-hint">
-              <span class="setting__label" id="label-vibration">Vibration</span>
+              <span class="setting__label" id="label-vibration" data-i18n="html.vibration">Vibration</span>
               <div class="segmented">
-                <label><input type="radio" name="vibration" value="off" /><span>Off</span></label>
-                <label><input type="radio" name="vibration" value="soft" /><span>Soft</span></label>
-                <label><input type="radio" name="vibration" value="strong" /><span>Strong</span></label>
+                <label><input type="radio" name="vibration" value="off" /><span data-i18n="html.off">Off</span></label>
+                <label><input type="radio" name="vibration" value="soft" /><span data-i18n="html.vibrationSoft">Soft</span></label>
+                <label><input type="radio" name="vibration" value="strong" /><span data-i18n="html.vibrationStrong">Strong</span></label>
               </div>
-              <p class="setting__hint" id="haptics-hint">Short pulses on releases, collisions and wins. Soft makes them lighter and shorter.</p>
+              <p class="setting__hint" id="haptics-hint" data-i18n="html.settingsHapticsHint">Short pulses on releases, collisions and wins. Soft makes them lighter and shorter.</p>
             </div>
             <div class="setting setting--test">
-              <button type="button" class="btn btn--ghost btn--small" id="btn-test-vibration">
+              <button type="button" class="btn btn--ghost btn--small" id="btn-test-vibration" data-i18n="html.settingsTestVibration">
                 <svg class="icon" aria-hidden="true"><use href="#icon-vibrate" /></svg>
                 Test vibration
               </button>
@@ -607,60 +588,60 @@
           </section>
 
           <section class="settings-group surface" aria-labelledby="settings-gameplay">
-            <h2 class="settings-group__title" id="settings-gameplay">
+            <h2 class="settings-group__title" id="settings-gameplay" data-i18n="html.settingsGameplay">
               <svg class="icon" aria-hidden="true"><use href="#icon-gamepad" /></svg>Gameplay
             </h2>
             <label class="setting setting--switch">
               <span class="setting__text">
-                <span class="setting__label">Show gameplay timer</span>
-                <span class="setting__hint">Times are always recorded and shown when you finish</span>
+                <span class="setting__label" data-i18n="html.settingsTimer">Show gameplay timer</span>
+                <span class="setting__hint" data-i18n="html.settingsTimerHint">Times are always recorded and shown when you finish</span>
               </span>
               <input type="checkbox" class="switch" role="switch" id="set-timer" />
             </label>
             <label class="setting setting--switch">
               <span class="setting__text">
-                <span class="setting__label">Confirm restart</span>
-                <span class="setting__hint">Ask before restarting a level you've started</span>
+                <span class="setting__label" data-i18n="html.settingsConfirmRestart">Confirm restart</span>
+                <span class="setting__hint" data-i18n="html.settingsConfirmRestartHint">Ask before restarting a level you've started</span>
               </span>
               <input type="checkbox" class="switch" role="switch" id="set-confirm-restart" />
             </label>
             <label class="setting setting--switch">
               <span class="setting__text">
-                <span class="setting__label">Player recap</span>
-                <span class="setting__hint">One fact from your own records when the game starts</span>
+                <span class="setting__label" data-i18n="html.settingsRecap">Player recap</span>
+                <span class="setting__hint" data-i18n="html.settingsRecapHint">One fact from your own records when the game starts</span>
               </span>
               <input type="checkbox" class="switch" role="switch" id="set-recap" />
             </label>
           </section>
 
           <section class="settings-group surface" aria-labelledby="settings-about">
-            <h2 class="settings-group__title" id="settings-about">
+            <h2 class="settings-group__title" id="settings-about" data-i18n="html.settingsInformation">
               <svg class="icon" aria-hidden="true"><use href="#icon-info" /></svg>Information
             </h2>
             <dl class="about">
-              <div><dt>Version</dt><dd id="settings-version">–</dd></div>
+              <div><dt data-i18n="html.settingsVersion">Version</dt><dd id="settings-version">–</dd></div>
               <div class="about__studio">
-                <dt>Studio</dt>
+                <dt data-i18n="html.settingsStudio">Studio</dt>
                 <dd><svg class="about__mark" aria-hidden="true"><use href="#mw-mark" /></svg>Mr. White Games</dd>
               </div>
               <div>
-                <dt>Credits</dt>
-                <dd>Game design, code, art, sound effects and music are original to NEON ESCAPE. Sounds and music are synthesised in code. Built with Phaser 3, TypeScript and Vite.</dd>
+                <dt data-i18n="html.settingsCredits">Credits</dt>
+                <dd data-i18n="html.settingsCreditsText">Game design, code, art, sound effects and music are original to NEON ESCAPE. Sounds and music are synthesised in code. Built with Phaser 3, TypeScript and Vite.</dd>
               </div>
               <div>
-                <dt>Privacy</dt>
-                <dd>
+                <dt data-i18n="html.settingsPrivacy">Privacy</dt>
+                <dd data-i18n="html.settingsPrivacyText">
                   No account. Your profile, progress, statistics, settings and Energy Credits are stored only on this device; the game itself never sends them anywhere.
                   In the Android app you can choose to watch rewarded ads (Google AdMob) for credits. Ads are only shown when you tap to watch one, and only if your consent choices allow ads.
                   Google's ad SDK then collects device and usage data (such as the advertising ID, IP address and ad interactions) as described in Google's privacy policy. The browser version has no ads.
                 </dd>
               </div>
             </dl>
-            <button type="button" class="btn btn--ghost btn--small" id="btn-ad-privacy" hidden>
+            <button type="button" class="btn btn--ghost btn--small" id="btn-ad-privacy" hidden data-i18n="html.settingsAdPrivacy">
               <svg class="icon" aria-hidden="true"><use href="#icon-info" /></svg>
               Privacy options (ads)
             </button>
-            <button type="button" class="btn btn--ghost btn--small btn--reset" id="btn-reset-settings">
+            <button type="button" class="btn btn--ghost btn--small btn--reset" id="btn-reset-settings" data-i18n="html.settingsReset">
               <svg class="icon" aria-hidden="true"><use href="#icon-restart" /></svg>
               Reset settings
             </button>
@@ -672,50 +653,50 @@
       <!-- Energy Credits Shop: permanent cosmetics (src/shop/catalog.ts, src/ui/ShopScreen.ts) -->
       <section class="screen screen--shop" id="screen-shop" aria-labelledby="shop-title">
         <header class="topbar">
-          <button type="button" class="icon-btn" id="btn-shop-back" aria-label="Back">
+          <button type="button" class="icon-btn" id="btn-shop-back" aria-label="Back" data-i18n-aria="html.back">
             <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
           </button>
-          <h1 class="topbar__title" id="shop-title">Shop</h1>
+          <h1 class="topbar__title" id="shop-title" data-i18n="html.shop">Shop</h1>
           <span class="topbar__spacer" aria-hidden="true"></span>
         </header>
         <div class="shop__scroll">
-          <section class="shop__summary surface" aria-label="Your Energy Credits">
+          <section class="shop__summary surface" aria-label="Your Energy Credits" data-i18n-aria="html.shopCreditsAria">
             <span class="avatar avatar--large shop__avatar" id="shop-avatar"></span>
             <div class="shop__balance">
-              <span class="shop__label">Energy Credits</span>
+              <span class="shop__label" data-i18n="html.energyCredits">Energy Credits</span>
               <span class="credits-inline shop__credits" id="shop-credits-wrap"><svg class="icon" aria-hidden="true"><use href="#icon-credit" /></svg><strong id="shop-credits">0</strong></span>
-              <p class="shop__note">Cosmetics are permanent: buy once, keep forever. They only change how things look.</p>
+              <p class="shop__note" data-i18n="html.shopNote">Cosmetics are permanent: buy once, keep forever. They only change how things look.</p>
             </div>
           </section>
           <!-- Optional rewarded ads (Android app only; src/ads/). Never shown automatically. -->
           <section class="shop-earn surface" id="shop-earn" aria-labelledby="shop-earn-title">
             <div class="shop-earn__text">
-              <h2 class="shop-section__title" id="shop-earn-title">Earn credits</h2>
-              <p class="shop-earn__offer" id="shop-earn-offer">Watch a short ad: <strong>+30</strong> Energy Credits</p>
+              <h2 class="shop-section__title" id="shop-earn-title" data-i18n="html.shopEarnTitle">Earn credits</h2>
+              <p class="shop-earn__offer" id="shop-earn-offer" data-i18n="html.shopWatchAd" data-i18n-last="html.energyCredits">Watch a short ad: <strong>+30</strong> Energy Credits</p>
               <p class="shop-earn__status" id="shop-earn-status" role="status" aria-live="polite"></p>
             </div>
             <button type="button" class="btn btn--primary btn--small shop-earn__btn" id="btn-shop-watch-ad">Watch ad</button>
           </section>
           <div class="shop__catalog" id="shop-catalog"></div>
-          <button type="button" class="btn btn--primary shop__play" id="btn-shop-play">
+          <button type="button" class="btn btn--primary shop__play" id="btn-shop-play" data-i18n="html.shopContinue">
             <svg class="icon" aria-hidden="true"><use href="#icon-next" /></svg>Continue playing
           </button>
-          <p class="card-note">Earn Energy Credits from daily rewards, achievements and the Daily League. Credits can't be bought with money.</p>
+          <p class="card-note" data-i18n="html.shopFootnote">Earn Energy Credits from daily rewards, achievements and the Daily League. Credits can't be bought with money.</p>
         </div>
       </section>
 
       <section class="screen screen--achievements" id="screen-achievements" aria-labelledby="achievements-title">
         <header class="topbar">
-          <button type="button" class="icon-btn" id="btn-achievements-back" aria-label="Back">
+          <button type="button" class="icon-btn" id="btn-achievements-back" aria-label="Back" data-i18n-aria="html.back">
             <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
           </button>
-          <h1 class="topbar__title" id="achievements-title">Achievements</h1>
+          <h1 class="topbar__title" id="achievements-title" data-i18n="html.achievements">Achievements</h1>
           <span class="topbar__spacer" aria-hidden="true"></span>
         </header>
         <div class="achievements__scroll">
-          <section class="achievements__summary surface" aria-label="Summary">
+          <section class="achievements__summary surface" aria-label="Summary" data-i18n-aria="html.achievementsSummaryAria">
             <div class="progress__row">
-              <span class="progress__count"><strong id="ach-count">0</strong> / <span id="ach-total">12</span> achievements unlocked</span>
+              <span class="progress__count"><strong id="ach-count">0</strong> / <span id="ach-total">12</span> <span data-i18n="html.achievementsUnlocked">achievements unlocked</span></span>
               <span class="credits-inline"><svg class="icon" aria-hidden="true"><use href="#icon-credit" /></svg><strong id="ach-credits">0</strong></span>
             </div>
             <div class="meter"><div class="meter__fill" id="ach-fill"></div></div>
@@ -727,32 +708,41 @@
       <!-- Daily League -->
       <section class="screen screen--league" id="screen-league" aria-labelledby="league-title">
         <header class="topbar">
-          <button type="button" class="icon-btn" id="btn-league-back" aria-label="Back">
+          <button type="button" class="icon-btn" id="btn-league-back" aria-label="Back" data-i18n-aria="html.back">
             <svg class="icon" aria-hidden="true"><use href="#icon-back" /></svg>
           </button>
-          <h1 class="topbar__title" id="league-title">Daily League</h1>
+          <h1 class="topbar__title" id="league-title" data-i18n="html.dailyLeague">Daily League</h1>
           <span class="topbar__spacer" aria-hidden="true"></span>
         </header>
         <div class="league__scroll">
-          <section class="league-hero surface" aria-label="Current league">
+          <section class="league-hero surface" aria-label="Current league" data-i18n-aria="html.currentLeague">
             <span class="league-hero__badge" id="league-badge" aria-hidden="true"></span>
             <div class="league-hero__info">
-              <span class="eyebrow">Current league</span>
+              <span class="eyebrow" data-i18n="html.currentLeague">Current league</span>
               <strong class="league-hero__name" id="league-name">Bronze</strong>
-              <span class="league-hero__points"><svg class="icon" aria-hidden="true"><use href="#icon-bolt" /></svg><strong id="league-points">0</strong> / 12 Energy Points today</span>
+              <span class="league-hero__points"><svg class="icon" aria-hidden="true"><use href="#icon-bolt" /></svg><strong id="league-points">0</strong><span data-i18n="html.leaguePointsToday"> / 12 Energy Points today</span></span>
             </div>
+          </section>
+
+          <section class="league-rules surface" aria-labelledby="league-quick-title">
+            <h2 class="card-heading" id="league-quick-title" data-i18n="html.leagueInShort">In short</h2>
+            <ol class="league-rules__list league-rules__list--quick">
+              <li><strong data-i18n="html.leagueQuick1Title">Play the 3 daily challenges.</strong> <span data-i18n="html.leagueQuick1Text">Each hides 4 glowing Energy Arrows.</span></li>
+              <li><strong data-i18n="html.leagueQuick2Title">Clear Energy Arrows</strong> <span data-i18n="html.leagueQuick2Text">to earn points: 1 point each, up to 12 a day.</span></li>
+              <li><strong data-i18n="html.leagueQuick3Title">Tomorrow, your score decides your league.</strong> <span data-i18n="html.leagueQuick3Text">Reach the green mark on the meter to move up; fall short of the grey mark and you move down.</span></li>
+            </ol>
           </section>
 
           <section class="league-locked surface" id="league-locked" hidden>
             <svg class="icon league-locked__icon" aria-hidden="true"><use href="#icon-lock" /></svg>
-            <h2 class="league-locked__title">Unlocks after Level 10</h2>
-            <p class="league-locked__text">Complete all 10 levels to play three Daily League challenges every day and collect Energy Arrows.</p>
+            <h2 class="league-locked__title" data-i18n="html.leagueLockedTitle">Unlocks after Level 10</h2>
+            <p class="league-locked__text" data-i18n="html.leagueLockedText">Complete all 10 levels to play three Daily League challenges every day and collect Energy Arrows.</p>
             <div class="meter"><div class="meter__fill" id="league-unlock-fill"></div></div>
-            <span class="league-locked__count"><strong id="league-unlock-count">0</strong> / 10 levels</span>
+            <span class="league-locked__count"><strong id="league-unlock-count">0</strong><span data-i18n="html.leagueLockedCount"> / 10 levels</span></span>
           </section>
 
           <section class="league-progress surface" id="league-progress" aria-labelledby="league-progress-title">
-            <h2 class="card-heading" id="league-progress-title">Progress today</h2>
+            <h2 class="card-heading" id="league-progress-title" data-i18n="html.leagueProgressToday">Progress today</h2>
             <div class="league-meter" id="league-meter" role="img">
               <div class="league-meter__fill" id="league-meter-fill"></div>
               <span class="league-meter__mark league-meter__mark--down" id="league-mark-down"></span>
@@ -760,34 +750,34 @@
             </div>
             <p class="league-progress__targets" id="league-targets"></p>
             <div class="league-progress__counts">
-              <span>Challenges <strong id="league-challenges">0</strong> / 3</span>
-              <span>Energy Arrows <strong id="league-arrows">0</strong> / 12</span>
+              <span data-i18n="html.leagueChallenges">Challenges <strong id="league-challenges">0</strong> / 3</span>
+              <span data-i18n="html.energyArrows">Energy Arrows <strong id="league-arrows">0</strong> / 12</span>
             </div>
             <p class="setting__note" id="league-day-note" hidden></p>
           </section>
 
           <section aria-labelledby="league-challenges-title">
-            <h2 class="card-heading league__heading" id="league-challenges-title">Daily challenges</h2>
+            <h2 class="card-heading league__heading" id="league-challenges-title" data-i18n="html.leagueDailyChallenges">Daily challenges</h2>
             <ol class="challenge-list" id="league-challenge-list"></ol>
           </section>
 
           <section class="league-rules surface" aria-labelledby="league-rules-title">
-            <h2 class="card-heading" id="league-rules-title">How the league works</h2>
+            <h2 class="card-heading" id="league-rules-title" data-i18n="html.leagueFullRules">Full rules</h2>
             <ul class="league-rules__list">
-              <li>Each day has 3 challenges with 4 Energy Arrows each. Clearing an Energy Arrow, by tapping it or by a chain reaction, earns 1 Energy Point, once per arrow per day: up to 12.</li>
-              <li>When a new day starts, the previous day is scored against your league's targets. Reach the promotion target to move up one league; score below the relegation threshold to move down one. Anything in between keeps your league.</li>
-              <li>You take part in a day by earning at least 1 point. The first day in a row without points is forgiven; each further one moves you down one league, never below Bronze.</li>
-              <li>These are personal, offline targets. There are no other players in this league yet, and no rankings.</li>
+              <li data-i18n="html.leagueRule1">Each day has 3 challenges with 4 Energy Arrows each. Clearing an Energy Arrow, by tapping it or by a chain reaction, earns 1 Energy Point, once per arrow per day: up to 12.</li>
+              <li data-i18n="html.leagueRule2">When a new day starts, the previous day is scored against your league's targets. Reach the promotion target to move up one league; score below the relegation threshold to move down one. Anything in between keeps your league.</li>
+              <li data-i18n="html.leagueRule3">You take part in a day by earning at least 1 point. The first day in a row without points is forgiven; each further one moves you down one league, never below Bronze.</li>
+              <li data-i18n="html.leagueRule4">These are personal, offline targets. There are no other players in this league yet, and no rankings.</li>
             </ul>
             <table class="league-table">
-              <caption class="visually-hidden">League targets</caption>
-              <thead><tr><th scope="col">League</th><th scope="col">Promote at</th><th scope="col">Relegate below</th></tr></thead>
+              <caption class="visually-hidden" data-i18n="html.leagueTableCaption">League targets</caption>
+              <thead><tr><th scope="col" data-i18n="html.leagueTableLeague">League</th><th scope="col" data-i18n="html.leagueTablePromote">Promote at</th><th scope="col" data-i18n="html.leagueTableRelegate">Relegate below</th></tr></thead>
               <tbody id="league-table-body"></tbody>
             </table>
           </section>
 
           <section class="league-history surface" aria-labelledby="league-history-title">
-            <h2 class="card-heading" id="league-history-title">Recent days</h2>
+            <h2 class="card-heading" id="league-history-title" data-i18n="html.leagueRecentDays">Recent days</h2>
             <ol class="league-history__list" id="league-history"></ol>
           </section>
         </div>
@@ -800,7 +790,7 @@
           <p class="card__eyebrow" id="league-result-eyebrow">Daily League</p>
           <h2 class="card__title" id="league-result-title">Promoted!</h2>
           <p class="card__detail" id="league-result-text"></p>
-          <button type="button" class="btn btn--primary" id="btn-league-result-ok">Continue</button>
+          <button type="button" class="btn btn--primary" id="btn-league-result-ok" data-i18n="html.continue">Continue</button>
         </div>
       </div>
 
@@ -808,22 +798,22 @@
       <div class="overlay" id="daily-dialog" role="dialog" aria-modal="true" aria-labelledby="daily-title" hidden>
         <div class="card card--picker card--daily">
           <header class="picker__head">
-            <h2 class="card__title card__title--small" id="daily-title">Daily rewards</h2>
-            <button type="button" class="icon-btn icon-btn--small" id="btn-daily-close" aria-label="Close">
+            <h2 class="card__title card__title--small" id="daily-title" data-i18n="html.dailyRewards">Daily rewards</h2>
+            <button type="button" class="icon-btn icon-btn--small" id="btn-daily-close" aria-label="Close" data-i18n-aria="html.close">
               <svg class="icon" aria-hidden="true"><use href="#icon-close" /></svg>
             </button>
           </header>
           <div class="daily__summary">
-            <span class="daily__streak"><svg class="icon" aria-hidden="true"><use href="#icon-flame" /></svg><strong id="daily-streak">0</strong><span>-day streak</span></span>
+            <span class="daily__streak"><svg class="icon" aria-hidden="true"><use href="#icon-flame" /></svg><strong id="daily-streak">0</strong><span data-streak-suffix>-day streak</span></span>
             <span class="credits-inline"><svg class="icon" aria-hidden="true"><use href="#icon-credit" /></svg><strong id="daily-balance">0</strong></span>
           </div>
-          <ol class="daily-grid" id="daily-grid" aria-label="7-day reward cycle"></ol>
+          <ol class="daily-grid" id="daily-grid" aria-label="7-day reward cycle" data-i18n-aria="html.dailyCycleAria"></ol>
           <p class="daily__message" id="daily-message" role="status" aria-live="polite"></p>
           <button type="button" class="btn btn--primary daily__claim" id="btn-daily-claim">Claim</button>
-          <button type="button" class="btn btn--ghost btn--small daily__shop" id="btn-daily-shop">
+          <button type="button" class="btn btn--ghost btn--small daily__shop" id="btn-daily-shop" data-i18n="html.dailyShop">
             <svg class="icon" aria-hidden="true"><use href="#icon-credit" /></svg>Spend credits in the Shop
           </button>
-          <p class="card-note">Play on consecutive days to move through the 7-day cycle. Miss a day and the cycle starts again from Day 1. Credits you've earned are always kept. Best streak: <strong id="daily-best">0</strong>.</p>
+          <p class="card-note" data-i18n="html.dailyNote">Play on consecutive days to move through the 7-day cycle. Miss a day and the cycle starts again from Day 1. Credits you've earned are always kept. Best streak: <strong id="daily-best">0</strong>.</p>
         </div>
       </div>
 
@@ -843,39 +833,39 @@
           <p class="stars__caption" id="complete-lives"></p>
           <p class="card__detail" id="complete-detail"></p>
           <dl class="run-stats run-stats--two" id="complete-challenge-stats" hidden>
-            <div class="run-stats__time"><dt>Time</dt><dd id="complete-challenge-time">0.0 s</dd></div>
-            <div class="run-stats__energy"><dt>Energy Arrows</dt><dd id="complete-energy">0 / 4</dd></div>
-            <div><dt>New points</dt><dd id="complete-new-points">+0</dd></div>
-            <div><dt>Today</dt><dd id="complete-today">0 / 12</dd></div>
+            <div class="run-stats__time"><dt data-i18n="html.time">Time</dt><dd id="complete-challenge-time">0.0 s</dd></div>
+            <div class="run-stats__energy"><dt data-i18n="html.energyArrows">Energy Arrows</dt><dd id="complete-energy">0 / 4</dd></div>
+            <div><dt data-i18n="html.completeNewPoints">New points</dt><dd id="complete-new-points">+0</dd></div>
+            <div><dt data-i18n="html.today">Today</dt><dd id="complete-today">0 / 12</dd></div>
           </dl>
           <dl class="run-stats run-stats--two" id="complete-level-stats">
-            <div class="run-stats__time"><dt>Time</dt><dd id="complete-time">0.0 s</dd></div>
-            <div><dt>Personal best</dt><dd id="complete-best-time">–</dd></div>
-            <div><dt>Arrows cleared</dt><dd><span id="complete-arrows">0</span><small id="complete-chain"></small></dd></div>
-            <div><dt>Mistakes</dt><dd id="complete-mistakes">0</dd></div>
+            <div class="run-stats__time"><dt data-i18n="html.time">Time</dt><dd id="complete-time">0.0 s</dd></div>
+            <div><dt data-i18n="html.completePersonalBest">Personal best</dt><dd id="complete-best-time">–</dd></div>
+            <div><dt data-i18n="html.arrowsCleared">Arrows cleared</dt><dd><span id="complete-arrows">0</span><small id="complete-chain"></small></dd></div>
+            <div><dt data-i18n="html.mistakes">Mistakes</dt><dd id="complete-mistakes">0</dd></div>
           </dl>
           <div class="chips">
-            <p class="chip chip--time" id="complete-new-time" hidden>New best time!</p>
-            <p class="chip chip--best" id="complete-best" hidden>Best rating!</p>
+            <p class="chip chip--time" id="complete-new-time" data-i18n="html.completeNewTime" hidden>New best time!</p>
+            <p class="chip chip--best" id="complete-best" data-i18n="html.completeBestRating" hidden>Best rating!</p>
             <p class="chip" id="complete-unlocked" hidden></p>
           </div>
           <div class="card__actions">
             <button type="button" class="btn btn--solid" id="btn-next">
-              <span id="btn-next-label">Next level</span>
+              <span id="btn-next-label" data-i18n="html.nextLevel">Next level</span>
               <svg class="icon" aria-hidden="true"><use href="#icon-next" /></svg>
             </button>
-            <button type="button" class="btn btn--solid" id="btn-play-from-start" hidden>
+            <button type="button" class="btn btn--solid" id="btn-play-from-start" hidden data-i18n="html.playFromLevel1">
               <svg class="icon" aria-hidden="true"><use href="#icon-restart" /></svg>
               Play from level 1
             </button>
             <div class="card__row">
-              <button type="button" class="btn btn--ghost btn--small" id="btn-replay">
+              <button type="button" class="btn btn--ghost btn--small" id="btn-replay" data-i18n="html.restart">
                 <svg class="icon" aria-hidden="true"><use href="#icon-restart" /></svg>
                 Restart
               </button>
               <button type="button" class="btn btn--ghost btn--small" id="btn-levels">
                 <svg class="icon" aria-hidden="true"><use href="#icon-grid" /></svg>
-                <span id="btn-levels-label">Levels</span>
+                <span id="btn-levels-label" data-i18n="html.levels">Levels</span>
               </button>
             </div>
           </div>
@@ -889,20 +879,20 @@
             <svg class="badge__icon badge__icon--solid"><use href="#icon-heart" /></svg>
           </div>
           <p class="card__eyebrow" id="gameover-eyebrow">Level 1</p>
-          <h2 class="card__title" id="gameover-title">Out of lives</h2>
+          <h2 class="card__title" id="gameover-title" data-i18n="html.gameOverTitle">Out of lives</h2>
           <p class="card__detail" id="gameover-detail"></p>
           <dl class="run-stats run-stats--two">
-            <div><dt>Arrows cleared</dt><dd id="gameover-cleared">0</dd></div>
-            <div><dt>Mistakes</dt><dd id="gameover-mistakes">0</dd></div>
+            <div><dt data-i18n="html.arrowsCleared">Arrows cleared</dt><dd id="gameover-cleared">0</dd></div>
+            <div><dt data-i18n="html.mistakes">Mistakes</dt><dd id="gameover-mistakes">0</dd></div>
           </dl>
           <div class="card__actions">
             <!-- Watch a rewarded ad to continue this run with one heart (once per attempt; see App.continueWithAd). -->
             <button type="button" class="btn btn--solid gameover__continue" id="btn-continue-ad" hidden>
               <svg class="icon" aria-hidden="true"><use href="#icon-ad" /></svg>
-              <span>Continue</span>
+              <span data-i18n="html.continue">Continue</span>
               <span class="gameover__continue-reward"><svg class="icon" aria-hidden="true"><use href="#icon-heart" /></svg>+1</span>
             </button>
-            <button type="button" class="btn btn--danger" id="btn-try-again">
+            <button type="button" class="btn btn--danger" id="btn-try-again" data-i18n="html.tryAgain">
               <svg class="icon" aria-hidden="true"><use href="#icon-restart" /></svg>
               Try again
             </button>
@@ -918,12 +908,12 @@
       <div class="overlay" id="avatar-dialog" role="dialog" aria-modal="true" aria-labelledby="avatar-title" hidden>
         <div class="card card--picker">
           <header class="picker__head">
-            <h2 class="card__title card__title--small" id="avatar-title">Choose avatar</h2>
-            <button type="button" class="icon-btn icon-btn--small" id="btn-avatar-close" aria-label="Close">
+            <h2 class="card__title card__title--small" id="avatar-title" data-i18n="html.avatarTitle">Choose avatar</h2>
+            <button type="button" class="icon-btn icon-btn--small" id="btn-avatar-close" aria-label="Close" data-i18n-aria="html.close">
               <svg class="icon" aria-hidden="true"><use href="#icon-close" /></svg>
             </button>
           </header>
-          <div class="avatar-grid" id="avatar-grid" role="listbox" aria-label="Avatars"></div>
+          <div class="avatar-grid" id="avatar-grid" role="listbox" aria-label="Avatars" data-i18n-aria="html.avatarGridAria"></div>
         </div>
       </div>
 
@@ -931,18 +921,18 @@
       <div class="overlay" id="country-dialog" role="dialog" aria-modal="true" aria-labelledby="country-title" hidden>
         <div class="card card--picker card--tall">
           <header class="picker__head">
-            <h2 class="card__title card__title--small" id="country-title">Country</h2>
-            <button type="button" class="icon-btn icon-btn--small" id="btn-country-close" aria-label="Close">
+            <h2 class="card__title card__title--small" id="country-title" data-i18n="html.countryTitle">Country</h2>
+            <button type="button" class="icon-btn icon-btn--small" id="btn-country-close" aria-label="Close" data-i18n-aria="html.close">
               <svg class="icon" aria-hidden="true"><use href="#icon-close" /></svg>
             </button>
           </header>
-          <p class="card-note">Optional and only shown on your profile. Nothing leaves this device.</p>
+          <p class="card-note" data-i18n="html.countryNote">Optional and only shown on your profile. Nothing leaves this device.</p>
           <label class="search">
             <svg class="icon" aria-hidden="true"><use href="#icon-search" /></svg>
-            <span class="visually-hidden">Search countries</span>
-            <input id="country-search" class="text-input" type="search" placeholder="Search" autocomplete="off" />
+            <span class="visually-hidden" data-i18n="html.countrySearchLabel">Search countries</span>
+            <input id="country-search" class="text-input" type="search" placeholder="Search" data-i18n-placeholder="html.countrySearchPlaceholder" autocomplete="off" />
           </label>
-          <ul class="country-list" id="country-list" role="listbox" aria-label="Countries"></ul>
+          <ul class="country-list" id="country-list" role="listbox" aria-label="Countries" data-i18n-aria="html.countryListAria"></ul>
         </div>
       </div>
 
@@ -965,7 +955,7 @@
       <!-- Startup recap screen (src/ui/RecapScreen.ts): after the studio splash, the animated
            NEON ESCAPE logo and one fact from the player's own records. Tap anywhere to continue. -->
       <section class="recap-screen" id="recap-screen" role="dialog" aria-modal="true" aria-labelledby="recap-wordmark" aria-describedby="recap-text" hidden>
-        <button type="button" class="btn btn--ghost btn--small recap-screen__skip" id="btn-recap-skip">Skip</button>
+        <button type="button" class="btn btn--ghost btn--small recap-screen__skip" id="btn-recap-skip" data-i18n="html.recapSkip">Skip</button>
         <div class="recap-screen__body">
           <!-- The logo mark (resources/logo/neon-escape-mark.svg), with classes for the intro animation. -->
           <svg class="recap-logo" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
@@ -1016,10 +1006,10 @@
           <figure class="recap-quote">
             <span class="recap-quote__title" id="recap-title"></span>
             <blockquote class="recap-quote__text" id="recap-text"></blockquote>
-            <figcaption class="recap-quote__by">— Your recap</figcaption>
+            <figcaption class="recap-quote__by" data-i18n="html.recapBy">— Your recap</figcaption>
           </figure>
         </div>
-        <button type="button" class="recap-screen__continue" id="btn-recap-continue">Tap to continue</button>
+        <button type="button" class="recap-screen__continue" id="btn-recap-continue" data-i18n="html.recapContinue">Tap to continue</button>
         <div class="recap-screen__progress" aria-hidden="true"><span id="recap-progress"></span></div>
       </section>
     </div>

@@ -2,6 +2,7 @@ import { formatClock, formatTotal } from '../core/time';
 import type { LevelData } from '../core/types';
 import type { DailyState } from '../daily/Daily';
 import { addDays, type DayKey } from '../daily/dayKey';
+import { dateLocale, formatNumber, getLocale, t } from '../i18n/translate';
 import type { PlayerStats } from '../profile/Stats';
 import { completedCount, MAX_STARS, nextLevelToPlay, perfectLevels, totalStars, type Progress } from '../progress/Progress';
 import { browserStorage, isNonNegativeInt, readVersioned, SafeStore, type KeyValueStore, type SaveStatus } from '../storage/SafeStore';
@@ -37,12 +38,16 @@ export interface Insight {
 export const INSIGHT_IDS = ['week', 'progress', 'yesterday', 'stars', 'best-time', 'streak', 'flawless', 'arrows', 'chains', 'play-time'] as const;
 export type InsightId = (typeof INSIGHT_IDS)[number];
 
-const plural = (n: number, one: string, many = `${one}s`) => `${n.toLocaleString('en-US')} ${n === 1 ? one : many}`;
+/** A grouped count for a plural message: `count` picks the form, `num` is what is shown. */
+const counted = (n: number) => ({ count: n, num: formatNumber(n) });
 
-/** "12 Oct" from an ISO date-time, in the device's time zone. */
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+/** "12 Oct" from an ISO date-time, in the device's time zone ("12 oct" / "12 oct." in Spanish / Romanian). */
 function shortDate(iso: string): string {
   const d = new Date(iso);
-  return `${d.getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][d.getMonth()]}`;
+  if (getLocale() === 'en') return `${d.getDate()} ${MONTHS[d.getMonth()]}`;
+  return d.toLocaleDateString(dateLocale(), { day: 'numeric', month: 'short' });
 }
 
 /** The insight with this id, or null when the records don't support it yet. */
@@ -53,30 +58,35 @@ export function insightFor(id: InsightId, r: RecapRecords): Insight | null {
       if (!week.complete || week.wins === 0) return null;
       return {
         id,
-        title: 'Your last 7 days',
-        text: `${plural(week.wins, 'level')} cleared in ${formatTotal(week.playMs)} of play, across ${plural(week.daysPlayed, 'day')}.`,
+        title: t('recap.titleWeek'),
+        text: t('recap.week', { ...counted(week.wins), time: formatTotal(week.playMs), days: t('recap.days', counted(week.daysPlayed)) }),
       };
     }
     case 'yesterday': {
       const yesterday = addDays(r.today, -1);
       const day = summarize(r.log, yesterday, 1);
       if (!day.complete || day.wins === 0) return null;
-      return { id, title: 'Yesterday', text: `You cleared ${plural(day.wins, 'level')} in ${formatTotal(day.playMs)} of play.` };
+      return { id, title: t('recap.titleYesterday'), text: t('recap.yesterday', { ...counted(day.wins), time: formatTotal(day.playMs) }) };
     }
     case 'progress': {
       const done = completedCount(r.progress, r.levels.length);
       if (done === 0) return null;
-      if (done === r.levels.length) return { id, title: 'Progress', text: `All ${r.levels.length} levels completed.` };
-      return { id, title: 'Progress', text: `${done} of ${r.levels.length} levels completed. Next up: Level ${nextLevelToPlay(r.progress, r.levels.length)}.` };
+      const title = t('recap.titleProgress');
+      if (done === r.levels.length) return { id, title, text: t('recap.progressAll', { count: r.levels.length }) };
+      return { id, title, text: t('recap.progress', { done, count: r.levels.length, next: nextLevelToPlay(r.progress, r.levels.length) }) };
     }
     case 'stars': {
       const stars = totalStars(r.progress, r.levels.length);
       if (stars === 0) return null;
       const perfect = perfectLevels(r.progress, r.levels.length);
+      const count = r.levels.length * MAX_STARS;
       return {
         id,
-        title: 'Stars',
-        text: `${stars} of ${r.levels.length * MAX_STARS} stars collected${perfect > 0 ? `, with ${plural(perfect, 'perfect level')}` : ''}.`,
+        title: t('recap.titleStars'),
+        text:
+          perfect > 0
+            ? t('recap.starsPerfect', { stars, count, perfect: t('recap.perfectLevels', counted(perfect)) })
+            : t('recap.stars', { stars, count }),
       };
     }
     case 'best-time': {
@@ -84,27 +94,30 @@ export function insightFor(id: InsightId, r: RecapRecords): Insight | null {
       for (const level of [...r.levels].reverse()) {
         const record = r.progress.completed[level.id];
         if (record?.bestTimeMs == null || record.revision !== (level.revision ?? 1)) continue;
-        return { id, title: 'Personal best', text: `Your best time on Level ${level.id} is ${formatClock(record.bestTimeMs)}.` };
+        return { id, title: t('recap.titleBestTime'), text: t('recap.bestTime', { level: level.id, time: formatClock(record.bestTimeMs) }) };
       }
       return null;
     }
     case 'streak': {
       if (r.daily.lastCheckIn !== r.today || r.daily.streak < 2) return null;
-      const longest = r.daily.longestStreak > r.daily.streak ? ` Your longest is ${r.daily.longestStreak}.` : ' Your longest yet.';
-      return { id, title: 'Daily streak', text: `Day ${r.daily.streak} in a row.${longest}` };
+      const text =
+        r.daily.longestStreak > r.daily.streak
+          ? t('recap.streakLonger', { streak: r.daily.streak, longest: r.daily.longestStreak })
+          : t('recap.streakBest', { streak: r.daily.streak });
+      return { id, title: t('recap.titleStreak'), text };
     }
     case 'flawless':
       if (r.stats.flawlessRuns === 0) return null;
-      return { id, title: 'Flawless', text: `${plural(r.stats.flawlessRuns, 'clear')} without a single mistake since ${shortDate(r.stats.trackedSince)}.` };
+      return { id, title: t('recap.titleFlawless'), text: t('recap.flawless', { ...counted(r.stats.flawlessRuns), date: shortDate(r.stats.trackedSince) }) };
     case 'arrows':
       if (r.stats.arrowsCleared === 0) return null;
-      return { id, title: 'Arrows', text: `${plural(r.stats.arrowsCleared, 'arrow')} escaped the grid since ${shortDate(r.stats.trackedSince)}.` };
+      return { id, title: t('recap.titleArrows'), text: t('recap.arrows', { ...counted(r.stats.arrowsCleared), date: shortDate(r.stats.trackedSince) }) };
     case 'chains':
       if (r.stats.chainClears === 0) return null;
-      return { id, title: 'Chain reactions', text: `Chain reactions have released ${plural(r.stats.chainClears, 'arrow')} for you.` };
+      return { id, title: t('recap.titleChains'), text: t('recap.chains', counted(r.stats.chainClears)) };
     case 'play-time':
       if (r.stats.playTimeMs < 60_000) return null;
-      return { id, title: 'Play time', text: `${formatTotal(r.stats.playTimeMs)} of play since ${shortDate(r.stats.trackedSince)}.` };
+      return { id, title: t('recap.titlePlayTime'), text: t('recap.playTime', { time: formatTotal(r.stats.playTimeMs), date: shortDate(r.stats.trackedSince) }) };
   }
 }
 

@@ -1,8 +1,11 @@
 /*
  * Countries for the cosmetic profile field. Stored as ISO 3166-1 alpha-2
- * codes; names come from the platform (Intl.DisplayNames) so no translations
- * table has to be shipped. Nothing here ever looks at the player's location.
+ * codes; names come from the platform (Intl.DisplayNames), in the game's
+ * language, so no translations table has to be shipped. Nothing here ever looks at the player's location.
  */
+
+import { getLocale } from '../i18n/translate';
+import { localeTag } from '../i18n/locale';
 
 const CODES = (
   'AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW ' +
@@ -31,27 +34,42 @@ export function flagEmoji(code: string): string {
   return String.fromCodePoint(...[...code.toUpperCase()].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65));
 }
 
-let names: Intl.DisplayNames | null | undefined;
-
-export function countryName(code: string): string {
-  if (names === undefined) {
-    try {
-      names = new Intl.DisplayNames(['en'], { type: 'region' });
-    } catch {
-      names = null; // very old engines: fall back to the code
-    }
-  }
-  return names?.of(code) ?? code;
+/** The language for names and sorting: plain `en` in English (as always), the chosen language otherwise. */
+function nameLocale(): string {
+  const locale = getLocale();
+  return locale === 'en' ? 'en' : localeTag(locale);
 }
 
-let cache: readonly Country[] | null = null;
+/** Display names per language (null: the engine has none, names fall back to the code). */
+const names = new Map<string, Intl.DisplayNames | null>();
 
-/** All countries, sorted by name. */
+/** The country's name in the current language. */
+export function countryName(code: string): string {
+  const tag = nameLocale();
+  let display = names.get(tag);
+  if (display === undefined) {
+    try {
+      display = new Intl.DisplayNames([tag], { type: 'region' });
+    } catch {
+      display = null; // very old engines: fall back to the code
+    }
+    names.set(tag, display);
+  }
+  return display?.of(code) ?? code;
+}
+
+/** The sorted list per language, built on first use. */
+const cache = new Map<string, readonly Country[]>();
+
+/** All countries, sorted by name in the current language. */
 export function allCountries(): readonly Country[] {
-  cache ??= CODES.map((code) => ({ code, name: countryName(code), flag: flagEmoji(code) })).sort((a, b) =>
-    a.name.localeCompare(b.name, 'en'),
-  );
-  return cache;
+  const tag = nameLocale();
+  let list = cache.get(tag);
+  if (!list) {
+    list = CODES.map((code) => ({ code, name: countryName(code), flag: flagEmoji(code) })).sort((a, b) => a.name.localeCompare(b.name, tag));
+    cache.set(tag, list);
+  }
+  return list;
 }
 
 /** Case- and accent-insensitive search on name or code. */

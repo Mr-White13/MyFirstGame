@@ -14,6 +14,7 @@ import {
   recordEntry,
   recordsSummary,
   RECORDS_PAGE_SIZE,
+  revealedLevelCount,
   searchLevelIds,
 } from './chapters';
 import { createProgress, recordCompletion, type LevelRecord, type Progress } from './Progress';
@@ -32,6 +33,17 @@ function simulated(count: number, done: number): Progress {
 const sameRevision = () => 1;
 
 describe('chapters', () => {
+  it('reveals levels only up to the end of the chapter reached', () => {
+    const reached = (highestUnlocked: number) => ({ ...createProgress(), highestUnlocked });
+    expect(revealedLevelCount(createProgress(), 100, false)).toBe(20);
+    expect(revealedLevelCount(reached(20), 100, false)).toBe(20);
+    expect(revealedLevelCount(reached(21), 100, false)).toBe(40);
+    expect(revealedLevelCount(reached(41), 100, false)).toBe(60);
+    expect(revealedLevelCount(reached(100), 100, false)).toBe(100);
+    expect(revealedLevelCount(reached(500), 30, false)).toBe(30); // never past the real levels
+    expect(revealedLevelCount(createProgress(), 100, true)).toBe(100); // testing unlock: everything
+  });
+
   it('groups levels into chapters of 20; the last chapter may be shorter', () => {
     expect(CHAPTER_SIZE).toBe(20);
     expect(chapterCount(30)).toBe(2);

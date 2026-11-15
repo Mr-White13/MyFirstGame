@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { t, type MessageKey } from '../i18n/translate';
 import type { GameState } from '../core/GameState';
 import type { LevelData } from '../core/types';
 import { withAvatar, withCountry, withNickname, type PlayerProfile, type ProfileStorage } from '../profile/Profile';
@@ -14,6 +15,7 @@ import { LEAGUE_UNLOCK_LEVEL, type LeagueService } from '../league/LeagueService
 import type { LeagueScreen } from '../ui/LeagueScreen';
 import type { LeagueResultDialog } from '../ui/LeagueResultDialog';
 import type { ProgressStorage } from '../progress/ProgressStorage';
+import type { SavedRun, SavedRunStorage } from '../progress/SavedRun';
 import type { DailyLogStorage } from '../recap/DailyLog';
 import type { RecapRecords } from '../recap/insights';
 import type { GameScene } from '../scenes/GameScene';
@@ -43,8 +45,8 @@ import type { RewardedAds, WatchResult } from '../ads/RewardedAds';
 import { AD_FREE_PLAY_MS } from '../ads/config';
 import type { BoosterBar } from '../ui/BoosterBar';
 import { AttemptTracker, type AttemptSummary } from './AttemptTracker';
-import { BOOSTER_TIP, BoosterController } from './BoosterController';
-import { TIP_MS, TIP_TEXT, TIPS_UNTIL_COMPLETED, tipForEvent, type TipId } from './tips';
+import { boosterTip, BoosterController } from './BoosterController';
+import { TIP_MS, tipText, TIPS_UNTIL_COMPLETED, tipForEvent, type TipId } from './tips';
 import { IDLE_HINT_SHOW_MS, IdleHint, idleHintText } from './idleHint';
 import { routeBack, type BackLayer } from './backLayers';
 import { LeagueController } from './LeagueController';
@@ -60,6 +62,8 @@ export interface AppParts {
   readonly statsStorage: StatsStorage;
   /** Per-day statistics for the startup recap. */
   readonly dailyLogStorage: DailyLogStorage;
+  /** The unfinished level the player left, to continue where it was (see SavedRun). */
+  readonly savedRuns: Pick<SavedRunStorage, 'load' | 'save'>;
   readonly state: GameState;
   readonly scene: GameScene;
   readonly game: Phaser.Game;
@@ -119,6 +123,8 @@ export class App {
   private intro: { back: () => void } | null = null;
   private readonly history = new NavigationHistory();
   private readonly attempt = new AttemptTracker();
+  /** The level left unfinished, resumed the next time it is opened. */
+  private savedRun: SavedRun | null;
   private clockTimer = 0;
   /** "Only N arrows can move" after a long think (see idleHint.ts). */
   private readonly idleHint = new IdleHint();
@@ -160,6 +166,7 @@ export class App {
     const progress = parts.storage.load();
     this.profile = parts.profileStorage.load();
     this.records = new RecordsKeeper(parts, progress, parts.statsStorage.load(), parts.dailyLogStorage.load());
+    this.savedRun = parts.savedRuns.load();
     this.leagueController = new LeagueController(parts, {
       challenge: () => this.challenge,
       attemptIsChallenge: () => this.attemptIsChallenge,
@@ -301,8 +308,7 @@ export class App {
         toast.show(purchaseMessage(item, result.reason, rewards.credits), 3200);
         return;
       }
-      shopScreen.celebrate(item.id);
-      toast.show(`${item.name} unlocked and equipped · −${item.price}`, 2600, 'achievement');
+      shopScreen.celebrate(item.id); // the card itself shows it's bought and worn: no extra message
       this.parts.feedback({ type: 'purchase' });
     } finally {
       this.purchasing = false;
@@ -332,12 +338,12 @@ export class App {
         shopScreen.celebrateEarn();
         feedback({ type: 'claim' });
         toast.show(
-          result.saved ? `+${result.credits} Energy Credits` : `+${result.credits} Energy Credits (they'll be saved as soon as this device's storage works again)`,
+          t(result.saved ? 'game.adCredits' : 'game.adCreditsUnsaved', { credits: result.credits }),
           2600,
           'achievement',
         );
       } else {
-        const message = AD_RESULT_MESSAGES[result.kind];
+        const message = adResultMessage(result.kind);
         if (message) toast.show(message, 3200);
       }
     } finally {
@@ -390,10 +396,10 @@ export class App {
     const booster = BOOSTERS[id];
     this.attempt.timer.pause('confirm');
     const watch = await confirmDialog.ask({
-      title: 'Need more credits?',
-      text: `${booster.name} costs ${booster.cost} Energy Credits; you have ${rewards.credits}. Watch a short ad to earn +${ads.credits} Energy Credits (${ads.remainingToday} left today). The ${booster.name} is not used automatically: tap it again when you're ready.`,
-      confirm: `Watch ad (+${ads.credits})`,
-      cancel: 'Not now',
+      title: t('game.adOfferTitle'),
+      text: t('game.adOfferText', { name: booster.name, cost: booster.cost, credits: rewards.credits, earn: ads.credits, left: ads.remainingToday }),
+      confirm: t('game.adOfferConfirm', { credits: ads.credits }),
+      cancel: t('game.notNow'),
     });
     this.attempt.timer.resume('confirm');
     if (watch && this.parts.screens.active === 'game') await this.watchAd();
@@ -422,7 +428,7 @@ export class App {
     if (!challenge || !this.leagueUnlocked) return Promise.resolve();
     const level = challenge.level;
     return this.navigate(async () => {
-      this.endAttempt('abandoned');
+      this.closeAttempt();
       this.hideEndDialogs();
       this.parts.confirmDialog.close(false);
       this.challenge = challenge;
@@ -472,27 +478,35 @@ export class App {
     return this.showMenuScreen(target === 'game' ? 'home' : target);
   }
 
-  /** Starts a level from scratch. Locked or unknown levels are ignored. */
+  /**
+   * Opens a level: where the player left it if it was left unfinished (see
+   * SavedRun), otherwise from scratch. Locked or unknown levels are ignored.
+   */
   openLevel(levelId: number): Promise<void> {
     const level = this.parts.levels[levelId - 1];
     if (!level || !canPlayLevel(this.records.progress, levelId, this.parts.levels.length)) return Promise.resolve();
     return this.navigate(async () => {
-      this.endAttempt('abandoned'); // a previous attempt still open counts as abandoned
+      this.closeAttempt(); // a previous attempt still open is put aside, or counts as abandoned
       this.hideEndDialogs();
       this.parts.confirmDialog.close(false);
       this.parts.gameLayout.setGrid(level.rows, level.cols); // size the slot before the board is fitted into it
       this.challenge = null;
       this.lastLevelOpened = levelId;
-      this.parts.scene.loadLevel(level); // replaces every arrow, counter and flag
-      this.beginAttempt();
-      this.parts.hud.setTime(0);
+      const saved = this.savedRun?.levelId === levelId && this.savedRun.revision === (level.revision ?? 1) ? this.savedRun : null;
+      const resumed = saved !== null && this.parts.scene.resumeLevel(level, saved.events);
+      if (!resumed) {
+        if (saved) this.forgetRun(levelId); // it no longer leads anywhere: start fresh
+        this.parts.scene.loadLevel(level); // replaces every arrow, counter and flag
+      }
+      this.beginAttempt(resumed ? saved : null);
+      this.parts.hud.setTime(resumed ? saved.timeMs : 0);
       this.wakeGame();
       this.history.go('game');
       await this.parts.screens.show('game');
       // Only now is the level interactive: loading and the screen transition don't count.
       this.attempt.interactive();
       this.startClock();
-      if (levelId === 1) this.showTip('tap');
+      if (levelId === 1 && !resumed) this.showTip('tap');
       this.introduceBoosters();
     });
   }
@@ -511,7 +525,7 @@ export class App {
   private introduceBoosters(): void {
     const { rewards, dayClock, toast, state } = this.parts;
     if (this.challenge || state.levelId < BOOSTERS_FROM_LEVEL || rewards.current.boosters.introduced) return;
-    toast.show(BOOSTER_TIP, 5000);
+    toast.show(boosterTip(), 5000);
     rewards.markBoostersIntroduced(dayClock.today);
   }
 
@@ -548,7 +562,7 @@ export class App {
     const { rewards, dayClock, toast, screens, levels } = this.parts;
     if (screens.active !== 'game' || rewards.current.tips.includes(id)) return;
     if (completedCount(this.records.progress, levels.length) >= TIPS_UNTIL_COMPLETED) return;
-    toast.show(TIP_TEXT[id], TIP_MS);
+    toast.show(tipText(id), TIP_MS);
     rewards.markTipSeen(dayClock.today, id);
   }
 
@@ -557,8 +571,9 @@ export class App {
     if (this.navigating || this.parts.screens.active !== 'game') return;
     const { state, confirmDialog } = this.parts;
     const snapshot = state.snapshot();
-    // Only an unfinished attempt with something to lose needs confirming.
-    if (hasProgress(snapshot, state.isPlaying)) {
+    // Only an unfinished attempt with something to lose needs confirming;
+    // a level that is kept to resume later loses nothing.
+    if (hasProgress(snapshot, state.isPlaying) && !this.canSuspend) {
       // Answering the question isn't play time: pause the clock while it is open.
       this.attempt.timer.pause('confirm');
       const leave = await confirmDialog.ask();
@@ -603,11 +618,12 @@ export class App {
   handleLevelSolved(): void {
     const summary = this.attempt.finish('won', this.parts.state.snapshot());
     if (!summary) return;
+    if (!this.attemptIsChallenge && !this.attemptIsTestPlay) this.forgetRun(summary.levelId);
     if (this.attemptIsTestPlay) {
       // Testing flag only: show the result, record nothing (see progress/testUnlock.ts).
       this.lastCompletion = { unlocked: null, newBestStars: false, newBestTime: false, bestTimeMs: summary.timeMs, timeMs: summary.timeMs };
       this.parts.hud.setTime(summary.timeMs);
-      this.parts.toast.show('Test play: this result is not saved', 2200);
+      this.parts.toast.show(t('game.testPlayNotSaved'), 2200);
       this.parts.feedback({ type: 'complete' });
       return;
     }
@@ -689,6 +705,7 @@ export class App {
   handleLevelLost(): void {
     if (!this.attempt.isOpen) return;
     this.pendingFailure = true;
+    if (!this.attemptIsChallenge && !this.attemptIsTestPlay) this.forgetRun(this.parts.state.levelId); // lost: nothing to resume
     this.attempt.timer.pause('over');
     this.parts.hud.setTime(this.attempt.timer.elapsed());
     this.parts.feedback({ type: 'gameOver' });
@@ -734,8 +751,8 @@ export class App {
     try {
       const result = await ads.watchForContinue();
       if (result.kind !== 'rewarded') {
-        const message = AD_RESULT_MESSAGES[result.kind];
-        if (message) this.parts.toast.show(message === AD_RESULT_MESSAGES.dismissed ? 'The ad was closed before the end, so no extra heart this time.' : message, 3200);
+        const message = result.kind === 'dismissed' ? t('game.adDismissedHeart') : adResultMessage(result.kind);
+        if (message) this.parts.toast.show(message, 3200);
         return;
       }
       // The player may have left during the ad; only a still-lost level continues.
@@ -746,7 +763,7 @@ export class App {
       this.parts.scene.continueAfterFailure();
       this.attempt.timer.resume('over');
       this.parts.feedback({ type: 'claim' });
-      this.parts.toast.show('+1 heart: keep going!', 2200, 'achievement');
+      this.parts.toast.show(t('game.heartBack'), 2200, 'achievement');
     } finally {
       this.watchingAd = false;
     }
@@ -799,7 +816,7 @@ export class App {
   async resetSettings(): Promise<void> {
     if (this.parts.screens.active !== 'settings') return;
     if (!(await this.parts.confirmDialog.ask(RESET_SETTINGS))) return;
-    if (this.parts.settings.reset()) this.parts.toast.show('Settings reset');
+    if (this.parts.settings.reset()) this.parts.toast.show(t('game.settingsReset'));
   }
 
   /** The HUD theme picker opened or closed: choosing a theme isn't play time. */
@@ -857,7 +874,7 @@ export class App {
 
   private showMenuScreen(screen: Exclude<ScreenName, 'game'>): Promise<void> {
     return this.navigate(async () => {
-      this.endAttempt('abandoned'); // leaving gameplay: the timer can't keep running
+      this.closeAttempt(); // leaving gameplay: kept to resume later, or abandoned
       this.stopClock();
       this.parts.scene.resetView(); // no leftover zoom or half-finished gesture
       this.hideEndDialogs();
@@ -884,7 +901,45 @@ export class App {
     const final = this.pendingFailure ? 'failed' : outcome;
     this.pendingFailure = false;
     this.attempt.timer.resume('over');
-    this.recordEnded(this.attempt.finish(final, this.parts.state.snapshot()));
+    const summary = this.attempt.finish(final, this.parts.state.snapshot());
+    if (summary && !this.attemptIsChallenge && !this.attemptIsTestPlay) this.forgetRun(summary.levelId);
+    this.recordEnded(summary);
+  }
+
+  /** True if the open attempt can be kept and resumed later: a level (not a challenge or test play) still being played, with progress. */
+  private get canSuspend(): boolean {
+    const { state } = this.parts;
+    return this.attempt.isOpen && !this.attemptIsChallenge && !this.attemptIsTestPlay && !this.pendingFailure && hasProgress(state.snapshot(), state.isPlaying);
+  }
+
+  /** Leaving the open attempt: kept to resume later if it can be, otherwise ended as abandoned. */
+  private closeAttempt(): void {
+    if (!this.canSuspend) {
+      this.endAttempt('abandoned');
+      return;
+    }
+    const played = this.attempt.suspend();
+    if (played > 0) this.records.addPlayTime(played);
+    this.saveRun();
+  }
+
+  /** Saves the open level's steps and time, to rebuild it later (see SavedRun). */
+  private saveRun(): void {
+    const { state, levels, savedRuns } = this.parts;
+    this.savedRun = {
+      levelId: state.levelId,
+      revision: levels[state.levelId - 1]?.revision ?? 1,
+      events: [...state.history],
+      timeMs: Math.round(this.attempt.timer.elapsed()),
+    };
+    savedRuns.save(this.savedRun);
+  }
+
+  /** The level's saved run is finished with (won, lost, restarted, or can't be resumed). */
+  private forgetRun(levelId: number): void {
+    if (this.savedRun?.levelId !== levelId) return;
+    this.savedRun = null;
+    this.parts.savedRuns.save(null);
   }
 
   private recordEnded(summary: AttemptSummary | null): void {
@@ -894,7 +949,7 @@ export class App {
 
   private renderAll(): void {
     const { progress, stats } = this.records;
-    this.parts.home.render(this.profile, progress);
+    this.parts.home.render(this.profile, progress, this.savedRun?.levelId ?? null);
     this.parts.levelSelect.render(progress);
     this.parts.profileScreen.render(this.profile, progress, stats);
     this.parts.recordsScreen.render(progress);
@@ -904,15 +959,18 @@ export class App {
 
   // ------------------------------------------------------------ league
 
-  private beginAttempt(): void {
+  /** A new attempt on the loaded level, or the continuation of a saved one. */
+  private beginAttempt(resume: SavedRun | null = null): void {
     this.pendingFailure = false;
-    this.continued = false;
+    this.continued = resume?.events.some((e) => e.kind === 'revive') ?? false; // one Continue per attempt, saved or not
     const level = this.parts.state;
     this.attemptIsChallenge = this.challenge !== null;
     this.attemptIsTestPlay = !this.challenge && isTestPlay(this.records.progress, level.levelId);
     this.attemptStartCollected = this.challenge ? collectedIn(this.parts.league.current, this.challenge) : 0;
     this.lastChallenge = null;
-    this.attempt.begin(level.levelId, this.parts.levels[level.levelId - 1]?.revision ?? 1);
+    const revision = this.parts.levels[level.levelId - 1]?.revision ?? 1;
+    if (resume) this.attempt.resume(level.levelId, revision, resume.timeMs);
+    else this.attempt.begin(level.levelId, revision);
     this.idleHint.activity(0);
     this.leagueController.renderChallengeHud();
     this.boosters.render();
@@ -958,8 +1016,8 @@ export class App {
     const credits = unlocked.reduce((sum, a) => sum + a.reward, 0);
     const message =
       unlocked.length === 1
-        ? `Achievement unlocked: ${unlocked[0].title} · +${credits}`
-        : `${unlocked.length} achievements unlocked · +${credits}`;
+        ? t('game.achievementUnlocked', { title: unlocked[0].title, credits })
+        : t('game.achievementsUnlocked', { count: unlocked.length, credits });
     this.parts.toast.show(message, 2600, 'achievement');
     this.parts.feedback({ type: 'achievement' });
   }
@@ -974,7 +1032,7 @@ export class App {
   zoomHint(): void {
     if (this.zoomHintShown || this.parts.screens.active !== 'game') return;
     this.zoomHintShown = true;
-    this.parts.toast.show('Tip: pinch (or scroll) to zoom, drag to move', 2600);
+    this.parts.toast.show(t('game.tipZoom'), 2600);
   }
 
   private async navigate(action: () => Promise<void>): Promise<void> {
@@ -1018,6 +1076,8 @@ export class App {
       if (played > 0 && !this.attemptIsChallenge && !this.attemptIsTestPlay) {
         this.records.addPlayTime(played);
       }
+      // The app may be closed from the background: keep the level to resume it.
+      if (this.parts.screens.active === 'game' && this.canSuspend) this.saveRun();
     } else {
       this.attempt.timer.resume('hidden');
       // Back from the background, possibly on a new day: count it (idempotent on the same day).
@@ -1080,11 +1140,16 @@ export class App {
 }
 
 /** What the player is told when a "Watch ad" tap earns nothing (null: say nothing). */
-const AD_RESULT_MESSAGES: Readonly<Record<Exclude<WatchResult['kind'], 'rewarded'>, string | null>> = {
-  dismissed: 'The ad was closed before the end, so no credits this time.',
-  unavailable: 'No ad is available right now. Check your connection and try again later.',
-  limit: 'Daily ad limit reached. Come back tomorrow for more.',
+const AD_RESULT_MESSAGES: Readonly<Record<Exclude<WatchResult['kind'], 'rewarded'>, MessageKey | null>> = {
+  dismissed: 'game.adDismissed',
+  unavailable: 'game.adUnavailable',
+  limit: 'game.adLimit',
   busy: null,
-  'not-permitted': 'Ads are off because of your privacy choices or region. You can change your choices in Settings.',
-  unsupported: 'Ads that earn credits are available in the Android app.',
+  'not-permitted': 'game.adNotPermitted',
+  unsupported: 'game.adUnsupported',
 };
+
+function adResultMessage(kind: Exclude<WatchResult['kind'], 'rewarded'>): string | null {
+  const key = AD_RESULT_MESSAGES[kind];
+  return key === null ? null : t(key);
+}

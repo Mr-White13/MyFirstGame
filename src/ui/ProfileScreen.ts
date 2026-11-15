@@ -1,5 +1,5 @@
 import { formatTotal } from '../core/time';
-import { recordsSummary } from '../progress/chapters';
+import { recordsSummary, revealedLevelCount } from '../progress/chapters';
 import type { LevelData } from '../core/types';
 import { avatarSvg } from '../profile/avatars';
 import type { CosmeticId } from '../shop/catalog';
@@ -10,6 +10,7 @@ import { completedCount, MAX_STARS, perfectLevels, totalStars, type Progress } f
 import { league } from '../league/leagues';
 import type { LeagueState } from '../league/League';
 import { requireElement } from './dom';
+import { dateLocale, t } from '../i18n/translate';
 
 export interface ProfileActions {
   onBack(): void;
@@ -89,16 +90,17 @@ export class ProfileScreen {
     this.avatar.innerHTML = avatarSvg(profile.avatar, this.frame); // static, trusted markup
     this.nickname.textContent = profile.nickname; // player text: never parsed as HTML
     this.countryFlag.textContent = profile.country ? flagEmoji(profile.country) : '';
-    this.countryName.textContent = profile.country ? countryName(profile.country) : 'Add country';
+    this.countryName.textContent = profile.country ? countryName(profile.country) : t('profile.addCountry');
 
     const stars = totalStars(progress, levelCount);
     const rank = rankFor(stars);
-    this.rank.textContent = rank.nextAt === null ? rank.title : `${rank.title} · ${rank.nextAt - stars} ★ to next`;
+    this.rank.textContent = rank.nextAt === null ? rank.title : t('profile.rankNext', { rank: rank.title, stars: rank.nextAt - stars });
 
     this.setText('profile-levels', completedCount(progress, levelCount));
-    this.setText('profile-levels-total', levelCount);
+    const shown = revealedLevelCount(progress, levelCount); // the chapters reached so far: the game's size stays hidden
+    this.setText('profile-levels-total', shown);
     this.setText('profile-stars', stars);
-    this.setText('profile-stars-total', levelCount * MAX_STARS);
+    this.setText('profile-stars-total', shown * MAX_STARS);
     this.setText('profile-perfect', perfectLevels(progress, levelCount));
 
     this.setText('stat-time', formatTotal(stats.playTimeMs));
@@ -107,11 +109,11 @@ export class ProfileScreen {
     this.setText('stat-flawless', stats.flawlessRuns);
     this.setText('stat-arrows', stats.arrowsCleared);
     this.setText('stat-chains', stats.chainClears);
-    const since = new Date(stats.trackedSince).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
-    this.setText('profile-tracked-since', `Runs counted since ${since}. "Levels cleared" includes replays.`);
+    const since = new Date(stats.trackedSince).toLocaleDateString(dateLocale(), { year: 'numeric', month: 'short', day: 'numeric' });
+    this.setText('profile-tracked-since', t('profile.trackedSince', { date: since }));
 
     // Personal records: a summary here; RecordsScreen pages through the levels.
-    const records = recordsSummary(progress, levelCount);
+    const records = recordsSummary(progress, shown);
     this.setText('records-completed', `${records.completed} / ${records.levels}`);
     this.setText('records-stars', `${records.stars} / ${records.maxStars}`);
     this.setText('records-perfect', records.perfect);
@@ -134,7 +136,7 @@ export class ProfileScreen {
       this.frame = frame;
       if (this.current) this.avatar.innerHTML = avatarSvg(this.current.avatar, frame); // static, trusted markup
     }
-    const days = (n: number) => `${n} ${n === 1 ? 'day' : 'days'}`;
+    const days = (n: number) => t('profile.days', { count: n });
     this.setText('stat-credits', r.credits);
     this.setText('stat-streak', days(r.streak));
     this.setText('stat-longest', days(r.longestStreak));

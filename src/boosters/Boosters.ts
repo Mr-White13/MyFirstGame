@@ -1,4 +1,5 @@
 import type { GameState } from '../core/GameState';
+import { t } from '../i18n/translate';
 
 /**
  * Hints and boosters: optional help during a level, paid with Energy
@@ -28,8 +29,27 @@ export interface BoosterDefinition {
 }
 
 export const BOOSTERS: Readonly<Record<BoosterId, BoosterDefinition>> = {
-  hint: { id: 'hint', name: 'Hint', cost: 20, description: 'shows one arrow that can escape' },
-  reveal: { id: 'reveal', name: 'Reveal', cost: 40, description: 'shows every free arrow for 3 seconds' },
+  // name / description are getters: translated when read, never while modules load.
+  hint: {
+    id: 'hint',
+    get name() {
+      return t('game.boosterHint');
+    },
+    cost: 20,
+    get description() {
+      return t('game.boosterHintDescription');
+    },
+  },
+  reveal: {
+    id: 'reveal',
+    get name() {
+      return t('game.boosterReveal');
+    },
+    cost: 40,
+    get description() {
+      return t('game.boosterRevealDescription');
+    },
+  },
 };
 
 /**
@@ -98,15 +118,15 @@ export function blockMessage(id: BoosterId, reason: BoosterBlock, credits: numbe
   const b = BOOSTERS[id];
   switch (reason) {
     case 'insufficient':
-      return `${b.name} costs ${b.cost} Energy Credits; you have ${credits}. Earn more from daily rewards and achievements.`;
+      return t('game.blockInsufficient', { name: b.name, cost: b.cost, credits });
     case 'no-target':
-      return 'No arrow can escape right now.';
+      return t('game.blockNoTarget');
     case 'active':
-      return id === 'hint' ? 'Your hint is still showing: tap the glowing arrow.' : 'Reveal is still showing.';
+      return t(id === 'hint' ? 'game.blockHintActive' : 'game.blockRevealActive');
     case 'challenge':
-      return 'Boosters are off in Daily League challenges.';
+      return t('game.blockChallenge');
     case 'not-playing':
-      return 'Boosters work only while a level is being played.';
+      return t('game.blockNotPlaying');
     case 'locked':
       return '';
   }

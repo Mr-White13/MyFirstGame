@@ -1,5 +1,6 @@
 import { isCompleted, isUnlocked, MAX_STARS, nextLevelToPlay, type Progress } from './Progress';
-import { canPlayLevel } from './testUnlock';
+import { t, translate, type MessageKey } from '../i18n/translate';
+import { canPlayLevel, UNLOCK_ALL_LEVELS_FOR_TESTING } from './testUnlock';
 
 /*
  * Chapters and personal records: how level select and the records view page
@@ -12,24 +13,22 @@ import { canPlayLevel } from './testUnlock';
 /** Levels per chapter. */
 export const CHAPTER_SIZE = 20;
 
-/** Chapter names, in order (chapters without one are just numbered). */
-export const CHAPTER_NAMES: readonly string[] = [
-  "It's Just the Beginning",
-  'Tangled Lines',
-  'Shapes in the Dark',
-  'The Neon Labyrinth',
-  'The Last Escape',
-];
+/** Chapter name messages, in order (chapters without one are just numbered). */
+const CHAPTER_NAME_KEYS = ['home.chapterName1', 'home.chapterName2', 'home.chapterName3', 'home.chapterName4', 'home.chapterName5'] as const satisfies readonly MessageKey[];
+
+/** Chapter names in English (the source text), in order. Shown text goes through chapterName / chapterTitle. */
+export const CHAPTER_NAMES: readonly string[] = CHAPTER_NAME_KEYS.map((key) => translate('en', key));
 
 /** A chapter's name ("It's Just the Beginning"), or "Chapter 6" for one without a name. */
 export function chapterName(chapter: number): string {
-  return CHAPTER_NAMES[chapter - 1] ?? `Chapter ${chapter}`;
+  const key = CHAPTER_NAME_KEYS[chapter - 1];
+  return key ? t(key) : t('home.chapter', { chapter });
 }
 
 /** A chapter's full heading: "Chapter 1 · It's Just the Beginning", or "Chapter 6" without a name. */
 export function chapterTitle(chapter: number): string {
-  const name = CHAPTER_NAMES[chapter - 1];
-  return name ? `Chapter ${chapter} · ${name}` : `Chapter ${chapter}`;
+  const key = CHAPTER_NAME_KEYS[chapter - 1];
+  return key ? t('home.chapterTitle', { chapter, name: t(key) }) : t('home.chapter', { chapter });
 }
 /** Most rows a records search shows at once. */
 export const RECORDS_PAGE_SIZE = CHAPTER_SIZE;
@@ -111,6 +110,18 @@ export function chapterTiles(progress: Progress, chapter: number, levelCount: nu
     tiles.push({ id, state, bestStars: completed ? (progress.completed[id].bestStars ?? null) : null });
   }
   return tiles;
+}
+
+/**
+ * How many levels the player may see: every level up to the end of the
+ * chapter they have reached (level 21 unlocked → levels 1–40), so the total
+ * number of levels in the game stays a surprise. All of them with the
+ * testing unlock (see testUnlock.ts).
+ */
+export function revealedLevelCount(progress: Progress, levelCount: number, unlockAll = UNLOCK_ALL_LEVELS_FOR_TESTING): number {
+  if (unlockAll) return levelCount;
+  const reached = Math.min(levelCount, Math.max(1, progress.highestUnlocked));
+  return chapterRange(chapterOf(reached), levelCount).last;
 }
 
 /** The chapter that holds the level to play next ("jump to current"). */

@@ -1,4 +1,5 @@
 import { formatPrecise } from '../core/time';
+import { t } from '../i18n/translate';
 import { Overlay, requireElement } from './dom';
 
 export interface CompletionSummary {
@@ -91,12 +92,12 @@ export class CompleteDialog {
     const final = summary.levelId === summary.levelCount;
     this.overlay.element.classList.toggle('overlay--final', final);
     this.icon.setAttribute('href', final ? '#icon-star' : '#icon-check');
-    this.eyebrow.textContent = final ? `Level ${summary.levelId} · Final level` : `Level ${summary.levelId}`;
-    this.title.textContent = final ? 'All levels complete!' : 'Level complete';
+    this.eyebrow.textContent = t(final ? 'game.levelFinal' : 'game.level', { level: summary.levelId });
+    this.title.textContent = t(final ? 'game.allComplete' : 'game.levelComplete');
     this.detail.textContent = final
-      ? `You escaped all ${summary.levelCount} levels. Thanks for playing!`
+      ? t('game.escapedAll', { count: summary.levelCount })
       : summary.mistakes === 0
-        ? 'Flawless: not a single mistake'
+        ? t('game.flawless')
         : '';
     this.detail.hidden = this.detail.textContent === '';
 
@@ -106,15 +107,15 @@ export class CompleteDialog {
       star.classList.toggle('star--earned', index < summary.stars);
       star.style.setProperty('--i', String(index));
     });
-    this.stars.setAttribute('aria-label', `${summary.stars} of ${stars.length} stars`);
-    this.lives.textContent = `${summary.stars} ${summary.stars === 1 ? 'life' : 'lives'} left`;
+    this.stars.setAttribute('aria-label', t('game.starsAria', { stars: summary.stars, total: stars.length }));
+    this.lives.textContent = t('game.livesLeft', { count: summary.stars });
 
     this.time.textContent = formatPrecise(summary.timeMs);
     this.bestTime.textContent = formatPrecise(summary.bestTimeMs);
     this.arrows.textContent = String(summary.directClears + summary.autoClears + summary.bonusClears);
     const extras = [
-      summary.autoClears > 0 ? `${summary.autoClears} by chain` : '',
-      summary.bonusClears > 0 ? `${summary.bonusClears} by cascade` : '',
+      summary.autoClears > 0 ? t('game.byChain', { count: summary.autoClears }) : '',
+      summary.bonusClears > 0 ? t('game.byCascade', { count: summary.bonusClears }) : '',
     ].filter(Boolean);
     this.chain.textContent = extras.length > 0 ? ` · ${extras.join(' · ')}` : '';
     this.mistakes.textContent = String(summary.mistakes);
@@ -123,7 +124,7 @@ export class CompleteDialog {
     this.newTime.hidden = !summary.newBestTime;
     this.best.hidden = !summary.newBestStars;
     this.unlocked.hidden = final || summary.unlocked === null;
-    this.unlocked.textContent = summary.unlocked === null ? '' : `Level ${summary.unlocked} unlocked`;
+    this.unlocked.textContent = summary.unlocked === null ? '' : t('game.levelUnlocked', { level: summary.unlocked });
 
     this.nextButton.hidden = final;
     this.fromStartButton.hidden = !final;
@@ -135,17 +136,17 @@ export class CompleteDialog {
     this.setChallengeMode(true);
     this.overlay.element.classList.remove('overlay--final');
     this.icon.setAttribute('href', '#icon-bolt');
-    this.eyebrow.textContent = `Daily League · ${c.leagueName}`;
-    this.title.textContent = `Challenge ${c.number}/3 complete`;
-    this.detail.textContent = c.mistakes === 0 ? 'Flawless: not a single mistake' : '';
+    this.eyebrow.textContent = t('game.challengeEyebrow', { league: c.leagueName });
+    this.title.textContent = t('game.challengeComplete', { number: c.number });
+    this.detail.textContent = c.mistakes === 0 ? t('game.flawless') : '';
     this.detail.hidden = this.detail.textContent === '';
     const stars = [...this.stars.children] as SVGElement[];
     stars.forEach((star, index) => {
       star.classList.toggle('star--earned', index < c.stars);
       star.style.setProperty('--i', String(index));
     });
-    this.stars.setAttribute('aria-label', `${c.stars} of ${stars.length} stars`);
-    this.lives.textContent = `${c.stars} ${c.stars === 1 ? 'life' : 'lives'} left`;
+    this.stars.setAttribute('aria-label', t('game.starsAria', { stars: c.stars, total: stars.length }));
+    this.lives.textContent = t('game.livesLeft', { count: c.stars });
     requireElement('complete-challenge-time').textContent = formatPrecise(c.timeMs);
     requireElement('complete-energy').textContent = `${c.collected} / ${c.perChallenge}`;
     requireElement('complete-new-points').textContent = `+${c.newPoints}`;
@@ -155,15 +156,15 @@ export class CompleteDialog {
     this.unlocked.hidden = true;
     this.nextButton.hidden = false;
     this.fromStartButton.hidden = true;
-    this.nextLabel.textContent = c.hasNext ? 'Next challenge' : 'League';
+    this.nextLabel.textContent = t(c.hasNext ? 'game.nextChallenge' : 'game.league');
     this.overlay.show(this.nextButton);
   }
 
   private setChallengeMode(on: boolean): void {
     this.levelStats.hidden = on;
     this.challengeStats.hidden = !on;
-    this.levelsLabel.textContent = on ? 'League' : 'Levels';
-    if (!on) this.nextLabel.textContent = 'Next level';
+    this.levelsLabel.textContent = t(on ? 'game.league' : 'game.levels');
+    if (!on) this.nextLabel.textContent = t('game.nextLevel');
   }
 
   hide(): void {

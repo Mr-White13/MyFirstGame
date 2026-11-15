@@ -1,3 +1,5 @@
+import { LOCALE_NAMES, resolveLocale } from '../i18n/locale';
+import { t } from '../i18n/translate';
 import type { ResolvedAppearance } from '../settings/Appearance';
 import { vibrationChoice, vibrationPatch, type GameSettings, type VibrationChoice } from '../settings/Settings';
 import { requireElement } from './dom';
@@ -25,12 +27,19 @@ export interface DeviceSupport {
 
 type SwitchKey = 'music' | 'sfx' | 'showTimer' | 'confirmRestart' | 'showRecap';
 
-const THEME_HINTS: Record<GameSettings['theme'], string> = {
-  dark: 'The original look: dark navy with cyan and purple neon.',
-  light: 'A bright board with darker lines and deep, high-contrast arrows.',
-  colorful: 'Each arrow gets its own neon colour. Red still means activated.',
-  system: '',
-};
+/** The hint under the theme choice, in the current language (System says what it resolves to). */
+function themeHint(theme: GameSettings['theme'], resolved: ResolvedAppearance['theme']): string {
+  switch (theme) {
+    case 'dark':
+      return t('settings.themeHintDark');
+    case 'light':
+      return t('settings.themeHintLight');
+    case 'colorful':
+      return t('settings.themeHintColorful');
+    case 'system':
+      return resolved === 'light' ? t('settings.themeHintSystemLight') : t('settings.themeHintSystemDark');
+  }
+}
 
 /**
  * The Settings screen. Every control writes straight to the settings (which
@@ -56,6 +65,7 @@ export class SettingsScreen {
   private readonly audioNote = requireElement('audio-note');
   private readonly hapticsHint = requireElement('haptics-hint');
   private readonly adPrivacyButton = requireElement<HTMLButtonElement>('btn-ad-privacy');
+  private readonly languageHint = requireElement('language-hint');
   private settings?: GameSettings;
   private audioUnavailable = false;
 
@@ -63,7 +73,11 @@ export class SettingsScreen {
     actions: SettingsActions,
     private readonly support: DeviceSupport,
     version: string,
+    /** The device's preferred languages, for the "Auto" language hint. */
+    private readonly deviceLanguages: readonly string[] = [],
   ) {
+    requireElement('label-language').textContent = t('settings.language');
+    requireElement('language-auto').textContent = t('settings.languageAuto');
     const versionEl = requireElement('settings-version');
     versionEl.textContent = version;
     let taps = 0;
@@ -85,14 +99,14 @@ export class SettingsScreen {
     const testStatus = requireElement('vibration-test-status');
     testButton.addEventListener('click', () => {
       testButton.disabled = true;
-      testStatus.textContent = 'Vibrating…';
+      testStatus.textContent = t('settings.vibrating');
       void actions
         .onTestVibration()
         .then((message) => (testStatus.textContent = message))
         .finally(() => setTimeout(() => (testButton.disabled = false), 600));
     });
 
-    for (const name of ['theme', 'motion', 'effects'] as const) {
+    for (const name of ['theme', 'motion', 'effects', 'language'] as const) {
       this.radios(name).forEach((radio) =>
         radio.addEventListener('change', () => radio.checked && actions.onChange({ [name]: radio.value } as Partial<GameSettings>)),
       );
@@ -112,9 +126,9 @@ export class SettingsScreen {
 
     if (!support.vibration) {
       testButton.disabled = true;
-      testStatus.textContent = 'Not available on this device.';
+      testStatus.textContent = t('settings.vibrationNotAvailable');
       this.radios('vibration').forEach((radio) => (radio.disabled = true));
-      this.hapticsHint.textContent = "This browser can't vibrate. It works in Chrome on Android phones.";
+      this.hapticsHint.textContent = t('settings.vibrationBrowserUnsupported');
     }
   }
 
@@ -123,6 +137,11 @@ export class SettingsScreen {
     this.check('theme', settings.theme);
     this.check('motion', settings.motion);
     this.check('effects', settings.effects);
+    this.check('language', settings.language);
+    this.languageHint.textContent =
+      settings.language === 'auto'
+        ? t('settings.languageHintAuto', { language: LOCALE_NAMES[resolveLocale('auto', this.deviceLanguages)] })
+        : t('settings.languageHint');
     this.sound.checked = !settings.muted;
     (Object.keys(this.switches) as SwitchKey[]).forEach((key) => (this.switches[key].checked = settings[key]));
     this.check('vibration', this.support.vibration ? vibrationChoice(settings) : 'off');
@@ -135,16 +154,15 @@ export class SettingsScreen {
     this.musicVolume.closest('.setting')?.classList.toggle('setting--inactive', settings.muted || !settings.music);
     this.sfxVolume.closest('.setting')?.classList.toggle('setting--inactive', settings.muted || !settings.sfx);
 
-    this.themeHint.textContent =
-      settings.theme === 'system'
-        ? `Follows your device: ${appearance.theme === 'light' ? 'Light' : 'Dark Neon'} right now.`
-        : THEME_HINTS[settings.theme];
+    this.themeHint.textContent = themeHint(settings.theme, appearance.theme);
     this.motionHint.textContent =
       settings.motion === 'auto'
-        ? `Follows your device: reduced motion is ${appearance.reducedMotion ? 'on' : 'off'} right now.`
+        ? appearance.reducedMotion
+          ? t('settings.motionHintAutoOn')
+          : t('settings.motionHintAutoOff')
         : settings.motion === 'reduce'
-          ? 'Screen transitions, particles and background motion are off. Arrows still move.'
-          : 'Full animation, even if your device asks for reduced motion.';
+          ? t('settings.motionHintReduce')
+          : t('settings.motionHintFull');
     this.renderAudioNote(settings);
   }
 
@@ -162,8 +180,8 @@ export class SettingsScreen {
 
   private renderAudioNote(settings: GameSettings): void {
     let note = '';
-    if (!this.support.audio || this.audioUnavailable) note = 'Audio is not available on this device right now.';
-    else if (settings.muted) note = 'Sound is off. Music and effects keep their own settings for when you turn it back on.';
+    if (!this.support.audio || this.audioUnavailable) note = t('settings.audioUnavailable');
+    else if (settings.muted) note = t('settings.audioMuted');
     this.audioNote.textContent = note;
     this.audioNote.hidden = note === '';
   }

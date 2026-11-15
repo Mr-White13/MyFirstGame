@@ -282,7 +282,8 @@
     "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
-    "showRecap": true
+    "showRecap": true,
+    "language": "auto"
    },
    "status": "empty"
   },
@@ -300,7 +301,8 @@
     "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
-    "showRecap": true
+    "showRecap": true,
+    "language": "auto"
    },
    "status": "corrupt"
   },
@@ -318,7 +320,8 @@
     "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
-    "showRecap": true
+    "showRecap": true,
+    "language": "auto"
    },
    "status": "corrupt"
   },
@@ -336,7 +339,8 @@
     "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
-    "showRecap": true
+    "showRecap": true,
+    "language": "auto"
    },
    "status": "corrupt"
   },
@@ -354,7 +358,8 @@
     "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
-    "showRecap": true
+    "showRecap": true,
+    "language": "auto"
    },
    "status": "corrupt"
   },
@@ -372,7 +377,8 @@
     "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
-    "showRecap": true
+    "showRecap": true,
+    "language": "auto"
    },
    "status": "corrupt"
   },
@@ -390,7 +396,8 @@
     "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
-    "showRecap": true
+    "showRecap": true,
+    "language": "auto"
    },
    "status": "corrupt"
   },
@@ -408,7 +415,8 @@
     "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
-    "showRecap": true
+    "showRecap": true,
+    "language": "auto"
    },
    "status": "corrupt"
   },
@@ -426,7 +434,8 @@
     "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
-    "showRecap": true
+    "showRecap": true,
+    "language": "auto"
    },
    "status": "corrupt"
   },
@@ -444,7 +453,8 @@
     "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
-    "showRecap": true
+    "showRecap": true,
+    "language": "auto"
    },
    "status": "corrupt"
   },
@@ -462,7 +472,8 @@
     "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
-    "showRecap": true
+    "showRecap": true,
+    "language": "auto"
    },
    "status": "corrupt"
   },
@@ -480,7 +491,8 @@
     "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
-    "showRecap": true
+    "showRecap": true,
+    "language": "auto"
    },
    "status": "corrupt"
   },
@@ -498,7 +510,8 @@
     "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
-    "showRecap": true
+    "showRecap": true,
+    "language": "auto"
    },
    "status": "current"
   },
@@ -516,7 +529,8 @@
     "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
-    "showRecap": true
+    "showRecap": true,
+    "language": "auto"
    },
    "status": "newer"
   },
@@ -534,7 +548,8 @@
     "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
-    "showRecap": true
+    "showRecap": true,
+    "language": "auto"
    },
    "status": "newer"
   },
@@ -552,7 +567,8 @@
     "hapticStrength": "strong",
     "showTimer": false,
     "confirmRestart": false,
-    "showRecap": false
+    "showRecap": false,
+    "language": "auto"
    },
    "status": "current"
   },
@@ -570,7 +586,8 @@
     "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
-    "showRecap": true
+    "showRecap": true,
+    "language": "auto"
    },
    "status": "current"
   },
@@ -588,7 +605,8 @@
     "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
-    "showRecap": true
+    "showRecap": true,
+    "language": "auto"
    },
    "status": "current"
   },
@@ -606,7 +624,8 @@
     "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
-    "showRecap": true
+    "showRecap": true,
+    "language": "auto"
    },
    "status": "current"
   },
@@ -624,7 +643,8 @@
     "hapticStrength": "strong",
     "showTimer": true,
     "confirmRestart": true,
-    "showRecap": true
+    "showRecap": true,
+    "language": "auto"
    },
    "status": "current"
   }

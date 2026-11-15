@@ -69,10 +69,13 @@ export class LevelTimer {
     this.phase = 'stopped';
   }
 
-  /** Back to 00:00 and idle, for a restart or a new level. Pause reasons are kept: they describe the page, not the attempt. */
-  reset(): void {
+  /**
+   * Back to idle, for a restart or a new level: at 00:00, or at `fromMs` when
+   * a saved level is resumed. Pause reasons are kept: they describe the page, not the attempt.
+   */
+  reset(fromMs = 0): void {
     this.phase = 'idle';
-    this.banked = 0;
+    this.banked = Math.max(0, fromMs);
     this.since = null;
   }
 

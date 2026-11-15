@@ -169,14 +169,28 @@ describe('daily reward claims', () => {
 });
 
 describe('achievements', () => {
-  it('has 12 achievements with modest rewards and unique ids', () => {
-    expect(ACHIEVEMENTS).toHaveLength(12);
-    expect(new Set(ACHIEVEMENTS.map((a) => a.id)).size).toBe(12);
+  it('has more than 50 achievements with modest rewards and unique ids', () => {
+    expect(ACHIEVEMENTS.length).toBeGreaterThan(50);
+    expect(new Set(ACHIEVEMENTS.map((a) => a.id)).size).toBe(ACHIEVEMENTS.length);
     for (const a of ACHIEVEMENTS) {
       expect(a.reward).toBeGreaterThan(0);
-      expect(a.reward).toBeLessThanOrEqual(75);
+      expect(a.reward).toBeLessThanOrEqual(160);
       expect(a.description.length).toBeGreaterThan(5);
     }
+  });
+
+  it('easier goals on the same measure pay fewer credits', () => {
+    const ladders = new Map<string, { target: number; reward: number }[]>();
+    for (const a of ACHIEVEMENTS) {
+      const key = a.id.replace(/-\d+$/, '');
+      if (key !== a.id) ladders.set(key, [...(ladders.get(key) ?? []), a]);
+    }
+    for (const rungs of ladders.values()) {
+      const sorted = [...rungs].sort((x, y) => x.target - y.target);
+      for (let i = 1; i < sorted.length; i++) expect(sorted[i].reward).toBeGreaterThan(sorted[i - 1].reward);
+    }
+    const cheapest = Math.min(...ACHIEVEMENTS.map((a) => a.reward));
+    expect(ACHIEVEMENTS.find((a) => a.id === 'levels-3')!.reward).toBe(cheapest);
   });
 
   it('reports progress toward each target', () => {

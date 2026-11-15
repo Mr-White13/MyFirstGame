@@ -1,5 +1,6 @@
 import { avatarSvg, type AvatarId } from '../profile/avatars';
 import { CATALOG, COSMETIC_SLOTS, SLOT_TITLES, type CosmeticId, type CosmeticItem, type CosmeticSlot, type CosmeticsState, type PurchaseBlock } from '../shop/catalog';
+import { t } from '../i18n/translate';
 import type { ConfirmQuestion } from './ConfirmDialog';
 import { presentEarn, type EarnView } from './earnView';
 import { requireElement, svgIcon } from './dom';
@@ -35,10 +36,10 @@ export function cardState(cosmetics: CosmeticsState, slot: CosmeticSlot, id: Cos
 /** The purchase confirmation: price, balance after, and that the item is permanent. */
 export function purchaseQuestion(item: CosmeticItem, credits: number): ConfirmQuestion {
   return {
-    title: `Buy ${item.name}?`,
-    text: `${item.price} Energy Credits (you have ${credits}, ${credits - item.price} left after). Cosmetics are permanent: it stays yours, and you can equip or remove it any time.`,
-    confirm: `Buy for ${item.price}`,
-    cancel: 'Not now',
+    title: t('rewards.buyTitle', { name: item.name }),
+    text: t('rewards.buyText', { count: item.price, credits, left: credits - item.price }),
+    confirm: t('rewards.buyConfirm', { price: item.price }),
+    cancel: t('rewards.buyCancel'),
   };
 }
 
@@ -46,19 +47,19 @@ export function purchaseQuestion(item: CosmeticItem, credits: number): ConfirmQu
 export function purchaseMessage(item: CosmeticItem, reason: PurchaseBlock, credits: number): string {
   switch (reason) {
     case 'insufficient':
-      return `${item.name} costs ${item.price} Energy Credits; you have ${credits}. Earn more from daily rewards and achievements.`;
+      return t('rewards.buyInsufficient', { name: item.name, count: item.price, credits });
     case 'owned':
-      return `You already own ${item.name}.`;
+      return t('rewards.buyOwned', { name: item.name });
     case 'not-saved':
-      return "The purchase couldn't be saved on this device, so nothing was charged. Try again.";
+      return t('rewards.buyNotSaved');
     case 'unknown':
-      return 'This item is not available.';
+      return t('rewards.buyUnknown');
   }
 }
 
-/** The free default of a slot, shown first so a frame can always be taken off. */
-const DEFAULTS: Readonly<Record<CosmeticSlot, { name: string; description: string }>> = {
-  frame: { name: 'No frame', description: "Your avatar's own ring. Always free." },
+/** The free default of a slot, shown first so a frame can always be taken off. Read at render time. */
+const DEFAULTS: Readonly<Record<CosmeticSlot, () => { name: string; description: string }>> = {
+  frame: () => ({ name: t('rewards.noFrame'), description: t('rewards.noFrameDesc') }),
 };
 
 /**
@@ -96,7 +97,7 @@ export class ShopScreen {
   render(view: ShopView): void {
     this.last = view;
     this.credits.textContent = String(view.credits);
-    this.creditsWrap.setAttribute('aria-label', `${view.credits} Energy Credits`);
+    this.creditsWrap.setAttribute('aria-label', t('rewards.creditsAria', { count: view.credits }));
     this.avatar.innerHTML = avatarSvg(view.avatar, view.cosmetics.equipped.frame); // static, trusted markup
     this.catalog.replaceChildren(...COSMETIC_SLOTS.map((slot) => this.section(slot, view)));
     this.renderEarn(view.earn);
@@ -120,7 +121,7 @@ export class ShopScreen {
       this.watchButton.textContent = shown.button.label;
       this.watchButton.disabled = !shown.button.enabled;
       this.watchButton.setAttribute('aria-busy', String(shown.button.busy));
-      this.watchButton.setAttribute('aria-label', shown.button.enabled ? `${shown.button.label}: earn ${earn.credits} Energy Credits` : shown.button.label);
+      this.watchButton.setAttribute('aria-label', shown.button.enabled ? t('rewards.earnWatchAria', { label: shown.button.label, count: earn.credits }) : shown.button.label);
     }
   }
 
@@ -149,7 +150,7 @@ export class ShopScreen {
   private card(slot: CosmeticSlot, item: CosmeticItem | null, view: ShopView): HTMLElement {
     const id = item?.id ?? null;
     const state = cardState(view.cosmetics, slot, id);
-    const name = item?.name ?? DEFAULTS[slot].name;
+    const name = item?.name ?? DEFAULTS[slot]().name;
     const card = document.createElement('article');
     card.className = `shop-card shop-card--${state}`;
     card.dataset.card = id ?? `${slot}-none`;
@@ -163,12 +164,12 @@ export class ShopScreen {
     title.textContent = name;
     const text = document.createElement('p');
     text.className = 'shop-card__text';
-    text.textContent = item?.description ?? DEFAULTS[slot].description;
+    text.textContent = item?.description ?? DEFAULTS[slot]().description;
 
     const status = document.createElement('span');
     status.className = 'shop-card__status';
-    if (state === 'equipped') status.textContent = 'Equipped';
-    else if (item && state === 'equip') status.textContent = 'Owned';
+    if (state === 'equipped') status.textContent = t('rewards.equipped');
+    else if (item && state === 'equip') status.textContent = t('rewards.owned');
     status.hidden = status.textContent === '';
 
     const button = document.createElement('button');
@@ -182,17 +183,20 @@ export class ShopScreen {
       button.classList.add('btn--primary');
       button.classList.toggle('is-unaffordable', !affordable);
       button.append(svgIcon('icon-credit', 'icon'), String(item!.price));
-      button.setAttribute('aria-label', `Buy ${name} for ${item!.price} Energy Credits${affordable ? '' : `; you have ${view.credits}`}`);
+      button.setAttribute(
+        'aria-label',
+        affordable ? t('rewards.buyAria', { name, count: item!.price }) : t('rewards.buyUnaffordableAria', { name, count: item!.price, credits: view.credits }),
+      );
     } else if (state === 'equip') {
       button.dataset.shopAction = 'equip';
       button.classList.add('btn--ghost');
-      button.textContent = 'Equip';
-      button.setAttribute('aria-label', `Equip ${name}`);
+      button.textContent = t('rewards.equip');
+      button.setAttribute('aria-label', t('rewards.equipAria', { name }));
     } else {
       button.classList.add('btn--ghost');
       button.disabled = true;
-      button.append(svgIcon('icon-check', 'icon'), 'Equipped');
-      button.setAttribute('aria-label', `${name} is equipped`);
+      button.append(svgIcon('icon-check', 'icon'), t('rewards.equipped'));
+      button.setAttribute('aria-label', t('rewards.equippedAria', { name }));
     }
 
     card.append(preview, title, text, status, button);

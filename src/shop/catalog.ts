@@ -8,6 +8,8 @@
  * add a slot and items here without changing how buying or saving works.
  * Boosters are not sold here: they are bought directly during a level.
  */
+import { t, type MessageKey } from '../i18n/translate';
+
 export type CosmeticSlot = 'frame';
 
 export const COSMETIC_SLOTS: readonly CosmeticSlot[] = ['frame'];
@@ -25,20 +27,34 @@ export type CosmeticId = keyof typeof COSMETIC_PRICES;
 export interface CosmeticItem {
   readonly id: CosmeticId;
   readonly slot: CosmeticSlot;
+  /** Name in the current language (looked up on each read: `rewards.item-<id>`). */
   readonly name: string;
+  /** Description in the current language (`rewards.item-<id>-desc`). */
   readonly description: string;
   readonly price: number;
 }
 
-export const CATALOG: readonly CosmeticItem[] = [
-  { id: 'frame-cyber', slot: 'frame', name: 'Cyber Frame', description: 'A clean circuit ring with glowing nodes.', price: COSMETIC_PRICES['frame-cyber'] },
-  { id: 'frame-plasma', slot: 'frame', name: 'Plasma Frame', description: 'Violet and pink plasma that slowly circles your avatar.', price: COSMETIC_PRICES['frame-plasma'] },
-  { id: 'frame-elite', slot: 'frame', name: 'Elite Frame', description: 'A gold ring with eight studs and a crown.', price: COSMETIC_PRICES['frame-elite'] },
-  { id: 'frame-inferno', slot: 'frame', name: 'Inferno Frame', description: 'A ring of flickering neon flames.', price: COSMETIC_PRICES['frame-inferno'] },
-];
+/** An item whose name and description follow the language (getters, so no t() while modules load). */
+const cosmetic = (id: CosmeticId, slot: CosmeticSlot): CosmeticItem => ({
+  id,
+  slot,
+  get name() {
+    return t(`rewards.item-${id}` as MessageKey);
+  },
+  get description() {
+    return t(`rewards.item-${id}-desc` as MessageKey);
+  },
+  price: COSMETIC_PRICES[id],
+});
 
-/** Section titles in the Shop, one per slot. */
-export const SLOT_TITLES: Readonly<Record<CosmeticSlot, string>> = { frame: 'Avatar frames' };
+export const CATALOG: readonly CosmeticItem[] = [cosmetic('frame-cyber', 'frame'), cosmetic('frame-plasma', 'frame'), cosmetic('frame-elite', 'frame'), cosmetic('frame-inferno', 'frame')];
+
+/** Section titles in the Shop, one per slot (in the current language, read at render time). */
+export const SLOT_TITLES: Readonly<Record<CosmeticSlot, string>> = {
+  get frame() {
+    return t('rewards.slotFrame');
+  },
+};
 
 export function cosmeticById(id: unknown): CosmeticItem | undefined {
   return CATALOG.find((item) => item.id === id);

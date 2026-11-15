@@ -1,6 +1,7 @@
 import type { DailyChallenge } from '../league/challenges';
 import type { HistoryEntry } from '../league/League';
-import { league, leagueBadgeSvg, LEAGUES } from '../league/leagues';
+import { league, leagueBadgeSvg, LEAGUES, TOP_TIER } from '../league/leagues';
+import { dateLocale, t as tr, type MessageKey } from '../i18n/translate';
 import { requireElement, svgIcon } from './dom';
 
 
@@ -27,10 +28,16 @@ export interface LeagueView {
 
 const formatDay = (day: string) => {
   const [y, m, d] = day.split('-').map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
+  return new Date(y, m - 1, d).toLocaleDateString(dateLocale(), { weekday: 'short', day: 'numeric', month: 'short' });
 };
 
-const OUTCOME_LABEL = { promoted: 'Promoted', retained: 'Kept league', relegated: 'Moved down', inactive: 'No points' } as const;
+/** History line per outcome: the same league, or a move between two. */
+const HISTORY_KEYS = {
+  promoted: ['league.historyPromoted', 'league.historyPromotedMove'],
+  retained: ['league.historyRetained', 'league.historyRetainedMove'],
+  relegated: ['league.historyRelegated', 'league.historyRelegatedMove'],
+  inactive: ['league.historyInactiveKept', 'league.historyInactiveMove'],
+} as const satisfies Record<string, readonly [MessageKey, MessageKey]>;
 
 /**
  * The Daily League: current league and today's points, progress toward the
@@ -62,7 +69,11 @@ export class LeagueScreen {
       ...LEAGUES.map((t) => {
         const row = document.createElement('tr');
         row.dataset.tier = String(t.order);
-        const cells = [t.name, t.promoteAt === null ? 'Top league' : `${t.promoteAt}+ points`, t.relegateBelow === null ? 'Never' : `under ${t.relegateBelow}`];
+        const cells = [
+          t.name,
+          t.promoteAt === null ? tr('league.tableTop') : tr('league.tablePromote', { count: t.promoteAt }),
+          t.relegateBelow === null ? tr('league.tableNever') : tr('league.tableRelegate', { threshold: t.relegateBelow }),
+        ];
         cells.forEach((text, i) => {
           const cell = document.createElement(i === 0 ? 'th' : 'td');
           if (i === 0) cell.setAttribute('scope', 'row');
@@ -99,19 +110,19 @@ export class LeagueScreen {
     const parts: string[] = [];
     if (t.promoteAt !== null) {
       const need = t.promoteAt - v.today;
-      parts.push(need > 0 ? `${need} more ${need === 1 ? 'point' : 'points'} to promote (target ${t.promoteAt})` : `Promotion target reached (${t.promoteAt})`);
+      parts.push(need > 0 ? tr('league.targetNeed', { count: need, target: t.promoteAt }) : tr('league.targetReached', { target: t.promoteAt }));
     } else {
-      parts.push('Top league: no promotion beyond Neon Elite');
+      parts.push(tr('league.targetTop', { league: league(TOP_TIER).name }));
     }
     if (t.relegateBelow !== null) {
-      parts.push(v.today >= t.relegateBelow ? `Safe from relegation (${t.relegateBelow}+)` : `Score ${t.relegateBelow}+ to stay in ${t.name}`);
+      parts.push(v.today >= t.relegateBelow ? tr('league.targetSafe', { threshold: t.relegateBelow }) : tr('league.targetStay', { threshold: t.relegateBelow, league: t.name }));
     }
     this.targets.textContent = parts.join(' · ');
-    this.meter.setAttribute('aria-label', `${v.today} of ${v.maxToday} points. ${parts.join('. ')}.`);
+    this.meter.setAttribute('aria-label', tr('league.meterAria', { today: v.today, count: v.maxToday, details: parts.join('. ') }));
     requireElement('league-challenges').textContent = String(v.challenges.filter((c) => c.completed).length);
     requireElement('league-arrows').textContent = String(v.today);
     this.note.hidden = !v.clockBack;
-    this.note.textContent = v.clockBack ? "Your device's date is earlier than a day already played. Points count again once that date has passed." : '';
+    this.note.textContent = v.clockBack ? tr('league.clockBack') : '';
 
     this.list.replaceChildren(...v.challenges.map((c) => this.card(c, v)));
     this.renderHistory(v.history);
@@ -127,14 +138,14 @@ export class LeagueScreen {
     body.className = 'challenge__body';
     const title = document.createElement('h3');
     title.className = 'challenge__title';
-    title.textContent = `Challenge ${c.challenge.number}`;
+    title.textContent = tr('league.challengeTitle', { number: c.challenge.number });
     const meta = document.createElement('p');
     meta.className = 'challenge__meta';
-    const size = `${c.challenge.level.rows}×${c.challenge.level.cols} · ${c.challenge.level.arrows.length} arrows`;
-    meta.textContent = c.completed ? `${size} · Completed` : size;
+    const size = tr('league.challengeSize', { rows: c.challenge.level.rows, cols: c.challenge.level.cols, count: c.challenge.level.arrows.length });
+    meta.textContent = c.completed ? tr('league.challengeCompleted', { size }) : size;
     const pips = document.createElement('span');
     pips.className = 'challenge__pips';
-    pips.setAttribute('aria-label', `${c.collected} of ${v.perChallenge} Energy Arrows collected`);
+    pips.setAttribute('aria-label', tr('league.pipsAria', { collected: c.collected, count: v.perChallenge }));
     for (let i = 0; i < v.perChallenge; i++) {
       const pip = svgIcon('icon-bolt', `challenge__pip${i < c.collected ? ' is-collected' : ''}`);
       pips.append(pip);
@@ -145,8 +156,8 @@ export class LeagueScreen {
     button.type = 'button';
     button.className = `btn btn--small ${c.completed ? 'btn--ghost' : 'btn--primary'} challenge__play`;
     button.disabled = !v.unlocked;
-    button.textContent = !v.unlocked ? 'Locked' : c.completed ? 'Replay' : c.collected > 0 ? 'Continue' : 'Play';
-    button.setAttribute('aria-label', `${button.textContent}: challenge ${c.challenge.number}`);
+    button.textContent = tr(!v.unlocked ? 'league.buttonLocked' : c.completed ? 'league.buttonReplay' : c.collected > 0 ? 'league.buttonContinue' : 'league.buttonPlay');
+    button.setAttribute('aria-label', tr('league.playAria', { action: button.textContent, number: c.challenge.number }));
     button.addEventListener('click', () => this.onPlay(c.challenge.number));
     if (c.completed) num.replaceChildren(svgIcon('icon-check', 'challenge__check'));
     li.append(num, body, button);
@@ -157,7 +168,7 @@ export class LeagueScreen {
     if (entries.length === 0) {
       const empty = document.createElement('li');
       empty.className = 'league-history__empty';
-      empty.textContent = 'Your results appear here after your first league day.';
+      empty.textContent = tr('league.historyEmpty');
       this.history.replaceChildren(empty);
       return;
     }
@@ -170,15 +181,16 @@ export class LeagueScreen {
           li.className = `history history--${e.outcome}`;
           const when = document.createElement('span');
           when.className = 'history__date';
-          when.textContent = e.days > 1 ? `${formatDay(e.date)} · ${e.days} days` : formatDay(e.date);
+          when.textContent = e.days > 1 ? tr('league.historyDays', { date: formatDay(e.date), count: e.days }) : formatDay(e.date);
           const what = document.createElement('span');
           what.className = 'history__result';
           const from = league(e.startTier).name;
           const to = league(e.endTier).name;
-          what.textContent = e.outcome === 'inactive' ? (from === to ? 'No points · league kept' : `No points · ${from} → ${to}`) : from === to ? `${OUTCOME_LABEL[e.outcome]} · ${to}` : `${OUTCOME_LABEL[e.outcome]} · ${from} → ${to}`;
+          const [same, move] = HISTORY_KEYS[e.outcome];
+          what.textContent = from === to ? tr(same, { league: to }) : tr(move, { from, to });
           const pts = document.createElement('span');
           pts.className = 'history__points';
-          pts.textContent = e.outcome === 'inactive' ? '–' : `${e.points} pts`;
+          pts.textContent = e.outcome === 'inactive' ? '–' : tr('league.historyPoints', { points: e.points });
           li.append(when, what, pts);
           return li;
         }),

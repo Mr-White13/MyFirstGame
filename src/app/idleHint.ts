@@ -1,3 +1,5 @@
+import { t } from '../i18n/translate';
+
 /**
  * A gentle nudge for a player who has stopped to think: after IDLE_HINT_MS of
  * level time without a tap, say how many arrows can move right now. Level
@@ -11,7 +13,7 @@ export const IDLE_HINT_MS = 8_000;
 export const IDLE_HINT_SHOW_MS = 3_800;
 
 export function idleHintText(movable: number): string {
-  return movable === 1 ? 'Only 1 arrow can move right now. Can you find it?' : `Only ${movable} arrows can move right now.`;
+  return t('game.idleHint', { count: movable });
 }
 
 export class IdleHint {

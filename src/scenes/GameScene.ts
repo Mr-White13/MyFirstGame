@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import type { GameState } from '../core/GameState';
+import type { GameState, RunEvent } from '../core/GameState';
 import { ArrowView } from '../render/ArrowView';
 import { GestureTracker, type GestureEvent } from '../render/gestures';
 import { chooseArrow, hitOptions } from '../render/hitTest';
@@ -64,6 +64,10 @@ const INTRO_SPREAD_MS = 280;
 const HINT_RING_MS = 1400;
 /** How long a zoomed view takes to glide to a hinted arrow that was off screen. */
 const HINT_PAN_MS = 380;
+/** How long a zoomed view takes to glide back to the whole board when the level is won. */
+const WIN_ZOOM_OUT_MS = 420;
+/** Gap a zoomed view may leave between the board's edge and the screen's (CSS pixels). */
+const ZOOM_EDGE_CSS = 28;
 
 /**
  * Glue between input, game logic and rendering. All rules live in GameState;
@@ -203,6 +207,22 @@ export class GameScene extends Phaser.Scene {
     this.outline = level.outline ? new Set(level.arrows.flatMap((a) => a.cells.map((c) => `${c.row},${c.col}`))) : null;
     this.board?.setOutline(this.outline);
     this.rebuild(false);
+  }
+
+  /**
+   * Opens a level where the player left it: the saved steps are replayed on a
+   * fresh board (see GameState.replay) and only the arrows still there are
+   * drawn, red ones red. Returns false if the steps don't leave a level in
+   * progress (the board then shows the replayed state; start it fresh instead).
+   */
+  resumeLevel(level: LevelData, events: readonly RunEvent[]): boolean {
+    this.state.load(level);
+    const playing = this.state.replay(events);
+    this.powerUpNext = false; // a resumed level just fades its arrows back in
+    this.outline = level.outline ? new Set(level.arrows.flatMap((a) => a.cells.map((c) => `${c.row},${c.col}`))) : null;
+    this.board?.setOutline(this.outline);
+    this.rebuild(false);
+    return playing;
   }
 
   /** Back to the fitted view (the Reset zoom control, and leaving a level). */
@@ -583,10 +603,41 @@ export class GameScene extends Phaser.Scene {
     this.clearAssist();
     this.releasePress();
     this.options.onLevelSolved();
+    this.zoomOutForWin();
     this.board.playWin();
     this.endTimer = this.time.delayedCall(WIN_DIALOG_DELAY, () => {
       this.endTimer = undefined;
       this.options.onCelebrationEnd();
+    });
+  }
+
+  /** Won while zoomed in: glides back to the whole board so the win plays on the full view. */
+  private zoomOutForWin(): void {
+    if (!this.viewport.zoomed) return;
+    this.stopPan();
+    if (reducedMotion()) {
+      this.viewport.reset();
+      this.applyView();
+      return;
+    }
+    const a = this.zoomArea({ x: this.layout.x, y: this.layout.y, width: this.layout.width, height: this.layout.height });
+    const anchor = { x: a.x + a.width / 2, y: a.y + a.height / 2 };
+    const from = this.viewport.zoom;
+    this.panTween = this.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: WIN_ZOOM_OUT_MS,
+      ease: 'Cubic.easeInOut',
+      onUpdate: (tween) => {
+        const t = tween.getValue() ?? 1;
+        this.viewport.zoomAt(anchor, from + (1 - from) * t);
+        this.applyView();
+      },
+      onComplete: () => {
+        this.panTween = undefined;
+        this.viewport.reset();
+        this.applyView();
+      },
     });
   }
 
@@ -659,7 +710,7 @@ export class GameScene extends Phaser.Scene {
     this.stopPan();
     const l = this.layout;
     const slot: Rect = { x: l.x, y: l.y, width: l.width, height: l.height };
-    this.viewport.configure({ x: 0, y: 0, width: this.scale.width, height: this.scale.height }, slot, maxZoomFor(l.cellSize, l.pxPerCss), this.zoomArea(slot));
+    this.viewport.configure({ x: 0, y: 0, width: this.scale.width, height: this.scale.height }, slot, maxZoomFor(l.cellSize, l.pxPerCss), this.zoomArea(slot), ZOOM_EDGE_CSS * l.pxPerCss);
     this.applyView();
   }
 

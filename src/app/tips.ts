@@ -1,3 +1,4 @@
+import { t, type MessageKey } from '../i18n/translate';
 import type { FeedbackEvent } from './Feedback';
 
 /**
@@ -9,12 +10,17 @@ export type TipId = 'tap' | 'blocked' | 'chain' | 'streak';
 
 export const TIP_IDS: readonly TipId[] = ['tap', 'blocked', 'chain', 'streak'];
 
-export const TIP_TEXT: Readonly<Record<TipId, string>> = {
-  tap: 'Tap an arrow: it flies off the board if nothing is in its way.',
-  blocked: 'Blocked! That cost a heart. The arrow turns red and leaves by itself once its path is clear.',
-  chain: 'Chain reaction: freeing a path released a red arrow, at no cost.',
-  streak: 'Streak bonus! 5 quick clears in a row sent 2 free arrows off the board.',
+const TIP_KEYS: Readonly<Record<TipId, MessageKey>> = {
+  tap: 'game.tipTap',
+  blocked: 'game.tipBlocked',
+  chain: 'game.tipChain',
+  streak: 'game.tipStreak',
 };
+
+/** A tip's text, in the current language. */
+export function tipText(id: TipId): string {
+  return t(TIP_KEYS[id]);
+}
 
 /** How long a tip stays on screen. */
 export const TIP_MS = 4500;

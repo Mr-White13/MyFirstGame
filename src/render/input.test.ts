@@ -225,6 +225,21 @@ describe('zoom and pan transform', () => {
     expect([back.x, back.y]).toEqual([expect.closeTo(p.x), expect.closeTo(p.y)]);
   });
 
+  it('leaves a gap between the board edge and the screen edge when zoomed', () => {
+    const area = { x: 0, y: 0, width: 800, height: 1600 };
+    const v = new BoardViewport();
+    v.configure(canvas, slot, 3, area, 24);
+    v.zoomAt({ x: 400, y: 800 }, 3);
+    v.panBy(9000, 9000); // as far toward the board's top-left corner as it goes
+    const corner = v.worldToScreen({ x: slot.x, y: slot.y });
+    expect(corner.x - area.x).toBeCloseTo(24); // the same gap on screen, whatever the zoom
+    expect(corner.y - area.y).toBeCloseTo(24);
+    v.panBy(-9000, -9000);
+    const far = v.worldToScreen({ x: slot.x + slot.width, y: slot.y + slot.height });
+    expect(area.x + area.width - far.x).toBeCloseTo(24);
+    expect(area.y + area.height - far.y).toBeCloseTo(24);
+  });
+
   it('pan does nothing when fitted', () => {
     const v = make();
     v.panBy(100, 100);

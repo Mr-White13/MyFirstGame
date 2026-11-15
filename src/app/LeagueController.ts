@@ -13,6 +13,7 @@ import type { ProfileScreen } from '../ui/ProfileScreen';
 import type { Screens } from '../ui/Screens';
 import type { Toast } from '../ui/Toast';
 import type { FeedbackEvent } from './Feedback';
+import { t } from '../i18n/translate';
 
 /** What the league needs from the rest of the app (a subset of AppParts). */
 export interface LeagueParts {
@@ -59,7 +60,7 @@ export class LeagueController {
     this.parts.league.settle(today, this.host.unlocked());
     const challenge = this.host.challenge();
     if (challenge && challenge.date !== today && this.parts.screens.active === 'game') {
-      this.parts.toast.show('A new league day has started: this challenge no longer earns points', 2600);
+      this.parts.toast.show(t('league.newDayToast'), 2600);
     }
     this.showNotice();
   }

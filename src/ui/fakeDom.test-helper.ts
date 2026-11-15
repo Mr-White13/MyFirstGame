@@ -360,6 +360,9 @@ export function parseIndexHtml(html = INDEX_HTML): FakeDocument {
     const inSvg = lower === 'svg' || stack.some((e) => e.namespaceURI === SVG_NS);
     const el = lower === 'html' ? root : inSvg ? doc.createElementNS(SVG_NS, openTag) : doc.createElement(openTag);
     for (const a of attrText.matchAll(/([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g)) {
+      // Translation markers (data-i18n*) only drive the startup translation (src/i18n/dom.ts);
+      // they render nothing, so the rendered-UI goldens leave them out.
+      if (a[1].startsWith('data-i18n')) continue;
       el.setAttribute(a[1], decode(a[2] ?? a[3] ?? a[4] ?? ''));
     }
     if (el !== root) top().append(el);

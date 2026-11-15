@@ -7,6 +7,7 @@
  */
 
 import type { CosmeticId } from '../shop/catalog';
+import { t, type MessageKey } from '../i18n/translate';
 import { frameMarkup } from './frames';
 
 const C = { cyan: '#27DDF5', purple: '#A855F7', orange: '#FF9F43', green: '#48F5A5', red: '#FF526B', text: '#F4F7FC' };
@@ -110,6 +111,24 @@ const DEFS = [
 export type AvatarId = (typeof DEFS)[number]['id'];
 
 export const AVATARS: readonly { readonly id: AvatarId; readonly name: string }[] = DEFS.map(({ id, name }) => ({ id, name }));
+
+const NAME_KEYS: Readonly<Record<AvatarId, MessageKey>> = {
+  bot: 'profile.avatarBot',
+  fox: 'profile.avatarFox',
+  astro: 'profile.avatarAstro',
+  orb: 'profile.avatarOrb',
+  visor: 'profile.avatarVisor',
+  cat: 'profile.avatarCat',
+  dragon: 'profile.avatarDragon',
+  core: 'profile.avatarCore',
+  glitch: 'profile.avatarGlitch',
+  arrow: 'profile.avatarArrow',
+};
+
+/** The avatar's display name in the current language (`AVATARS[].name` is the English source name). */
+export function avatarName(id: AvatarId): string {
+  return t(NAME_KEYS[id]);
+}
 
 export const DEFAULT_AVATAR: AvatarId = 'bot';
 

@@ -11,6 +11,7 @@ import {
   type BoosterId,
 } from '../boosters/Boosters';
 import type { GameState } from '../core/GameState';
+import { t } from '../i18n/translate';
 import type { BoosterBarView } from '../ui/BoosterBar';
 
 /** What the controller needs, as small interfaces (tests pass plain objects). */
@@ -126,4 +127,7 @@ export class BoosterController {
 }
 
 /** The first-time tip, shown once (see App): what the boosters cost. Short, so it stays a small toast. */
-export const BOOSTER_TIP = `Stuck? Boosters: ${BOOSTER_IDS.map((id) => `${BOOSTERS[id].name} ${BOOSTERS[id].cost}`).join(' · ')} credits`;
+export function boosterTip(): string {
+  const { hint, reveal } = BOOSTERS;
+  return t('game.boosterTip', { hint: hint.name, hintCost: hint.cost, reveal: reveal.name, revealCost: reveal.cost });
+}

@@ -1,4 +1,6 @@
 import './style.css';
+// First: picks the language before any module builds text (see src/i18n/boot.ts).
+import { deviceLanguages } from './i18n/boot';
 import { App } from './app/App';
 import { runIntro } from './app/Intro';
 import { firstPaintStart, sessionStore, StudioSplash } from './branding/StudioSplash';
@@ -21,6 +23,7 @@ import { LEVELS } from './levels';
 import { ProfileStorage } from './profile/Profile';
 import { StatsStorage } from './profile/Stats';
 import { ProgressStorage } from './progress/ProgressStorage';
+import { SavedRunStorage } from './progress/SavedRun';
 import { DailyLogStorage } from './recap/DailyLog';
 import { pickInsight, RecapStorage } from './recap/insights';
 import { Appearance } from './settings/Appearance';
@@ -48,6 +51,8 @@ import { ShopScreen } from './ui/ShopScreen';
 import { QuickSettings } from './ui/QuickSettings';
 import { ThemePicker } from './ui/ThemePicker';
 import { Toast } from './ui/Toast';
+import { resolveLocale } from './i18n/locale';
+import { getLocale, t } from './i18n/translate';
 
 // Settings first: the theme and motion preferences must be in place before anything draws.
 const settings = new SettingsStore();
@@ -177,6 +182,7 @@ app = new App({
   profileStorage: new ProfileStorage(),
   statsStorage: new StatsStorage(),
   dailyLogStorage: new DailyLogStorage(() => dayClock.today),
+  savedRuns: new SavedRunStorage(),
   state,
   scene,
   game,
@@ -258,16 +264,15 @@ const settingsScreen = new SettingsScreen(
     onAdPrivacyOptions: () => void app?.openAdPrivacyOptions(),
     onTestVibration: async () => {
       const result = await haptics.test();
-      if (result.status === 'unsupported') return "This device can't vibrate.";
-      if (result.status === 'failed') return "The vibration couldn't be started. Check that the app may vibrate.";
-      return isNativeApp()
-        ? "Sent. Felt nothing? Check Android Settings → Sound & vibration → Vibration & haptics (media vibration, battery saver, Do not disturb)."
-        : 'Sent. Browsers on computers usually have no vibration motor.';
+      if (result.status === 'unsupported') return t('settings.vibrationTestUnsupported');
+      if (result.status === 'failed') return t('settings.vibrationTestFailed');
+      return isNativeApp() ? t('settings.vibrationTestSentAndroid') : t('settings.vibrationTestSentBrowser');
     },
     onReset: () => void app?.resetSettings(),
   },
   { vibration: haptics.supported, audio: typeof AudioContext !== 'undefined' },
   __APP_VERSION__,
+  deviceLanguages(),
 );
 
 // Apply settings now and whenever they (or the device's theme / motion preference) change.
@@ -282,6 +287,11 @@ const applySettings = () => {
   quickSettings.render(current);
 };
 settings.subscribe(applySettings);
+// A new language reloads the page: every screen is then built in it from the start.
+// The level in progress is saved as usual and offered again (resume).
+settings.subscribe((current) => {
+  if (resolveLocale(current.language, deviceLanguages()) !== getLocale()) window.location.reload();
+});
 appearance.onChange(() => {
   scene.refreshTheme();
   settingsScreen.render(settings.current, appearance.current);

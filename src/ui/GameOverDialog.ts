@@ -1,3 +1,4 @@
+import { t } from '../i18n/translate';
 import { Overlay, requireElement } from './dom';
 
 export interface FailureSummary {
@@ -31,7 +32,7 @@ export class GameOverDialog {
   constructor(actions: FailureActions) {
     this.tryAgainButton.addEventListener('click', () => actions.onTryAgain());
     this.continueButton.addEventListener('click', () => actions.onContinue?.());
-    this.continueButton.setAttribute('aria-label', 'Continue: watch an ad to get one heart back and keep playing this level');
+    this.continueButton.setAttribute('aria-label', t('game.continueAdAria'));
     requireElement('btn-gameover-levels').addEventListener('click', () => actions.onLevels());
   }
 
@@ -41,12 +42,12 @@ export class GameOverDialog {
 
   show(summary: FailureSummary): void {
     const c = summary.challenge;
-    this.eyebrow.textContent = c ? `Daily challenge ${c.number}/3` : `Level ${summary.levelId}`;
+    this.eyebrow.textContent = c ? t('game.dailyChallenge', { number: c.number }) : t('game.level', { level: summary.levelId });
     const left = summary.total - summary.cleared;
     this.detail.textContent = c
-      ? `Energy Points you collected are kept: ${c.today} / ${c.maxToday} today. Try again to finish the challenge.`
-      : `${left} ${left === 1 ? 'arrow was' : 'arrows were'} still on the board. Each tap on a blocked arrow costs a life.`;
-    requireElement('btn-gameover-levels-label').textContent = c ? 'League' : 'Levels';
+      ? t('game.gameOverChallenge', { today: c.today, max: c.maxToday })
+      : t('game.gameOverArrowsLeft', { count: left });
+    requireElement('btn-gameover-levels-label').textContent = t(c ? 'game.league' : 'game.levels');
     this.cleared.textContent = `${summary.cleared} / ${summary.total}`;
     this.mistakes.textContent = String(summary.mistakes);
     this.continueButton.hidden = !summary.canContinue;

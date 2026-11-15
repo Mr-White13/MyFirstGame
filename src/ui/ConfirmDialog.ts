@@ -1,3 +1,4 @@
+import { t, type MessageKey } from '../i18n/translate';
 import { Overlay, requireElement } from './dom';
 
 export interface ConfirmQuestion {
@@ -7,27 +8,33 @@ export interface ConfirmQuestion {
   readonly cancel: string;
 }
 
+/**
+ * A question whose text is looked up when read (getters), so it is always in
+ * the current language and never translated while modules load.
+ */
+function question(title: MessageKey, text: MessageKey, confirm: MessageKey, cancel: MessageKey): ConfirmQuestion {
+  return {
+    get title() {
+      return t(title);
+    },
+    get text() {
+      return t(text);
+    },
+    get confirm() {
+      return t(confirm);
+    },
+    get cancel() {
+      return t(cancel);
+    },
+  };
+}
+
 /** The original question: leaving a level with an attempt in progress. */
-export const LEAVE_LEVEL: ConfirmQuestion = {
-  title: 'Leave level?',
-  text: 'Your moves on this attempt will be lost. Saved progress is kept.',
-  confirm: 'Leave',
-  cancel: 'Keep playing',
-};
+export const LEAVE_LEVEL: ConfirmQuestion = question('game.leaveTitle', 'game.leaveText', 'game.leaveConfirm', 'game.keepPlaying');
 
-export const RESTART_LEVEL: ConfirmQuestion = {
-  title: 'Restart level?',
-  text: 'This attempt starts over with full lives. Saved progress is kept.',
-  confirm: 'Restart',
-  cancel: 'Keep playing',
-};
+export const RESTART_LEVEL: ConfirmQuestion = question('game.restartTitle', 'game.restartText', 'game.restartConfirm', 'game.keepPlaying');
 
-export const RESET_SETTINGS: ConfirmQuestion = {
-  title: 'Reset settings?',
-  text: 'Theme, sound, haptics, motion and gameplay options go back to their defaults. Your levels, stars, times, statistics and profile are kept.',
-  confirm: 'Reset',
-  cancel: 'Cancel',
-};
+export const RESET_SETTINGS: ConfirmQuestion = question('game.resetTitle', 'game.resetText', 'game.resetConfirm', 'game.cancel');
 
 /**
  * A yes/no confirmation (leave level, restart level, reset settings).

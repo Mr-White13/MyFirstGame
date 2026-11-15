@@ -544,7 +544,7 @@
   "btn-records-chapter-prev": "<button aria-label=\"Previous chapter\" class=\"icon-btn icon-btn--small\" disabled id=\"btn-records-chapter-prev\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-back\"></></> </>",
   "btn-records-chapter-next": "<button aria-label=\"Next chapter\" class=\"icon-btn icon-btn--small chapter-nav__next\" disabled id=\"btn-records-chapter-next\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-back\"></></> </>",
   "records-search": "<input .value=\"31\" aria-label=\"Find a level by number\" autocomplete=\"off\" id=\"records-search\" inputmode=\"numeric\" maxlength=\"6\" pattern=\"[0-9]*\" placeholder=\"Find a level number\" type=\"search\"></>",
-  "records-note": "<p aria-live=\"polite\" class=\"records__note\" id=\"records-note\">No level 31: the game has levels 1–30.</>",
+  "records-note": "<p aria-live=\"polite\" class=\"records__note\" id=\"records-note\">No level 31: levels 1–30 are open to you so far.</>",
   "records-list": [
    "<ol class=\"records surface\" id=\"records-list\">"
   ]
@@ -555,7 +555,7 @@
   "btn-records-chapter-prev": "<button aria-label=\"Previous chapter\" class=\"icon-btn icon-btn--small\" disabled id=\"btn-records-chapter-prev\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-back\"></></> </>",
   "btn-records-chapter-next": "<button aria-label=\"Next chapter\" class=\"icon-btn icon-btn--small chapter-nav__next\" disabled id=\"btn-records-chapter-next\" type=\"button\"> <svg:svg aria-hidden=\"true\" class=\"icon\"><svg:use href=\"#icon-back\"></></> </>",
   "records-search": "<input .value=\"0\" aria-label=\"Find a level by number\" autocomplete=\"off\" id=\"records-search\" inputmode=\"numeric\" maxlength=\"6\" pattern=\"[0-9]*\" placeholder=\"Find a level number\" type=\"search\"></>",
-  "records-note": "<p aria-live=\"polite\" class=\"records__note\" id=\"records-note\">No level 0: the game has levels 1–30.</>",
+  "records-note": "<p aria-live=\"polite\" class=\"records__note\" id=\"records-note\">No level 0: levels 1–30 are open to you so far.</>",
   "records-list": [
    "<ol class=\"records surface\" id=\"records-list\">"
   ]

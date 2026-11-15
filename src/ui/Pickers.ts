@@ -1,6 +1,7 @@
-import { AVATARS, avatarSvg, type AvatarId } from '../profile/avatars';
+import { AVATARS, avatarName, avatarSvg, type AvatarId } from '../profile/avatars';
 import { searchCountries } from '../profile/countries';
 import { Overlay, requireElement } from './dom';
+import { t } from '../i18n/translate';
 
 /** Grid of avatars; picking one closes the dialog. */
 export class AvatarPicker {
@@ -33,13 +34,14 @@ export class AvatarPicker {
         button.dataset.avatar = a.id;
         button.setAttribute('role', 'option');
         button.setAttribute('aria-selected', String(a.id === current));
-        button.setAttribute('aria-label', a.name);
+        const label = avatarName(a.id);
+        button.setAttribute('aria-label', label);
         const art = document.createElement('span');
         art.className = 'avatar';
         art.innerHTML = avatarSvg(a.id); // static, trusted markup
         const name = document.createElement('span');
         name.className = 'avatar-option__name';
-        name.textContent = a.name;
+        name.textContent = label;
         button.append(art, name);
         return button;
       }),
@@ -92,12 +94,12 @@ export class CountryPicker {
   private renderList(): void {
     const query = this.search.value;
     const items: HTMLLIElement[] = [];
-    if (query.trim() === '') items.push(this.option('', '—', 'Prefer not to say'));
+    if (query.trim() === '') items.push(this.option('', '—', t('profile.countryNone')));
     for (const c of searchCountries(query)) items.push(this.option(c.code, c.flag, c.name));
     if (items.length === 0) {
       const empty = document.createElement('li');
       empty.className = 'country-list__empty';
-      empty.textContent = 'No matching country';
+      empty.textContent = t('profile.countryNoMatch');
       items.push(empty);
     }
     this.list.replaceChildren(...items);

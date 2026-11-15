@@ -1,10 +1,10 @@
 import { formatPrecise } from '../core/time';
 import type { LevelData } from '../core/types';
-import { chapterCount, chapterOf, chapterName, chapterSummary, clampChapter, queryRecords, type RecordEntry, type RecordsQuery } from '../progress/chapters';
+import { chapterCount, chapterOf, chapterName, chapterSummary, clampChapter, queryRecords, revealedLevelCount, type RecordEntry, type RecordsQuery } from '../progress/chapters';
 import type { Progress } from '../progress/Progress';
 import { chapterMeta, shownChapter } from './chapterNav';
 import { requireElement, starIcons } from './dom';
-
+import { t } from '../i18n/translate';
 
 /**
  * Personal records, one page at a time: a chapter of 20 levels (previous /
@@ -40,7 +40,12 @@ export class RecordsScreen {
   }
 
   private get shownChapter(): number {
-    return shownChapter(this.chapter, this.progress, this.levels.length);
+    return Math.min(shownChapter(this.chapter, this.progress, this.levels.length), chapterCount(this.revealed));
+  }
+
+  /** Levels the player may see (up to the end of the chapter reached). */
+  private get revealed(): number {
+    return this.progress ? revealedLevelCount(this.progress, this.levels.length) : this.levels.length;
   }
 
   render(progress: Progress): void {
@@ -50,7 +55,7 @@ export class RecordsScreen {
 
   /** Shows a chapter (clamped), clearing any search. */
   showChapter(chapter: number): void {
-    this.chapter = clampChapter(chapter, this.levels.length);
+    this.chapter = clampChapter(chapter, this.revealed);
     this.search.value = '';
     this.renderPage();
   }
@@ -71,16 +76,16 @@ export class RecordsScreen {
   private renderPage(): void {
     const progress = this.progress;
     if (!progress) return;
-    const count = this.levels.length;
+    const count = this.revealed; // never page or search past the chapters reached
     const page = queryRecords(progress, count, this.query, (id) => this.levels[id - 1]?.revision ?? 1);
 
     const chapter = page.chapter ?? (page.entries[0] ? chapterOf(page.entries[0].levelId) : this.shownChapter);
     const summary = chapterSummary(progress, chapter, count);
-    this.number.textContent = page.chapter === null ? 'Records' : `Chapter ${summary.chapter}`;
-    this.title.textContent = page.chapter === null ? 'Search' : chapterName(summary.chapter);
+    this.number.textContent = page.chapter === null ? t('profile.recordsTitle') : t('profile.recordsChapter', { chapter: summary.chapter });
+    this.title.textContent = page.chapter === null ? t('profile.recordsSearch') : chapterName(summary.chapter);
     this.meta.textContent =
       page.chapter === null
-        ? `${page.matches} matching ${page.matches === 1 ? 'level' : 'levels'}`
+        ? t('profile.recordsMatches', { count: page.matches })
         : chapterMeta(summary);
     this.prev.disabled = page.chapter === null || page.chapter <= 1;
     this.next.disabled = page.chapter === null || page.chapter >= chapterCount(count);
@@ -88,12 +93,12 @@ export class RecordsScreen {
       page.chapter !== null
         ? ''
         : page.entries.length === 0
-          ? `No level ${this.search.value}: the game has levels 1–${count}.`
+          ? t('profile.recordsNoLevel', { search: this.search.value, count })
           : page.matches > page.entries.length
-            ? `Showing the first ${page.entries.length}. Type more digits to narrow it down.`
+            ? t('profile.recordsFirst', { count: page.entries.length })
             : '';
     if (page.entries.some((e) => e.olderLayout)) {
-      this.note.textContent = [this.note.textContent, '* Best set on an earlier layout of the level.'].filter(Boolean).join(' ');
+      this.note.textContent = [this.note.textContent, t('profile.recordsOlderNote')].filter(Boolean).join(' ');
     }
     this.list.replaceChildren(...page.entries.map((entry) => this.row(entry)));
   }
@@ -107,23 +112,27 @@ export class RecordsScreen {
 
     const name = document.createElement('span');
     name.className = 'record__level';
-    name.textContent = `Level ${entry.levelId}`;
+    name.textContent = t('profile.recordLevel', { level: entry.levelId });
     const time = document.createElement('span');
     time.className = 'record__time';
-    time.textContent = entry.bestTimeMs != null ? formatPrecise(entry.bestTimeMs) : completed ? 'not timed' : entry.status === 'locked' ? 'locked' : '–';
+    time.textContent = entry.bestTimeMs != null ? formatPrecise(entry.bestTimeMs) : completed ? t('profile.recordNotTimed') : entry.status === 'locked' ? t('profile.recordLocked') : '–';
     time.classList.toggle('record__time--none', entry.bestTimeMs == null);
     const stars = document.createElement('span');
     stars.className = 'record__stars';
     const earned = entry.bestStars ?? 0;
     stars.append(...starIcons(earned));
-    if (entry.olderLayout) item.title = 'Set on an earlier layout of this level';
-    item.setAttribute(
-      'aria-label',
-      completed
-        ? `Level ${entry.levelId}: best time ${time.textContent}, ${entry.bestStars === null ? 'unranked' : `${earned} stars`}${entry.olderLayout ? ', set on an earlier layout' : ''}`
-        : `Level ${entry.levelId}: ${entry.status}`,
-    );
+    if (entry.olderLayout) item.title = t('profile.recordOlderTitle');
+    item.setAttribute('aria-label', this.ariaLabel(entry, time.textContent ?? '', earned));
     item.append(name, time, stars);
     return item;
+  }
+
+  /** The row read out by screen readers, as one whole sentence. */
+  private ariaLabel(entry: RecordEntry, time: string, earned: number): string {
+    const params = { level: entry.levelId, time, count: earned };
+    if (entry.status === 'locked') return t('profile.recordAriaLocked', params);
+    if (entry.status !== 'completed') return t('profile.recordAriaNotCompleted', params);
+    if (entry.bestStars === null) return t(entry.olderLayout ? 'profile.recordAriaUnrankedOlder' : 'profile.recordAriaUnranked', params);
+    return t(entry.olderLayout ? 'profile.recordAriaStarsOlder' : 'profile.recordAriaStars', params);
   }
 }

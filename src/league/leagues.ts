@@ -5,6 +5,8 @@
  * are none yet).
  */
 
+import { t, type MessageKey } from '../i18n/translate';
+
 export type LeagueId = 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond' | 'neon-elite';
 
 export interface LeagueTier {
@@ -21,13 +23,25 @@ export interface LeagueTier {
   readonly relegateBelow: number | null;
 }
 
+type TierData = Omit<LeagueTier, 'name'>;
+
+/** A tier whose `name` is translated each time it is read (never at import). */
+function namedTier(nameKey: MessageKey, data: TierData): LeagueTier {
+  return {
+    ...data,
+    get name() {
+      return t(nameKey);
+    },
+  };
+}
+
 export const LEAGUES: readonly LeagueTier[] = [
-  { id: 'bronze', name: 'Bronze', order: 0, color: '#d98f52', accent: '#ffc58f', promoteAt: 5, relegateBelow: null },
-  { id: 'silver', name: 'Silver', order: 1, color: '#aab8c9', accent: '#eef3fa', promoteAt: 7, relegateBelow: 2 },
-  { id: 'gold', name: 'Gold', order: 2, color: '#f2b51d', accent: '#ffe58a', promoteAt: 9, relegateBelow: 3 },
-  { id: 'platinum', name: 'Platinum', order: 3, color: '#45d6c4', accent: '#c4fff5', promoteAt: 10, relegateBelow: 4 },
-  { id: 'diamond', name: 'Diamond', order: 4, color: '#5c9dff', accent: '#cfe2ff', promoteAt: 11, relegateBelow: 5 },
-  { id: 'neon-elite', name: 'Neon Elite', order: 5, color: '#a855f7', accent: '#27ddf5', promoteAt: null, relegateBelow: 6 },
+  namedTier('league.tierBronze', { id: 'bronze', order: 0, color: '#d98f52', accent: '#ffc58f', promoteAt: 5, relegateBelow: null }),
+  namedTier('league.tierSilver', { id: 'silver', order: 1, color: '#aab8c9', accent: '#eef3fa', promoteAt: 7, relegateBelow: 2 }),
+  namedTier('league.tierGold', { id: 'gold', order: 2, color: '#f2b51d', accent: '#ffe58a', promoteAt: 9, relegateBelow: 3 }),
+  namedTier('league.tierPlatinum', { id: 'platinum', order: 3, color: '#45d6c4', accent: '#c4fff5', promoteAt: 10, relegateBelow: 4 }),
+  namedTier('league.tierDiamond', { id: 'diamond', order: 4, color: '#5c9dff', accent: '#cfe2ff', promoteAt: 11, relegateBelow: 5 }),
+  namedTier('league.tierNeonElite', { id: 'neon-elite', order: 5, color: '#a855f7', accent: '#27ddf5', promoteAt: null, relegateBelow: 6 }),
 ];
 
 export const BRONZE = 0;
@@ -62,22 +76,22 @@ export const leagueTransactionIds = {
 
 /** Original vector badge: a hexagonal crest in the tier's colours with one chevron per tier above Bronze. */
 export function leagueBadgeSvg(order: number, size = 64): string {
-  const t = league(order);
-  const id = `lg-${t.id}-${size}`;
-  const chevrons = Array.from({ length: t.order }, (_, i) => {
+  const tier = league(order);
+  const id = `lg-${tier.id}-${size}`;
+  const chevrons = Array.from({ length: tier.order }, (_, i) => {
     const y = 40 - i * 5.2;
-    return `<path d="M22 ${y}l10-5.5 10 5.5" fill="none" stroke="${t.accent}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>`;
+    return `<path d="M22 ${y}l10-5.5 10 5.5" fill="none" stroke="${tier.accent}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>`;
   }).join('');
   const core =
-    t.order === 0
-      ? `<circle cx="32" cy="30" r="6.5" fill="none" stroke="${t.accent}" stroke-width="2.6"/>`
-      : t.order === TOP_TIER
-        ? `<path d="M33.5 17l-7.5 11h6l-1.5 9 7.5-11h-6z" fill="${t.accent}"/>`
+    tier.order === 0
+      ? `<circle cx="32" cy="30" r="6.5" fill="none" stroke="${tier.accent}" stroke-width="2.6"/>`
+      : tier.order === TOP_TIER
+        ? `<path d="M33.5 17l-7.5 11h6l-1.5 9 7.5-11h-6z" fill="${tier.accent}"/>`
         : '';
   return `<svg viewBox="0 0 64 64" width="${size}" height="${size}" aria-hidden="true" focusable="false">
-    <defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${t.accent}" stop-opacity="0.55"/><stop offset="0.55" stop-color="${t.color}"/><stop offset="1" stop-color="${t.color}" stop-opacity="0.75"/></linearGradient></defs>
+    <defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${tier.accent}" stop-opacity="0.55"/><stop offset="0.55" stop-color="${tier.color}"/><stop offset="1" stop-color="${tier.color}" stop-opacity="0.75"/></linearGradient></defs>
     <path d="M32 4l24 13.5v29L32 60 8 46.5v-29z" fill="#0d1220" stroke="url(#${id})" stroke-width="3.2" stroke-linejoin="round"/>
     <path d="M32 11l18 10.2v21.6L32 53 14 42.8V21.2z" fill="url(#${id})" opacity="0.28"/>
-    ${core}${t.order > 0 && t.order < TOP_TIER ? chevrons : ''}
+    ${core}${tier.order > 0 && tier.order < TOP_TIER ? chevrons : ''}
   </svg>`;
 }

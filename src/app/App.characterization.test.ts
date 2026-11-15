@@ -1,4 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { RunEvent } from '../core/GameState';
+import type { SavedRun } from '../progress/SavedRun';
 import type { ArrowData, GameSnapshot, LevelData } from '../core/types';
 import { createDaily } from '../daily/Daily';
 import type { DailyChallenge } from '../league/challenges';
@@ -94,6 +96,8 @@ interface Options {
   playTimeMs?: number;
   /** Whether the one-time rule tips were already shown (default true, so older tests see none). */
   tipsSeen?: boolean;
+  /** A level left unfinished in an earlier session (default none). */
+  savedRun?: SavedRun | null;
 }
 
 function createHarness(options: Options = {}) {
@@ -136,6 +140,7 @@ function createHarness(options: Options = {}) {
     levelId: 1,
     snap: snapshotFor(1),
     removeListeners: [] as ((arrow: ArrowData) => void)[],
+    history: [] as RunEvent[],
     get isPlaying() {
       return this.snap.status === 'playing';
     },
@@ -167,11 +172,21 @@ function createHarness(options: Options = {}) {
     reset(levelId: number) {
       this.levelId = levelId;
       this.snap = snapshotFor(levelId);
+      this.history = [];
     },
   };
   const scene = {
     loadLevel: (level: LevelData) => (rec('scene.loadLevel', level.id), state.reset(level.id)),
     restartLevel: () => (rec('scene.restartLevel'), state.reset(state.levelId)),
+    /** Replays the saved steps: here each tap is one move, and an empty run leads nowhere. */
+    resumeLevel: (level: LevelData, events: readonly RunEvent[]) => {
+      rec('scene.resumeLevel', level.id, events.length);
+      state.reset(level.id);
+      state.history = [...events];
+      const moves = events.filter((e) => e.kind === 'tap').length;
+      state.set({ moves, directClears: moves });
+      return moves > 0;
+    },
     resetView: () => rec('scene.resetView'),
     hintShowing: false,
     revealShowing: false,
@@ -392,6 +407,7 @@ function createHarness(options: Options = {}) {
     profileStorage: { load: () => initial.profile, save: (p: unknown) => rec('profile.save', p) },
     statsStorage: { load: () => initial.stats, save: (s: unknown) => rec('stats.save', s) },
     dailyLogStorage: { load: () => initial.dailyLog, save: (l: unknown) => rec('dailyLog.save', l) },
+    savedRuns: { load: () => options.savedRun ?? null, save: (r: SavedRun | null) => (rec('run.save', r), true) },
     state,
     scene,
     game,
@@ -1019,9 +1035,12 @@ describe('handleBack priority', () => {
     expect(h.effects()).toEqual([...ABANDON_SAVES, ...MENU_TRANSITION, 'screens.show levels', 'loop.sleep', 'levelSelect.focusLevel 1']);
   });
 
-  it('with moves made, Back asks first; Back again cancels the question and the level carries on', async () => {
-    const h = createHarness();
-    await enterLevel(h, 1);
+  it('with moves made in a challenge, Back asks first; Back again cancels the question and the challenge carries on', async () => {
+    const h = createHarness({ progress: progressThrough(10), challenges: [CHALLENGE] });
+    h.app.start();
+    await h.app.openChallenge(1);
+    await flush();
+    h.clear();
     h.state.set({ moves: 1 });
     h.app.handleBack();
     expect(h.effects()).toEqual(['confirmDialog.ask default']);
@@ -1104,9 +1123,12 @@ describe('navigation lock', () => {
 });
 
 describe('confirm dialogs', () => {
-  it('leaving with moves: the clock pauses while asking; Leave records the abandoned attempt and goes back', async () => {
-    const h = createHarness();
-    await enterLevel(h, 1);
+  it('leaving a challenge with moves: the clock pauses while asking; Leave records the abandoned attempt and goes back', async () => {
+    const h = createHarness({ progress: progressThrough(10), challenges: [CHALLENGE] });
+    h.app.start();
+    await h.app.openChallenge(1);
+    await flush();
+    h.clear();
     h.advance(3_000);
     h.state.set({ moves: 2, directClears: 2 });
     const leaving = h.app.leaveLevel();
@@ -1115,15 +1137,17 @@ describe('confirm dialogs', () => {
     h.confirmDialog.close(true);
     await leaving;
     await flush();
-    expect(h.effects()).toEqual(['confirmDialog.ask default', 'confirmDialog.close true', ...ABANDON_SAVES, ...MENU_TRANSITION, 'screens.show home', 'loop.sleep']);
-    expect(h.calls('stats.save')[0][0]).toEqual(
-      applyAttempt({ progress: h.initial.progress, stats: h.initial.stats }, summary({ levelId: 1, outcome: 'abandoned', timeMs: 3_000, moves: 2, directClears: 2 }), LEVEL_COUNT).records.stats,
-    );
+    // A challenge keeps its own records (no statistics), and is never kept to resume.
+    expect(h.effects()).toEqual(['confirmDialog.ask default', 'confirmDialog.close true', ...MENU_TRANSITION, 'screens.show home', 'loop.sleep']);
+    expect(h.calls('run.save')).toEqual([]);
   });
 
-  it('leaving with moves: Keep playing resumes the clock and records nothing', async () => {
-    const h = createHarness();
-    await enterLevel(h, 1);
+  it('leaving a challenge with moves: Keep playing resumes the clock and records nothing', async () => {
+    const h = createHarness({ progress: progressThrough(10), challenges: [CHALLENGE] });
+    h.app.start();
+    await h.app.openChallenge(1);
+    await flush();
+    h.clear();
     h.advance(3_000);
     h.state.set({ moves: 2 });
     const leaving = h.app.leaveLevel();
@@ -1373,7 +1397,6 @@ describe('shop', () => {
       'confirmDialog.close true',
       'rewards.buyCosmetic frame-cyber',
       'shopScreen.celebrate frame-cyber',
-      'toast.show Cyber Frame unlocked and equipped · −150 2600 achievement',
       'feedback purchase',
     ]);
     expect(h.rewards.credits).toBe(170);
@@ -1671,5 +1694,109 @@ describe('ad-free start (first 30 minutes of play)', () => {
     h.app.handleLevelLost();
     h.app.handleLevelFailed();
     expect(h.calls('gameOverDialog.show').at(-1)![0]).toMatchObject({ canContinue: true });
+  });
+});
+
+describe('unfinished levels are kept and resumed', () => {
+  const SUSPEND_SAVES = ['stats.save', 'dailyLog.save'];
+
+  it('leaving a level with moves asks nothing: the play time is saved and the level is kept to resume', async () => {
+    const h = createHarness();
+    await enterLevel(h, 1);
+    h.advance(3_000);
+    h.state.set({ moves: 2, directClears: 2 });
+    h.state.history = [
+      { kind: 'tap', arrowId: 'a', at: 1 },
+      { kind: 'tap', arrowId: 'b', at: 2 },
+    ];
+    h.clear();
+    await h.app.leaveLevel();
+    await flush();
+    expect(h.effects()).toEqual([...SUSPEND_SAVES, 'run.save', ...MENU_TRANSITION, 'screens.show home', 'loop.sleep']);
+    expect(h.calls('run.save')[0][0]).toEqual({ levelId: 1, revision: 1, events: h.state.history, timeMs: 3_000 });
+    // Only the play time is counted now; the run itself is counted once, when it ends.
+    expect(h.calls('stats.save')[0][0]).toMatchObject({ playTimeMs: 3_000, successfulRuns: 0, failedRuns: 0, arrowsCleared: 0 });
+    expect(h.calls('rewards.afterAttempt')).toEqual([]);
+  });
+
+  it('opening the level again continues it: the steps are replayed and the clock picks up where it stopped', async () => {
+    const run: SavedRun = { levelId: 1, revision: 1, events: [{ kind: 'tap', arrowId: 'a', at: 1 }], timeMs: 42_000 };
+    const h = createHarness({ savedRun: run });
+    h.app.start();
+    h.clear();
+    await h.app.openLevel(1);
+    await flush();
+    expect(h.calls('scene.resumeLevel')).toEqual([[1, 1]]);
+    expect(h.calls('scene.loadLevel')).toEqual([]);
+    expect(h.calls('hud.setTime')[0]).toEqual([42_000]);
+    h.advance(1_000);
+    expect(h.app.timer.elapsed()).toBe(43_000);
+  });
+
+  it('a resumed level that is then won forgets the saved run, and counts its whole time', async () => {
+    const run: SavedRun = { levelId: 1, revision: 1, events: [{ kind: 'tap', arrowId: 'a', at: 1 }], timeMs: 42_000 };
+    const h = createHarness({ savedRun: run });
+    await enterLevel(h, 1);
+    h.advance(8_000);
+    h.state.set({ status: 'won', won: true, remaining: 0, stars: 3 });
+    h.clear();
+    h.app.handleLevelSolved();
+    expect(h.calls('run.save')).toEqual([[null]]);
+    expect(h.calls('progress.save')[0][0]).toMatchObject({ completed: { 1: { bestTimeMs: 50_000 } } });
+  });
+
+  it('restarting or losing a level forgets its saved run', async () => {
+    const run: SavedRun = { levelId: 1, revision: 1, events: [{ kind: 'tap', arrowId: 'a', at: 1 }], timeMs: 5_000 };
+    const restarted = createHarness({ savedRun: run });
+    await enterLevel(restarted, 1);
+    restarted.clear();
+    restarted.app.restartLevel();
+    expect(restarted.calls('run.save')).toEqual([[null]]);
+
+    const lost = createHarness({ savedRun: run });
+    await enterLevel(lost, 1);
+    lost.clear();
+    lost.app.handleLevelLost();
+    expect(lost.calls('run.save')).toEqual([[null]]);
+  });
+
+  it('a saved run for an older layout of the level is dropped and the level starts fresh', async () => {
+    const run: SavedRun = { levelId: 1, revision: 99, events: [{ kind: 'tap', arrowId: 'a', at: 1 }], timeMs: 5_000 };
+    const h = createHarness({ savedRun: run });
+    h.app.start();
+    await h.app.openLevel(1);
+    expect(h.calls('scene.resumeLevel')).toEqual([]);
+    expect(h.calls('scene.loadLevel')).toEqual([[1]]);
+  });
+
+  it('a saved run that no longer leads to a game in progress is forgotten and the level starts fresh', async () => {
+    const run: SavedRun = { levelId: 1, revision: 1, events: [], timeMs: 5_000 };
+    const h = createHarness({ savedRun: run });
+    h.app.start();
+    await h.app.openLevel(1);
+    expect(h.calls('scene.resumeLevel')).toEqual([[1, 0]]);
+    expect(h.calls('run.save')).toEqual([[null]]);
+    expect(h.calls('scene.loadLevel')).toEqual([[1]]);
+  });
+
+  it('going to the background mid-level saves it, so closing the app there loses nothing', async () => {
+    const h = createHarness();
+    await enterLevel(h, 1);
+    h.advance(2_500);
+    h.state.set({ moves: 1, directClears: 1 });
+    h.clear();
+    h.app.setBackground(true);
+    expect(h.calls('run.save')[0][0]).toMatchObject({ levelId: 1, timeMs: 2_500 });
+    expect(h.app.screen).toBe('game'); // still playing if the app comes back
+  });
+
+  it('an untouched level is not kept: leaving it still records an abandoned attempt', async () => {
+    const h = createHarness();
+    await enterLevel(h, 1);
+    h.clear();
+    await h.app.leaveLevel();
+    await flush();
+    expect(h.calls('run.save')).toEqual([]);
+    expect(h.effects().slice(0, 3)).toEqual(ABANDON_SAVES);
   });
 });

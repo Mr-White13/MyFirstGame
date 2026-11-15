@@ -1,5 +1,6 @@
 import { formatClock } from '../core/time';
 import { BONUS_CLEARS, STREAK_TAPS, STREAK_WINDOW_MS, type GameSnapshot, type LevelData } from '../core/types';
+import { t } from '../i18n/translate';
 import { requireElement } from './dom';
 
 /** What the HUD shows during a Daily League challenge. */
@@ -88,18 +89,18 @@ export class Hud {
     this.challenge = info;
     this.renderName(this.last?.levelId);
     this.league.hidden = info === null;
-    this.backButton.setAttribute('aria-label', info ? 'Back to the league' : 'Back to levels');
-    this.restartButton.setAttribute('aria-label', info ? 'Restart challenge' : 'Restart level');
+    this.backButton.setAttribute('aria-label', t(info ? 'game.backToLeague' : 'game.backToLevels'));
+    this.restartButton.setAttribute('aria-label', t(info ? 'game.restartChallenge' : 'game.restartLevel'));
     if (!info) {
-      this.title.textContent = 'Level';
+      this.title.textContent = t('game.hudLevel');
       if (this.last) this.level.textContent = String(this.last.levelId);
       return;
     }
-    this.title.textContent = 'Daily';
+    this.title.textContent = t('game.hudDaily');
     this.level.textContent = `${info.number}/3`;
     this.energy.textContent = String(info.collected);
     this.energyWrap.lastChild!.textContent = `/${info.perChallenge}`;
-    this.energyWrap.setAttribute('aria-label', `${info.collected} of ${info.perChallenge} Energy Arrows collected`);
+    this.energyWrap.setAttribute('aria-label', t('game.energyAria', { collected: info.collected, total: info.perChallenge }));
     this.leagueName.textContent = info.leagueName;
     this.points.textContent = String(info.today);
     if (before && info.collected > before.collected) this.tick(this.energy);
@@ -115,7 +116,7 @@ export class Hud {
 
   private renderName(levelId: number | undefined): void {
     const info = this.challenge || levelId === undefined ? undefined : this.levelInfo(levelId);
-    const text = info?.name ?? info?.tier?.toUpperCase();
+    const text = info?.name ?? (info?.tier === 'hard' ? t('game.tierHard') : info?.tier === 'very hard' ? t('game.tierVeryHard') : undefined);
     this.name.textContent = text ?? '';
     this.name.hidden = text === undefined;
     this.name.classList.toggle('hud__name--hard', info?.tier === 'hard');
@@ -164,7 +165,7 @@ export class Hud {
         heart.classList.add('heart--restored');
       }
     });
-    this.hearts.setAttribute('aria-label', `${lives} ${lives === 1 ? 'life' : 'lives'} left`);
+    this.hearts.setAttribute('aria-label', t('game.livesLeft', { count: lives }));
     this.hearts.classList.toggle('hearts--last', lives === 1);
   }
 
@@ -200,10 +201,10 @@ export class Hud {
     this.momentum.setAttribute(
       'aria-label',
       earned > 0
-        ? `Streak bonus: ${earned} arrows cleared`
+        ? t('game.streakBonusAria', { count: earned })
         : snapshot.bonusCooldown > 0
-          ? `Streak bonus recharging: ${snapshot.bonusCooldown} more clears`
-          : `Streak: ${snapshot.streak} of ${STREAK_TAPS} taps within ${STREAK_WINDOW_MS / 1000} s (bonus clears ${BONUS_CLEARS})`,
+          ? t('game.streakRechargingAria', { count: snapshot.bonusCooldown })
+          : t('game.streakAria', { streak: snapshot.streak, taps: STREAK_TAPS, seconds: STREAK_WINDOW_MS / 1000, clears: BONUS_CLEARS }),
     );
   }
 

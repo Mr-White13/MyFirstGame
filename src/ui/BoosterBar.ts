@@ -1,4 +1,5 @@
 import { BOOSTER_IDS, BOOSTERS, type BoosterId } from '../boosters/Boosters';
+import { t } from '../i18n/translate';
 import { requireElement } from './dom';
 
 /** What the booster toolbar shows (see BoosterController). */
@@ -39,15 +40,16 @@ export class BoosterBar {
     this.root.hidden = !view.visible;
     if (!view.visible) return;
     this.creditsValue.textContent = String(view.credits);
-    this.creditsBox.setAttribute('aria-label', `Energy Credits: ${view.credits}`);
+    this.creditsBox.setAttribute('aria-label', t('game.creditsAria', { credits: view.credits }));
     for (const id of BOOSTER_IDS) {
       const b = BOOSTERS[id];
       const button = this.buttons[id];
-      const price = view.free ? 'free in test play' : `${b.cost} Energy Credits`;
-      button.querySelector('[data-cost]')!.textContent = view.free ? 'Free' : String(b.cost);
+      const { name, description } = b;
+      const free = t('game.boosterFreeInTest');
+      button.querySelector('[data-cost]')!.textContent = view.free ? t('game.boosterFree') : String(b.cost);
       button.setAttribute('aria-disabled', String(!view.available[id]));
-      button.setAttribute('aria-label', `${b.name}, ${price}: ${b.description}`);
-      button.title = `${b.name} (${view.free ? 'free in test play' : `${b.cost} credits`}): ${b.description}`;
+      button.setAttribute('aria-label', t('game.boosterAria', { name, price: view.free ? free : t('game.boosterPriceAria', { cost: b.cost }), description }));
+      button.title = t('game.boosterTitle', { name, price: view.free ? free : t('game.boosterPriceShort', { cost: b.cost }), description });
     }
   }
 

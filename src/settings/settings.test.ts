@@ -82,6 +82,7 @@ describe('settings model', () => {
       showTimer: true,
       confirmRestart: true,
       showRecap: true,
+      language: 'auto',
     });
     expect(DEFAULT_SETTINGS.musicVolume).toBeLessThan(DEFAULT_SETTINGS.sfxVolume); // music low by default
     expect(Object.isFrozen(DEFAULT_SETTINGS)).toBe(true);
@@ -165,6 +166,23 @@ describe('settings storage', () => {
       expect([value.haptics, value.hapticStrength]).toEqual([haptics, 'strong']);
     }
     expect(readSettings(JSON.stringify({ ...before, hapticStrength: 'medium' })).value.hapticStrength).toBe('strong');
+  });
+
+  it('gives saves from before the language setting "auto" (device language), keeping everything else', () => {
+    const before = { version: 1, theme: 'light', motion: 'auto', effects: 'low', muted: false, music: true, sfx: true, musicVolume: 0.35, sfxVolume: 0.7, haptics: false, hapticStrength: 'soft', showTimer: false, confirmRestart: true, showRecap: true };
+    const { value, status } = readSettings(JSON.stringify(before));
+    expect(status).toBe('current');
+    expect(value).toEqual({ ...createSettings(), theme: 'light', effects: 'low', haptics: false, hapticStrength: 'soft', showTimer: false });
+    expect(value.language).toBe('auto');
+    expect(readSettings(JSON.stringify({ ...before, language: 'fr' })).value.language).toBe('auto');
+  });
+
+  it('keeps a chosen language and saves it', () => {
+    for (const language of ['en', 'es', 'ro', 'auto'] as const) {
+      expect(withSettings(createSettings(), { language }).language).toBe(language);
+      expect(readSettings(serializeSettings({ ...createSettings(), language })).value.language).toBe(language);
+    }
+    expect(withSettings(createSettings(), { language: 'de' } as never).language).toBe('auto');
   });
 
   it('maps the Vibration control (Off, Soft, Strong) to the on/off switch and the strength', () => {

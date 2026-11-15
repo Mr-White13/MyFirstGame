@@ -1,3 +1,4 @@
+import { LANGUAGE_CHOICES, type LanguageChoice } from '../i18n/locale';
 import { browserStorage, parseObject, SafeStore, type KeyValueStore, type SaveStatus } from '../storage/SafeStore';
 
 /** The player's visual theme choice. `system` follows the device's light/dark preference. */
@@ -38,6 +39,8 @@ export interface GameSettings {
   readonly confirmRestart: boolean;
   /** After the startup splash, show one insight from the player's own records before Home. */
   readonly showRecap: boolean;
+  /** Added after version 1 without a migration: older saves get `auto` (the device language). */
+  readonly language: LanguageChoice;
 }
 
 export const THEME_CHOICES: readonly ThemeChoice[] = ['dark', 'light', 'colorful', 'system'];
@@ -60,6 +63,7 @@ export const DEFAULT_SETTINGS: GameSettings = Object.freeze({
   showTimer: true,
   confirmRestart: true,
   showRecap: true,
+  language: 'auto',
 });
 
 export function createSettings(): GameSettings {
@@ -86,6 +90,7 @@ export function withSettings(current: GameSettings, patch: Partial<Record<keyof 
   if (isOneOf(MOTION_CHOICES, p.motion)) next.motion = p.motion;
   if (isOneOf(EFFECTS_LEVELS, p.effects)) next.effects = p.effects;
   if (isOneOf(HAPTIC_STRENGTHS, p.hapticStrength)) next.hapticStrength = p.hapticStrength;
+  if (isOneOf(LANGUAGE_CHOICES, p.language)) next.language = p.language;
   for (const key of ['muted', 'music', 'sfx', 'haptics', 'showTimer', 'confirmRestart', 'showRecap'] as const) {
     if (typeof p[key] === 'boolean') next[key] = p[key];
   }

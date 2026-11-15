@@ -1,8 +1,9 @@
 import type { LevelData } from '../core/types';
-import { chapterCount, chapterOf, chapterSummary, chapterName, chapterTiles, chapterTitle, clampChapter, currentChapter, type LevelTile } from '../progress/chapters';
+import { chapterCount, chapterOf, chapterSummary, chapterName, chapterTiles, chapterTitle, clampChapter, currentChapter, revealedLevelCount, type LevelTile } from '../progress/chapters';
 import { completedCount, MAX_STARS, nextLevelToPlay, totalStars, type Progress } from '../progress/Progress';
 import { UNLOCK_ALL_LEVELS_FOR_TESTING } from '../progress/testUnlock';
 import { chapterMeta, shownChapter } from './chapterNav';
+import { t } from '../i18n/translate';
 import { requireElement, starIcons, svgIcon } from './dom';
 
 /**
@@ -62,28 +63,34 @@ export class LevelSelect {
   render(progress: Progress): void {
     this.progress = progress;
     const levelCount = this.levels.length;
+    const shown = this.revealed; // only the chapters reached so far: the game's size stays hidden
     const done = completedCount(progress, levelCount);
     this.count.textContent = String(done);
-    this.total.textContent = String(levelCount);
-    this.fill.style.width = `${(done / levelCount) * 100}%`;
+    this.total.textContent = String(shown);
+    this.fill.style.width = `${(done / shown) * 100}%`;
     this.stars.textContent = String(totalStars(progress, levelCount));
-    this.starsTotal.textContent = String(levelCount * MAX_STARS);
+    this.starsTotal.textContent = String(shown * MAX_STARS);
 
     this.continueLevel = nextLevelToPlay(progress, levelCount);
     const allDone = done === levelCount;
     this.continueButton.textContent = allDone
-      ? 'Play again'
+      ? t('home.playAgain')
       : done === 0
-        ? 'Start'
-        : `Continue · Level ${this.continueLevel}`;
+        ? t('home.levelsStart')
+        : t('home.playContinue', { level: this.continueLevel });
     if (allDone) this.continueLevel = 1;
 
     this.renderChapter();
   }
 
-  /** Shows a chapter (clamped to the ones that exist). */
+  /** Levels the player may see (up to the end of the chapter reached). */
+  private get revealed(): number {
+    return this.progress ? revealedLevelCount(this.progress, this.levels.length) : this.levels.length;
+  }
+
+  /** Shows a chapter (clamped to the ones the player has reached). */
   showChapter(chapter: number): void {
-    this.chapter = clampChapter(chapter, this.levels.length);
+    this.chapter = clampChapter(chapter, this.revealed);
     this.renderChapter();
   }
 
@@ -98,16 +105,16 @@ export class LevelSelect {
     const progress = this.progress;
     if (!progress) return;
     const levelCount = this.levels.length;
-    const chapter = clampChapter(this.shownChapter, levelCount);
-    const chapters = chapterCount(levelCount);
+    const chapter = clampChapter(this.shownChapter, this.revealed);
+    const chapters = chapterCount(this.revealed);
     const summary = chapterSummary(progress, chapter, levelCount);
-    this.chapterNumber.textContent = `Chapter ${chapter}`;
+    this.chapterNumber.textContent = t('home.chapter', { chapter });
     this.chapterTitle.textContent = chapterName(chapter);
     this.chapterMeta.textContent = chapterMeta(summary);
     this.prevButton.disabled = chapter <= 1;
     this.nextButton.disabled = chapter >= chapters;
     this.currentButton.disabled = chapter === currentChapter(progress, levelCount);
-    this.grid.setAttribute('aria-label', `${chapterTitle(chapter)}, chapter ${chapter} of ${chapters}: levels ${summary.first} to ${summary.last}`);
+    this.grid.setAttribute('aria-label', t('home.chapterGridAria', { title: chapterTitle(chapter), first: summary.first, last: summary.last }));
     this.grid.replaceChildren(...chapterTiles(progress, chapter, levelCount).map((tile) => this.tile(tile)));
   }
 
@@ -138,16 +145,17 @@ export class LevelSelect {
     button.disabled = state === 'locked';
     const description =
       state === 'test'
-        ? 'locked, open for testing, result not saved'
+        ? t('home.stateTestNotSaved')
         : state === 'locked'
-          ? 'locked'
+          ? t('home.stateLocked')
           : !completed
-            ? 'not completed yet'
+            ? t('home.stateNotCompleted')
             : bestStars === null
-              ? 'completed, not yet rated'
-              : `completed with ${bestStars} of ${MAX_STARS} stars`;
-    const tier = level.tier ? `, ${level.tier}` : '';
-    button.setAttribute('aria-label', `Level ${tile.id}${level.name ? `, ${level.name}` : ''}${tier}, ${level.rows} by ${level.cols}, ${description}`);
+              ? t('home.stateUnrated')
+              : t('home.stateStars', { stars: bestStars, max: MAX_STARS });
+    const tier = level.tier === 'hard' ? t('home.tierHard') : level.tier === 'very hard' ? t('home.tierVeryHard') : '';
+    const parts = [t('home.level', { level: tile.id }), level.name, tier, t('home.gridSize', { rows: level.rows, cols: level.cols }), description];
+    button.setAttribute('aria-label', parts.filter(Boolean).join(', '));
     if (level.name) button.title = level.name;
 
     const number = document.createElement('span');

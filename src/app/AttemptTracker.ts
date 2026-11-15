@@ -87,6 +87,32 @@ export class AttemptTracker {
     this.timer.reset();
   }
 
+  /**
+   * Continues an attempt saved earlier (see SavedRun): the timer picks up at
+   * `timeMs`, all of which is already in the lifetime statistics.
+   */
+  resume(levelId: number, revision: number, timeMs: number): void {
+    this.begin(levelId, revision);
+    const from = Math.max(0, Math.round(timeMs));
+    this.timer.reset(from);
+    this.counted = from;
+  }
+
+  /**
+   * Puts the open attempt aside unfinished, to be resumed later: stops its
+   * timer and closes it without a result, so it is never counted as
+   * abandoned. Returns the play time not yet added to the lifetime total.
+   */
+  suspend(): number {
+    if (!this.current) return 0;
+    this.timer.stop();
+    const uncounted = this.checkpoint();
+    this.current = null;
+    this.counted = 0;
+    this.boosters = NO_BOOSTERS;
+    return uncounted;
+  }
+
   /** A booster was used in the open attempt. */
   useBooster(id: BoosterId): void {
     if (this.current) this.boosters = countBooster(this.boosters, id);

@@ -2,6 +2,7 @@ import { browserStorage, readVersioned, SafeStore, type KeyValueStore, type Save
 import { DEFAULT_AVATAR, isAvatarId, type AvatarId } from './avatars';
 import { isCountryCode } from './countries';
 import { isPlayerId, newPlayerId, randomNickname, type RandomBytes, type RandomSource } from './identity';
+import { t, type MessageKey } from '../i18n/translate';
 
 /** The player's local identity. No account, nothing leaves the device. */
 export interface PlayerProfile {
@@ -70,9 +71,9 @@ export type NicknameCheck =
 
 export function validateNickname(input: string): NicknameCheck {
   const value = normalizeNickname(input);
-  if (value === '') return { ok: false, reason: 'empty', message: 'Enter a nickname.' };
+  if (value === '') return { ok: false, reason: 'empty', message: t('profile.nicknameEmpty') };
   if (graphemes(value).length > NICKNAME_MAX) {
-    return { ok: false, reason: 'too-long', message: `Use at most ${NICKNAME_MAX} characters.` };
+    return { ok: false, reason: 'too-long', message: t('profile.nicknameTooLong', { max: NICKNAME_MAX }) };
   }
   return { ok: true, value };
 }
@@ -102,19 +103,20 @@ export interface Rank {
   readonly nextAt: number | null;
 }
 
-const RANKS: readonly { title: string; minStars: number }[] = [
-  { title: 'Rookie', minStars: 0 },
-  { title: 'Runner', minStars: 5 },
-  { title: 'Tracer', minStars: 12 },
-  { title: 'Navigator', minStars: 20 },
-  { title: 'Grid Master', minStars: 27 },
+const RANKS: readonly { key: MessageKey; minStars: number }[] = [
+  { key: 'profile.rankRookie', minStars: 0 },
+  { key: 'profile.rankRunner', minStars: 5 },
+  { key: 'profile.rankTracer', minStars: 12 },
+  { key: 'profile.rankNavigator', minStars: 20 },
+  { key: 'profile.rankGridMaster', minStars: 27 },
 ];
 
-/** A light cosmetic rank derived from total stars (nothing extra to save). */
+/** A light cosmetic rank derived from total stars (nothing extra to save). The title is in the current language. */
 export function rankFor(totalStars: number): Rank {
   let index = 0;
   RANKS.forEach((r, i) => totalStars >= r.minStars && (index = i));
-  return { ...RANKS[index], nextAt: RANKS[index + 1]?.minStars ?? null };
+  const { key, minStars } = RANKS[index];
+  return { title: t(key), minStars, nextAt: RANKS[index + 1]?.minStars ?? null };
 }
 
 // --------------------------------------------------------------- storage
