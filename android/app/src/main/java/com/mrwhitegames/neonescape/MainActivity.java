@@ -1,4 +1,4 @@
-package dev.neonescape.prototype;
+package com.mrwhitegames.neonescape;
 
 import android.os.Bundle;
 import android.view.Window;

@@ -1,14 +1,44 @@
+import groovy.json.JsonSlurper
+
 apply plugin: 'com.android.application'
 
+// ---------------------------------------------------------------- release setup (see GOOGLE_PLAY_RELEASE.md)
+
+// versionName comes from package.json ("version"), the same value the game shows in Settings.
+def appVersionName = new JsonSlurper().parse(rootProject.file('../package.json')).version
+// versionCode: a whole number Google Play requires to go UP with every upload (never reuse one).
+// 1 = version 1.0.0, the first release. Raise it by 1 for each new upload.
+def appVersionCode = 1
+
+// AdMob App ID for the manifest, from src/ads/adIds.json (the game reads the same file).
+// Test IDs unless the build is made with -PadMode=production (npm run android:bundle:production-ads).
+def adIds = new JsonSlurper().parse(rootProject.file('../src/ads/adIds.json'))
+def adMode = (project.findProperty('adMode') ?: 'test').toString()
+if (adMode == 'production' && !adIds.production) {
+    throw new GradleException('adMode=production, but src/ads/adIds.json has no "production" IDs. See GOOGLE_PLAY_RELEASE.md.')
+}
+def admobAppId = adMode == 'production' ? adIds.production.appId : adIds.test.appId
+
+// Release signing with the private UPLOAD key, from android/keystore.properties (git-ignored,
+// never committed) or environment variables. Without them, release builds are simply unsigned.
+def keystoreProps = new Properties()
+def keystorePropsFile = rootProject.file('keystore.properties')
+if (keystorePropsFile.exists()) keystorePropsFile.withInputStream { keystoreProps.load(it) }
+def signingValue = { String key, String env -> keystoreProps.getProperty(key) ?: System.getenv(env) }
+def uploadStoreFile = signingValue('storeFile', 'NEON_UPLOAD_STORE_FILE')
+def hasUploadKey = uploadStoreFile && signingValue('storePassword', 'NEON_UPLOAD_STORE_PASSWORD') &&
+        signingValue('keyAlias', 'NEON_UPLOAD_KEY_ALIAS') && signingValue('keyPassword', 'NEON_UPLOAD_KEY_PASSWORD')
+
 android {
-    namespace = "dev.neonescape.prototype"
+    namespace = "com.mrwhitegames.neonescape"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "dev.neonescape.prototype"
+        applicationId "com.mrwhitegames.neonescape"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode appVersionCode
+        versionName appVersionName
+        resValue "string", "admob_app_id", admobAppId
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -16,8 +46,22 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        if (hasUploadKey) {
+            release {
+                storeFile rootProject.file(uploadStoreFile)
+                storePassword signingValue('storePassword', 'NEON_UPLOAD_STORE_PASSWORD')
+                keyAlias signingValue('keyAlias', 'NEON_UPLOAD_KEY_ALIAS')
+                keyPassword signingValue('keyPassword', 'NEON_UPLOAD_KEY_PASSWORD')
+            }
+        }
+    }
     buildTypes {
         release {
+            // Never debuggable (the default for release, stated so it can't drift).
+            debuggable false
+            if (hasUploadKey) signingConfig signingConfigs.release
+            // No code shrinking: the game is a WebView app; R8 would only risk stripping plugin classes.
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

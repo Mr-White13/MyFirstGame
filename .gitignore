@@ -12,3 +12,7 @@ dist/
 *.aab
 *.jks
 *.keystore
+# Upload-key passwords for release signing (see GOOGLE_PLAY_RELEASE.md). Only the .example is committed.
+keystore.properties
+*.p12
+*.pem

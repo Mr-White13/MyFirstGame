@@ -1,7 +1,7 @@
 {
   "name": "neon-escape",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -19,6 +19,8 @@
     "android:open": "cap open android",
     "android:apk": "npm run android:sync && node scripts/android-apk.mjs",
     "android:apk:unlocked": "tsc --noEmit && vite build --mode unlocked && cap sync android && node scripts/android-apk.mjs",
+    "android:bundle": "npm run android:sync && node scripts/android-apk.mjs --bundle",
+    "android:bundle:production-ads": "tsc --noEmit && vite build --mode production-ads && cap sync android && node scripts/android-apk.mjs --bundle --ad-mode=production",
     "android:run": "npm run android:sync && cap run android",
     "levels:plan": "npm run levels:build --silent && node .tools/levels.mjs plan"
   },

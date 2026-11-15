@@ -5,7 +5,8 @@ import { createStats } from '../profile/Stats';
 import { adRewardTransactionId, readRewards, REWARDS_KEY, Rewards } from '../rewards/Rewards';
 import { MemoryStore } from '../testing/memoryStore';
 import { presentEarn } from '../ui/earnView';
-import { MAX_REWARDED_ADS_PER_DAY, REWARDED_AD_CREDITS, TEST_AD_CONFIG, ACTIVE_AD_CONFIG, PRODUCTION_AD_CONFIG } from './config';
+import { readFileSync } from 'node:fs';
+import { MAX_REWARDED_ADS_PER_DAY, REWARDED_AD_CREDITS, TEST_AD_CONFIG, ACTIVE_AD_CONFIG, PRODUCTION_AD_CONFIG, selectAdConfig } from './config';
 import { NO_ADS_BACKEND, RewardedAds, type ConsentState, type RewardedAdBackend } from './RewardedAds';
 
 const DAY = '2026-11-02';
@@ -74,6 +75,26 @@ describe('rewarded ads: configuration', () => {
     expect(TEST_AD_CONFIG).toEqual({ appId: 'ca-app-pub-3940256099942544~3347511713', rewardedUnitId: 'ca-app-pub-3940256099942544/5224354917', isTesting: true });
     expect(PRODUCTION_AD_CONFIG).toBeNull();
     expect([REWARDED_AD_CREDITS, MAX_REWARDED_ADS_PER_DAY]).toEqual([30, 5]);
+  });
+
+  it('every build mode except "production" uses test ads', () => {
+    for (const mode of [undefined, '', 'test', 'unlocked', 'development', 'PRODUCTION']) expect(selectAdConfig(mode)).toBe(TEST_AD_CONFIG);
+  });
+
+  it('"production" refuses to run without production IDs, and uses them (not marked as test) when set', () => {
+    expect(() => selectAdConfig('production', null)).toThrow(/no production IDs/);
+    const live = { appId: 'ca-app-pub-1~2', rewardedUnitId: 'ca-app-pub-1/3', isTesting: false };
+    expect(selectAdConfig('production', live)).toBe(live);
+  });
+
+  it('the AdMob App ID in the Android manifest comes from the same IDs file (build.gradle), and only the production-ads build enables production mode', () => {
+    const gradle = readFileSync(new URL('../../android/app/build.gradle', import.meta.url), 'utf8');
+    expect(gradle).toContain("src/ads/adIds.json");
+    expect(gradle).toMatch(/resValue "string", "admob_app_id", admobAppId/);
+    const strings = readFileSync(new URL('../../android/app/src/main/res/values/strings.xml', import.meta.url), 'utf8');
+    expect(strings).not.toMatch(/<string name="admob_app_id">/); // one source only: no hard-coded copy
+    expect(readFileSync(new URL('../../.env.production-ads', import.meta.url), 'utf8')).toMatch(/^VITE_AD_MODE=production$/m);
+    expect(readFileSync(new URL('../../.env.unlocked', import.meta.url), 'utf8')).not.toMatch(/VITE_AD_MODE/);
   });
 });
 

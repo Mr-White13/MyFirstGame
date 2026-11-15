@@ -66,7 +66,7 @@ NEON ESCAPE also runs as an installed Android app. [Capacitor](https://capacitor
 | | |
 | --- | --- |
 | App name | NEON ESCAPE |
-| App id | `dev.neonescape.prototype` (temporary, see "Changing the app id") |
+| App id | `com.mrwhitegames.neonescape` (final: never change it after the first Play upload) |
 | Web content | `dist/`, copied into the app by `cap sync`. Everything is bundled: no internet needed to play. |
 | Orientation | Portrait only (`android:screenOrientation="portrait"` in `AndroidManifest.xml`) |
 | Full screen | Immersive: status and navigation bars are hidden and appear briefly when you swipe from an edge (`MainActivity.java`). The page is edge-to-edge and the existing CSS safe-area padding keeps the UI clear of the notch and gesture area (`SystemBars.insetsHandling: "native"` in `capacitor.config.json`). |
@@ -84,6 +84,8 @@ NEON ESCAPE also runs as an installed Android app. [Capacitor](https://capacitor
 | --- | --- |
 | `npm run android:sync` | Builds the web app and copies it into `android/` (run after every web change) |
 | `npm run android:apk` | `android:sync`, then builds a **debug APK** with Gradle and prints its path |
+| `npm run android:bundle` | `android:sync`, then builds the **release AAB** for Google Play (test ads; signed when `android/keystore.properties` exists) |
+| `npm run android:bundle:production-ads` | Release AAB with production AdMob IDs (fails until they are set in `src/ads/adIds.json`) |
 | `npm run android:open` | Opens the `android/` project in Android Studio |
 | `npm run android:run` | `android:sync`, then installs and starts the app on a connected phone or a running emulator |
 
@@ -194,18 +196,11 @@ Then install the new APK over the old one. Your saved progress on the phone is k
 | Install | Directly on a phone | Google Play builds device-specific APKs from it; it can't be installed directly |
 | Optimised | No (debuggable, larger) | Yes (can be minified) |
 
-A release build needs a signing key (Android Studio: **Build → Generate Signed App Bundle / APK**), a final app id, an app icon, a version code and a Play Console account. None of this is set up yet.
+Release builds are set up: `npm run android:bundle` makes the AAB (version from `package.json`, `versionCode` in `android/app/build.gradle`), signed with your upload key from the git-ignored `android/keystore.properties`. Still open before the first upload: the final app id, the upload key itself and the Play Console setup. **See [GOOGLE_PLAY_RELEASE.md](GOOGLE_PLAY_RELEASE.md)** for the full checklist.
 
-### Changing the app id
+### The app id
 
-The id must be unique on Google Play and can never change after publishing. Pick a reverse-domain id you control (for example `com.yourname.neonescape`) before the first release, then:
-1. Set `appId` in `capacitor.config.json`.
-2. Set `namespace` and `applicationId` in `android/app/build.gradle`.
-3. Move `MainActivity.java` to the matching folder under `android/app/src/main/java/` and update its `package` line.
-4. Update `package_name` and `custom_url_scheme` in `android/app/src/main/res/values/strings.xml`.
-5. Run `npm run android:sync`.
-
-A new id is a different app on the phone: it installs next to the old one with empty saved data.
+The app id is **`com.mrwhitegames.neonescape`** (in `capacitor.config.json`, `android/app/build.gradle`, the Java package of `MainActivity.java` / `NeonHapticsPlugin.java`, and `strings.xml`). It is permanent on Google Play: never change it after the first upload, or players get a different app with empty saved data. Older test builds used `dev.neonescape.prototype`, which installs as a separate app with its own saves.
 
 ### Files
 
@@ -216,7 +211,7 @@ A new id is a different app on the phone: it installs next to the old one with e
 - `scripts/android-apk.mjs`: the APK build behind `npm run android:apk`.
 - `scripts/generate-icons.py`: launcher icons and favicon from the logo (see "Studio splash and player recap").
 
-**Not yet:** release signing, store listing. Capacitor's CLI sends anonymous usage data; turn it off with `npx cap telemetry off`.
+Release signing, versioning and the Play checklist: [GOOGLE_PLAY_RELEASE.md](GOOGLE_PLAY_RELEASE.md). Capacitor's CLI sends anonymous usage data; turn it off with `npx cap telemetry off`.
 
 ## How to play
 
@@ -753,14 +748,15 @@ The level clock pauses (the `ad` pause reason), game audio is silent, vibration 
 
 ### Test configuration (current) and production (later)
 
-- `TEST_AD_CONFIG` uses Google's public sample IDs: app `ca-app-pub-3940256099942544~3347511713`, rewarded unit `ca-app-pub-3940256099942544/5224354917`, marked as test requests. The same app ID is in `android/app/src/main/res/values/strings.xml` (`admob_app_id`), referenced by the manifest's `com.google.android.gms.ads.APPLICATION_ID`.
-- `PRODUCTION_AD_CONFIG` is `null` and `ACTIVE_AD_CONFIG` is the test configuration in every build. Never request or click live ads while developing.
+- All ad IDs live in **`src/ads/adIds.json`**, read by the game (`src/ads/config.ts`) and by `android/app/build.gradle`, which writes the AdMob App ID into the manifest (`admob_app_id` → `com.google.android.gms.ads.APPLICATION_ID`). One file, so the two can't disagree.
+- `test` holds Google's public sample IDs (app `ca-app-pub-3940256099942544~3347511713`, rewarded unit `ca-app-pub-3940256099942544/5224354917`), marked as test requests. **Every build uses them**: dev server, debug APKs, `npm run android:bundle`.
+- `production` is `null`. Only `npm run android:bundle:production-ads` (Vite mode `production-ads` → `VITE_AD_MODE=production`, Gradle `-PadMode=production`) uses it, and that build **fails** while it is empty, so test ads can't ship by mistake as "production" and live ads can't be requested while developing.
 - **Automated tests** use a fake ad backend that exists only in test files; the game itself has no simulated or mock ads, so no build can pay credits without the real SDK's reward.
 
 ### Before real ads (account and Play setup, not done yet)
 
 1. Create the AdMob account and the Android app; create a **rewarded** ad unit (reward: 30 credits, to match the game).
-2. Set `admob_app_id` (strings.xml) and a production config in `src/ads/config.ts` (switch `ACTIVE_AD_CONFIG` only for release builds), and register your test devices in AdMob before using real IDs on them.
+2. Fill in `"production"` in `src/ads/adIds.json` (app ID and rewarded unit ID), register your test devices in AdMob before using real IDs on them, and build the store version with `npm run android:bundle:production-ads`.
 3. In AdMob → Privacy & messaging, create the **GDPR** message (and the US state regulations message if needed). UMP shows only what is configured there.
 4. Link the app to the Play listing, and add **app-ads.txt** to the developer website.
 5. **Privacy policy** (required, linked from Play and from the game): say that the browser game collects nothing, that the Android app uses Google AdMob for optional rewarded ads, what Google collects (advertising ID, IP address, device and usage data, ad interactions, crash and diagnostics data), the purposes (advertising, ad measurement, fraud prevention), consent and how to change it (Privacy options), and that game data stays on the device.

@@ -1,5 +1,10 @@
-// Builds a debug APK of the Android app from the current web build.
-// Run through `npm run android:apk` (which builds and syncs the web app first).
+// Builds the Android app from the current web build:
+//   (no flag)   debug APK            `npm run android:apk`
+//   --bundle    release AAB (Play)    `npm run android:bundle`
+//   --bundle --ad-mode=production     `npm run android:bundle:production-ads`
+// The npm scripts build and sync the web app first. The release AAB is signed
+// with the upload key when android/keystore.properties exists, otherwise it is
+// unsigned (fine for checking the build, not for uploading). See GOOGLE_PLAY_RELEASE.md.
 //
 // It finds Java and the Android SDK the way Android Studio installs them, so
 // no environment variables are needed on a typical machine:
@@ -57,15 +62,35 @@ if (!sdk) fail('No Android SDK found. Open Android Studio once and let it instal
 const props = join(android, 'local.properties');
 if (!existsSync(props)) writeFileSync(props, `sdk.dir=${sdk.replace(/\\/g, '/').replace(/:/g, '\\:')}\n`);
 
-console.log(`Java: ${java}\nSDK:  ${sdk}\nBuilding the debug APK…\n`);
+const bundle = process.argv.includes('--bundle');
+const adMode = process.argv.find((a) => a.startsWith('--ad-mode='))?.slice('--ad-mode='.length) ?? 'test';
+if (!['test', 'production'].includes(adMode)) fail(`Unknown --ad-mode=${adMode} (test or production).`);
+const signing = existsSync(join(android, 'keystore.properties'));
+const what = bundle
+  ? `Building the release AAB (ads: ${adMode}, ${signing ? 'signing with the upload key from android/keystore.properties' : 'UNSIGNED: no android/keystore.properties'})…`
+  : 'Building the debug APK…';
+
+console.log(`Java: ${java}\nSDK:  ${sdk}\n${what}\n`);
 const gradlew = join(android, isWindows ? 'gradlew.bat' : 'gradlew');
-const result = spawnSync(gradlew, ['assembleDebug'], {
+const result = spawnSync(gradlew, bundle ? ['bundleRelease', `-PadMode=${adMode}`] : ['assembleDebug'], {
   cwd: android,
   stdio: 'inherit',
   shell: isWindows, // .bat files need a shell on Windows
   env: { ...process.env, JAVA_HOME: java, ANDROID_HOME: sdk },
 });
 if (result.status !== 0) fail('Gradle build failed (see the output above).');
+
+if (bundle) {
+  const aab = join(android, 'app', 'build', 'outputs', 'bundle', 'release', 'app-release.aab');
+  if (!existsSync(aab)) fail(`Build finished but no AAB at ${aab}`);
+  const mb = (statSync(aab).size / 1024 / 1024).toFixed(1);
+  // jarsigner (in the JDK) tells whether the bundle really carries a signature.
+  const jarsigner = join(java, 'bin', isWindows ? 'jarsigner.exe' : 'jarsigner');
+  const verify = existsSync(jarsigner) ? spawnSync(jarsigner, ['-verify', aab], { encoding: 'utf8' }) : null;
+  const signed = verify?.status === 0 && /jar verified/i.test(verify.stdout) && !/unsigned/i.test(verify.stdout);
+  console.log(`\n✔ Release AAB ready (${mb} MB, ads: ${adMode}, ${signed ? 'SIGNED' : 'UNSIGNED: not uploadable'}):\n  ${aab}\n`);
+  process.exit(0);
+}
 
 const apk = join(android, 'app', 'build', 'outputs', 'apk', 'debug', 'app-debug.apk');
 if (!existsSync(apk)) fail(`Build finished but no APK at ${apk}`);
