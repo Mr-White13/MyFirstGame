@@ -34,7 +34,9 @@ export function admobBackend(config: AdConfig): RewardedAdBackend {
 
     async initialize() {
       const { AdMob } = await plugin();
-      await AdMob.initialize({ initializeForTesting: config.isTesting });
+      // Registered test devices (adIds.json) get test ads even in a production-ads build.
+      const testingDevices = [...config.testDeviceIds];
+      await AdMob.initialize({ initializeForTesting: config.isTesting || testingDevices.length > 0, testingDevices });
     },
 
     async load() {

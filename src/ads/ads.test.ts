@@ -72,7 +72,7 @@ function setup(backend: RewardedAdBackend = fakeBackend(), store = new MemorySto
 describe('rewarded ads: configuration', () => {
   it('uses Google test IDs only, with the production configuration empty', () => {
     expect(ACTIVE_AD_CONFIG).toBe(TEST_AD_CONFIG);
-    expect(TEST_AD_CONFIG).toEqual({ appId: 'ca-app-pub-3940256099942544~3347511713', rewardedUnitId: 'ca-app-pub-3940256099942544/5224354917', isTesting: true });
+    expect(TEST_AD_CONFIG).toEqual({ appId: 'ca-app-pub-3940256099942544~3347511713', rewardedUnitId: 'ca-app-pub-3940256099942544/5224354917', isTesting: true, testDeviceIds: [] });
     expect(PRODUCTION_AD_CONFIG).toBeNull();
     expect([REWARDED_AD_CREDITS, MAX_REWARDED_ADS_PER_DAY]).toEqual([30, 5]);
   });
@@ -83,7 +83,7 @@ describe('rewarded ads: configuration', () => {
 
   it('"production" refuses to run without production IDs, and uses them (not marked as test) when set', () => {
     expect(() => selectAdConfig('production', null)).toThrow(/no production IDs/);
-    const live = { appId: 'ca-app-pub-1~2', rewardedUnitId: 'ca-app-pub-1/3', isTesting: false };
+    const live = { appId: 'ca-app-pub-1~2', rewardedUnitId: 'ca-app-pub-1/3', isTesting: false, testDeviceIds: [] };
     expect(selectAdConfig('production', live)).toBe(live);
   });
 

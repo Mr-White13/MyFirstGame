@@ -19,6 +19,7 @@
     "android:open": "cap open android",
     "android:apk": "npm run android:sync && node scripts/android-apk.mjs",
     "android:apk:unlocked": "tsc --noEmit && vite build --mode unlocked && cap sync android && node scripts/android-apk.mjs",
+    "android:upload-key": "node scripts/create-upload-key.mjs",
     "android:bundle": "npm run android:sync && node scripts/android-apk.mjs --bundle",
     "android:bundle:production-ads": "tsc --noEmit && vite build --mode production-ads && cap sync android && node scripts/android-apk.mjs --bundle --ad-mode=production",
     "android:run": "npm run android:sync && cap run android",

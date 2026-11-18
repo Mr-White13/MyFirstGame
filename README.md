@@ -84,6 +84,7 @@ NEON ESCAPE also runs as an installed Android app. [Capacitor](https://capacitor
 | --- | --- |
 | `npm run android:sync` | Builds the web app and copies it into `android/` (run after every web change) |
 | `npm run android:apk` | `android:sync`, then builds a **debug APK** with Gradle and prints its path |
+| `npm run android:upload-key` | Creates your private Google Play upload key outside the repo and the git-ignored `android/keystore.properties` (once; never overwrites) |
 | `npm run android:bundle` | `android:sync`, then builds the **release AAB** for Google Play (test ads; signed when `android/keystore.properties` exists) |
 | `npm run android:bundle:production-ads` | Release AAB with production AdMob IDs (fails until they are set in `src/ads/adIds.json`) |
 | `npm run android:open` | Opens the `android/` project in Android Studio |
@@ -750,6 +751,7 @@ The level clock pauses (the `ad` pause reason), game audio is silent, vibration 
 
 - All ad IDs live in **`src/ads/adIds.json`**, read by the game (`src/ads/config.ts`) and by `android/app/build.gradle`, which writes the AdMob App ID into the manifest (`admob_app_id` → `com.google.android.gms.ads.APPLICATION_ID`). One file, so the two can't disagree.
 - `test` holds Google's public sample IDs (app `ca-app-pub-3940256099942544~3347511713`, rewarded unit `ca-app-pub-3940256099942544/5224354917`), marked as test requests. **Every build uses them**: dev server, debug APKs, `npm run android:bundle`.
+- `testDeviceIds` (empty) lists your own phones' AdMob test-device IDs: in a production-ads build they get test ads instead of live ones.
 - `production` is `null`. Only `npm run android:bundle:production-ads` (Vite mode `production-ads` → `VITE_AD_MODE=production`, Gradle `-PadMode=production`) uses it, and that build **fails** while it is empty, so test ads can't ship by mistake as "production" and live ads can't be requested while developing.
 - **Automated tests** use a fake ad backend that exists only in test files; the game itself has no simulated or mock ads, so no build can pay credits without the real SDK's reward.
 

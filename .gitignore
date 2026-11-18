@@ -16,3 +16,6 @@ dist/
 keystore.properties
 *.p12
 *.pem
+
+# Python bytecode (scripts/*.py)
+__pycache__/

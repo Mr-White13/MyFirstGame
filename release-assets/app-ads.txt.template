@@ -1,0 +1,12 @@
+# app-ads.txt for NEON ESCAPE (Mr. White Games) — TEMPLATE, not published.
+#
+# 1. Replace pub-XXXXXXXXXXXXXXXX with YOUR AdMob publisher ID
+#    (AdMob → Settings → Account information → "Publisher ID"; looks like pub-1234567890123456).
+#    AdMob also shows this exact line under Apps → View all apps → app-ads.txt.
+# 2. Save as plain text named app-ads.txt (delete these comment lines if you like).
+# 3. Host it at the ROOT of the developer website entered in Play Console
+#    (e.g. https://example.com/app-ads.txt — not in a subfolder).
+# 4. AdMob checks it within ~24 h (Apps → app-ads.txt shows the status).
+#
+# f08c47fec0942fa0 is Google's certification authority ID (the same for every AdMob publisher).
+google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0

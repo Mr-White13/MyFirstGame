@@ -2,7 +2,11 @@
 
 Studio: Mr. White Games · Stack: Phaser 3, TypeScript, Vite, Capacitor 8, Android.
 
-This file is the checklist for the first public release and every update after it.
+This file is the technical guide for the first public release and every update after it.
+Step-by-step submission status: [GOOGLE_PLAY_SUBMISSION_CHECKLIST.md](GOOGLE_PLAY_SUBMISSION_CHECKLIST.md).
+Store texts: [GOOGLE_PLAY_LISTING.md](GOOGLE_PLAY_LISTING.md) · App content answers:
+[PLAY_CONSOLE_DECLARATIONS.md](PLAY_CONSOLE_DECLARATIONS.md) · Privacy policy:
+[PRIVACY_POLICY.md](PRIVACY_POLICY.md) · Graphics: [release-assets/](release-assets/README.md).
 **Verified** means checked in this repository or on a build; **To do** needs a person, an
 account or a decision.
 
@@ -10,8 +14,9 @@ account or a decision.
 
 ## 1. Current release readiness
 
-**Status: NEEDS WORK.** The game, the final application id and the release build pipeline are
-ready; the upload key, the ads decision and the account setup are not.
+**Status: ready for internal testing as soon as the upload key exists** (the AAB then only needs
+signing). Public release still needs identity verification, a hosted privacy policy, your
+policy confirmations, the closed test and the ads decision.
 
 ### Verified
 
@@ -21,7 +26,8 @@ ready; the upload key, the ads decision and the account setup are not.
 | Toolchain | Capacitor 8.6, Android Gradle Plugin 8.13, Gradle 9.1, Java 21 (Android Studio JBR). Builds without dependency changes. |
 | Application id | **`com.mrwhitegames.neonescape`** (final; `capacitor.config.json`, `android/app/build.gradle`, Java package `com.mrwhitegames.neonescape`, `strings.xml`). Never change it after the first upload. |
 | Version | `versionName 1.0.0` (read from `package.json`), `versionCode 1` (`android/app/build.gradle`). Settings shows **1.0.0**. |
-| Release AAB | `npm run android:bundle` builds `android/app/build/outputs/bundle/release/app-release.aab` (7.2 MB, **unsigned** until the upload key exists). |
+| Release AAB | `npm run android:bundle` builds `android/app/build/outputs/bundle/release/app-release.aab` (7.2 MB, **unsigned** until the upload key exists). Its manifest (read with `aapt2` from the AAB): package `com.mrwhitegames.neonescape`, versionCode 1, versionName 1.0.0, minSdk 24, targetSdk 36, no `debuggable`. |
+| Signing | Tested end to end with a throwaway key (since deleted): `bundleRelease` signed the AAB, `jarsigner` reported "jar verified", signer CN=Mr. White Games. `npm run android:upload-key` creates the real key. |
 | Release build | Not debuggable (`debuggable false`, `aapt dump badging` shows no debuggable flag); WebView remote debugging is off in release (Capacitor default). No native libraries, so the 16 KB page-size requirement doesn't apply. |
 | Development-only code | Off in production builds: the "unlock all levels" test mode (`src/progress/testUnlock.ts`, a test checks it), the DevTools `neon` global, and source maps (none emitted). |
 | Levels | 100 levels, ids 1–100, all valid and solvable (`npm run levels:validate`), no two identical layouts, unlocked through normal progression. |
@@ -30,7 +36,10 @@ ready; the upload key, the ads decision and the account setup are not.
 | Manifest | Declared: `INTERNET`. Added by libraries (Google Mobile Ads, WorkManager, Capacitor Haptics): `ACCESS_NETWORK_STATE`, `VIBRATE`, `com.google.android.gms.permission.AD_ID`, `ACCESS_ADSERVICES_AD_ID / ATTRIBUTION / TOPICS`, `WAKE_LOCK`, `FOREGROUND_SERVICE` (WorkManager, no foreground service type). Exported: only `MainActivity` (launcher) plus library components protected by system permissions. |
 | Rewarded ads | Shown only after a tap (Shop, booster offer, Continue after Game Over); never automatically. Reward paid once per reward id (`ad:<day>:<n>`), never on early close, load failure, no connection, missing consent or daily limit (5/day). Covered by `src/ads/ads.test.ts`. |
 | Consent | Google UMP runs at launch; no ad is requested unless `canRequestAds`; "Privacy options (ads)" appears in Settings when UMP requires it. |
-| Ads configuration | Google **test** IDs in every build. Production IDs are not set, and a production-ads build **fails** until they are (`vite.config.ts` and `build.gradle` both check). |
+| Ads configuration | Google **test** IDs in every build. Production IDs are not set, and a production-ads build **fails** until they are (`vite.config.ts` and `build.gradle` both check). `testDeviceIds` in `src/ads/adIds.json` registers your phones as test devices for production-ads builds. Mobile Ads SDK pinned to 25.4.0 and UMP to 4.0.0 (`android/variables.gradle`). |
+| Rewarded ad on device | Google test ad on the emulator (release build): tap, ad, reward, closed with the ad's close button, exactly +30 credits, daily count 5 to 4. Offline: no ad, no credits, no crash. |
+| Performance sample | Level 30 on the emulator: 0.47 % janky frames, about 144 MB PSS, no crash/ANR. (Emulator GPU; confirm on a phone.) |
+| Store assets | 512 icon, 1024x500 feature graphic, 8 real phone screenshots in `release-assets/`. |
 | Icons and splash | Launcher icons for all densities + adaptive icon (`#101522` background). Launch window is blank on the studio colour; the Mr. White Games web splash plays unchanged. App name: **NEON ESCAPE**. |
 | Languages | English, Spanish, Romanian (device language, or Settings → Language). |
 
@@ -45,11 +54,11 @@ ready; the upload key, the ads decision and the account setup are not.
 
 | # | Blocker | Who |
 | --- | --- | --- |
-| 1 | **Upload key** does not exist yet: the AAB is unsigned (section 4). | You |
-| 2 | **Ads for 1.0.0**: ship with real AdMob IDs (needs an AdMob account), or consciously ship 1.0.0 with test ads (players see "Test Ad", no revenue). Never fill in invented IDs. | Decision |
-| 3 | **Privacy policy URL** (required: the app contains ads and uses the advertising ID). | You (publicly hosted page) |
-| 4 | **Store listing assets**: 512×512 icon, 1024×500 feature graphic, 2–8 phone screenshots. | You |
-| 5 | **Play Console**: identity verification, then (for personal accounts created after Nov 2023) a **closed test with at least 12 testers for 14 continuous days** before production access. | You |
+| 1 | **Upload key** does not exist yet: run `npm run android:upload-key` (section 4), then `npm run android:bundle` must report SIGNED. | You |
+| 2 | **Play Console identity verification** (pending), then for personal accounts created after Nov 2023 a **closed test with at least 12 testers for 14 continuous days** before production access. | You / Google |
+| 3 | **Privacy policy URL**: fill the placeholders in `release-assets/privacy-policy/index.html` and host it publicly. | You |
+| 4 | **Policy confirmations**: target audience, Data safety mapping, contact email, developer identity (`PLAY_CONSOLE_DECLARATIONS.md` section 9). | You (legal decision) |
+| 5 | **Ads for the public release**: real AdMob IDs (needs an AdMob account), or consciously ship with test ads (players see "Test Ad", no revenue). Never fill in invented IDs. Not needed for internal/closed testing. | Decision |
 
 ---
 
@@ -76,7 +85,19 @@ Google Play App Signing is used: Google keeps the **app signing key**; you sign 
 your own **upload key**. If the upload key is lost, Google can reset it (Play Console →
 Setup → App signing), but keep it safe anyway.
 
-### Create it (once)
+### Create it (once), recommended: the script
+
+```bash
+npm run android:upload-key
+```
+
+It asks for a password twice (hidden, never printed), creates
+`C:/Users/<you>/keys/neon-escape-upload.jks` (RSA 4096, PKCS12, alias `upload`,
+"CN=Mr. White Games, O=Mr. White Games, C=RO"), writes the git-ignored
+`android/keystore.properties`, and refuses to overwrite an existing keystore or properties file
+or to put the keystore inside the project. Options: `--keystore <path>`, `--properties <path>`.
+
+### Or manually
 
 Android Studio: **Build → Generate Signed App Bundle or APK → Android App Bundle → Create new…**
 Or in a terminal (keytool comes with Android Studio's JDK):
@@ -161,6 +182,13 @@ previous version (progress kept).
 ---
 
 ## 7. Manual Play Console and AdMob steps
+
+Prepared since: draft answers for every App content form in
+[PLAY_CONSOLE_DECLARATIONS.md](PLAY_CONSOLE_DECLARATIONS.md), the privacy policy in
+[PRIVACY_POLICY.md](PRIVACY_POLICY.md) / `release-assets/privacy-policy/index.html`, store texts
+in [GOOGLE_PLAY_LISTING.md](GOOGLE_PLAY_LISTING.md), graphics in `release-assets/`, and
+`release-assets/app-ads.txt.template`. The order of steps is in
+[GOOGLE_PLAY_SUBMISSION_CHECKLIST.md](GOOGLE_PLAY_SUBMISSION_CHECKLIST.md).
 
 ### Play Console (in this order)
 

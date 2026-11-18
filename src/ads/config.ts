@@ -24,15 +24,21 @@ export interface AdConfig {
   readonly rewardedUnitId: string;
   /** True for test ads: requests are marked as test requests. */
   readonly isTesting: boolean;
+  /**
+   * Your own phones (AdMob "test device" IDs, from adIds.json `testDeviceIds`).
+   * In a production-ads build they get Google test ads instead of live ones,
+   * so testing never produces invalid traffic. Empty: nobody is registered.
+   */
+  readonly testDeviceIds: readonly string[];
 }
 
 export type AdMode = 'test' | 'production';
 
 /** Google's official sample IDs for Android: app ID and the rewarded ad unit. */
-export const TEST_AD_CONFIG: AdConfig = { ...AD_IDS.test, isTesting: true };
+export const TEST_AD_CONFIG: AdConfig = { ...AD_IDS.test, isTesting: true, testDeviceIds: AD_IDS.testDeviceIds };
 
 /** Not configured yet (adIds.json `production` is null). Live ads must never be requested during development. */
-export const PRODUCTION_AD_CONFIG: AdConfig | null = AD_IDS.production ? { ...(AD_IDS.production as Omit<AdConfig, 'isTesting'>), isTesting: false } : null;
+export const PRODUCTION_AD_CONFIG: AdConfig | null = AD_IDS.production ? { ...(AD_IDS.production as Pick<AdConfig, 'appId' | 'rewardedUnitId'>), isTesting: false, testDeviceIds: AD_IDS.testDeviceIds } : null;
 
 /**
  * The configuration for a build mode. Anything but `production` is test ads.

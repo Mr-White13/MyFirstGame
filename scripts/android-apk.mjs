@@ -65,9 +65,9 @@ if (!existsSync(props)) writeFileSync(props, `sdk.dir=${sdk.replace(/\\/g, '/').
 const bundle = process.argv.includes('--bundle');
 const adMode = process.argv.find((a) => a.startsWith('--ad-mode='))?.slice('--ad-mode='.length) ?? 'test';
 if (!['test', 'production'].includes(adMode)) fail(`Unknown --ad-mode=${adMode} (test or production).`);
-const signing = existsSync(join(android, 'keystore.properties'));
+const signing = existsSync(join(android, 'keystore.properties')) || Boolean(process.env.NEON_UPLOAD_STORE_FILE);
 const what = bundle
-  ? `Building the release AAB (ads: ${adMode}, ${signing ? 'signing with the upload key from android/keystore.properties' : 'UNSIGNED: no android/keystore.properties'})…`
+  ? `Building the release AAB (ads: ${adMode}, ${signing ? 'signing with the upload key' : 'UNSIGNED: no android/keystore.properties (create it: npm run android:upload-key)'})…`
   : 'Building the debug APK…';
 
 console.log(`Java: ${java}\nSDK:  ${sdk}\n${what}\n`);
