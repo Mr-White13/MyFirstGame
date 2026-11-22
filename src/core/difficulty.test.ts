@@ -38,7 +38,7 @@ describe('analyzeDifficulty', () => {
       expect(report.score).toBeLessThanOrEqual(100);
       expect(report.category).toBe(categoryFor(report.score));
     }
-  }, 90_000); // ~30 s of lives simulations (Levels 31–40 have 160–215 arrows each): headroom for parallel runs
+  }, 900_000); // minutes of lives simulations over 300 levels (thirty finales have 115–245 arrows each): headroom for parallel runs
 
   it('rates a tangled board above a trivial one', () => {
     const trivial = levelFromMap(1, ['a> .  .', '.  .  .', '.  .  b>']);

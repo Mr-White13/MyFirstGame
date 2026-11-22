@@ -1,0 +1,37 @@
+import { levelFromMap } from './levelMap';
+
+/** Level 213 — chapter 11, hard maze, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers, generated from tools/level-plan.json (seed 21325, attempt 2), score 82 (Very hard). */
+export default levelFromMap(
+  213,
+  [
+    'a<  a   a   a   a   a   a   d0  d0  d0  d0  d0  d0  i<  i   i   i   i   i   q   q>',
+    'y<  y   N^  b0  b0  d0< d0  d0  q0  q0  q0  q0  d0  d0  d0  d0  t0< t0  i   q   K^',
+    'a0^ y   N   N   b0  U   U   U   q0v b   b   b   b   b   b   d0  h^  t0  i   q   K',
+    'a0  y   x^  b0< b0  U   k0  k0  k0  E<  E   E   E   E   b   d0  h   t0  i   q   K',
+    'a0  y   x   x   U<  U   k0v b<  b   b   r   r   r>  E   b   h   h   P^  i   q   K',
+    'a0  y   y   x   x   x   x   x   x   b   b   b   b   b   b   v0< v0  P   o^  q   q',
+    'a0  J<  J   J   J   J   J   J   J   J   J   J   J   J   P   P   P   P   o   o   q',
+    'o0  o0  o0  o0  o0  o0  Q   Q   Q   Q   p0  p0  p0  p0> P   W   W   W>  d^  o   q',
+    'o0  T^  .   A<  A   A   Q   I   I>  Q   Q   Q   c   k   d   d   d   d   d   o   q',
+    'o0  T   T   T   w0^ A   Qv  Y   Y   Y   Y   Y>  c   k   d   g0  g0  g0  g0  g0> q',
+    'o0v w0  w0  w0  w0  A   f   f   f   f>  s   c   c   k   d   d   q   q   q   q   q',
+    'Z   Z   Z   x0  n<  n   n   n   n   n   s   c   v^  k   B   d   R   R   R   H   r0',
+    'Z   X^  Z   x0  x0  n0^ h0  h0  n0  n   s   c   v   k   B   d   R   d   R   H   r0',
+    'Z   X   Z   D   x0  n0  h0  n0  n0  n   s   cv  k<  k   B   d   d   d   R   H   r0',
+    'Z   X   Z   D   x0  n0  h0  n0  n   n   s   s   s>  O   B   B   B   B>  Rv  H   r0',
+    'Z   X   Z   D   x0  n0  h0v n0  O   O   O   O   O   O   H   H   H   H   H   H   r0',
+    'Z   Z   D   D   x0v n0  n0  n0  Ov  j0  j0  j0  j0  j0  H   r0  r0  r0  r0  r0  r0',
+    'V   Z   D   e0^ j0  j0  j0  j0  j0  j0  u   u   u   u   Hv  r0  u0  u0  u0  u0> l^',
+    'V   Z   Dv  e0  j0v u   u   u   u   u   u   L   L   u   r0  r0  u0  F   e   e>  l',
+    'V   Z   u   u   u   u   m<  m   m   m   m   m   L   uv  r0  u0  u0  F   e   F^  l',
+    'Vv  Z   u   y0  y0  C   C   C   C   C   j   m   L   L   r0  u0  M   F   F   F   l',
+    'Z   Z   i0  i0  y0  C   l0< l0  l0  Cv  j   m   S^  L   r0  u0  M   M   l   l   l',
+    'Z   m0^ i0v y0< y0  p<  p   p   l0  m   j   m   S   Lv  r0v u0  z   M   l   l   l',
+    'Z   m0  c0  c0  c0  c0  c0  p   l0  m   j   m   m   t   t   u0  z   M   M   M   M>',
+    'Z   m0  c0v s0  s0> g   c0  p   l0  m   jv  w   m   t   t   u0  z   z   z   z>  f0^',
+    'Z   m0  g<  g   g   g   c0  p   l0  m   w<  w   m   t   t   z0  z0  z0  z0  z0  f0',
+    'Zv  m0  m0  m0  m0  m0  c0  p   l0  m   m   m   m   t   t   z0  z0  z0  z0  z0  f0',
+    'G<  G   G   G   m0  m0  p   p   t<  t   t   t   t   t   t   z0  z0  z0> f0  f0  f0',
+  ],
+  { tier: 'hard', curls: true },
+);

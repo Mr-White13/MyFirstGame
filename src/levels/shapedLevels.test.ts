@@ -85,12 +85,12 @@ describe.each(SHAPED)('Level %i — %s', (id, name, shape) => {
 });
 
 describe('the shaped levels', () => {
-  it('are nine different shapes, and THE FORTRESS is the last level of the game', () => {
+  it('are nine different shapes, and THE FORTRESS closes chapter 5', () => {
     expect(new Set(SHAPED.map(([, , shape]) => shape)).size).toBe(9);
-    expect(LEVELS.at(-1)?.name).toBe('THE FORTRESS');
+    expect(getLevel(100)?.name).toBe('THE FORTRESS');
   });
 
-  it('are the only levels with an outline', () => {
-    expect(LEVELS.filter((l) => l.outline).map((l) => l.id)).toEqual(SHAPED.map(([id]) => id));
+  it('are the only levels of chapters 1–5 with an outline', () => {
+    expect(LEVELS.filter((l) => l.outline && l.id <= 100).map((l) => l.id)).toEqual(SHAPED.map(([id]) => id));
   });
 });

@@ -1,5 +1,5 @@
 import { formatClock } from '../core/time';
-import { BONUS_CLEARS, STREAK_TAPS, STREAK_WINDOW_MS, type GameSnapshot, type LevelData } from '../core/types';
+import { BONUS_CLEARS, STARTING_LIVES, STREAK_TAPS, STREAK_WINDOW_MS, type GameSnapshot, type LevelData } from '../core/types';
 import { t } from '../i18n/translate';
 import { requireElement } from './dom';
 
@@ -48,7 +48,7 @@ export class Hud {
 
   constructor(
     /** A level's name and difficulty tier, if it has them (see LevelData.name and LevelData.tier). */
-    private readonly levelInfo: (levelId: number) => Pick<LevelData, 'name' | 'tier'> | undefined = () => undefined,
+    private readonly levelInfo: (levelId: number) => Pick<LevelData, 'name' | 'tier' | 'lives'> | undefined = () => undefined,
   ) {}
 
   update(snapshot: GameSnapshot): void {
@@ -65,7 +65,7 @@ export class Hud {
     // Extra Heart: exactly one more life and nothing else changed (a restart also adds lives, but resets moves and mistakes).
     const restored =
       before !== undefined && snapshot.lives === before.lives + 1 && snapshot.mistakes === before.mistakes && snapshot.moves === before.moves;
-    this.renderHearts(snapshot.lives, before !== undefined && snapshot.lives < before.lives, restored);
+    this.renderHearts(snapshot.lives, before !== undefined && snapshot.lives < before.lives, restored, this.maxLives(snapshot.levelId));
     this.renderStreak(snapshot, sameRun ? this.last : undefined);
     if (sameRun && this.last && snapshot.remaining < this.last.remaining) this.tick(this.remaining);
     this.last = snapshot;
@@ -116,9 +116,12 @@ export class Hud {
 
   private renderName(levelId: number | undefined): void {
     const info = this.challenge || levelId === undefined ? undefined : this.levelInfo(levelId);
-    const text = info?.name ?? (info?.tier === 'hard' ? t('game.tierHard') : info?.tier === 'very hard' ? t('game.tierVeryHard') : undefined);
+    const tier = info?.tier === 'hard' ? t('game.tierHard') : info?.tier === 'very hard' ? t('game.tierVeryHard') : undefined;
+    const oneLife = info?.lives === 1 ? t('game.oneLife') : undefined;
+    const text = info?.name ?? (tier && oneLife ? `${tier} · ${oneLife}` : (tier ?? oneLife));
     this.name.textContent = text ?? '';
     this.name.hidden = text === undefined;
+    this.name.classList.toggle('hud__name--one-life', oneLife !== undefined && info?.tier === undefined);
     this.name.classList.toggle('hud__name--hard', info?.tier === 'hard');
     this.name.classList.toggle('hud__name--very-hard', info?.tier === 'very hard');
     // A very hard level's name flickers on with the board's power-up wave.
@@ -127,6 +130,11 @@ export class Hud {
       void this.name.offsetWidth; // restart the CSS animation
       this.name.classList.add('is-powering-up');
     }
+  }
+
+  /** Hearts a level starts with: its own `lives` (one-life levels), else STARTING_LIVES. Daily challenges always have three. */
+  private maxLives(levelId: number): number {
+    return (this.challenge ? undefined : this.levelInfo(levelId)?.lives) ?? STARTING_LIVES;
   }
 
   /** The Reset zoom control on the board: shown only while the board is zoomed in. */
@@ -150,9 +158,11 @@ export class Hud {
    * Full hearts first, lost hearts last; the heart that was just lost plays a
    * short break animation, and one given back (Extra Heart) grows back in.
    */
-  private renderHearts(lives: number, justLost: boolean, justRestored = false): void {
+  private renderHearts(lives: number, justLost: boolean, justRestored = false, max = STARTING_LIVES): void {
     const hearts = [...this.hearts.children] as SVGElement[];
     hearts.forEach((heart, index) => {
+      // A one-life level shows just one heart (the others aren't lost, they don't exist).
+      heart.classList.toggle('heart--absent', index >= max);
       const full = index < lives;
       heart.classList.toggle('heart--lost', !full);
       heart.classList.remove('heart--breaking', 'heart--restored');

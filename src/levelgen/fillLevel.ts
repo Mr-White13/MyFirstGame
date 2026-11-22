@@ -81,6 +81,25 @@ export interface FillOptions {
    * tools/shapes.ts). Coverage is then measured against the shape's cells.
    */
   readonly mask?: readonly string[];
+  /**
+   * Share of paths (0..1) allowed to curl against themselves while being
+   * drawn: spiral and hook arrows (default 0: every arrow is a clean path
+   * with space between its parts, see isSelfTouching). A curling path keeps
+   * hugging its own body and may make up to 4 more turns.
+   */
+  readonly curlChance?: number;
+  /**
+   * Bottleneck: highest average share of arrows free during a solve
+   * (DifficultyReport.estimated.averageFreeShare), so there are few choices
+   * at every step, not just at the start.
+   */
+  readonly maxFreeShare?: number;
+  /**
+   * Long blockers: lowest share of blocking links that block from 3 or more
+   * cells away (exact.longRangeBlocks / exact.blockingRelations), so a
+   * blocked arrow can't be read locally.
+   */
+  readonly minLongRangeShare?: number;
   readonly avoid?: readonly LevelData[];
   readonly similarityLimit?: number;
 }
@@ -101,7 +120,12 @@ export function fillLevel(options: FillOptions): GenerateResult {
   const depthGap = (r: DifficultyReport) =>
     options.depth ? Math.max(0, options.depth[0] - r.exact.depth, r.exact.depth - options.depth[1]) : 0;
   const freeGap = (r: DifficultyReport) => Math.max(0, r.exact.initialFree - (options.maxInitialFree ?? Infinity));
-  const gapFor = (r: DifficultyReport) => scoreGap(r) + depthGap(r) * 2 + freeGap(r) * 2;
+  // In percentage points, like the score.
+  const bottleneckGap = (r: DifficultyReport) => Math.max(0, r.estimated.averageFreeShare - (options.maxFreeShare ?? 1)) * 100;
+  const longRangeGap = (r: DifficultyReport) =>
+    Math.max(0, (options.minLongRangeShare ?? 0) - r.exact.longRangeBlocks / Math.max(1, r.exact.blockingRelations)) * 100;
+  const gapFor = (r: DifficultyReport) => scoreGap(r) + depthGap(r) * 2 + freeGap(r) * 2 + bottleneckGap(r) + longRangeGap(r);
+  const allowCurls = (options.curlChance ?? 0) > 0;
   const tooShort = (level: LevelData) =>
     filled(level) * area < (options.minMeanLength ?? 0) * level.arrows.length ||
     level.arrows.filter((a) => a.cells.length < (options.minLength ?? 3)).length > (options.maxShortShare ?? 1) * level.arrows.length;
@@ -112,16 +136,22 @@ export function fillLevel(options: FillOptions): GenerateResult {
     const random = createRandom(mixSeed(options.seed, attempt, 0xf111));
     const arrows = buildFilled(random, options);
     if (!arrows) continue;
-    let level = relabel({ id: options.id ?? 0, rows: options.rows, cols: options.cols, arrows });
-    if (filled(level) < minCoverage || tooShort(level) || !isPlayable(level) || !isNovel(level)) continue;
-    if (options.deepenSteps) level = relabel(deepen(level, random, options.deepenSteps));
+    // With curls, work on the level as the game will load it: a curled arrow's body order comes from the loader.
+    const settle = (l: LevelData | null): LevelData | null => (l && allowCurls ? loadedOrNull(l) : l);
+    let level = settle(relabel({ id: options.id ?? 0, rows: options.rows, cols: options.cols, arrows }));
+    if (!level || filled(level) < minCoverage || tooShort(level) || !isPlayable(level, allowCurls) || !isNovel(level)) continue;
+    if (options.deepenSteps) {
+      const deeper = settle(relabel(deepen(level, random, options.deepenSteps, allowCurls)));
+      if (!deeper || !isPlayable(deeper, allowCurls)) continue;
+      level = deeper;
+    }
 
-    let report = analyzeDifficulty(asLoaded(level), SEARCH_ONLY);
+    let report = analyzeDifficulty(asLoaded(level, allowCurls), SEARCH_ONLY);
     // Steer the score with head flips that keep the level solvable and readable.
     for (let i = 0; i < (options.refineSteps ?? 200) && gapFor(report) > 0; i++) {
-      const edited = flipRandom(level, random);
-      if (!edited || !isPlayable(edited) || !isNovel(edited)) continue;
-      const editedReport = analyzeDifficulty(asLoaded(edited), SEARCH_ONLY);
+      const edited = settle(flipRandom(level, random));
+      if (!edited || !isPlayable(edited, allowCurls) || !isNovel(edited)) continue;
+      const editedReport = analyzeDifficulty(asLoaded(edited, allowCurls), SEARCH_ONLY);
       if (gapFor(editedReport) <= gapFor(report)) {
         level = edited;
         report = editedReport;
@@ -145,8 +175,17 @@ export function fillLevel(options: FillOptions): GenerateResult {
  * boards). Arrow order changes the simulated part of the score, so every
  * report is measured on this.
  */
-function asLoaded(level: LevelData): LevelData {
-  return levelFromMap(level.id, levelToMap(level));
+function asLoaded(level: LevelData, curls = false): LevelData {
+  return levelFromMap(level.id, levelToMap(level), { curls });
+}
+
+/** asLoaded with spiral and hook arrows allowed, or null if a curled arrow can't be traced back. */
+function loadedOrNull(level: LevelData): LevelData | null {
+  try {
+    return asLoaded(level, true);
+  } catch {
+    return null;
+  }
 }
 
 /** Share of grid cells covered by arrows (0..1). */
@@ -159,7 +198,7 @@ export function coverage(level: LevelData): number {
 function buildFilled(random: Random, o: FillOptions): ArrowData[] | null {
   const minLength = o.minLength ?? 3;
   const maxLength = o.maxLength ?? 9;
-  const paths = partition(random, o.rows, o.cols, minLength, maxLength, o.maxTurns ?? 4, o.turnChance ?? 0.45, o.maxStraight ?? 4, o.mask);
+  const paths = partition(random, o.rows, o.cols, minLength, maxLength, o.maxTurns ?? 4, o.turnChance ?? 0.45, o.maxStraight ?? 4, o.mask, o.curlChance ?? 0);
   mergeShort(paths, minLength, maxLength + 2, (o.maxTurns ?? 4) + 1);
   absorbSingles(paths);
 
@@ -258,6 +297,7 @@ function partition(
   turnChance: number,
   maxStraight: number,
   mask?: readonly string[],
+  curlChance = 0,
 ): Path[] {
   const free = new Set<string>();
   for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) if (!mask || mask[r][c] === '#') free.add(cellKey({ row: r, col: c }));
@@ -280,6 +320,10 @@ function partition(
     const path: Cell[] = [start!];
     free.delete(cellKey(start!));
     const target = randomInt(random, minLength, maxLength);
+    // A curling path (spiral or hook) may run alongside its own body and turn more.
+    // random() is only drawn when curls are on, so existing seeds give the same levels.
+    const curl = curlChance > 0 && random() < curlChance;
+    const turnLimit = curl ? maxTurns + 4 : maxTurns;
     let heading: Direction | null = null;
     let turns = 0;
     let run = 0;
@@ -288,7 +332,8 @@ function partition(
       const options = DIRS.filter((d) => {
         const n = step(at, d);
         if (!inside(n) || !free.has(cellKey(n))) return false;
-        if (heading !== null && d !== heading && turns >= maxTurns) return false;
+        if (heading !== null && d !== heading && turns >= turnLimit) return false;
+        if (curl) return true;
         // Stay a clean path: the new cell may touch only the cell it extends.
         return path.slice(0, -1).every((p) => Math.abs(p.row - n.row) + Math.abs(p.col - n.col) !== 1);
       });
@@ -436,7 +481,7 @@ function flipRandom(level: LevelData, random: Random): LevelData | null {
  * FillOptions.deepenSteps). Edits that keep the same depth are kept too, so
  * the search can drift across plateaus instead of stopping at the first one.
  */
-function deepen(level: LevelData, random: Random, steps: number): LevelData {
+function deepen(level: LevelData, random: Random, steps: number, allowCurls = false): LevelData {
   // Depth first, then fewer arrows free at the start.
   const measure = (l: LevelData) => {
     const { waves, stuck } = clearInWaves(l);
@@ -447,7 +492,7 @@ function deepen(level: LevelData, random: Random, steps: number): LevelData {
     const edited = flipRandom(level, random);
     if (!edited) continue;
     const value = measure(edited);
-    if (value < best || !isPlayable(edited)) continue;
+    if (value < best || !isPlayable(edited, allowCurls)) continue;
     level = edited;
     best = value;
   }

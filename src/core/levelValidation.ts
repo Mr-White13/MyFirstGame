@@ -2,12 +2,15 @@ import { cellKey, directionBetween, headOf } from './Arrow';
 import { Grid } from './Grid';
 import { exitRay } from './PathChecker';
 import { findSolution } from './solver';
-import type { LevelData } from './types';
+import { STARTING_LIVES, type LevelData } from './types';
 
 /** Throws a descriptive error if the level is malformed or cannot be solved. */
 export function validateLevel(level: LevelData): void {
   const ids = new Set<string>();
   const grid = new Grid(level.rows, level.cols);
+  if (level.lives !== undefined && !(Number.isInteger(level.lives) && level.lives >= 1 && level.lives <= STARTING_LIVES)) {
+    throw new Error(`Level ${level.id}: lives must be a whole number from 1 to ${STARTING_LIVES}`);
+  }
 
   for (const arrow of level.arrows) {
     if (ids.has(arrow.id)) throw new Error(`Duplicate arrow id "${arrow.id}"`);

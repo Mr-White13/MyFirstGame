@@ -7,8 +7,9 @@ apply plugin: 'com.android.application'
 // versionName comes from package.json ("version"), the same value the game shows in Settings.
 def appVersionName = new JsonSlurper().parse(rootProject.file('../package.json')).version
 // versionCode: a whole number Google Play requires to go UP with every upload (never reuse one).
-// 1 = version 1.0.0, the first release. Raise it by 1 for each new upload.
-def appVersionCode = 1
+// 1 = version 1.0.0, the first upload. 2 = 1.0.0 with the optional portrait feature (closed test).
+// Raise it by 1 for each new upload.
+def appVersionCode = 3
 
 // AdMob App ID for the manifest, from src/ads/adIds.json (the game reads the same file).
 // Test IDs unless the build is made with -PadMode=production (npm run android:bundle:production-ads).

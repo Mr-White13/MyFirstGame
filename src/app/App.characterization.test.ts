@@ -1287,6 +1287,43 @@ describe('background and resume', () => {
   });
 });
 
+describe('zoom tip', () => {
+  it('shows a one-time dialog on the first zoomable board, saved as seen once closed, also for players past the rule tips', async () => {
+    const h = createHarness({ progress: progressThrough(10) });
+    await enterLevel(h, 11);
+    h.clear();
+    h.app.zoomHint();
+    h.app.zoomHint(); // every view change calls it: still one dialog
+    expect(h.effects()).toEqual(['confirmDialog.ask Zoom in on big boards']);
+    h.confirmDialog.close(false); // OK (single button) — Back or the backdrop count the same
+    await flush();
+    expect(h.effects()).toContain(`rewards.markTipSeen ${TODAY} zoom`);
+    expect(h.rewards.current.tips).toContain('zoom');
+
+    // Seen: never again, also after a restart (the saved tips list decides).
+    h.clear();
+    h.app.zoomHint();
+    const restarted = createHarness({ progress: progressThrough(10) });
+    restarted.rewards.current = { ...restarted.rewards.current, tips: [...restarted.rewards.current.tips, 'zoom'] };
+    await enterLevel(restarted, 11);
+    restarted.clear();
+    restarted.app.zoomHint();
+    expect([...h.effects(), ...restarted.effects()]).toEqual([]);
+  });
+
+  it('waits for a later board while another dialog is open', async () => {
+    const h = createHarness({ progress: progressThrough(10) });
+    await enterLevel(h, 11);
+    h.confirmDialog.isOpen = true;
+    h.clear();
+    h.app.zoomHint();
+    expect(h.effects()).toEqual([]);
+    h.confirmDialog.isOpen = false;
+    h.app.zoomHint();
+    expect(h.effects()).toEqual(['confirmDialog.ask Zoom in on big boards']);
+  });
+});
+
 describe('boosters', () => {
   const freeArrow = { id: 'a1', direction: 'right', cells: [{ row: 0, col: 0 }] } as ArrowData;
 
@@ -1305,7 +1342,7 @@ describe('boosters', () => {
     await h.app.openLevel(4);
     await flush();
     expect(h.effects().filter((e) => e.startsWith('toast.show') || e.startsWith('rewards.mark'))).toEqual([
-      'toast.show Stuck? Boosters: Hint 20 · Reveal 40 credits 5000',
+      'toast.show Stuck? Boosters: Hint 50 · Reveal 100 credits 5000',
       `rewards.markBoostersIntroduced ${TODAY}`,
     ]);
     h.clear();
@@ -1552,7 +1589,7 @@ describe('rewarded ads', () => {
     h.app.useBooster('hint');
     await flush();
     expect(h.effects()).toEqual([
-      'toast.show Hint costs 20 Energy Credits; you have 5. Earn more from daily rewards and achievements. 2600',
+      'toast.show Hint costs 50 Energy Credits; you have 5. Earn more from daily rewards and achievements. 2600',
       'confirmDialog.ask Need more credits?',
     ]);
     h.clear();
@@ -1580,7 +1617,7 @@ describe('rewarded ads', () => {
     none.rewards.credits = 5;
     none.app.useBooster('reveal');
     await flush();
-    expect(none.effects()).toEqual(['toast.show Reveal costs 40 Energy Credits; you have 5. Earn more from daily rewards and achievements. 2600']);
+    expect(none.effects()).toEqual(['toast.show Reveal costs 100 Energy Credits; you have 5. Earn more from daily rewards and achievements. 2600']);
   });
 
   it('while an ad covers the game the level clock pauses and Back is ignored; both resume afterwards', async () => {

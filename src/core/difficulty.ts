@@ -214,7 +214,7 @@ function simulateStrategy(level: LevelData, strategy: Strategy, seed: number): S
     const snapshot = state.snapshot();
     mistakes += snapshot.mistakes;
     chainClears += snapshot.autoClears;
-    if (snapshot.mistakes < STARTING_LIVES) wins++;
+    if (snapshot.mistakes < (level.lives ?? STARTING_LIVES)) wins++; // a one-life level forgives no mistake
   }
   return {
     expectedMistakes: mistakes / LIVES_SIMULATIONS,

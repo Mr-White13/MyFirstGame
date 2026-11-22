@@ -114,5 +114,5 @@ describe('shipped levels rebuilt from the level plan', () => {
     expect(result.attempt).toBe(attempt);
     expect(levelToMap(result.level)).toEqual(levelToMap(shipped));
     expect(result.level.arrows).toEqual(shipped.arrows);
-  });
+  }, 30_000); // checks each candidate against all 300 shipped levels: slow when the whole suite runs in parallel
 });

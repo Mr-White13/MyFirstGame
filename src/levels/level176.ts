@@ -1,0 +1,35 @@
+import { levelFromMap } from './levelMap';
+
+/** Level 176 — chapter 9, shaped hard level (tree outline), long arrows, generated from tools/level-plan.json (seed 17621, attempt 17), score 75 (Very hard). */
+export default levelFromMap(
+  176,
+  [
+    '.  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .',
+    '.  .  .  .  .  .  .  .  .  a< a  .  .  .  .  .  .  .  .  .',
+    '.  .  .  .  .  .  .  .  b  b> a  c^ .  .  .  .  .  .  .  .',
+    '.  .  .  .  .  .  .  c  c  c  a  c  o  .  .  .  .  .  .  .',
+    '.  .  .  .  .  .  d^ c  e^ c  c  c  o  f^ .  .  .  .  .  .',
+    '.  .  .  .  .  d  d  c  e  g  g  g> o  f  h^ .  .  .  .  .',
+    '.  .  .  .  c  c  c  c  e  g  i  i> o  f  h  h  .  .  .  .',
+    '.  .  .  .  .  .  j  j> e  g  g  g  o  o  .  .  .  .  .  .',
+    '.  .  .  .  .  j  j  l  l  l  l  m  m  o  x  .  .  .  .  .',
+    '.  .  .  .  k^ j  l< l  m< m  m  m  o  o  x  n^ .  .  .  .',
+    '.  .  .  .  k  k  k  k  k  o< o  o  o  p^ x  n  .  .  .  .',
+    '.  .  .  u  u  u  u  u  u  t  p  p  p  p  x  n  n  .  .  .',
+    '.  .  q  q  q  q> r^ s^ u  t  t  t> u^ x  x  A  A  A  .  .',
+    '.  .  q  v^ w< w  r  s  u  u  u  u  u  xv y< y  z^ Av .  .',
+    '.  .  .  v  D  w  r  E  E  B< B  B  C^ F  F  y  z  .  .  .',
+    '.  .  .  v  Dv w  r  Ev G  G  G  G  C  Fv y  y  z  .  .  .',
+    '.  .  .  v  v  w  r  r  Gv H< H  G  C  z  z  z  z  .  .  .',
+    '.  .  I^ w  w  w  J< J  V  V  V  V  C  C  C  C  C  C  .  .',
+    '.  .  I  I  M  Z  Z  J  V  L  L  L  L  L  L  K^ L^ C  .  .',
+    '.  N  N  N  M  M> Z  J  V  Q  Q  Q  R  R  L  K  L  C  S  .',
+    '.  Nv T  N  N  O^ Z  J  V  Q  P^ Q  Q> Rv L  K  L  C  Sv .',
+    'T< T  T  O  O  O  Z  Z  V  Q  P  P  U  U> L  L  L  C  C  C',
+    '.  .  .  .  .  .  .  Z  V  Q  W  P  U  .  .  .  .  .  .  .',
+    '.  .  .  .  .  .  .  Z  Vv Q  Wv X^ Y^ .  .  .  .  .  .  .',
+    '.  .  .  .  .  .  .  Z  Q  Q  X  X  Y  .  .  .  .  .  .  .',
+    '.  .  .  .  .  .  .  Zv Y  Y  Y  Y  Y  .  .  .  .  .  .  .',
+  ],
+  { outline: true, tier: 'hard' },
+);

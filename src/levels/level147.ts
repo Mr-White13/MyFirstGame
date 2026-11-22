@@ -1,0 +1,35 @@
+import { levelFromMap } from './levelMap';
+
+/** Level 147 — chapter 8, shaped hard level (heart outline), long arrows, generated from tools/level-plan.json (seed 14790, attempt 5), score 75 (Very hard). */
+export default levelFromMap(
+  147,
+  [
+    '.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .',
+    '.   .   .   d   d   d   d   .   .   .   .   .   .   a<  a   b<  b   .   .   .',
+    '.   .   c^  dv  e<  e   d   f   f>  .   .   g   g   g>  a   a   b   b   .   .',
+    '.   o   c   p   d   d   d   f   h   h>  q   g   i   i>  j^  a   k^  b   b   .',
+    '.   o   c   p   l   l>  m^  f   h   n^  q   j   j   j   j   a   k   k   k   .',
+    'o<  o   c   pv  l   m   m   f   h   n   q   q   q   q   a   a   q^  B   k   r^',
+    's   s>  c   c   l   C   f   f   h   n   t   t>  u^  q   q   q   q   B   k   r',
+    'C   C   C   C   l   C   R   v   v>  n   t   u   u   J   J   J   J   B   k   r',
+    'C   w^  x^  C   C   C   R   v   y^  n   t   t   z   A   A   A   J   B   k   r',
+    'C   w   x   R   R   R   R   v   y   z<  z   z   z   Av  I   A   J   Bv  k   r',
+    'Cv  w   x   R   K   K   K   K   y   D^  G   H   H   H   I   A   J   r   r   r',
+    '.   w   x   R   K   E^  F^  K   y   D   G   G   G>  Hv  I   A   J   Q   Q   .',
+    '.   .   x   R   K   E   F   F   y   D   D   D   I<  I   I   A   Jv  Q   .   .',
+    '.   .   x   R   Kv  E   E   E   L<  L   L   L   M<  M   A   A   Q   Q   .   .',
+    '.   .   .   R   R   V   V   E   E   E   E   E   E   M   A   Q   Q   .   .   .',
+    '.   .   .   .   R   V   N<  N   N   O^  P<  P   E   M   M   Qv  .   .   .   .',
+    '.   .   .   .   Rv  V   S   S>  N   O   T   P   Z   Z   Z   Z   .   .   .   .',
+    '.   .   .   .   .   V   V   N   N   O   Tv  U^  Z   X   X   .   .   .   .   .',
+    '.   .   .   .   .   .   Vv  a0  a0  W^  U   U   Z   Xv  .   .   .   .   .   .',
+    '.   .   .   .   .   .   c0  c0  a0  W   W   Y^  Z   Z>  .   .   .   .   .   .',
+    '.   .   .   .   .   .   .   c0  a0v Y   Y   Y   b0^ .   .   .   .   .   .   .',
+    '.   .   .   .   .   .   .   c0  c0  c0> b0  b0  b0  .   .   .   .   .   .   .',
+    '.   .   .   .   .   .   .   .   d0< d0  d0  d0  .   .   .   .   .   .   .   .',
+    '.   .   .   .   .   .   .   .   .   e0^ f0  .   .   .   .   .   .   .   .   .',
+    '.   .   .   .   .   .   .   .   .   e0  f0v .   .   .   .   .   .   .   .   .',
+    '.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .',
+  ],
+  { outline: true, tier: 'hard' },
+);

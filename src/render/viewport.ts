@@ -15,6 +15,11 @@ const SNAP = 1.02;
  *   the board, magnified. screen = area.x + (world − scroll) × zoom. The
  *   scroll is clamped to the board (the slot, in world pixels); along an
  *   axis where the magnified board is smaller than the area, it is centred.
+ * - Free pan (`freePan`, boards that can zoom): one finger may also move the
+ *   board at zoom 1, and on every axis, until a board edge reaches the
+ *   middle of the zoom area, so any arrow can be brought under a finger
+ *   without zooming in. A moved board at zoom 1 is drawn in the zoom area
+ *   like a zoomed one; `reset()` puts it back in place.
  */
 export class BoardViewport {
   private canvas: Rect = { x: 0, y: 0, width: 1, height: 1 };
@@ -23,6 +28,17 @@ export class BoardViewport {
   private max = 1;
   /** Breathing room (screen pixels) a zoomed view may show past the board's edges. */
   private edge = 0;
+  /**
+   * Extra room past the board's edges as a share of the zoom area, per axis:
+   * 0.5 lets a zoomed view scroll until a board edge reaches the middle of
+   * the screen, so arrows on the edges can be brought away from the screen
+   * border (and from under the thumb). The larger of this and `edge` applies.
+   */
+  private overscroll = 0;
+  /** One-finger panning at zoom 1 and on every axis (see the class comment). */
+  private freePan = false;
+  /** Moved at zoom 1 (free pan): the view is the zoom area, like a zoomed view. */
+  private shifted = false;
   private z = 1;
   private sx = 0;
   private sy = 0;
@@ -31,14 +47,18 @@ export class BoardViewport {
    * Sets the canvas, the board slot, the zoom area (all in canvas pixels; the
    * area defaults to the slot), the zoom limit and the edge margin (screen
    * pixels a zoomed view may scroll past the board's edges, so arrows at the
-   * edge never touch the screen border), and fits the board.
+   * edge never touch the screen border), the overscroll (share of the zoom
+   * area a zoomed view may scroll past the board, see `overscroll`), whether
+   * the board may also be moved at zoom 1 (`freePan`), and fits the board.
    */
-  configure(canvas: Rect, slot: Rect, maxZoom: number, area: Rect = slot, edge = 0): void {
+  configure(canvas: Rect, slot: Rect, maxZoom: number, area: Rect = slot, edge = 0, overscroll = 0, freePan = false): void {
     this.canvas = canvas;
     this.slot = slot;
     this.area = area;
     this.max = Math.max(1, maxZoom);
     this.edge = Math.max(0, edge);
+    this.overscroll = Math.min(0.5, Math.max(0, overscroll));
+    this.freePan = freePan;
     this.reset();
   }
 
@@ -59,19 +79,30 @@ export class BoardViewport {
     return this.z > 1;
   }
 
+  /** Zoomed, or moved away from its place at zoom 1: not the fitted view. */
+  get moved(): boolean {
+    return this.zoomed || this.shifted;
+  }
+
+  /** True if a one-finger drag moves the view now: zoomed, or free pan on a board that can zoom. */
+  get canPan(): boolean {
+    return this.zoomed || (this.freePan && this.zoomable);
+  }
+
   get scroll(): Point {
     return { x: this.sx, y: this.sy };
   }
 
   /** The camera's viewport on the canvas. */
   get view(): Rect {
-    return this.zoomed ? this.area : this.canvas;
+    return this.moved ? this.area : this.canvas;
   }
 
   reset(): void {
     this.z = 1;
     this.sx = 0;
     this.sy = 0;
+    this.shifted = false;
   }
 
   screenToWorld(p: Point): Point {
@@ -92,6 +123,7 @@ export class BoardViewport {
       return;
     }
     const world = this.screenToWorld(anchor);
+    this.shifted = false;
     this.z = target;
     this.sx = world.x - (anchor.x - this.area.x) / target;
     this.sy = world.y - (anchor.y - this.area.y) / target;
@@ -100,7 +132,13 @@ export class BoardViewport {
 
   /** Moves the view with a finger drag of (dx, dy) screen pixels. */
   panBy(dx: number, dy: number): void {
-    if (!this.zoomed) return;
+    if (!this.canPan) return;
+    if (!this.moved) {
+      // Leaving the fitted view at zoom 1: switch to the zoom area without the board jumping.
+      this.shifted = true;
+      this.sx = this.area.x - this.canvas.x;
+      this.sy = this.area.y - this.canvas.y;
+    }
     this.sx -= dx / this.z;
     this.sy -= dy / this.z;
     this.clamp();
@@ -116,9 +154,9 @@ export class BoardViewport {
     return p.x >= left && p.x <= right && p.y >= top && p.y <= bottom;
   }
 
-  /** The scroll that would put the world point in the middle of the zoomed view (kept on the board). Unchanged when not zoomed. */
+  /** The scroll that would put the world point in the middle of the moved or zoomed view (kept on the board). Unchanged in the fitted view. */
   scrollToCenter(p: Point): Point {
-    if (!this.zoomed) return this.scroll;
+    if (!this.moved) return this.scroll;
     const [x, y] = [this.sx, this.sy];
     this.sx = p.x - this.area.width / (2 * this.z);
     this.sy = p.y - this.area.height / (2 * this.z);
@@ -128,9 +166,9 @@ export class BoardViewport {
     return target;
   }
 
-  /** Scrolls the zoomed view (kept on the board). Does nothing when not zoomed. */
+  /** Scrolls the moved or zoomed view (kept on the board). Does nothing in the fitted view. */
   scrollTo(x: number, y: number): void {
-    if (!this.zoomed) return;
+    if (!this.moved) return;
     this.sx = x;
     this.sy = y;
     this.clamp();
@@ -139,10 +177,12 @@ export class BoardViewport {
   /** Keeps the view on the board (plus the edge margin): no scrolling further, and centred where it doesn't fill the area. */
   private clamp(): void {
     const s = this.slot;
-    const m = this.edge / this.z; // the margin in world pixels: a constant gap on screen at any zoom
     const clampAxis = (scroll: number, start: number, size: number, viewSize: number) => {
       const visible = viewSize / this.z;
-      if (size > visible) {
+      // The margin in world pixels: a constant gap on screen at any zoom.
+      const m = Math.max(this.edge, viewSize * this.overscroll) / this.z;
+      // Free pan: the margin applies even where the board fits, so it can move on every axis.
+      if (size > visible || this.freePan) {
         start -= m;
         size += 2 * m;
       }

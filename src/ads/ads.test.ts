@@ -74,7 +74,7 @@ describe('rewarded ads: configuration', () => {
     expect(ACTIVE_AD_CONFIG).toBe(TEST_AD_CONFIG);
     expect(TEST_AD_CONFIG).toEqual({ appId: 'ca-app-pub-3940256099942544~3347511713', rewardedUnitId: 'ca-app-pub-3940256099942544/5224354917', isTesting: true, testDeviceIds: [] });
     expect(PRODUCTION_AD_CONFIG).toBeNull();
-    expect([REWARDED_AD_CREDITS, MAX_REWARDED_ADS_PER_DAY]).toEqual([30, 5]);
+    expect([REWARDED_AD_CREDITS, MAX_REWARDED_ADS_PER_DAY]).toEqual([50, 5]);
   });
 
   it('every build mode except "production" uses test ads', () => {
@@ -99,14 +99,14 @@ describe('rewarded ads: configuration', () => {
 });
 
 describe('rewarded ads: watching', () => {
-  it('a successful reward pays 30 credits once through the wallet, saved, and pauses/resumes the game around the ad', async () => {
+  it('a successful reward pays 50 credits once through the wallet, saved, and pauses/resumes the game around the ad', async () => {
     const { ads, rewards, store, showing } = setup();
     await ads.start();
     expect(ads.state).toBe('ready');
-    expect(await ads.watch()).toEqual({ kind: 'rewarded', credits: 30, saved: true });
-    expect(rewards.credits).toBe(30);
+    expect(await ads.watch()).toEqual({ kind: 'rewarded', credits: 50, saved: true });
+    expect(rewards.credits).toBe(50);
     expect(rewards.current.wallet.applied).toContain(adRewardTransactionId(DAY, 1));
-    expect(readRewards(store.getItem(REWARDS_KEY)).value.wallet.credits).toBe(30);
+    expect(readRewards(store.getItem(REWARDS_KEY)).value.wallet.credits).toBe(50);
     expect(ads.remainingToday).toBe(4);
     expect(showing).toEqual([true, false]);
   });
@@ -124,7 +124,7 @@ describe('rewarded ads: watching', () => {
     const { ads, rewards } = setup(fakeBackend({ rewardCalls: 3 }));
     await ads.start();
     expect(await ads.watch()).toMatchObject({ kind: 'rewarded' });
-    expect(rewards.credits).toBe(30);
+    expect(rewards.credits).toBe(50);
     expect(ads.remainingToday).toBe(4);
     // The wallet itself also refuses the same reward id again.
     expect(rewards.grantAdReward(DAY, adRewardTransactionId(DAY, 1))).toEqual({ ok: false, reason: 'duplicate' });
@@ -162,7 +162,7 @@ describe('rewarded ads: watching', () => {
     const results = await Promise.all([ads.watch(), ads.watch(), ads.watch()]);
     expect(results.map((r) => r.kind)).toEqual(['rewarded', 'busy', 'busy']);
     expect(backend.calls.filter((c) => c === 'show')).toHaveLength(1);
-    expect(rewards.credits).toBe(30);
+    expect(rewards.credits).toBe(50);
   });
 
   it('the daily cap: 5 paid ads per local day, then none (no ad is even shown), and a new day starts again', async () => {
@@ -173,7 +173,7 @@ describe('rewarded ads: watching', () => {
     const shows = backend.calls.filter((c) => c === 'show').length;
     expect(await ads.watch()).toEqual({ kind: 'limit' });
     expect(backend.calls.filter((c) => c === 'show')).toHaveLength(shows);
-    expect(rewards.credits).toBe(150);
+    expect(rewards.credits).toBe(250);
     expect(rewards.grantAdReward(DAY, adRewardTransactionId(DAY, 6))).toEqual({ ok: false, reason: 'limit' });
     today.day = NEXT_DAY;
     expect(ads.remainingToday).toBe(5);
@@ -189,7 +189,7 @@ describe('rewarded ads: watching', () => {
     await first.ads.watch();
     await first.ads.watch();
     const again = setup(fakeBackend(), store);
-    expect(again.rewards.credits).toBe(130);
+    expect(again.rewards.credits).toBe(170);
     expect(again.ads.remainingToday).toBe(3);
     expect(again.rewards.nextAdRewardId(DAY)).toBe(adRewardTransactionId(DAY, 3));
   });
@@ -199,12 +199,12 @@ describe('rewarded ads: watching', () => {
     const { ads, rewards } = setup(fakeBackend(), store);
     await ads.start();
     store.failWrites = true;
-    expect(await ads.watch()).toEqual({ kind: 'rewarded', credits: 30, saved: false });
-    expect(rewards.credits).toBe(30);
+    expect(await ads.watch()).toEqual({ kind: 'rewarded', credits: 50, saved: false });
+    expect(rewards.credits).toBe(50);
     expect(readRewards(store.getItem(REWARDS_KEY)).value.wallet.credits).toBe(0); // not on disk yet
     store.failWrites = false;
     rewards.markTipSeen(DAY, 'tap'); // any later write
-    expect(readRewards(store.getItem(REWARDS_KEY)).value).toMatchObject({ wallet: { credits: 30 }, adRewards: { day: DAY, count: 1 } });
+    expect(readRewards(store.getItem(REWARDS_KEY)).value).toMatchObject({ wallet: { credits: 50 }, adRewards: { day: DAY, count: 1 } });
   });
 });
 
@@ -278,7 +278,7 @@ describe('rewarded ads: saved data', () => {
     rewards.grant(DAY, { id: 'test:seed', amount: 245 });
     await ads.start();
     await ads.watch();
-    expect(rewards.current.wallet).toMatchObject({ credits: 275, earned: 275 });
+    expect(rewards.current.wallet).toMatchObject({ credits: 295, earned: 295 });
     vi.restoreAllMocks();
   });
 });

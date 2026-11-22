@@ -94,7 +94,7 @@ NEON ESCAPE: Puzle de flechas
 ### Descripción breve
 
 ```
-Toca las flechas en el orden correcto y despeja 100 tableros de neón brillante.
+    Toca las flechas en el orden correcto y despeja 100 tableros de neón brillante.
 ```
 
 ### Descripción completa

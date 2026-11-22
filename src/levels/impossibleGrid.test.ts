@@ -24,7 +24,8 @@ const level = getLevel(94)!;
 const report = analyzeDifficulty(level, { lives: false });
 const graph = dependencyGraph(level);
 /** Depths of every normal and hard level (computed once: analysing 90 levels is the slow part). */
-const otherDepths = LEVELS.filter((l) => l.tier !== 'very hard').map((l) => analyzeDifficulty(l, { lives: false }).exact.depth);
+/** Normal and hard levels of chapters 1–5 (later chapters have their own, deeper mazes). */
+const otherDepths = LEVELS.slice(0, 100).filter((l) => l.tier !== 'very hard').map((l) => analyzeDifficulty(l, { lives: false }).exact.depth);
 
 describe('Level 94 — THE IMPOSSIBLE GRID', () => {
   it('exists exactly once, as a very hard level with its name', () => {
@@ -72,7 +73,7 @@ describe('Level 94 — THE IMPOSSIBLE GRID', () => {
     expect(stats.initialFree).toBeGreaterThanOrEqual(1);
   });
 
-  it('is far deeper and more tangled than any normal or hard level', () => {
+  it('is far deeper and more tangled than any normal or hard level of chapters 1–5', () => {
     expect(report.exact.depth).toBeGreaterThanOrEqual(50);
     expect(report.exact.depth).toBeGreaterThan(Math.max(...otherDepths));
     expect(report.exact.initialFree).toBeLessThanOrEqual(10); // few ways in: the opening is a search

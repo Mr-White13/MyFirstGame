@@ -43,6 +43,7 @@ export interface GameSceneOptions {
   /** Sound and haptic cues for what the player sees: releases, collisions, chain reactions. */
   onFeedback?: (event: FeedbackEvent) => void;
   /** The view changed: `zoomed` (show a reset control) and whether this board can zoom at all. */
+  /** `zoomed`: zoomed in or moved (not the fitted view), so the reset-view button shows. */
   onViewChange?: (zoomed: boolean, zoomable: boolean) => void;
 }
 
@@ -68,6 +69,12 @@ const HINT_PAN_MS = 380;
 const WIN_ZOOM_OUT_MS = 420;
 /** Gap a zoomed view may leave between the board's edge and the screen's (CSS pixels). */
 const ZOOM_EDGE_CSS = 28;
+/**
+ * Share of the screen a zoomed view may scroll past the board's edges: at 0.5
+ * a board edge can be dragged to the middle of the screen, so edge arrows can
+ * be tapped comfortably instead of right at the screen border.
+ */
+const ZOOM_OVERSCROLL = 0.5;
 
 /**
  * Glue between input, game logic and rendering. All rules live in GameState;
@@ -127,7 +134,7 @@ export class GameScene extends Phaser.Scene {
   private readonly viewport = new BoardViewport();
   /** A shaped level's cells ("row,col"): only they show board dots. Null for rectangular boards. */
   private outline: ReadonlySet<string> | null = null;
-  private readonly gestures = new GestureTracker(PAN_THRESHOLD_CSS * Math.min(window.devicePixelRatio || 1, 3), () => this.viewport.zoomed);
+  private readonly gestures = new GestureTracker(PAN_THRESHOLD_CSS * Math.min(window.devicePixelRatio || 1, 3), () => this.viewport.canPan);
 
   constructor(
     private readonly state: GameState,
@@ -277,7 +284,7 @@ export class GameScene extends Phaser.Scene {
    * touch on the board cancels the glide, so it never fights the player.
    */
   private bringIntoView(p: { x: number; y: number }): void {
-    if (!this.viewport.zoomed || this.viewport.isVisible(p, this.layout.cellSize)) return;
+    if (!this.viewport.moved || this.viewport.isVisible(p, this.layout.cellSize)) return;
     const from = this.viewport.scroll;
     const to = this.viewport.scrollToCenter(p);
     this.panTween?.remove();
@@ -433,7 +440,7 @@ export class GameScene extends Phaser.Scene {
           this.release(e.x, e.y);
           break;
         case 'pan':
-          if (this.viewport.zoomed) {
+          if (this.viewport.canPan) {
             this.viewport.panBy(e.dx, e.dy);
             this.applyView();
           }
@@ -611,11 +618,11 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  /** Won while zoomed in: glides back to the whole board so the win plays on the full view. */
+  /** Won while zoomed in or moved: glides back to the whole board so the win plays on the full view. */
   private zoomOutForWin(): void {
-    if (!this.viewport.zoomed) return;
+    if (!this.viewport.moved) return;
     this.stopPan();
-    if (reducedMotion()) {
+    if (reducedMotion() || !this.viewport.zoomed) {
       this.viewport.reset();
       this.applyView();
       return;
@@ -710,7 +717,7 @@ export class GameScene extends Phaser.Scene {
     this.stopPan();
     const l = this.layout;
     const slot: Rect = { x: l.x, y: l.y, width: l.width, height: l.height };
-    this.viewport.configure({ x: 0, y: 0, width: this.scale.width, height: this.scale.height }, slot, maxZoomFor(l.cellSize, l.pxPerCss), this.zoomArea(slot), ZOOM_EDGE_CSS * l.pxPerCss);
+    this.viewport.configure({ x: 0, y: 0, width: this.scale.width, height: this.scale.height }, slot, maxZoomFor(l.cellSize, l.pxPerCss), this.zoomArea(slot), ZOOM_EDGE_CSS * l.pxPerCss, ZOOM_OVERSCROLL, true);
     this.applyView();
   }
 
@@ -736,7 +743,11 @@ export class GameScene extends Phaser.Scene {
     cam.setZoom(this.viewport.zoom);
     cam.setScroll(this.viewport.scroll.x, this.viewport.scroll.y);
     this.staticLayer?.setZoom(this.viewport.zoom);
-    this.options.onViewChange?.(this.viewport.zoomed, this.viewport.zoomable);
+    // Zoomed: the resting-arrow cache covers only what is on screen, so it stays sharp.
+    const s = this.viewport.scroll;
+    const z = this.viewport.zoom;
+    this.staticLayer?.setView(this.viewport.zoomed ? { x: s.x, y: s.y, width: v.width / z, height: v.height / z } : undefined);
+    this.options.onViewChange?.(this.viewport.moved, this.viewport.zoomable);
   }
 
   /** The board slot's rectangle in canvas (device) pixels; the whole canvas if the slot isn't laid out. */

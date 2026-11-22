@@ -240,10 +240,105 @@ describe('zoom and pan transform', () => {
     expect(area.y + area.height - far.y).toBeCloseTo(24);
   });
 
-  it('pan does nothing when fitted', () => {
+  it('with overscroll, a zoomed board edge can be dragged to the middle of the screen, not past it', () => {
+    const area = { x: 0, y: 0, width: 800, height: 1600 };
+    const v = new BoardViewport();
+    v.configure(canvas, slot, 3, area, 24, 0.5);
+    v.zoomAt({ x: 400, y: 800 }, 3);
+    v.panBy(9000, 9000); // as far toward the board's top-left corner as it goes
+    const corner = v.worldToScreen({ x: slot.x, y: slot.y });
+    expect(corner.x - area.x).toBeCloseTo(area.width / 2);
+    expect(corner.y - area.y).toBeCloseTo(area.height / 2);
+    v.panBy(-9000, -9000);
+    const far = v.worldToScreen({ x: slot.x + slot.width, y: slot.y + slot.height });
+    expect(far.x - area.x).toBeCloseTo(area.width / 2);
+    expect(far.y - area.y).toBeCloseTo(area.height / 2);
+    // The corner arrow can now be centred exactly (a hint glides it to the middle).
+    const target = v.scrollToCenter({ x: slot.x, y: slot.y });
+    v.scrollTo(target.x, target.y);
+    const centred = v.worldToScreen({ x: slot.x, y: slot.y });
+    expect([centred.x, centred.y]).toEqual([expect.closeTo(400), expect.closeTo(800)]);
+  });
+
+  it('pan does nothing when fitted (without free pan)', () => {
     const v = make();
+    expect(v.canPan).toBe(false);
     v.panBy(100, 100);
     expect(v.scroll).toEqual({ x: 0, y: 0 });
+    expect(v.moved).toBe(false);
+  });
+
+  describe('free pan: one finger moves the board without zooming in', () => {
+    const area = { x: 0, y: 100, width: 800, height: 1400 };
+    const free = (max = 3) => {
+      const v = new BoardViewport();
+      v.configure(canvas, slot, max, area, 24, 0.5, true);
+      return v;
+    };
+
+    it('moves the board 1:1 with the finger at zoom 1, with no jump when it starts, and taps follow it', () => {
+      const v = free();
+      expect(v.canPan).toBe(true);
+      const corner = { x: slot.x, y: slot.y };
+      expect(v.worldToScreen(corner)).toEqual(corner); // fitted: the identity, as before
+      v.panBy(0, 0); // starting to move switches to the zoom area without the board jumping
+      expect(v.worldToScreen(corner).x).toBeCloseTo(corner.x);
+      expect(v.worldToScreen(corner).y).toBeCloseTo(corner.y);
+      v.panBy(-120, 80);
+      expect([v.zoom, v.zoomed, v.moved]).toEqual([1, false, true]);
+      expect(v.view).toEqual(area); // drawn in the board's area, like a zoomed view
+      const moved = v.worldToScreen(corner);
+      expect(moved.x).toBeCloseTo(corner.x - 120);
+      expect(moved.y).toBeCloseTo(corner.y + 80);
+      // A tap where the corner now is lands on the corner.
+      const back = v.screenToWorld(moved);
+      expect(back.x).toBeCloseTo(corner.x);
+      expect(back.y).toBeCloseTo(corner.y);
+    });
+
+    it('lets a board edge reach the middle of the board area on every axis, not past it', () => {
+      const v = free();
+      v.panBy(9000, 9000); // toward the board's top-left corner
+      const topLeft = v.worldToScreen({ x: slot.x, y: slot.y });
+      expect(topLeft.x).toBeCloseTo(area.x + area.width / 2);
+      expect(topLeft.y).toBeCloseTo(area.y + area.height / 2);
+      v.panBy(-9000, -9000); // toward the bottom-right corner
+      const bottomRight = v.worldToScreen({ x: slot.x + slot.width, y: slot.y + slot.height });
+      expect(bottomRight.x).toBeCloseTo(area.x + area.width / 2);
+      expect(bottomRight.y).toBeCloseTo(area.y + area.height / 2);
+    });
+
+    it('zooms around the fingers from a moved board, and reset puts the board back in place', () => {
+      const v = free();
+      v.panBy(-150, 60);
+      const anchor = { x: 300, y: 700 };
+      const before = v.screenToWorld(anchor);
+      v.zoomAt(anchor, 2);
+      const after = v.screenToWorld(anchor);
+      expect(after.x).toBeCloseTo(before.x);
+      expect(after.y).toBeCloseTo(before.y);
+      v.reset();
+      expect([v.zoom, v.moved, v.view]).toEqual([1, false, canvas]);
+      expect(v.screenToWorld({ x: 123, y: 456 })).toEqual({ x: 123, y: 456 });
+    });
+
+    it('can glide a hinted arrow to the middle of a moved board at zoom 1', () => {
+      const v = free();
+      v.panBy(-9000, 0); // the board's left part is now off screen
+      const left = { x: slot.x + 10, y: slot.y + slot.height / 2 };
+      expect(v.isVisible(left)).toBe(false);
+      const target = v.scrollToCenter(left);
+      v.scrollTo(target.x, target.y);
+      expect(v.isVisible(left)).toBe(true);
+    });
+
+    it('never moves small boards that cannot zoom (the tutorial levels stay still)', () => {
+      const v = free(1.1);
+      expect(v.canPan).toBe(false);
+      v.panBy(100, 100);
+      expect(v.moved).toBe(false);
+      expect(v.view).toEqual(canvas);
+    });
   });
 
   it('can bring an off-screen point (a hinted arrow) to the middle of a zoomed view, staying on the board', () => {

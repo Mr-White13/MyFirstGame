@@ -6,9 +6,10 @@ import type { Point } from './layout';
  *
  * - One finger down starts a **press** on an arrow. Lifting it **releases**
  *   (the move happens), unless the press was cancelled.
- * - While the board is zoomed, dragging one finger past a small threshold
- *   turns the press into a **pan**: the press is cancelled, so panning never
- *   moves an arrow.
+ * - While the board can be panned (zoomed, or any board large enough to
+ *   zoom, see BoardViewport.canPan), dragging one finger past a small
+ *   threshold turns the press into a **pan**: the press is cancelled, so
+ *   panning never moves an arrow.
  * - A second finger landing while a press is held is an **overlap**: fast
  *   play with two thumbs often puts the next finger down before the previous
  *   one has lifted. If either finger then moves past the threshold, it is a
@@ -45,7 +46,7 @@ export class GestureTracker {
   constructor(
     /** Drag distance (screen pixels) after which a press becomes a pan. */
     private readonly panThreshold: number,
-    /** Whether one-finger panning is possible right now (the board is zoomed). */
+    /** Whether one-finger panning is possible right now (BoardViewport.canPan). */
     private readonly canPan: () => boolean,
   ) {}
 

@@ -35,8 +35,9 @@ export interface GameStateOptions {
    */
   readonly validate?: boolean;
   /**
-   * Lives at the start (default STARTING_LIVES). Simulations use a large
-   * value to count every mistake a strategy makes instead of stopping at 3.
+   * Lives at the start, for every level this state plays (default: the
+   * level's own `lives`, else STARTING_LIVES). Simulations use a large value
+   * to count every mistake a strategy makes instead of stopping at 3.
    */
   readonly startingLives?: number;
   /** Milliseconds from a monotonic clock, for the streak timing (default performance.now). */
@@ -91,7 +92,9 @@ export class GameState {
   private readonly listeners = new Set<Listener>();
   private readonly removeListeners = new Set<(arrow: ArrowData, auto: boolean) => void>();
   private readonly validate: boolean;
-  private readonly startingLives: number;
+  /** Lives at the start of the current level (the option, else the level's `lives`, else STARTING_LIVES). */
+  private startingLives: number;
+  private readonly livesOverride: number | undefined;
   private status: LevelStatus = 'playing';
   private directClears = 0;
   private autoClears = 0;
@@ -112,7 +115,8 @@ export class GameState {
 
   constructor(level: LevelData, options: GameStateOptions = {}) {
     this.validate = options.validate ?? true;
-    this.startingLives = options.startingLives ?? STARTING_LIVES;
+    this.livesOverride = options.startingLives;
+    this.startingLives = this.livesFor(level);
     this.clock = options.clock ?? (() => performance.now());
     if (this.validate) validateLevel(level);
     this.level = level;
@@ -124,8 +128,13 @@ export class GameState {
   load(level: LevelData): void {
     if (this.validate) validateLevel(level);
     this.level = level;
+    this.startingLives = this.livesFor(level);
     this.grid = new Grid(level.rows, level.cols);
     this.reset();
+  }
+
+  private livesFor(level: LevelData): number {
+    return this.livesOverride ?? level.lives ?? STARTING_LIVES;
   }
 
   get levelId(): number {
@@ -350,7 +359,9 @@ export class GameState {
       won,
       // Stars count mistakes, not lives: a life given back by Extra Heart lets the
       // player finish but never raises the rating. Without one, this equals lives.
-      stars: won ? Math.max(1, this.startingLives - this.mistakes) : 0,
+      // A one-life level rates like a normal one: no mistake is 3 stars, and a
+      // mistake (then Continue) costs one star, so it is out of STARTING_LIVES.
+      stars: won ? Math.max(1, Math.max(this.startingLives, STARTING_LIVES) - this.mistakes) : 0,
     };
   }
 

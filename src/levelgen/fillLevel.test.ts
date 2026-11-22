@@ -4,6 +4,7 @@ import { validateLevel } from '../core/levelValidation';
 import { countAmbiguousJoins } from '../core/difficulty';
 import { coverage, fillLevel } from './fillLevel';
 import { isSelfTouching } from './generateLevel';
+import { levelFromMap, levelToMap } from '../levels/levelMap';
 
 describe('fill-first level generator', () => {
   const sizes = [
@@ -72,5 +73,29 @@ describe('fill-first level generator', () => {
     const arrows = result.level.arrows;
     expect(arrows.filter((a) => a.cells.length < 3).length / arrows.length).toBeLessThanOrEqual(0.12);
     expect(arrows.reduce((n, a) => n + a.cells.length, 0) / arrows.length).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('curlChance adds spiral and hook arrows that load back exactly, and the level stays valid, solvable and readable', () => {
+    const options = { rows: 16, cols: 12, seed: 5, minScore: 0, maxScore: 100, attempts: 20, refineSteps: 0, minLength: 4, maxLength: 20, maxTurns: 6, maxShortShare: 0.3 } as const;
+    const curled = fillLevel({ ...options, curlChance: 0.4 });
+    expect(curled.ok).toBe(true);
+    if (!curled.ok) return;
+    const level = curled.level;
+    expect(level.arrows.some((a) => isSelfTouching(a.cells))).toBe(true);
+    expect(levelFromMap(level.id, levelToMap(level), { curls: true }).arrows).toEqual(level.arrows);
+    expect(() => validateLevel(level)).not.toThrow();
+    expect(findSolution(level)).not.toBeNull();
+    expect(countAmbiguousJoins(level)).toBe(0);
+    // Off by default: the same options without curlChance give only clean paths.
+    const plain = fillLevel(options);
+    expect(plain.ok && plain.level.arrows.every((a) => !isSelfTouching(a.cells))).toBe(true);
+  });
+
+  it('maxFreeShare and minLongRangeShare reject levels outside the bottleneck and long-blocker targets', () => {
+    const options = { rows: 12, cols: 9, seed: 11, minScore: 0, maxScore: 100, attempts: 3, refineSteps: 0 } as const;
+    expect(fillLevel({ ...options, maxFreeShare: 0.01 }).ok).toBe(false);
+    expect(fillLevel({ ...options, minLongRangeShare: 0.99 }).ok).toBe(false);
+    const loose = fillLevel({ ...options, maxFreeShare: 1, minLongRangeShare: 0 });
+    expect(loose.ok).toBe(true);
   });
 });

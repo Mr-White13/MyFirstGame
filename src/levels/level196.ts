@@ -1,0 +1,35 @@
+import { levelFromMap } from './levelMap';
+
+/** Level 196 — chapter 10, shaped hard level (castle outline), long arrows, generated from tools/level-plan.json (seed 19606, attempt 9), score 81 (Very hard). */
+export default levelFromMap(
+  196,
+  [
+    'a<  a   a   .   t   t   t   .   d   d   d   .   e   e   j   .   b   b>  f   .',
+    'c<  c   a   .   t   l   t   .   dv  t   t   .   ev  i   j   .   f<  f   f   .',
+    'g^  c   a   a   t   l   t   t   t   t   h<  h   i<  i   jv  o   o   o   o   o',
+    'g   k^  l<  l   t   l   I   I   I   q   m^  h   n<  n   o<  o   p<  p   p   o',
+    'g   k   B   l   t   l   I   q<  q   q   m   m   m   n   r   r   r>  m   p   o',
+    's^  k   B   l   tv  l   I   I   I   I   u   u>  m   m   m   m   m   m   p   v^',
+    's   k   B   l   l   l   w^  x<  x   I   u   y<  y   y   p   p   p   p   p   v',
+    's   k   B   H   H   H   w   z^  x   I   u   K   K   p   p   v   v   v   v   v',
+    's   k   B   H   C   H   w   z   z   I   u   u   K   E   A<  A   A   A   A   A',
+    's   B<  B   H   Cv  H   H   H   z   I   D<  D   K   E   E   E>  F   F   F>  X',
+    's   s   s   H   G   G   G>  H   H>  Iv  J   J>  Kv  a0  X   X   X   X   X   X',
+    'L<  L   s   G   G   W   W   W   W   Z   J   Q   a0  a0  X   M<  M   M   M   M',
+    'N^  L   s   s   s   V   V   V   W   Z   J   Q   a0  O^  X   X   S   S   S   P^',
+    'N   L   L   L   L   V   U   V   W   Z   J   Qv  a0  O   T   X   S   R^  Sv  P',
+    'N   N   N   N   L   U   U   V   W   Z   J   J   a0  O   Tv  X   R   R   P   P',
+    'L   L   L   L   L   Uv  V<  V   Wv  Z   Z   Z   a0  O   O   X   X>  i0  i0  i0',
+    'L   d0  d0  d0  d0  Y<  Y   Y   Y   Y   b0  Zv  a0  a0  a0  a0> c0  h0  h0  i0',
+    'L   d0  e0  e0  e0  e0  e0  e0  b0< b0  b0  c0< c0  c0  c0  c0  c0  h0  k0  i0',
+    'L   d0v e0v f0< f0  g0< g0  e0  .   .   .   .   h0< h0  h0  h0  h0  h0  k0  i0v',
+    'j0^ l0  l0  l0  f0  f0  f0  .   .   .   .   .   .   k0< k0  k0  k0  k0  k0  y0',
+    'j0  l0v j0  j0  j0  q0  f0  .   .   .   .   .   .   v0  v0  v0  v0  v0  v0  y0',
+    'j0  j0  j0  o0  j0  q0  m0^ .   .   .   .   .   .   v0  w0  w0  w0  w0  v0  y0',
+    'n0^ o0< o0  o0  j0  q0  m0  .   .   .   .   .   .   v0  w0  p0  p0> w0  w0  y0',
+    'n0  q0< q0  q0  q0  q0  m0  .   .   .   .   .   .   v0  w0  p0  s0  s0  t0  y0',
+    'n0  n0  r0< r0  r0  r0  m0  .   .   .   .   .   .   v0  w0  p0  s0v t0< t0  y0',
+    'u0  u0  u0  u0  u0  u0  u0> .   .   .   .   .   .   v0v w0  w0> x0  x0  x0> y0v',
+  ],
+  { outline: true, tier: 'hard' },
+);

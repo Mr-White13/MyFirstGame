@@ -101,76 +101,90 @@ const describePlayTime = (minutes: number) =>
 const MORE_ACHIEVEMENTS: readonly AchievementDefinition[] = [
   ...ladder('levels', 'gameplay', 'icon-grid', describeLevels, completed, [
     [3, 5], // Warming Up
-    [15, 40], // Getting Serious
-    [20, 50], // Maze Walker
-    [25, 60], // Quarter Century
-    [30, 70], // Pathfinder
-    [40, 85], // Grid Master
-    [50, 100], // Half a Hundred
-    [60, 120], // Neon Navigator
-    [70, 140], // Escape Artist
-    [80, 160], // Legend of the Grid
+    [15, 20], // Getting Serious
+    [20, 25], // Maze Walker
+    [25, 30], // Quarter Century
+    [30, 35], // Pathfinder
+    [40, 45], // Grid Master
+    [50, 50], // Half a Hundred
+    [60, 60], // Neon Navigator
+    [70, 70], // Escape Artist
+    [80, 80], // Legend of the Grid
+    [100, 90], // Centennial Escape (levels 101–200 from here on)
+    [125, 100], // Long Liner
+    [150, 110], // Shape Shifter
+    [175, 120], // Deep Diver
+    [200, 130], // Grid Conqueror
+    [225, 140], // Dense Runner (levels 201–300 from here on; rewards stay modest, at most 160)
+    [250, 145], // Narrow Escape
+    [275, 150], // Shadow Walker
+    [300, 160], // Final Escape
   ]),
   ...ladder('perfect', 'performance', 'icon-spark', describePerfect, perfect, [
-    [3, 10], // Sharp Eye
-    [10, 60], // Precision
-    [20, 90], // Perfectionist
-    [30, 120], // Flawless Mind
-    [50, 160], // Untouchable
+    [3, 5], // Sharp Eye
+    [10, 30], // Precision
+    [20, 45], // Perfectionist
+    [30, 60], // Flawless Mind
+    [50, 80], // Untouchable
   ]),
   ...ladder('stars', 'performance', 'icon-star', (count) => t('rewards.descStars', { count }), (c) => totalStars(c.progress, c.levels.length), [
-    [10, 10], // Stargazer
-    [25, 25], // Constellation
-    [50, 45], // Star Collector
-    [100, 80], // Galaxy
-    [150, 120], // Supernova
-    [200, 160], // Universe
+    [10, 5], // Stargazer
+    [25, 15], // Constellation
+    [50, 25], // Star Collector
+    [100, 40], // Galaxy
+    [150, 60], // Supernova
+    [200, 80], // Universe
+    [300, 90], // Nebula
+    [450, 110], // Star Forge
+    [600, 130], // Cosmos
+    [750, 145], // Hypernova
+    [900, 160], // Infinity of Stars
   ]),
   ...ladder('wins', 'gameplay', 'icon-trophy', (count) => t('rewards.descWins', { count }), (c) => c.stats.successfulRuns, [
-    [25, 25], // Regular
-    [50, 45], // Persistent
-    [100, 80], // Centurion
-    [250, 150], // Unstoppable
+    [25, 15], // Regular
+    [50, 25], // Persistent
+    [100, 40], // Centurion
+    [250, 75], // Unstoppable
   ]),
   ...ladder('flawless', 'performance', 'icon-heart', (count) => t('rewards.descFlawless', { count }), (c) => c.stats.flawlessRuns, [
     [1, 5], // Clean Slate
-    [10, 30], // Steady Hand
-    [25, 60], // Calm and Precise
-    [50, 100], // Zen Master
+    [10, 15], // Steady Hand
+    [25, 30], // Calm and Precise
+    [50, 50], // Zen Master
   ]),
   ...ladder('arrows', 'gameplay', 'icon-next', (n) => t('rewards.descArrows', { count: formatNumber(n) }), (c) => c.stats.arrowsCleared, [
     [100, 5], // Arrow Apprentice
-    [500, 20], // Arrow Adept
-    [1000, 40], // Arrow Expert
-    [2500, 70], // Arrow Master
-    [5000, 110], // Arrow Storm
-    [10000, 160], // Arrow Legend
+    [500, 10], // Arrow Adept
+    [1000, 20], // Arrow Expert
+    [2500, 35], // Arrow Master
+    [5000, 55], // Arrow Storm
+    [10000, 80], // Arrow Legend
   ]),
   ...ladder('chains', 'gameplay', 'icon-bolt', (count) => t('rewards.descChains', { count }), (c) => c.stats.chainClears, [
-    [10, 15], // Spark Plug
-    [50, 50], // Live Wire
-    [100, 90], // Power Grid
+    [10, 10], // Spark Plug
+    [50, 25], // Live Wire
+    [100, 45], // Power Grid
   ]),
   ...ladder('playtime', 'daily', 'icon-clock', describePlayTime, (c) => Math.floor(c.stats.playTimeMs / MINUTE), [
     [10, 5], // Getting Started
-    [30, 15], // Hooked
-    [60, 30], // Night Owl
-    [180, 70], // Marathon
-    [600, 150], // Devoted
+    [30, 10], // Hooked
+    [60, 15], // Night Owl
+    [180, 35], // Marathon
+    [600, 75], // Devoted
   ]),
   ...ladder('claims', 'daily', 'icon-calendar', (count) => t('rewards.descClaims', { count }), (c) => c.daily.claims, [
-    [5, 15], // Collector
-    [15, 40], // Loyal
-    [30, 80], // Faithful
+    [5, 10], // Collector
+    [15, 20], // Loyal
+    [30, 40], // Faithful
   ]),
   ...ladder('streak', 'daily', 'icon-flame', describeStreak, (c) => c.daily.longestStreak, [
-    [14, 90], // Two-Week Streak
-    [30, 160], // Monthly Streak
+    [14, 45], // Two-Week Streak
+    [30, 80], // Monthly Streak
   ]),
   ...ladder('days', 'daily', 'icon-target', describeDays, (c) => c.daily.daysPlayed, [
-    [7, 20], // Regular Visitor
-    [30, 100], // Neon Resident
-    [60, 160], // Lifer
+    [7, 10], // Regular Visitor
+    [30, 50], // Neon Resident
+    [60, 80], // Lifer
   ]),
   ...ladder(
     'fast',
@@ -178,10 +192,10 @@ const MORE_ACHIEVEMENTS: readonly AchievementDefinition[] = [
     'icon-clock',
     (count) => t('rewards.descFast', { count, arrows: SPEED_RUN_MIN_ARROWS, seconds: SPEED_RUN_MS / 1000 }),
     (c) => fastLevels(c, SPEED_RUN_MS),
-    [[5, 60]], // Quick Fingers
+    [[5, 30]], // Quick Fingers
   ),
   define(
-    { id: 'speed-demon', category: 'performance', icon: 'icon-clock', reward: 50, target: 1, progress: (c) => (fastLevels(c, SPEED_DEMON_MS) > 0 ? 1 : 0) },
+    { id: 'speed-demon', category: 'performance', icon: 'icon-clock', reward: 25, target: 1, progress: (c) => (fastLevels(c, SPEED_DEMON_MS) > 0 ? 1 : 0) },
     () => describeSpeed(SPEED_DEMON_MS),
   ),
 ];
@@ -197,32 +211,32 @@ const MORE_ACHIEVEMENTS: readonly AchievementDefinition[] = [
  *   doesn't make it trivial.
  */
 const FIRST_ACHIEVEMENTS: readonly AchievementDefinition[] = [
-  define({ id: 'first-escape', category: 'gameplay', icon: 'icon-check', reward: 15, target: 1, progress: (c) => completedCount(c.progress, c.levels.length) }, () =>
+  define({ id: 'first-escape', category: 'gameplay', icon: 'icon-check', reward: 10, target: 1, progress: (c) => completedCount(c.progress, c.levels.length) }, () =>
     t('rewards.descFirstEscape'),
   ),
-  define({ id: 'perfect-run', category: 'gameplay', icon: 'icon-spark', reward: 20, target: 1, progress: (c) => perfectLevels(c.progress, c.levels.length) }, () =>
+  define({ id: 'perfect-run', category: 'gameplay', icon: 'icon-spark', reward: 10, target: 1, progress: (c) => perfectLevels(c.progress, c.levels.length) }, () =>
     t('rewards.descPerfectRun'),
   ),
-  define({ id: 'chain-reaction', category: 'gameplay', icon: 'icon-bolt', reward: 20, target: 1, progress: (c) => Math.max(c.stats.chainClears, c.bestChain) }, () =>
+  define({ id: 'chain-reaction', category: 'gameplay', icon: 'icon-bolt', reward: 10, target: 1, progress: (c) => Math.max(c.stats.chainClears, c.bestChain) }, () =>
     t('rewards.descChainReaction'),
   ),
-  define({ id: 'double-chain', category: 'gameplay', icon: 'icon-bolt', reward: 40, target: 2, progress: (c) => c.bestChain }, () => t('rewards.descDoubleChain')),
-  define({ id: 'puzzle-explorer', category: 'gameplay', icon: 'icon-grid', reward: 30, target: 5, progress: (c) => completedCount(c.progress, c.levels.length) }, () =>
+  define({ id: 'double-chain', category: 'gameplay', icon: 'icon-bolt', reward: 20, target: 2, progress: (c) => c.bestChain }, () => t('rewards.descDoubleChain')),
+  define({ id: 'puzzle-explorer', category: 'gameplay', icon: 'icon-grid', reward: 15, target: 5, progress: (c) => completedCount(c.progress, c.levels.length) }, () =>
     describeLevels(5),
   ),
-  define({ id: 'puzzle-veteran', category: 'gameplay', icon: 'icon-trophy', reward: 60, target: 10, progress: (c) => completedCount(c.progress, c.levels.length) }, () =>
+  define({ id: 'puzzle-veteran', category: 'gameplay', icon: 'icon-trophy', reward: 30, target: 10, progress: (c) => completedCount(c.progress, c.levels.length) }, () =>
     describeLevels(10),
   ),
-  define({ id: 'speed-runner', category: 'performance', icon: 'icon-clock', reward: 40, target: 1, progress: (c) => (fastLevels(c, SPEED_RUN_MS) > 0 ? 1 : 0) }, () =>
+  define({ id: 'speed-runner', category: 'performance', icon: 'icon-clock', reward: 20, target: 1, progress: (c) => (fastLevels(c, SPEED_RUN_MS) > 0 ? 1 : 0) }, () =>
     describeSpeed(SPEED_RUN_MS),
   ),
-  define({ id: 'flawless-five', category: 'performance', icon: 'icon-star', reward: 50, target: 5, progress: (c) => perfectLevels(c.progress, c.levels.length) }, () =>
+  define({ id: 'flawless-five', category: 'performance', icon: 'icon-star', reward: 25, target: 5, progress: (c) => perfectLevels(c.progress, c.levels.length) }, () =>
     describePerfect(5),
   ),
-  define({ id: 'first-check-in', category: 'daily', icon: 'icon-calendar', reward: 10, target: 1, progress: (c) => c.daily.claims }, () => t('rewards.descFirstCheckIn')),
-  define({ id: 'three-day-streak', category: 'daily', icon: 'icon-flame', reward: 20, target: 3, progress: (c) => c.daily.longestStreak }, () => describeStreak(3)),
-  define({ id: 'weekly-explorer', category: 'daily', icon: 'icon-flame', reward: 50, target: 7, progress: (c) => c.daily.longestStreak }, () => describeStreak(7)),
-  define({ id: 'dedicated-player', category: 'daily', icon: 'icon-target', reward: 60, target: 14, progress: (c) => c.daily.daysPlayed }, () => describeDays(14)),
+  define({ id: 'first-check-in', category: 'daily', icon: 'icon-calendar', reward: 5, target: 1, progress: (c) => c.daily.claims }, () => t('rewards.descFirstCheckIn')),
+  define({ id: 'three-day-streak', category: 'daily', icon: 'icon-flame', reward: 10, target: 3, progress: (c) => c.daily.longestStreak }, () => describeStreak(3)),
+  define({ id: 'weekly-explorer', category: 'daily', icon: 'icon-flame', reward: 25, target: 7, progress: (c) => c.daily.longestStreak }, () => describeStreak(7)),
+  define({ id: 'dedicated-player', category: 'daily', icon: 'icon-target', reward: 30, target: 14, progress: (c) => c.daily.daysPlayed }, () => describeDays(14)),
 ];
 
 /** Every achievement, grouped by category and cheapest (easiest) first within each. */

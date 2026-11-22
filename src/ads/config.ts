@@ -53,8 +53,8 @@ export function selectAdConfig(mode: string | undefined, production: AdConfig | 
 /** The configuration in use: test ads unless this build was made with VITE_AD_MODE=production. */
 export const ACTIVE_AD_CONFIG: AdConfig = selectAdConfig(import.meta.env.VITE_AD_MODE);
 
-/** Energy Credits paid for one rewarded ad watched to the end. */
-export const REWARDED_AD_CREDITS = 30;
+/** Energy Credits paid for one rewarded ad watched to the end: exactly one Hint (BOOSTERS.hint.cost). */
+export const REWARDED_AD_CREDITS = 50;
 /**
  * Rewarded ads that pay credits per device-local calendar day, across every
  * place they're offered (Shop, booster offer). Continue ads after Game Over

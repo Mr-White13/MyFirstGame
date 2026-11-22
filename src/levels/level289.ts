@@ -1,0 +1,35 @@
+import { levelFromMap } from './levelMap';
+
+/** Level 289 — chapter 15, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers, generated from tools/level-plan.json (seed 28902, attempt 21), score 80 (Very hard). */
+export default levelFromMap(
+  289,
+  [
+    'A   A   A   A>  C   C   C   C   C>  W   W   W   c   c   c   c   c   c   B',
+    'A   M   M   M   C   E^  G<  G   E   C   C   W   c   S   S   S   I<  I   B',
+    'A   K   K>  M   C   E   E   E   E   C   W   W   c   c   c   S   S   I   B',
+    'A   M   M   M   C   C   C   C   C   C   W   L   L   L>  c   c   S   I   B',
+    'A   Mv  A   A   A   A   A   A   P   P   W   W   N   N^  O^  c   S   I   B',
+    'A   A   A   P<  P   P   P   P   P   Q<  Q   W   N   N   O   c   S   B   B',
+    'b   b   b   b   R   R   R>  d0  d0  d0  Q   W   V   V   O   c   Sv  B   T^',
+    'd   Z   Z   b   R   U   U   d0  R   d0  Q   W   V   O   O   c   a   B   T',
+    'd   d   Z   b   R   R   Uv  R   R   d0  Q   W   V   V>  W^  c   a   B   B',
+    'X^  d   Z   b   a0  R   R   R   Y^  d0  Q   W   W   W   W   c   a   a   B',
+    'X   d   Zv  b   a0  c0  c0  c0  Y   d0  Q   Q   Q   Q   Q   c   e0  a   B',
+    'X   d   b   b   a0v b0^ Y   c0v Y   d0  d0  d0  d0  d0> Q   c   e0v av  B',
+    'X   d   bv  b0  b0  b0  Y   Y   Y   Q   Q   Q   Q   Q   Q   c   c   c>  B',
+    'X   d   d   d>  Q   Q   Q   Q   Q   Q   e^  k   k   k   f   f   f>  B   B',
+    'h   h   h   h   h   e   e   e   e   e   e   k   g^  k   f   q   q   B   J',
+    'hv  n   n   i   h   e   k   k   k   k   k   k   g   k   f   q   l   B   J',
+    'v   m   n   iv  h   e   k   j   j   j   j>  g   g   k   f   q   l   B   J',
+    'v   m   n   h   h   e   e   e   e   e   k<  k   k   k   f   q   lv  B   J',
+    'v   mv  nv  o   o   o   o   o   o>  e   p^  s   s   f   f   q   q>  B   J',
+    'v   v   t   o   e   e   e   e   e   e   p   s   f   f   H   H   H   B   J',
+    'u   v   t   o   e   r<  r   r   r   r   p   s   s   s>  H   x   H   B   J',
+    'u   v   t   o   e   D   D   D   D   D   p   F   H   H   H   x   H   B   J',
+    'u   v   tv  o   e   D   p   p   p   p   p   F   z   z   z   x   H   B   J',
+    'uv  vv  y   y   e   D   p   w<  w   w   w   F   z   x<  x   x   H   B   J',
+    'y<  y   y   e   e   D   p   p   p   p   p   F   z   z>  H   H   H   Bv  J',
+    'D<  D   D   D   D   D   F<  F   F   F   F   F   H<  H   H   J<  J   J   J',
+  ],
+  { curls: true },
+);

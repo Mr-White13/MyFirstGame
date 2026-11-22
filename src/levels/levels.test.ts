@@ -10,7 +10,8 @@ import { getLevel, LEVEL_COUNT, LEVELS } from './index';
 import { arrowLabel, levelFromMap, levelToMap } from './levelMap';
 
 /*
- * The 100-level campaign: five chapters of 20. Levels 1–3 are the tutorial;
+ * Chapters 1–5 (levels 1–100) of the 300-level campaign; chapters 6–10 are
+ * checked in moreLevels.test.ts and chapters 11–15 in finalLevels.test.ts. Levels 1–3 are the tutorial;
  * 4–100 follow one rhythm: two or three normal levels, then a hard one, with
  * a very hard one closing every chapter (and more often in chapters 3–5).
  * Ten very hard levels are the extreme ones (THE IMPOSSIBLE GRID and nine
@@ -20,19 +21,21 @@ import { arrowLabel, levelFromMap, levelToMap } from './levelMap';
  * human difficulty.
  */
 const tierOf = (l: LevelData): LevelTier => l.tier ?? 'normal';
+/** Levels 1–100 (chapters 1–5); 101–200 have their own checks in moreLevels.test.ts. */
+const FIRST = LEVELS.slice(0, 100);
 /** Generated rectangular levels: everything after the tutorial except the extreme levels. */
-const GENERATED = LEVELS.slice(3).filter((l) => l.name === undefined);
+const GENERATED = FIRST.slice(3).filter((l) => l.name === undefined);
 const reports = LEVELS.map((l) => analyzeDifficulty(l, { lives: false }));
 const score = (id: number) => reports[id - 1].score;
 const depth = (id: number) => reports[id - 1].exact.depth;
 const chapterLevels = (chapter: number) => LEVELS.slice((chapter - 1) * CHAPTER_SIZE, chapter * CHAPTER_SIZE);
 
 describe('level registry', () => {
-  it('has 100 levels with ids 1..100 in order, in five named chapters of 20', () => {
-    expect(LEVEL_COUNT).toBe(100);
-    expect(LEVELS.map((l) => l.id)).toEqual(Array.from({ length: 100 }, (_, i) => i + 1));
+  it('has 300 levels with ids 1..300 in order, in fifteen named chapters of 20', () => {
+    expect(LEVEL_COUNT).toBe(300);
+    expect(LEVELS.map((l) => l.id)).toEqual(Array.from({ length: 300 }, (_, i) => i + 1));
     expect(CHAPTER_SIZE).toBe(20);
-    expect(CHAPTER_NAMES).toHaveLength(5);
+    expect(CHAPTER_NAMES).toHaveLength(15);
     expect(CHAPTER_NAMES[0]).toBe("It's Just the Beginning");
   });
 
@@ -40,12 +43,14 @@ describe('level registry', () => {
     expect(getLevel(1)).toBe(LEVELS[0]);
     expect(getLevel(50)).toBe(LEVELS[49]);
     expect(getLevel(100)).toBe(LEVELS[99]);
+    expect(getLevel(200)).toBe(LEVELS[199]);
+    expect(getLevel(300)).toBe(LEVELS[299]);
     expect(getLevel(0)).toBeUndefined();
-    expect(getLevel(101)).toBeUndefined();
+    expect(getLevel(301)).toBeUndefined();
   });
 
-  it('names only the ten extreme levels', () => {
-    expect(LEVELS.filter((l) => l.name !== undefined).map((l) => l.id)).toEqual([47, 54, 60, 67, 74, 80, 87, 90, 94, 100]);
+  it('names only the ten extreme levels of chapters 1–5', () => {
+    expect(FIRST.filter((l) => l.name !== undefined).map((l) => l.id)).toEqual([47, 54, 60, 67, 74, 80, 87, 90, 94, 100]);
   });
 });
 
@@ -95,7 +100,7 @@ describe('campaign rhythm', () => {
 
   it('makes every harder level harder than the normal levels before it: deeper, and scoring at least as high', () => {
     let run: LevelData[] = [];
-    for (const level of LEVELS.slice(3)) {
+    for (const level of FIRST.slice(3)) {
       if (tierOf(level) === 'normal') {
         run.push(level);
         continue;
@@ -137,7 +142,7 @@ describe('campaign rhythm', () => {
 
   it('keeps normal levels readable on a phone without zooming: tall boards up to 17×12 that never shrink', () => {
     expect(LEVELS.slice(0, 3).map((l) => `${l.rows}x${l.cols}`)).toEqual(['7x7', '7x7', '7x7']);
-    const normal = LEVELS.slice(3).filter((l) => tierOf(l) === 'normal');
+    const normal = FIRST.slice(3).filter((l) => tierOf(l) === 'normal');
     for (const l of normal) {
       expect(l.rows, `level ${l.id}`).toBeGreaterThan(l.cols);
       expect(l.cols, `level ${l.id}`).toBeLessThanOrEqual(12);
@@ -148,7 +153,7 @@ describe('campaign rhythm', () => {
 
   it('gives harder levels a board at least as big as the normal level before them', () => {
     let last = LEVELS[2];
-    for (const level of LEVELS.slice(3)) {
+    for (const level of FIRST.slice(3)) {
       if (tierOf(level) === 'normal') last = level;
       else expect(level.rows * level.cols, `level ${level.id}`).toBeGreaterThanOrEqual(last.rows * last.cols);
     }
@@ -168,8 +173,8 @@ describe('campaign rhythm', () => {
 
   it('marks rebuilt layouts with a new revision', () => {
     // 1 unchanged; 2–3 as rebalanced in Step 12; 4–30 redesigned in Steps 13 and 14 and again in the
-    // 100-level rebuild; 31–40 rebuilt once (they were the experimental levels); 41–100 are new.
-    expect(LEVELS.map((l) => l.revision ?? 1)).toEqual([1, 3, 3, ...Array(7).fill(6), ...Array(20).fill(4), ...Array(10).fill(2), ...Array(60).fill(1)]);
+    // 100-level rebuild; 31–40 rebuilt once (they were the experimental levels); 41–300 are new.
+    expect(LEVELS.map((l) => l.revision ?? 1)).toEqual([1, 3, 3, ...Array(7).fill(6), ...Array(20).fill(4), ...Array(10).fill(2), ...Array(260).fill(1)]);
   });
 
   it('does not simply add arrows every level', () => {
@@ -258,7 +263,7 @@ describe('levelFromMap', () => {
 
   it('round-trips through levelToMap', () => {
     for (const level of LEVELS) {
-      const again = levelFromMap(level.id, levelToMap(level));
+      const again = levelFromMap(level.id, levelToMap(level), { curls: true });
       expect(again.arrows.map((a) => [a.direction, a.cells])).toEqual(
         expect.arrayContaining(level.arrows.map((a) => [a.direction, a.cells])),
       );
@@ -284,6 +289,24 @@ describe('levelFromMap', () => {
   it('keeps the name option, and adds no name field without it', () => {
     expect(levelFromMap(3, ['a> .'], { name: 'X' }).name).toBe('X');
     expect('name' in levelFromMap(3, ['a> .'], { revision: 2 })).toBe(false);
+  });
+
+  it('loads a hook or spiral arrow only with { curls: true }, head first then straight back behind it', () => {
+    const hook = ['a  a  a', '.  a< a'];
+    expect(() => levelFromMap(1, hook)).toThrow(/branching/);
+    expect(levelFromMap(1, hook, { curls: true }).arrows[0]).toEqual({
+      id: 'a',
+      direction: 'left',
+      cells: [
+        { row: 0, col: 0 },
+        { row: 0, col: 1 },
+        { row: 0, col: 2 },
+        { row: 1, col: 2 },
+        { row: 1, col: 1 },
+      ],
+    });
+    // Still rejected when no single path fits, curls or not.
+    expect(() => levelFromMap(1, ['a  a  a', 'a  a< .'], { curls: true })).toThrow(/branching/);
   });
 
   it('rejects malformed maps with a helpful message', () => {

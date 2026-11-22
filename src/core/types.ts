@@ -47,6 +47,12 @@ export interface LevelData {
    * level select and the HUD; rules ignore it.
    */
   readonly tier?: Exclude<LevelTier, 'normal'>;
+  /**
+   * Lives at the start, when not STARTING_LIVES: `1` makes a one-life level
+   * (Levels 101–200), where the first mistake ends the attempt unless the
+   * player continues with a rewarded ad. Stars still range 1–3 (see GameState).
+   */
+  readonly lives?: number;
   readonly rows: number;
   readonly cols: number;
   readonly arrows: readonly ArrowData[];

@@ -46,7 +46,7 @@ import { AD_FREE_PLAY_MS } from '../ads/config';
 import type { BoosterBar } from '../ui/BoosterBar';
 import { AttemptTracker, type AttemptSummary } from './AttemptTracker';
 import { boosterTip, BoosterController } from './BoosterController';
-import { TIP_MS, tipText, TIPS_UNTIL_COMPLETED, tipForEvent, type TipId } from './tips';
+import { TIP_MS, tipText, TIPS_UNTIL_COMPLETED, tipForEvent, type RuleTipId } from './tips';
 import { IDLE_HINT_SHOW_MS, IdleHint, idleHintText } from './idleHint';
 import { routeBack, type BackLayer } from './backLayers';
 import { LeagueController } from './LeagueController';
@@ -130,6 +130,7 @@ export class App {
   private readonly idleHint = new IdleHint();
   /** True while the app is hidden or in the background (browser tab or Android app). */
   private background = false;
+  /** The zoom tip dialog is open or was answered this session (it is saved as seen once closed). */
   private zoomHintShown = false;
   /** True from a Shop "Buy" tap until its confirmation is answered: further Buy taps are ignored. */
   private purchasing = false;
@@ -507,7 +508,9 @@ export class App {
       this.attempt.interactive();
       this.startClock();
       if (levelId === 1 && !resumed) this.showTip('tap');
-      this.introduceBoosters();
+      // One-life levels say so every time they start: the rule differs from every other level.
+      if (level.lives === 1 && !resumed) this.parts.toast.show(t('game.oneLifeTip'), TIP_MS);
+      else this.introduceBoosters();
     });
   }
 
@@ -558,7 +561,7 @@ export class App {
    * only during a level, and only to players still learning (fewer than
    * TIPS_UNTIL_COMPLETED levels completed, so existing players aren't interrupted).
    */
-  private showTip(id: TipId): void {
+  private showTip(id: RuleTipId): void {
     const { rewards, dayClock, toast, screens, levels } = this.parts;
     if (screens.active !== 'game' || rewards.current.tips.includes(id)) return;
     if (completedCount(this.records.progress, levels.length) >= TIPS_UNTIL_COMPLETED) return;
@@ -1028,11 +1031,24 @@ export class App {
     this.parts.gameOverDialog.hide();
   }
 
-  /** Once per session, on the first board that can be zoomed: how to zoom. */
+  /**
+   * Once ever, on the first board that can be zoomed (a big, dense one): a
+   * small dialog on how to zoom and move. Saved as seen when it is closed (OK,
+   * Back or the backdrop), so it never comes back, also for existing players.
+   * Waits for a later board if another dialog or an ad is in the way.
+   */
   zoomHint(): void {
-    if (this.zoomHintShown || this.parts.screens.active !== 'game') return;
+    const { screens, confirmDialog, rewards, state, dayClock } = this.parts;
+    if (this.zoomHintShown || screens.active !== 'game' || rewards.current.tips.includes('zoom')) return;
+    if (confirmDialog.isOpen || this.adShowing || this.navigating || !state.isPlaying) return;
     this.zoomHintShown = true;
-    this.parts.toast.show(t('game.tipZoom'), 2600);
+    this.attempt.timer.pause('confirm');
+    void confirmDialog
+      .ask({ title: t('game.zoomTipTitle'), text: t('game.zoomTipText'), confirm: t('game.zoomTipOk'), tone: 'info' })
+      .then(() => {
+        this.attempt.timer.resume('confirm');
+        rewards.markTipSeen(dayClock.today, 'zoom');
+      });
   }
 
   private async navigate(action: () => Promise<void>): Promise<void> {

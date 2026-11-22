@@ -1,0 +1,35 @@
+import { levelFromMap } from './levelMap';
+
+/** Level 136 — chapter 7, shaped hard level (cross outline), long arrows, generated from tools/level-plan.json (seed 13680, attempt 6), score 73 (Very hard). */
+export default levelFromMap(
+  136,
+  [
+    '.   .   .   .   .   .   a<  a   a   a   a   a   d   a   .   .   .   .   .   .',
+    '.   .   .   .   .   .   b^  c<  c   c   c   a   dv  a   .   .   .   .   .   .',
+    '.   .   .   .   .   .   b   e^  f   f   f>  a   a   a   .   .   .   .   .   .',
+    '.   .   .   .   .   .   b   e   f   n   n   n   n   n   .   .   .   .   .   .',
+    '.   .   .   .   .   .   e   e   g^  n   h<  h   h   h   .   .   .   .   .   .',
+    '.   .   .   .   .   .   e   i^  g   n   j   j   j>  h   .   .   .   .   .   .',
+    '.   .   .   .   .   .   e   i   g   n   j   k<  k   k   .   .   .   .   .   .',
+    '.   .   .   .   .   .   e   i   g   n   j   j   o   k   .   .   .   .   .   .',
+    '.   .   .   .   .   .   e   i   g   n   n   l^  o   k   .   .   .   .   .   .',
+    'm   m   m>  e   e   e   e   i   g   g   nv  l   o   o>  p   p   p   p   p   p>',
+    'm   s   i   i   i   i   i   i   q^  t   t   l   l   l   p   r^  z   z   z   x',
+    'm   s   s   s   s>  B   B   C   q   q   tv  w   w   w   p   r   z   r   z   x',
+    'm   u^  A   v<  v   v   B   C   y   y   y   E   E   wv  p   r   z   r   z   xv',
+    'm   u   A   K   K   K   B   C   y   H   yv  I   E   p   p   r   r   r   zv  L',
+    'm   m   A   A>  G   K   Bv  Cv  D^  H   M   I   E   E   E   E   E   E>  T   L',
+    'F^  m   m   G<  G   K   Q   Q   D   Hv  M   Iv  J<  J   J   J   J   J   T   L',
+    'F   F   F   F   F   Kv  N   Q   D   O   M   M   R   T   T   T   T   T   T   Lv',
+    '.   .   .   .   .   .   N   Q   D   O   P   Mv  R   T   .   .   .   .   .   .',
+    '.   .   .   .   .   .   Nv  Q   D   Ov  P   P>  R   T   .   .   .   .   .   .',
+    '.   .   .   .   .   .   U   Qv  R<  R   R   R   R   T   .   .   .   .   .   .',
+    '.   .   .   .   .   .   U   S<  S   S   S   S   S   Tv  .   .   .   .   .   .',
+    '.   .   .   .   .   .   Uv  V   V   V   a0  a0  a0  a0  .   .   .   .   .   .',
+    '.   .   .   .   .   .   W   Vv  X   Z   a0  b0  b0  a0  .   .   .   .   .   .',
+    '.   .   .   .   .   .   W   W>  Xv  Z   a0  Y   b0  a0  .   .   .   .   .   .',
+    '.   .   .   .   .   .   Z   Z   Z   Z   a0  Yv  b0  a0  .   .   .   .   .   .',
+    '.   .   .   .   .   .   Zv  a0< a0  a0  a0  b0< b0  a0  .   .   .   .   .   .',
+  ],
+  { outline: true, tier: 'hard' },
+);

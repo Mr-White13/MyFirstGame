@@ -41,6 +41,11 @@
             android:value="@string/admob_app_id" />
     </application>
 
+    <!-- The activity is locked to portrait, which implies android.hardware.screen.portrait as a
+         required feature. Mark it optional so Play doesn't exclude devices that can't report it
+         (Chromebooks, Google Play Games on PC, Android XR). The game still runs in portrait. -->
+    <uses-feature android:name="android.hardware.screen.portrait" android:required="false" />
+
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />

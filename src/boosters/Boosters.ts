@@ -35,7 +35,7 @@ export const BOOSTERS: Readonly<Record<BoosterId, BoosterDefinition>> = {
     get name() {
       return t('game.boosterHint');
     },
-    cost: 20,
+    cost: 50,
     get description() {
       return t('game.boosterHintDescription');
     },
@@ -45,7 +45,7 @@ export const BOOSTERS: Readonly<Record<BoosterId, BoosterDefinition>> = {
     get name() {
       return t('game.boosterReveal');
     },
-    cost: 40,
+    cost: 100,
     get description() {
       return t('game.boosterRevealDescription');
     },

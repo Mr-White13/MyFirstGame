@@ -5,7 +5,10 @@ export interface ConfirmQuestion {
   readonly title: string;
   readonly text: string;
   readonly confirm: string;
-  readonly cancel: string;
+  /** No cancel text: a notice with a single button (closing it any way resolves false). */
+  readonly cancel?: string;
+  /** `info`: the neutral (cyan) look for notices and tips. Default: the warning look. */
+  readonly tone?: 'warning' | 'info';
 }
 
 /**
@@ -44,6 +47,7 @@ export const RESET_SETTINGS: ConfirmQuestion = question('game.resetTitle', 'game
 export class ConfirmDialog {
   private readonly overlay = new Overlay(requireElement('confirm-dialog'));
   private readonly title = requireElement('confirm-title');
+  private readonly card = requireElement('confirm-card');
   private readonly text = requireElement('confirm-text');
   private readonly okButton = requireElement<HTMLButtonElement>('btn-confirm-ok');
   private readonly cancelButton = requireElement<HTMLButtonElement>('btn-confirm-cancel');
@@ -65,8 +69,14 @@ export class ConfirmDialog {
     this.title.textContent = question.title;
     this.text.textContent = question.text;
     this.okButton.textContent = question.confirm;
-    this.cancelButton.textContent = question.cancel;
-    this.overlay.show(this.cancelButton);
+    this.cancelButton.textContent = question.cancel ?? '';
+    this.cancelButton.hidden = question.cancel === undefined;
+    const warning = question.tone !== 'info';
+    this.card.classList.toggle('card--warning', warning);
+    this.title.classList.toggle('card__title--warning', warning);
+    this.okButton.classList.toggle('btn--warning', warning);
+    this.okButton.classList.toggle('btn--primary', !warning);
+    this.overlay.show(question.cancel === undefined ? this.okButton : this.cancelButton);
     return new Promise((resolve) => {
       this.resolve = resolve;
     });

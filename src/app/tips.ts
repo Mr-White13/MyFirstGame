@@ -6,11 +6,14 @@ import type { FeedbackEvent } from './Feedback';
  * first matters, never a blocking tutorial. Each is shown once ever (saved
  * in the rewards record, see Rewards.markTipSeen).
  */
-export type TipId = 'tap' | 'blocked' | 'chain' | 'streak';
+export type TipId = RuleTipId | 'zoom';
 
-export const TIP_IDS: readonly TipId[] = ['tap', 'blocked', 'chain', 'streak'];
+/** Tips shown as toasts. `zoom` is a one-time dialog instead (App.zoomHint), shown to every player. */
+export type RuleTipId = 'tap' | 'blocked' | 'chain' | 'streak';
 
-const TIP_KEYS: Readonly<Record<TipId, MessageKey>> = {
+export const TIP_IDS: readonly TipId[] = ['tap', 'blocked', 'chain', 'streak', 'zoom'];
+
+const TIP_KEYS: Readonly<Record<RuleTipId, MessageKey>> = {
   tap: 'game.tipTap',
   blocked: 'game.tipBlocked',
   chain: 'game.tipChain',
@@ -18,7 +21,7 @@ const TIP_KEYS: Readonly<Record<TipId, MessageKey>> = {
 };
 
 /** A tip's text, in the current language. */
-export function tipText(id: TipId): string {
+export function tipText(id: RuleTipId): string {
   return t(TIP_KEYS[id]);
 }
 
@@ -29,7 +32,7 @@ export const TIP_MS = 4500;
 export const TIPS_UNTIL_COMPLETED = 5;
 
 /** The tip a game event introduces, if any: the first lost heart, chain release and streak bonus. */
-export function tipForEvent(event: FeedbackEvent): TipId | null {
+export function tipForEvent(event: FeedbackEvent): RuleTipId | null {
   if (event.type === 'blocked' && event.lifeLost) return 'blocked';
   if (event.type === 'chain' && event.index === 0) return 'chain';
   if (event.type === 'bonus' && event.index === 0) return 'streak';

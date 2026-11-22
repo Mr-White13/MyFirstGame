@@ -1,0 +1,37 @@
+import { levelFromMap } from './levelMap';
+
+/** Level 193 — chapter 10, hard level, long arrows, generated from tools/level-plan.json (seed 19372, attempt 8), score 82 (Very hard). */
+export default levelFromMap(
+  193,
+  [
+    'a   a   a   a   a   a   a>  b   b>  h   h   h   h   c   c   c   c   c   c   c>',
+    'd   d>  e^  b   b   b   b   b   f   f   f>  g^  h   h   h>  r   r   r   i^  j^',
+    'd   s   e   k^  f   f   f   f   f   l   l>  g   m   r   r   r   m^  r   i   j',
+    'd   s   e   k   n<  n   n   o   o   l   o^  g   m   m   m   m   m   r   i   j',
+    'd   s   e   k   u   p^  n   o   l   l   o   g   q   q   q   q   q>  rv  i   j',
+    'd   sv  e   k   u   p   p   o   o   o   o   g   q   t<  t   t   t   i   i   j',
+    'u<  u   e   e   u   v^  p   p   p   p   p   p   w^  x   x   x   x>  i   y   y>',
+    'z^  u   u   u   u   v   H   H   A   A   A>  B^  w   x   C   C   C   i   y   b0',
+    'z   z   z   z   E   v   H   A   A   B   B   B   w   x   Cv  .   C   i   y   b0',
+    'D^  E<  E   E   E   v   H   A   w   w   w   w   w   F   F>  G   G>  i   y   b0',
+    'D   D   D   D   D   v   H   H>  w   I   I   I   I>  F   G   G   i   i   y   b0',
+    'J^  U   U   K^  D   v   v   v   w   w   w   w   Q   F   T   T   T   T   b0  b0',
+    'J   U   L^  K   D   D   D   D   D   D   D   w   Q   S   S   S   S   T   b0  M^',
+    'J   U   L   K   N^  O^  P<  P   P   P   P   Q<  Q   R   R   R>  Sv  Tv  b0  M',
+    'J   Uv  L   K   N   O   X   X   X   X   P   a0  a0  a0  V   V   V   V>  b0  b0',
+    'J   J   L   K   K   O   W   W   W>  Xv  P   Y^  Z^  a0  a0> q0  q0  q0  q0  b0v',
+    'c0^ J   L   j0  j0  O   d0  d0  d0  d0> P   Y   Z   f0  l0  l0  .   h0  q0  q0',
+    'c0  J   L   j0  J   J   e0< e0  e0  e0  P   Y   Z   f0v l0  g0< g0  h0v i0^ q0',
+    'c0  J   j0< j0  J   k0< k0  k0  k0  k0  k0  Y   Z   l0< l0  i0  i0  i0  i0  q0',
+    'c0  J   J   J   J   c0  o0  o0  o0  o0  k0  Y   Z   y0  y0  y0  y0  y0  y0  q0',
+    'c0  c0  c0  c0  c0  c0  o0  p0  p0  p0  m0^ Z   Z   y0  z0  z0  z0  z0  y0  q0',
+    'n0< n0  n0  n0  o0< o0  o0  p0v t0  p0  m0  m0  x0  y0  z0  C0  y0  y0  y0  q0v',
+    'E0  E0  E0  n0  n0  n0  r0^ t0  t0  p0  p0  m0  x0  y0  z0  C0  C0  C0  C0  C0',
+    'E0  v0  v0  v0  v0  v0  r0  t0  w0  w0  p0  m0  x0  y0  z0  u0  u0  u0  s0^ C0',
+    'E0  v0  r0  r0  r0  r0  r0  t0  t0> w0  m0  m0  x0  y0  z0  u0v s0  u0  s0  C0',
+    'E0  v0  v0  v0> A0  B0  B0  B0  B0  w0  w0> B0  x0v y0v z0v D0  s0  s0  s0  C0',
+    'E0  A0< A0  A0  A0  B0v F0  F0  B0  B0  B0  B0  C0< C0  C0  D0  D0  D0  D0> C0',
+    'E0v F0< F0  F0  F0  F0  F0  G0  G0  G0  G0  G0  G0  G0> C0  C0  C0  C0  C0  C0',
+  ],
+  { tier: 'hard' },
+);

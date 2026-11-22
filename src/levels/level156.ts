@@ -1,0 +1,35 @@
+import { levelFromMap } from './levelMap';
+
+/** Level 156 — chapter 8, shaped hard level (crown outline), long arrows, generated from tools/level-plan.json (seed 15600, attempt 0), score 76 (Very hard). */
+export default levelFromMap(
+  156,
+  [
+    '.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .',
+    '.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .',
+    '.   .   .   .   .   g   .   .   .   a   a>  .   .   .   m   .   .   .   .   .',
+    '.   .   .   .   .   g   .   .   .   a   b   .   .   .   m   .   .   .   .   .',
+    'f   .   .   .   .   g   .   .   .   a   bv  .   .   .   m   .   .   .   .   c^',
+    'f   .   .   .   g   g   .   .   .   a   a   .   .   .   m   e   .   .   .   c',
+    'f   .   .   .   g   j   j   .   .   d^  a   .   .   k   m   ev  .   .   .   c',
+    'f   f>  .   .   g   g>  j   .   d   d   a   h^  .   k   m   m   .   .   c   c',
+    'i<  i   .   .   j<  j   j   .   d   k^  a   h   .   k   l^  m   .   .   c   m^',
+    'w   i   i   i   i   i   n<  n   d   k   k   k   k   k   l   m   m   m   m   m',
+    'w   o^  p   p   p   p   p>  n   d   v   v   v   v   v   l   l   l   l   l   l',
+    'w   o   p   q^  r^  s<  s   n   t^  x   x   x   u^  v   v   v   v   v   v>  l',
+    'wv  o   p   q   r   r   r   n   t   xv  y<  y   u   u   u   u   u   z   z>  l',
+    'o   o   p   q   B   B   B   n   t   C   C   y   z   z   z   z   z   z   A^  l',
+    'o   p   p   q   F   F   Bv  t   t   Cv  y   y   z   A   A   A   A   A   A   D^',
+    'o   p   E<  E   E   Fv  J   I   M   M   M   M   z   z   z   G<  G   G   H^  D',
+    'o   p   I^  J<  J   J   J   I   M   K<  K   K   K   L^  O   O   O   G   H   D',
+    'o   p   I   I   I   I   I   I   M   N   N   N   K   L   O   G   G   G   H   D',
+    'o   o   o   o   M<  M   M   M   M   Nv  c0  N   K   L   O   O>  H   H   H   D',
+    'P<  P   P   o   Z   Z   Z   Z   Z   c0  c0  N   K   L   D   D   D   D   D   D',
+    'f0  a0  a0  Q   Q   Q>  Y   h0  Z   c0  S   R^  S^  L   L   L   L   L   L   L',
+    'f0  T^  a0  b0  b0  Y   Y   h0  Z   c0  S   R   S   U^  V   V>  W   W>  X^  L',
+    'f0  T   a0  b0  Y<  Y   h0  h0  Zv  c0  S   R   S   U   V   d0  W   X   X   L',
+    'f0  T   a0  b0  g0  g0  h0  U   U   c0  S   S   S   U   V   d0  e0  e0  e0  e0',
+    'f0  T   a0v b0  b0> g0  h0  h0  U   c0  c0  c0  c0> U   V   d0  d0  d0  d0> e0v',
+    'f0  f0  f0  f0  f0> g0  g0> h0v U   U   U   U   U   U   V   V   V   V   V   V',
+  ],
+  { outline: true, tier: 'hard' },
+);

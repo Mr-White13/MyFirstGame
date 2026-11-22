@@ -1,0 +1,35 @@
+import { levelFromMap } from './levelMap';
+
+/** Level 295 — chapter 15, one-life level (normal board, a single heart), full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers, generated from tools/level-plan.json (seed 29506, attempt 13), score 81 (Very hard). */
+export default levelFromMap(
+  295,
+  [
+    'C   A<  A   A   C   C   C   C   C>  E   E   E   E   E   E   Y   Y   Y   E^',
+    'C   S   S   A   C   G<  G   E   E   E   I<  I   I   I   E   Y   K^  Y   E',
+    'C   S   S   A   C   O   G   E   G   G   G   G   M^  I   E   Y   K   Y   E',
+    'C   S   S   C   C   Ov  G   G   G   Q   Q>  G   M   I   E   Y   K   K   E',
+    'C   S<  S   C   U^  W   W   W   W   W   W   W>  M   I   E   Y   Y   Y>  E',
+    'C   C   C   C   U   W   a0< a0  a0  a0  a0  a0  M   I   E   E   E   E   E',
+    'U   U   U   U   U   W   W   W   W   W   e0  a0  M   I   I   b0< b0  b0  b0',
+    'U   c0< c0  c0  c0  c0  c0  d0^ e0< e0  e0  f0^ M   M   m0  m0  m0  m0  b0',
+    'U   g0  g0  g0  g0  g0> c0  d0  d0  d0  d0  f0  h0^ M   m0  i0  i0> m0  b0',
+    'U   g0  j0  j0  j0  j0> c0  k0  k0  k0> d0  f0  h0  M   m0  i0  m0  m0  b0',
+    'U   g0  g0  g0  g0  g0  c0  c0  c0  c0  d0  f0  h0  M   m0  i0  i0  i0  b0',
+    'U   U   U   U   b   b   b   b   b   c0  c0  l0^ h0  M   m0  m0  m0> b0  b0',
+    'a^  n   n   U   bv  c   c   c>  b   l0  l0  l0  h0  M   M   d^  e   e   e>',
+    'a   f^  n   U   U   U   U   U   U   l0  g   g   g   g>  M   d   e   h^  i^',
+    'a   f   n   j   j   j   j   j>  U   l0  g   M   M   M   M   d   h   h   i',
+    'a   f   n   j   k<  k   k   k   U   l0  g   M   d   d   d   d   l<  l   i',
+    'm^  n<  n   o<  o   o   o   o   o   l0  g   M   p   p   p   p   p>  l   l',
+    'm   m   m   m   m   q   q   q   q>  l0  g   M   s   s   s   s   s   s   l',
+    'r   r   r   r>  m   q   x   x   x   l0  g   g   g   g   g   g   t   sv  t^',
+    'r   u<  u   u   u   q   x   v^  x   x   x   w<  w   w   x^  g   t   t   t',
+    'D   D   y^  L   L   q   v   v   z<  z   x   x   x   x   x   g   g   g   g',
+    'X   D   y   L   L   q   v   N   N   z   z   z   z   B^  J   J   J   J   g',
+    'X   Dv  y   L   L   q   v   P   N   F   F>  B   B   B   H   H   H>  Jv  g',
+    'X   X   y   Lv  L   q   v   P   N   N>  P^  B   Z   R   R   R   R   R>  g',
+    'T^  X   y   y   L   q   v   P   P   P   P   B   Z   V   V   V   V   V>  g',
+    'T   X   X>  y   L   q   v   v   v   v   v   B   Z   Z   Z   Z   Z   Z>  g',
+  ],
+  { lives: 1, curls: true },
+);

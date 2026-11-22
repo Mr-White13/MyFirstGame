@@ -37,13 +37,24 @@ export function arrowLabel(index: number): string {
  * Pass `{ revision }` when a level's layout is redesigned (see LevelData.revision),
  * `{ name }` for a special level with a display name (see LevelData.name),
  * `{ outline: true }` for a shaped board (see LevelData.outline),
- * `{ tier }` for a hard or very hard level (see LevelData.tier).
+ * `{ tier }` for a hard or very hard level (see LevelData.tier),
+ * `{ lives: 1 }` for a one-life level (see LevelData.lives),
+ * `{ curls: true }` for a level with spiral or hook arrows (see below).
  *
  * The body order (tail → head) is recovered by walking back from the head,
- * so every arrow must be a simple, unbranched chain. The result is a plain
+ * so every arrow must be a simple, unbranched chain. With `curls`, an arrow
+ * may also run alongside itself (a spiral or a hook, where one cell touches
+ * two of its own cells): its body is then the first path, in a fixed search
+ * order, that starts at the head, steps straight back behind it and visits
+ * every cell once. The generator only keeps levels as loaded this way, so a
+ * level always plays exactly as it was measured. The result is a plain
  * `LevelData`; validity and solvability are still checked by `validateLevel`.
  */
-export function levelFromMap(id: number, map: readonly string[], options: { revision?: number; name?: string; outline?: boolean; tier?: LevelData['tier'] } = {}): LevelData {
+export function levelFromMap(
+  id: number,
+  map: readonly string[],
+  options: { revision?: number; name?: string; outline?: boolean; tier?: LevelData['tier']; lives?: number; curls?: boolean } = {},
+): LevelData {
   const grid = map.map((row) => row.trim().split(/\s+/));
   const rows = grid.length;
   const cols = grid[0]?.length ?? 0;
@@ -73,7 +84,7 @@ export function levelFromMap(id: number, map: readonly string[], options: { revi
   for (const [letter, cells] of bodies) {
     const head = heads.get(letter);
     if (!head) throw new Error(`Level ${id}: arrow "${letter}" has no head mark`);
-    arrows.push(traceArrow(id, letter, head, cells));
+    arrows.push(traceArrow(id, letter, head, cells, options.curls === true));
   }
   // Stable order (by letter) keeps ids and the intro animation predictable.
   arrows.sort((a, b) => (a.id < b.id ? -1 : 1));
@@ -83,6 +94,7 @@ export function levelFromMap(id: number, map: readonly string[], options: { revi
     ...(options.name === undefined ? {} : { name: options.name }),
     ...(options.outline ? { outline: true } : {}),
     ...(options.tier === undefined ? {} : { tier: options.tier }),
+    ...(options.lives === undefined ? {} : { lives: options.lives }),
     rows,
     cols,
     arrows,
@@ -114,6 +126,7 @@ function traceArrow(
   letter: string,
   head: { row: number; col: number; direction: Direction },
   cells: readonly { row: number; col: number }[],
+  curls = false,
 ): ArrowData {
   const remaining = new Set(cells.map((c) => `${c.row},${c.col}`));
   const path: [number, number][] = [[head.row, head.col]];
@@ -126,6 +139,8 @@ function traceArrow(
       .map((v) => ({ row: current.row + v.dRow, col: current.col + v.dCol }))
       .filter((c) => remaining.has(`${c.row},${c.col}`));
     if (next.length !== 1) {
+      const curled = next.length > 1 && curls ? traceCurled(head, cells) : null;
+      if (curled) return arrow(letter, head.direction, ...curled);
       throw new Error(
         `Level ${levelId}: arrow "${letter}" is ${next.length === 0 ? 'disconnected' : 'branching'} near ${current.row},${current.col}`,
       );
@@ -135,4 +150,41 @@ function traceArrow(
     path.push([current.row, current.col]);
   }
   return arrow(letter, head.direction, ...path.reverse());
+}
+
+/** Search steps allowed per curled arrow before it is reported as branching. */
+const CURL_SEARCH_LIMIT = 200_000;
+
+/**
+ * A spiral or hook arrow's body, tail → head: a depth-first search for a path
+ * through every cell that starts at the head and steps straight back behind
+ * it first (so the head continues its body), trying neighbours in the fixed
+ * DIRECTION_VECTORS order. Null if there is none (or the search runs too long).
+ */
+function traceCurled(head: { row: number; col: number; direction: Direction }, cells: readonly { row: number; col: number }[]): [number, number][] | null {
+  const key = (r: number, c: number) => `${r},${c}`;
+  const unvisited = new Set(cells.map((c) => key(c.row, c.col)));
+  const back = DIRECTION_VECTORS[head.direction];
+  const behind = { row: head.row - back.dRow, col: head.col - back.dCol };
+  if (!unvisited.has(key(behind.row, behind.col))) return null;
+  const path: [number, number][] = [[head.row, head.col], [behind.row, behind.col]];
+  unvisited.delete(key(head.row, head.col));
+  unvisited.delete(key(behind.row, behind.col));
+  let steps = 0;
+  const extend = (row: number, col: number): boolean => {
+    if (unvisited.size === 0) return true;
+    if (++steps > CURL_SEARCH_LIMIT) return false;
+    for (const v of Object.values(DIRECTION_VECTORS)) {
+      const r = row + v.dRow;
+      const c = col + v.dCol;
+      if (!unvisited.has(key(r, c))) continue;
+      unvisited.delete(key(r, c));
+      path.push([r, c]);
+      if (extend(r, c)) return true;
+      path.pop();
+      unvisited.add(key(r, c));
+    }
+    return false;
+  };
+  return extend(behind.row, behind.col) ? path.reverse() : null;
 }

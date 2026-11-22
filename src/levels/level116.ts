@@ -1,0 +1,35 @@
+import { levelFromMap } from './levelMap';
+
+/** Level 116 — chapter 6, shaped hard level (pyramid outline), long arrows, generated from tools/level-plan.json (seed 11681, attempt 3), score 74 (Very hard). */
+export default levelFromMap(
+  116,
+  [
+    '.  .  .  .  .  .  .  .  i  i  i  a^ .  .  .  .  .  .  .  .',
+    '.  .  .  .  .  .  .  .  i  a  a  a  .  .  .  .  .  .  .  .',
+    '.  .  .  .  .  .  .  .  i  a  b< b  .  .  .  .  .  .  .  .',
+    '.  .  .  .  .  .  .  .  i  a  c^ b  .  .  .  .  .  .  .  .',
+    '.  .  .  .  .  .  .  .  i  a  c  d^ .  .  .  .  .  .  .  .',
+    '.  .  .  .  .  .  i  i  i  a  c  d  e< e  .  .  .  .  .  .',
+    '.  .  .  .  .  .  i  e  e  a  c  d  d  e  .  .  .  .  .  .',
+    '.  .  .  .  .  .  i  f^ e  e  e  e  e  e  .  .  .  .  .  .',
+    '.  .  .  .  .  .  i  f  g  g  g  g  g> h^ .  .  .  .  .  .',
+    '.  .  .  .  .  .  iv f  f  j^ n  n  o  h  .  .  .  .  .  .',
+    '.  .  .  .  z  r  r  r  f  j  n  k^ o  h  l< l  .  .  .  .',
+    '.  .  .  .  z  r  p  p  m^ j  nv k  ov h  h  l  .  .  .  .',
+    '.  .  .  .  z  r  pv A  m  j  j  k  k  k  h  l  .  .  .  .',
+    '.  .  .  .  z  r  A  A  m  m  j  q< q  k  h  l  .  .  .  .',
+    '.  .  .  .  z  rv A  s^ t^ m  j  B  q  k  h  l  .  .  .  .',
+    '.  .  .  .  z  z  A  s  t  t  j  B  q  k  l  l  .  .  .  .',
+    '.  .  u^ Q  Q  z  A  s  v^ w^ j  B  q  k  k  x  x> H  .  .',
+    '.  .  u  Q  C  z  A  s  v  w  j  B  q  y  y  x  y^ H  .  .',
+    '.  .  u  Q  C  zv Av B< B  w  w  B  N  N  y  x  y  H  .  .',
+    '.  .  u  Q  Cv D  D  D  B  B  B  B  S  N  y  x  y  H  .  .',
+    '.  .  u  Q  D< D  E< E  E  E  G  G  S  N  y  x  y  H  .  .',
+    'u  u  u  Q  Q  Q  U  F< F  F  Gv M  S  N  y  y  y  H  H> I^',
+    'u  J< J  J  V  Q  U  K^ L^ X  M< M  S  Nv R  R  R  R  R  I',
+    'u  O^ P  P> V  Qv U  K  L  X  Y  R^ S  S> R  T  T  T> R  I',
+    'U^ O  O  V< V  U  U  K  K  X  Y  R  R  R  R  W  W  W  W> I',
+    'U  U  U  U  U  U  X< X  X  X  Y  Y  Y  Y  Y  Y  Y  Y> I  I',
+  ],
+  { outline: true, tier: 'hard' },
+);

@@ -43,7 +43,7 @@ describe('updating from 10 to 30 levels', () => {
     expect(isUnlocked(progress, 5)).toBe(false);
   });
 
-  it('completing Level 10 now unlocks Level 11, each level unlocks the next up to 100, and Level 100 is the final level', () => {
+  it('completing Level 10 now unlocks Level 11, each level unlocks the next up to 300, and Level 300 is the final level', () => {
     const store = new MemoryStore();
     store.setItem(STORAGE_KEY, tenLevelSave());
     let progress = new ProgressStorage(LEVELS.length, store).load();
@@ -51,15 +51,15 @@ describe('updating from 10 to 30 levels', () => {
       levelId, revision: LEVELS[levelId - 1].revision ?? 1, outcome: 'won', timeMs: 40_000, uncountedTimeMs: 40_000,
       moves: 10, stars: 3, directClears: 10, autoClears: 0, bonusClears: 0, longestChain: 0, mistakes: 0,
     });
-    for (let id = 11; id <= 99; id++) {
+    for (let id = 11; id <= 299; id++) {
       const { records, completion } = applyAttempt({ progress, stats: createStats() }, won(id), LEVELS.length);
       expect(completion?.unlocked).toBe(id + 1);
       progress = records.progress;
     }
-    const last = applyAttempt({ progress, stats: createStats() }, won(100), LEVELS.length);
+    const last = applyAttempt({ progress, stats: createStats() }, won(300), LEVELS.length);
     expect(last.completion?.unlocked).toBeNull(); // nothing after the final level
-    expect(LEVELS.at(-1)?.id).toBe(100); // the dialog's "game complete" variant triggers at levelCount
-    expect(recordCompletion(last.records.progress, 100, { moves: 1, stars: 1, mistakes: 2, timeMs: 1 }, LEVELS.length).unlocked).toBeNull();
+    expect(LEVELS.at(-1)?.id).toBe(300); // the dialog's "game complete" variant triggers at levelCount
+    expect(recordCompletion(last.records.progress, 300, { moves: 1, stars: 1, mistakes: 2, timeMs: 1 }, LEVELS.length).unlocked).toBeNull();
   });
 
   it('leaves rewards, achievements and settings untouched when progress is loaded with the new level count', () => {

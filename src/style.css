@@ -632,6 +632,15 @@ body.is-navigating #app {
   white-space: nowrap;
 }
 
+/* One-life levels (LevelData.lives) show only the hearts they start with. */
+.heart--absent {
+  display: none;
+}
+
+.hud__name--one-life {
+  color: var(--pink);
+}
+
 .hud__name--hard {
   color: var(--orange);
 }
@@ -1066,6 +1075,12 @@ body.is-navigating #app {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+}
+
+/* A notice with a single button (the other one hidden): centred, half width. */
+.card__row:has(> [hidden]) {
+  grid-template-columns: minmax(0, 0.5fr);
+  justify-content: center;
 }
 
 /* ---------- Lives, stars and run statistics ---------- */

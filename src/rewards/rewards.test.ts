@@ -80,9 +80,9 @@ describe('daily reward claims', () => {
     const result = rewards.claimDaily(DAY)!;
     expect(result.reward).toMatchObject({ day: 1, credits: 10 });
     expect(result.unlocked.map((a) => a.id)).toEqual(['first-check-in']);
-    expect(rewards.credits).toBe(10 + 10);
+    expect(rewards.credits).toBe(10 + 5);
     expect(rewards.claimDaily(DAY)).toBeNull();
-    expect(rewards.credits).toBe(20);
+    expect(rewards.credits).toBe(15);
   });
 
   it('opening the game never pays by itself, even on a new day', () => {
@@ -118,7 +118,7 @@ describe('daily reward claims', () => {
     const saved = readRewards(store.data.get(REWARDS_KEY)!).value;
     expect(saved.daily.lastClaim).toBe(DAY);
     expect(saved.wallet.applied).toContain('daily:2026-10-31');
-    expect(saved.wallet.credits).toBe(20);
+    expect(saved.wallet.credits).toBe(15);
   });
 
   it('cannot be claimed again after a refresh', () => {
@@ -129,7 +129,7 @@ describe('daily reward claims', () => {
     reloaded.checkIn(DAY);
     expect(reloaded.status(DAY)).toBe('claimed');
     expect(reloaded.claimDaily(DAY)).toBeNull();
-    expect(reloaded.credits).toBe(20);
+    expect(reloaded.credits).toBe(15);
   });
 
   it('an interrupted (failed) write never leaves a claim without credits or credits without a claim', () => {
@@ -155,7 +155,7 @@ describe('daily reward claims', () => {
     const rewards = setup(store).rewards;
     expect(rewards.status(DAY)).toBe('available');
     expect(rewards.claimDaily(DAY)).toBeNull();
-    expect(rewards.credits).toBe(20);
+    expect(rewards.credits).toBe(15);
   });
 
   it('a clock moved back to an unclaimed earlier date pays nothing', () => {
@@ -230,7 +230,7 @@ describe('achievements', () => {
     const first = rewards.afterAttempt(DAY, 0).map((a) => a.id);
     expect(first).toEqual(expect.arrayContaining(['first-escape', 'perfect-run']));
     const credits = rewards.credits;
-    expect(credits).toBe(15 + 20);
+    expect(credits).toBe(10 + 10);
     for (let i = 0; i < 5; i++) {
       records.progress = win(records.progress, 1);
       expect(rewards.afterAttempt(DAY, 0)).toEqual([]);
@@ -250,7 +250,7 @@ describe('achievements', () => {
     const again = new Rewards({ levels: LEVELS, records: () => records }, store);
     again.sync(DAY);
     expect(again.current.achievements['first-escape']).toBe(DAY); // shown as unlocked again…
-    expect(again.credits).toBe(35); // …but not paid twice
+    expect(again.credits).toBe(20); // …but not paid twice
   });
 
   it('chain achievements come from the longest chain of any attempt', () => {

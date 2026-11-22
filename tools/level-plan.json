@@ -4065,5 +4065,9429 @@
   ],
   "note": "THE FORTRESS, a shaped extreme level: a 36×28 board filled only inside the castle outline (tools/shapes.ts), chains lengthened with fillLevel deepenSteps",
   "tier": "very hard"
+ },
+ {
+  "id": 101,
+  "rows": 18,
+  "cols": 13,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 14,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   68,
+   82
+  ],
+  "depth": [
+   18,
+   34
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2000,
+  "seeds": [
+   10100,
+   10101,
+   10102,
+   10103,
+   10104,
+   10105,
+   10106,
+   10107,
+   10108,
+   10109,
+   10110,
+   10111
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 6, normal level, long arrows"
+ },
+ {
+  "id": 102,
+  "rows": 18,
+  "cols": 13,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 14,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   68,
+   82
+  ],
+  "depth": [
+   18,
+   34
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2000,
+  "seeds": [
+   10200,
+   10201,
+   10202,
+   10203,
+   10204,
+   10205,
+   10206,
+   10207,
+   10208,
+   10209,
+   10210,
+   10211
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 6, normal level, long arrows"
+ },
+ {
+  "id": 103,
+  "rows": 18,
+  "cols": 13,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 14,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   68,
+   82
+  ],
+  "depth": [
+   18,
+   34
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2000,
+  "seeds": [
+   10300,
+   10301,
+   10302,
+   10303,
+   10304,
+   10305,
+   10306,
+   10307,
+   10308,
+   10309,
+   10310,
+   10311
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 6, normal level, long arrows"
+ },
+ {
+  "id": 104,
+  "rows": 24,
+  "cols": 18,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 16,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   96
+  ],
+  "depth": [
+   24,
+   200
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 3000,
+  "seeds": [
+   10400,
+   10401,
+   10402,
+   10403,
+   10404,
+   10405,
+   10406,
+   10407,
+   10408,
+   10409,
+   10410,
+   10411
+  ],
+  "maxShortShare": 0.1,
+  "tier": "hard",
+  "note": "chapter 6, hard level, long arrows"
+ },
+ {
+  "id": 105,
+  "rows": 18,
+  "cols": 13,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 14,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   68,
+   82
+  ],
+  "depth": [
+   18,
+   34
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2000,
+  "seeds": [
+   10500,
+   10501,
+   10502,
+   10503,
+   10504,
+   10505,
+   10506,
+   10507,
+   10508,
+   10509,
+   10510,
+   10511
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 6, one-life level (normal board, a single heart), long arrows",
+  "lives": 1
+ },
+ {
+  "id": 106,
+  "rows": 18,
+  "cols": 13,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 14,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   68,
+   82
+  ],
+  "depth": [
+   18,
+   34
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2000,
+  "seeds": [
+   10600,
+   10601,
+   10602,
+   10603,
+   10604,
+   10605,
+   10606,
+   10607,
+   10608,
+   10609,
+   10610,
+   10611
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 6, normal level, long arrows"
+ },
+ {
+  "id": 107,
+  "shape": "arrowhead",
+  "rows": 26,
+  "cols": 20,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 12,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 3,
+  "minMeanLength": 5.5,
+  "minCoverage": 0.95,
+  "score": [
+   55,
+   100
+  ],
+  "maxFree": 5,
+  "attempts": 10,
+  "repairRounds": 3000,
+  "deepen": 3000,
+  "refineSteps": 0,
+  "seeds": [
+   10700,
+   10701,
+   10702,
+   10703,
+   10704,
+   10705,
+   10706,
+   10707,
+   10708,
+   10709,
+   10710,
+   10711
+  ],
+  "maxShortShare": 0.15,
+  "tier": "hard",
+  "note": "chapter 6, shaped hard level (arrowhead outline), long arrows"
+ },
+ {
+  "id": 108,
+  "rows": 18,
+  "cols": 13,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 14,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   68,
+   82
+  ],
+  "depth": [
+   18,
+   34
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2000,
+  "seeds": [
+   10800,
+   10801,
+   10802,
+   10803,
+   10804,
+   10805,
+   10806,
+   10807,
+   10808,
+   10809,
+   10810,
+   10811
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 6, normal level, long arrows"
+ },
+ {
+  "id": 109,
+  "rows": 18,
+  "cols": 13,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 14,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   68,
+   82
+  ],
+  "depth": [
+   18,
+   34
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2000,
+  "seeds": [
+   10900,
+   10901,
+   10902,
+   10903,
+   10904,
+   10905,
+   10906,
+   10907,
+   10908,
+   10909,
+   10910,
+   10911
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 6, normal level, long arrows"
+ },
+ {
+  "id": 110,
+  "name": "THE STAR",
+  "shape": "star",
+  "rows": 44,
+  "cols": 34,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 6,
+  "turns": 4,
+  "minLength": 3,
+  "minMeanLength": 4,
+  "minCoverage": 0.96,
+  "score": [
+   76,
+   100
+  ],
+  "attempts": 4,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 0,
+  "seeds": [
+   11090,
+   11091,
+   11092,
+   11093,
+   11094,
+   11095,
+   11096,
+   11097
+  ],
+  "tier": "very hard",
+  "note": "THE STAR, a shaped very hard finale: a 44x34 board filled only inside the star outline (tools/shapes.ts), many arrows with chains lengthened by deepening, harder than the chapter 1-5 finales",
+  "depth": [
+   46,
+   400
+  ]
+ },
+ {
+  "id": 111,
+  "rows": 18,
+  "cols": 13,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 14,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   68,
+   82
+  ],
+  "depth": [
+   18,
+   34
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2000,
+  "seeds": [
+   11100,
+   11101,
+   11102,
+   11103,
+   11104,
+   11105,
+   11106,
+   11107,
+   11108,
+   11109,
+   11110,
+   11111
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 6, normal level, long arrows"
+ },
+ {
+  "id": 112,
+  "rows": 18,
+  "cols": 13,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 14,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   68,
+   82
+  ],
+  "depth": [
+   18,
+   34
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2000,
+  "seeds": [
+   11200,
+   11201,
+   11202,
+   11203,
+   11204,
+   11205,
+   11206,
+   11207,
+   11208,
+   11209,
+   11210,
+   11211
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 6, normal level, long arrows"
+ },
+ {
+  "id": 113,
+  "rows": 24,
+  "cols": 18,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 16,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   96
+  ],
+  "depth": [
+   24,
+   200
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 3000,
+  "seeds": [
+   11300,
+   11301,
+   11302,
+   11303,
+   11304,
+   11305,
+   11306,
+   11307,
+   11308,
+   11309,
+   11310,
+   11311
+  ],
+  "maxShortShare": 0.1,
+  "tier": "hard",
+  "note": "chapter 6, hard level, long arrows"
+ },
+ {
+  "id": 114,
+  "rows": 18,
+  "cols": 13,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 14,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   68,
+   82
+  ],
+  "depth": [
+   18,
+   34
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2000,
+  "seeds": [
+   11400,
+   11401,
+   11402,
+   11403,
+   11404,
+   11405,
+   11406,
+   11407,
+   11408,
+   11409,
+   11410,
+   11411
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 6, normal level, long arrows"
+ },
+ {
+  "id": 115,
+  "rows": 18,
+  "cols": 13,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 14,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   68,
+   82
+  ],
+  "depth": [
+   18,
+   34
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2000,
+  "seeds": [
+   11500,
+   11501,
+   11502,
+   11503,
+   11504,
+   11505,
+   11506,
+   11507,
+   11508,
+   11509,
+   11510,
+   11511
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 6, normal level, long arrows"
+ },
+ {
+  "id": 116,
+  "shape": "pyramid",
+  "rows": 26,
+  "cols": 20,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 12,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 3,
+  "minMeanLength": 5.5,
+  "minCoverage": 0.95,
+  "score": [
+   72,
+   100
+  ],
+  "maxFree": 5,
+  "attempts": 10,
+  "repairRounds": 3000,
+  "deepen": 3000,
+  "refineSteps": 0,
+  "seeds": [
+   11680,
+   11681,
+   11682,
+   11683,
+   11684,
+   11685,
+   11686,
+   11687,
+   11688,
+   11689,
+   11690,
+   11691
+  ],
+  "maxShortShare": 0.15,
+  "tier": "hard",
+  "note": "chapter 6, shaped hard level (pyramid outline), long arrows",
+  "depth": [
+   24,
+   200
+  ]
+ },
+ {
+  "id": 117,
+  "rows": 18,
+  "cols": 13,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 14,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   68,
+   82
+  ],
+  "depth": [
+   18,
+   34
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2000,
+  "seeds": [
+   11700,
+   11701,
+   11702,
+   11703,
+   11704,
+   11705,
+   11706,
+   11707,
+   11708,
+   11709,
+   11710,
+   11711
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 6, normal level, long arrows"
+ },
+ {
+  "id": 118,
+  "rows": 18,
+  "cols": 13,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 14,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   68,
+   82
+  ],
+  "depth": [
+   18,
+   34
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2000,
+  "seeds": [
+   11800,
+   11801,
+   11802,
+   11803,
+   11804,
+   11805,
+   11806,
+   11807,
+   11808,
+   11809,
+   11810,
+   11811
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 6, normal level, long arrows"
+ },
+ {
+  "id": 119,
+  "rows": 24,
+  "cols": 18,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 16,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   96
+  ],
+  "depth": [
+   24,
+   200
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 3000,
+  "seeds": [
+   11900,
+   11901,
+   11902,
+   11903,
+   11904,
+   11905,
+   11906,
+   11907,
+   11908,
+   11909,
+   11910,
+   11911
+  ],
+  "maxShortShare": 0.1,
+  "tier": "hard",
+  "note": "chapter 6, hard level, long arrows"
+ },
+ {
+  "id": 120,
+  "name": "THE BOLT",
+  "shape": "bolt",
+  "rows": 44,
+  "cols": 34,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 6,
+  "turns": 4,
+  "minLength": 3,
+  "minMeanLength": 4,
+  "minCoverage": 0.96,
+  "score": [
+   76,
+   100
+  ],
+  "attempts": 4,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 0,
+  "seeds": [
+   12090,
+   12091,
+   12092,
+   12093,
+   12094,
+   12095,
+   12096,
+   12097
+  ],
+  "tier": "very hard",
+  "note": "THE BOLT, a shaped very hard finale: a 44x34 board filled only inside the bolt outline (tools/shapes.ts), many arrows with chains lengthened by deepening, harder than the chapter 1-5 finales",
+  "depth": [
+   46,
+   400
+  ]
+ },
+ {
+  "id": 121,
+  "rows": 19,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 16,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.8,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   84
+  ],
+  "depth": [
+   20,
+   37
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2500,
+  "seeds": [
+   12100,
+   12101,
+   12102,
+   12103,
+   12104,
+   12105,
+   12106,
+   12107,
+   12108,
+   12109,
+   12110,
+   12111
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 7, normal level, long arrows"
+ },
+ {
+  "id": 122,
+  "rows": 19,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 16,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.8,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   84
+  ],
+  "depth": [
+   20,
+   37
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2500,
+  "seeds": [
+   12200,
+   12201,
+   12202,
+   12203,
+   12204,
+   12205,
+   12206,
+   12207,
+   12208,
+   12209,
+   12210,
+   12211
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 7, normal level, long arrows"
+ },
+ {
+  "id": 123,
+  "rows": 19,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 16,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.8,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   84
+  ],
+  "depth": [
+   20,
+   37
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2500,
+  "seeds": [
+   12300,
+   12301,
+   12302,
+   12303,
+   12304,
+   12305,
+   12306,
+   12307,
+   12308,
+   12309,
+   12310,
+   12311
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 7, normal level, long arrows"
+ },
+ {
+  "id": 124,
+  "rows": 24,
+  "cols": 18,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 18,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   96
+  ],
+  "depth": [
+   26,
+   200
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 3000,
+  "seeds": [
+   12400,
+   12401,
+   12402,
+   12403,
+   12404,
+   12405,
+   12406,
+   12407,
+   12408,
+   12409,
+   12410,
+   12411
+  ],
+  "maxShortShare": 0.1,
+  "tier": "hard",
+  "note": "chapter 7, hard level, long arrows"
+ },
+ {
+  "id": 125,
+  "rows": 19,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 16,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.8,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   84
+  ],
+  "depth": [
+   20,
+   37
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2500,
+  "seeds": [
+   12500,
+   12501,
+   12502,
+   12503,
+   12504,
+   12505,
+   12506,
+   12507,
+   12508,
+   12509,
+   12510,
+   12511
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 7, one-life level (normal board, a single heart), long arrows",
+  "lives": 1
+ },
+ {
+  "id": 126,
+  "rows": 19,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 16,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.8,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   84
+  ],
+  "depth": [
+   20,
+   37
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2500,
+  "seeds": [
+   12600,
+   12601,
+   12602,
+   12603,
+   12604,
+   12605,
+   12606,
+   12607,
+   12608,
+   12609,
+   12610,
+   12611
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 7, normal level, long arrows"
+ },
+ {
+  "id": 127,
+  "shape": "hourglass",
+  "rows": 26,
+  "cols": 20,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 13,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 3,
+  "minMeanLength": 5.5,
+  "minCoverage": 0.95,
+  "score": [
+   55,
+   100
+  ],
+  "maxFree": 5,
+  "attempts": 10,
+  "repairRounds": 3000,
+  "deepen": 3000,
+  "refineSteps": 0,
+  "seeds": [
+   12700,
+   12701,
+   12702,
+   12703,
+   12704,
+   12705,
+   12706,
+   12707,
+   12708,
+   12709,
+   12710,
+   12711
+  ],
+  "maxShortShare": 0.15,
+  "tier": "hard",
+  "note": "chapter 7, shaped hard level (hourglass outline), long arrows"
+ },
+ {
+  "id": 128,
+  "rows": 19,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 16,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.8,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   84
+  ],
+  "depth": [
+   20,
+   37
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2500,
+  "seeds": [
+   12800,
+   12801,
+   12802,
+   12803,
+   12804,
+   12805,
+   12806,
+   12807,
+   12808,
+   12809,
+   12810,
+   12811
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 7, normal level, long arrows"
+ },
+ {
+  "id": 129,
+  "rows": 19,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 16,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.8,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   84
+  ],
+  "depth": [
+   20,
+   37
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2500,
+  "seeds": [
+   12900,
+   12901,
+   12902,
+   12903,
+   12904,
+   12905,
+   12906,
+   12907,
+   12908,
+   12909,
+   12910,
+   12911
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 7, normal level, long arrows"
+ },
+ {
+  "id": 130,
+  "name": "THE CRESCENT",
+  "shape": "crescent",
+  "rows": 44,
+  "cols": 34,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 6,
+  "turns": 4,
+  "minLength": 3,
+  "minMeanLength": 4,
+  "minCoverage": 0.96,
+  "score": [
+   76,
+   100
+  ],
+  "attempts": 4,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 0,
+  "seeds": [
+   13090,
+   13091,
+   13092,
+   13093,
+   13094,
+   13095,
+   13096,
+   13097
+  ],
+  "tier": "very hard",
+  "note": "THE CRESCENT, a shaped very hard finale: a 44x34 board filled only inside the crescent outline (tools/shapes.ts), many arrows with chains lengthened by deepening, harder than the chapter 1-5 finales",
+  "depth": [
+   46,
+   400
+  ]
+ },
+ {
+  "id": 131,
+  "rows": 19,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 16,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.8,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   84
+  ],
+  "depth": [
+   20,
+   37
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2500,
+  "seeds": [
+   13100,
+   13101,
+   13102,
+   13103,
+   13104,
+   13105,
+   13106,
+   13107,
+   13108,
+   13109,
+   13110,
+   13111
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 7, normal level, long arrows"
+ },
+ {
+  "id": 132,
+  "rows": 19,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 16,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.8,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   84
+  ],
+  "depth": [
+   20,
+   37
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2500,
+  "seeds": [
+   13200,
+   13201,
+   13202,
+   13203,
+   13204,
+   13205,
+   13206,
+   13207,
+   13208,
+   13209,
+   13210,
+   13211
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 7, normal level, long arrows"
+ },
+ {
+  "id": 133,
+  "rows": 24,
+  "cols": 18,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 18,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   96
+  ],
+  "depth": [
+   26,
+   200
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 3000,
+  "seeds": [
+   13300,
+   13301,
+   13302,
+   13303,
+   13304,
+   13305,
+   13306,
+   13307,
+   13308,
+   13309,
+   13310,
+   13311
+  ],
+  "maxShortShare": 0.1,
+  "tier": "hard",
+  "note": "chapter 7, hard level, long arrows"
+ },
+ {
+  "id": 134,
+  "rows": 19,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 16,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.8,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   84
+  ],
+  "depth": [
+   20,
+   37
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2500,
+  "seeds": [
+   13400,
+   13401,
+   13402,
+   13403,
+   13404,
+   13405,
+   13406,
+   13407,
+   13408,
+   13409,
+   13410,
+   13411
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 7, normal level, long arrows"
+ },
+ {
+  "id": 135,
+  "rows": 19,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 16,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.8,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   84
+  ],
+  "depth": [
+   20,
+   37
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2500,
+  "seeds": [
+   13500,
+   13501,
+   13502,
+   13503,
+   13504,
+   13505,
+   13506,
+   13507,
+   13508,
+   13509,
+   13510,
+   13511
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 7, normal level, long arrows"
+ },
+ {
+  "id": 136,
+  "shape": "cross",
+  "rows": 26,
+  "cols": 20,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 13,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 3,
+  "minMeanLength": 5.5,
+  "minCoverage": 0.95,
+  "score": [
+   72,
+   100
+  ],
+  "maxFree": 5,
+  "attempts": 10,
+  "repairRounds": 3000,
+  "deepen": 3000,
+  "refineSteps": 0,
+  "seeds": [
+   13680,
+   13681,
+   13682,
+   13683,
+   13684,
+   13685,
+   13686,
+   13687,
+   13688,
+   13689,
+   13690,
+   13691
+  ],
+  "maxShortShare": 0.15,
+  "tier": "hard",
+  "note": "chapter 7, shaped hard level (cross outline), long arrows",
+  "depth": [
+   24,
+   200
+  ]
+ },
+ {
+  "id": 137,
+  "rows": 19,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 16,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.8,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   84
+  ],
+  "depth": [
+   20,
+   37
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2500,
+  "seeds": [
+   13700,
+   13701,
+   13702,
+   13703,
+   13704,
+   13705,
+   13706,
+   13707,
+   13708,
+   13709,
+   13710,
+   13711
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 7, normal level, long arrows"
+ },
+ {
+  "id": 138,
+  "rows": 19,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 16,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.8,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   84
+  ],
+  "depth": [
+   20,
+   37
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 2500,
+  "seeds": [
+   13800,
+   13801,
+   13802,
+   13803,
+   13804,
+   13805,
+   13806,
+   13807,
+   13808,
+   13809,
+   13810,
+   13811
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 7, normal level, long arrows"
+ },
+ {
+  "id": 139,
+  "rows": 24,
+  "cols": 18,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 18,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   96
+  ],
+  "depth": [
+   26,
+   200
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 3000,
+  "seeds": [
+   13900,
+   13901,
+   13902,
+   13903,
+   13904,
+   13905,
+   13906,
+   13907,
+   13908,
+   13909,
+   13910,
+   13911
+  ],
+  "maxShortShare": 0.1,
+  "tier": "hard",
+  "note": "chapter 7, hard level, long arrows"
+ },
+ {
+  "id": 140,
+  "name": "THE ROCKET",
+  "shape": "rocket",
+  "rows": 44,
+  "cols": 34,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 6,
+  "turns": 4,
+  "minLength": 3,
+  "minMeanLength": 4,
+  "minCoverage": 0.96,
+  "score": [
+   76,
+   100
+  ],
+  "attempts": 4,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 0,
+  "seeds": [
+   14090,
+   14091,
+   14092,
+   14093,
+   14094,
+   14095,
+   14096,
+   14097
+  ],
+  "tier": "very hard",
+  "note": "THE ROCKET, a shaped very hard finale: a 44x34 board filled only inside the rocket outline (tools/shapes.ts), many arrows with chains lengthened by deepening, harder than the chapter 1-5 finales",
+  "depth": [
+   46,
+   400
+  ]
+ },
+ {
+  "id": 141,
+  "rows": 20,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 18,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.1,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   86
+  ],
+  "depth": [
+   22,
+   40
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3000,
+  "seeds": [
+   14100,
+   14101,
+   14102,
+   14103,
+   14104,
+   14105,
+   14106,
+   14107,
+   14108,
+   14109,
+   14110,
+   14111
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 8, normal level, long arrows"
+ },
+ {
+  "id": 142,
+  "rows": 20,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 18,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.1,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   86
+  ],
+  "depth": [
+   22,
+   40
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3000,
+  "seeds": [
+   14200,
+   14201,
+   14202,
+   14203,
+   14204,
+   14205,
+   14206,
+   14207,
+   14208,
+   14209,
+   14210,
+   14211
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 8, normal level, long arrows"
+ },
+ {
+  "id": 143,
+  "rows": 20,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 18,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.1,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   86
+  ],
+  "depth": [
+   22,
+   40
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3000,
+  "seeds": [
+   14300,
+   14301,
+   14302,
+   14303,
+   14304,
+   14305,
+   14306,
+   14307,
+   14308,
+   14309,
+   14310,
+   14311
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 8, normal level, long arrows"
+ },
+ {
+  "id": 144,
+  "rows": 26,
+  "cols": 19,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 20,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   96
+  ],
+  "depth": [
+   28,
+   200
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 3000,
+  "seeds": [
+   14400,
+   14401,
+   14402,
+   14403,
+   14404,
+   14405,
+   14406,
+   14407,
+   14408,
+   14409,
+   14410,
+   14411
+  ],
+  "maxShortShare": 0.1,
+  "tier": "hard",
+  "note": "chapter 8, hard level, long arrows"
+ },
+ {
+  "id": 145,
+  "rows": 20,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 18,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.1,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   86
+  ],
+  "depth": [
+   22,
+   40
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3000,
+  "seeds": [
+   14500,
+   14501,
+   14502,
+   14503,
+   14504,
+   14505,
+   14506,
+   14507,
+   14508,
+   14509,
+   14510,
+   14511
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 8, one-life level (normal board, a single heart), long arrows",
+  "lives": 1
+ },
+ {
+  "id": 146,
+  "rows": 20,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 18,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.1,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   86
+  ],
+  "depth": [
+   22,
+   40
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3000,
+  "seeds": [
+   14600,
+   14601,
+   14602,
+   14603,
+   14604,
+   14605,
+   14606,
+   14607,
+   14608,
+   14609,
+   14610,
+   14611
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 8, normal level, long arrows"
+ },
+ {
+  "id": 147,
+  "shape": "heart",
+  "rows": 26,
+  "cols": 20,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 14,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 3,
+  "minMeanLength": 5,
+  "minCoverage": 0.93,
+  "score": [
+   72,
+   100
+  ],
+  "maxFree": 8,
+  "attempts": 10,
+  "repairRounds": 3000,
+  "deepen": 3000,
+  "refineSteps": 0,
+  "seeds": [
+   14780,
+   14781,
+   14782,
+   14783,
+   14784,
+   14785,
+   14786,
+   14787,
+   14788,
+   14789,
+   14790,
+   14791
+  ],
+  "maxShortShare": 0.15,
+  "tier": "hard",
+  "note": "chapter 8, shaped hard level (heart outline), long arrows",
+  "depth": [
+   27,
+   200
+  ]
+ },
+ {
+  "id": 148,
+  "rows": 20,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 18,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.1,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   86
+  ],
+  "depth": [
+   22,
+   40
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3000,
+  "seeds": [
+   14800,
+   14801,
+   14802,
+   14803,
+   14804,
+   14805,
+   14806,
+   14807,
+   14808,
+   14809,
+   14810,
+   14811
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 8, normal level, long arrows"
+ },
+ {
+  "id": 149,
+  "rows": 20,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 18,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.1,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   86
+  ],
+  "depth": [
+   22,
+   40
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3000,
+  "seeds": [
+   14900,
+   14901,
+   14902,
+   14903,
+   14904,
+   14905,
+   14906,
+   14907,
+   14908,
+   14909,
+   14910,
+   14911
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 8, normal level, long arrows"
+ },
+ {
+  "id": 150,
+  "name": "THE GEM",
+  "shape": "gem",
+  "rows": 44,
+  "cols": 34,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 6,
+  "turns": 4,
+  "minLength": 3,
+  "minMeanLength": 4,
+  "minCoverage": 0.96,
+  "score": [
+   76,
+   100
+  ],
+  "attempts": 4,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 0,
+  "seeds": [
+   15090,
+   15091,
+   15092,
+   15093,
+   15094,
+   15095,
+   15096,
+   15097
+  ],
+  "tier": "very hard",
+  "note": "THE GEM, a shaped very hard finale: a 44x34 board filled only inside the gem outline (tools/shapes.ts), many arrows with chains lengthened by deepening, harder than the chapter 1-5 finales",
+  "depth": [
+   46,
+   400
+  ]
+ },
+ {
+  "id": 151,
+  "rows": 20,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 18,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.1,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   86
+  ],
+  "depth": [
+   22,
+   40
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3000,
+  "seeds": [
+   15100,
+   15101,
+   15102,
+   15103,
+   15104,
+   15105,
+   15106,
+   15107,
+   15108,
+   15109,
+   15110,
+   15111
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 8, normal level, long arrows"
+ },
+ {
+  "id": 152,
+  "rows": 20,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 18,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.1,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   86
+  ],
+  "depth": [
+   22,
+   40
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3000,
+  "seeds": [
+   15200,
+   15201,
+   15202,
+   15203,
+   15204,
+   15205,
+   15206,
+   15207,
+   15208,
+   15209,
+   15210,
+   15211
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 8, normal level, long arrows"
+ },
+ {
+  "id": 153,
+  "rows": 26,
+  "cols": 19,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 20,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   96
+  ],
+  "depth": [
+   28,
+   200
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 3000,
+  "seeds": [
+   15300,
+   15301,
+   15302,
+   15303,
+   15304,
+   15305,
+   15306,
+   15307,
+   15308,
+   15309,
+   15310,
+   15311
+  ],
+  "maxShortShare": 0.1,
+  "tier": "hard",
+  "note": "chapter 8, hard level, long arrows"
+ },
+ {
+  "id": 154,
+  "rows": 20,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 18,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   90
+  ],
+  "depth": [
+   20,
+   40
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3000,
+  "seeds": [
+   15450,
+   15451,
+   15452,
+   15453,
+   15454,
+   15455,
+   15456,
+   15457,
+   15458,
+   15459,
+   15460,
+   15461
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 8, normal level, long arrows"
+ },
+ {
+  "id": 155,
+  "rows": 20,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 18,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.1,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   86
+  ],
+  "depth": [
+   22,
+   40
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3000,
+  "seeds": [
+   15500,
+   15501,
+   15502,
+   15503,
+   15504,
+   15505,
+   15506,
+   15507,
+   15508,
+   15509,
+   15510,
+   15511
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 8, normal level, long arrows"
+ },
+ {
+  "id": 156,
+  "shape": "crown",
+  "rows": 26,
+  "cols": 20,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 14,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 3,
+  "minMeanLength": 5.5,
+  "minCoverage": 0.95,
+  "score": [
+   55,
+   100
+  ],
+  "maxFree": 5,
+  "attempts": 10,
+  "repairRounds": 3000,
+  "deepen": 3000,
+  "refineSteps": 0,
+  "seeds": [
+   15600,
+   15601,
+   15602,
+   15603,
+   15604,
+   15605,
+   15606,
+   15607,
+   15608,
+   15609,
+   15610,
+   15611
+  ],
+  "maxShortShare": 0.15,
+  "tier": "hard",
+  "note": "chapter 8, shaped hard level (crown outline), long arrows"
+ },
+ {
+  "id": 157,
+  "rows": 20,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 18,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   90
+  ],
+  "depth": [
+   20,
+   40
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3000,
+  "seeds": [
+   15750,
+   15751,
+   15752,
+   15753,
+   15754,
+   15755,
+   15756,
+   15757,
+   15758,
+   15759,
+   15760,
+   15761
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 8, normal level, long arrows"
+ },
+ {
+  "id": 158,
+  "rows": 20,
+  "cols": 14,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 18,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.1,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   86
+  ],
+  "depth": [
+   22,
+   40
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3000,
+  "seeds": [
+   15800,
+   15801,
+   15802,
+   15803,
+   15804,
+   15805,
+   15806,
+   15807,
+   15808,
+   15809,
+   15810,
+   15811
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 8, normal level, long arrows"
+ },
+ {
+  "id": 159,
+  "rows": 26,
+  "cols": 19,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 20,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   96
+  ],
+  "depth": [
+   28,
+   200
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 3000,
+  "seeds": [
+   15900,
+   15901,
+   15902,
+   15903,
+   15904,
+   15905,
+   15906,
+   15907,
+   15908,
+   15909,
+   15910,
+   15911
+  ],
+  "maxShortShare": 0.1,
+  "tier": "hard",
+  "note": "chapter 8, hard level, long arrows"
+ },
+ {
+  "id": 160,
+  "name": "THE KEY",
+  "shape": "key",
+  "rows": 44,
+  "cols": 34,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 6,
+  "turns": 4,
+  "minLength": 3,
+  "minMeanLength": 4,
+  "minCoverage": 0.96,
+  "score": [
+   76,
+   100
+  ],
+  "attempts": 4,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 0,
+  "seeds": [
+   16090,
+   16091,
+   16092,
+   16093,
+   16094,
+   16095,
+   16096,
+   16097
+  ],
+  "tier": "very hard",
+  "note": "THE KEY, a shaped very hard finale: a 44x34 board filled only inside the key outline (tools/shapes.ts), many arrows with chains lengthened by deepening, harder than the chapter 1-5 finales",
+  "depth": [
+   46,
+   400
+  ]
+ },
+ {
+  "id": 161,
+  "rows": 20,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 20,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.4,
+  "minCoverage": 0.97,
+  "score": [
+   74,
+   88
+  ],
+  "depth": [
+   24,
+   43
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3500,
+  "seeds": [
+   16100,
+   16101,
+   16102,
+   16103,
+   16104,
+   16105,
+   16106,
+   16107,
+   16108,
+   16109,
+   16110,
+   16111
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 9, normal level, long arrows"
+ },
+ {
+  "id": 162,
+  "rows": 20,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 20,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.4,
+  "minCoverage": 0.97,
+  "score": [
+   74,
+   88
+  ],
+  "depth": [
+   24,
+   43
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3500,
+  "seeds": [
+   16200,
+   16201,
+   16202,
+   16203,
+   16204,
+   16205,
+   16206,
+   16207,
+   16208,
+   16209,
+   16210,
+   16211
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 9, normal level, long arrows"
+ },
+ {
+  "id": 163,
+  "rows": 20,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 20,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   90
+  ],
+  "depth": [
+   20,
+   43
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3500,
+  "seeds": [
+   16350,
+   16351,
+   16352,
+   16353,
+   16354,
+   16355,
+   16356,
+   16357,
+   16358,
+   16359,
+   16360,
+   16361
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 9, normal level, long arrows"
+ },
+ {
+  "id": 164,
+  "rows": 26,
+  "cols": 19,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 22,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   96
+  ],
+  "depth": [
+   30,
+   200
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 3000,
+  "seeds": [
+   16400,
+   16401,
+   16402,
+   16403,
+   16404,
+   16405,
+   16406,
+   16407,
+   16408,
+   16409,
+   16410,
+   16411
+  ],
+  "maxShortShare": 0.1,
+  "tier": "hard",
+  "note": "chapter 9, hard level, long arrows"
+ },
+ {
+  "id": 165,
+  "rows": 20,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 20,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   90
+  ],
+  "depth": [
+   20,
+   43
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3500,
+  "seeds": [
+   16550,
+   16551,
+   16552,
+   16553,
+   16554,
+   16555,
+   16556,
+   16557,
+   16558,
+   16559,
+   16560,
+   16561
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 9, one-life level (normal board, a single heart), long arrows",
+  "lives": 1
+ },
+ {
+  "id": 166,
+  "rows": 20,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 20,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   90
+  ],
+  "depth": [
+   20,
+   43
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3500,
+  "seeds": [
+   16650,
+   16651,
+   16652,
+   16653,
+   16654,
+   16655,
+   16656,
+   16657,
+   16658,
+   16659,
+   16660,
+   16661
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 9, normal level, long arrows"
+ },
+ {
+  "id": 167,
+  "shape": "shield",
+  "rows": 26,
+  "cols": 20,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 15,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 3,
+  "minMeanLength": 5.5,
+  "minCoverage": 0.95,
+  "score": [
+   55,
+   100
+  ],
+  "maxFree": 5,
+  "attempts": 10,
+  "repairRounds": 3000,
+  "deepen": 3000,
+  "refineSteps": 0,
+  "seeds": [
+   16700,
+   16701,
+   16702,
+   16703,
+   16704,
+   16705,
+   16706,
+   16707,
+   16708,
+   16709,
+   16710,
+   16711
+  ],
+  "maxShortShare": 0.15,
+  "tier": "hard",
+  "note": "chapter 9, shaped hard level (shield outline), long arrows"
+ },
+ {
+  "id": 168,
+  "rows": 20,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 20,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.4,
+  "minCoverage": 0.97,
+  "score": [
+   74,
+   88
+  ],
+  "depth": [
+   24,
+   43
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3500,
+  "seeds": [
+   16800,
+   16801,
+   16802,
+   16803,
+   16804,
+   16805,
+   16806,
+   16807,
+   16808,
+   16809,
+   16810,
+   16811
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 9, normal level, long arrows"
+ },
+ {
+  "id": 169,
+  "rows": 20,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 20,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   90
+  ],
+  "depth": [
+   18,
+   43
+  ],
+  "maxFree": 4,
+  "attempts": 40,
+  "deepen": 3500,
+  "seeds": [
+   16970,
+   16971,
+   16972,
+   16973,
+   16974,
+   16975,
+   16976,
+   16977,
+   16978,
+   16979,
+   16980,
+   16981
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 9, normal level, long arrows"
+ },
+ {
+  "id": 170,
+  "name": "THE BUTTERFLY",
+  "shape": "butterfly",
+  "rows": 38,
+  "cols": 30,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 6,
+  "turns": 4,
+  "minLength": 3,
+  "minMeanLength": 4,
+  "minCoverage": 0.96,
+  "score": [
+   76,
+   100
+  ],
+  "attempts": 4,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 0,
+  "seeds": [
+   17090,
+   17091,
+   17092,
+   17093,
+   17094,
+   17095,
+   17096,
+   17097
+  ],
+  "tier": "very hard",
+  "note": "THE BUTTERFLY, a shaped very hard finale: a 38x30 board filled only inside the butterfly outline (tools/shapes.ts), many arrows with chains lengthened by deepening, harder than the chapter 1-5 finales",
+  "depth": [
+   46,
+   400
+  ]
+ },
+ {
+  "id": 171,
+  "rows": 20,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 20,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   90
+  ],
+  "depth": [
+   20,
+   43
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3500,
+  "seeds": [
+   17150,
+   17151,
+   17152,
+   17153,
+   17154,
+   17155,
+   17156,
+   17157,
+   17158,
+   17159,
+   17160,
+   17161
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 9, normal level, long arrows"
+ },
+ {
+  "id": 172,
+  "rows": 20,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 20,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   90
+  ],
+  "depth": [
+   20,
+   43
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3500,
+  "seeds": [
+   17250,
+   17251,
+   17252,
+   17253,
+   17254,
+   17255,
+   17256,
+   17257,
+   17258,
+   17259,
+   17260,
+   17261
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 9, normal level, long arrows"
+ },
+ {
+  "id": 173,
+  "rows": 26,
+  "cols": 19,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 22,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   96
+  ],
+  "depth": [
+   30,
+   200
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 3000,
+  "seeds": [
+   17300,
+   17301,
+   17302,
+   17303,
+   17304,
+   17305,
+   17306,
+   17307,
+   17308,
+   17309,
+   17310,
+   17311
+  ],
+  "maxShortShare": 0.1,
+  "tier": "hard",
+  "note": "chapter 9, hard level, long arrows"
+ },
+ {
+  "id": 174,
+  "rows": 20,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 20,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.4,
+  "minCoverage": 0.97,
+  "score": [
+   74,
+   88
+  ],
+  "depth": [
+   24,
+   43
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3500,
+  "seeds": [
+   17400,
+   17401,
+   17402,
+   17403,
+   17404,
+   17405,
+   17406,
+   17407,
+   17408,
+   17409,
+   17410,
+   17411
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 9, normal level, long arrows"
+ },
+ {
+  "id": 175,
+  "rows": 20,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 20,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   90
+  ],
+  "depth": [
+   20,
+   43
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3500,
+  "seeds": [
+   17550,
+   17551,
+   17552,
+   17553,
+   17554,
+   17555,
+   17556,
+   17557,
+   17558,
+   17559,
+   17560,
+   17561
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 9, normal level, long arrows"
+ },
+ {
+  "id": 176,
+  "shape": "tree",
+  "rows": 26,
+  "cols": 20,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 15,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 3,
+  "minMeanLength": 5,
+  "minCoverage": 0.95,
+  "score": [
+   64,
+   100
+  ],
+  "maxFree": 8,
+  "attempts": 20,
+  "repairRounds": 3000,
+  "deepen": 3000,
+  "refineSteps": 0,
+  "seeds": [
+   17620,
+   17621,
+   17622,
+   17623,
+   17624,
+   17625,
+   17626,
+   17627,
+   17628,
+   17629,
+   17630,
+   17631
+  ],
+  "maxShortShare": 0.15,
+  "tier": "hard",
+  "note": "chapter 9, shaped hard level (tree outline), long arrows",
+  "depth": [
+   26,
+   200
+  ]
+ },
+ {
+  "id": 177,
+  "rows": 20,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 20,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   90
+  ],
+  "depth": [
+   20,
+   43
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3500,
+  "seeds": [
+   17750,
+   17751,
+   17752,
+   17753,
+   17754,
+   17755,
+   17756,
+   17757,
+   17758,
+   17759,
+   17760,
+   17761
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 9, normal level, long arrows"
+ },
+ {
+  "id": 178,
+  "rows": 20,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 20,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   90
+  ],
+  "depth": [
+   20,
+   43
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 3500,
+  "seeds": [
+   17850,
+   17851,
+   17852,
+   17853,
+   17854,
+   17855,
+   17856,
+   17857,
+   17858,
+   17859,
+   17860,
+   17861
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 9, normal level, long arrows"
+ },
+ {
+  "id": 179,
+  "rows": 26,
+  "cols": 19,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 22,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   96
+  ],
+  "depth": [
+   30,
+   200
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 3000,
+  "seeds": [
+   17900,
+   17901,
+   17902,
+   17903,
+   17904,
+   17905,
+   17906,
+   17907,
+   17908,
+   17909,
+   17910,
+   17911
+  ],
+  "maxShortShare": 0.1,
+  "tier": "hard",
+  "note": "chapter 9, hard level, long arrows"
+ },
+ {
+  "id": 180,
+  "name": "THE NUT",
+  "shape": "nut",
+  "rows": 38,
+  "cols": 30,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 6,
+  "turns": 4,
+  "minLength": 3,
+  "minMeanLength": 4,
+  "minCoverage": 0.96,
+  "score": [
+   76,
+   100
+  ],
+  "attempts": 4,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 0,
+  "seeds": [
+   18090,
+   18091,
+   18092,
+   18093,
+   18094,
+   18095,
+   18096,
+   18097
+  ],
+  "tier": "very hard",
+  "note": "THE NUT, a shaped very hard finale: a 38x30 board filled only inside the nut outline (tools/shapes.ts), many arrows with chains lengthened by deepening, harder than the chapter 1-5 finales",
+  "depth": [
+   46,
+   400
+  ]
+ },
+ {
+  "id": 181,
+  "rows": 21,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 22,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   90
+  ],
+  "depth": [
+   20,
+   46
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 4000,
+  "seeds": [
+   18150,
+   18151,
+   18152,
+   18153,
+   18154,
+   18155,
+   18156,
+   18157,
+   18158,
+   18159,
+   18160,
+   18161
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 10, normal level, long arrows"
+ },
+ {
+  "id": 182,
+  "rows": 21,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 22,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   90
+  ],
+  "depth": [
+   20,
+   46
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 4000,
+  "seeds": [
+   18250,
+   18251,
+   18252,
+   18253,
+   18254,
+   18255,
+   18256,
+   18257,
+   18258,
+   18259,
+   18260,
+   18261
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 10, normal level, long arrows"
+ },
+ {
+  "id": 183,
+  "rows": 21,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 22,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   90
+  ],
+  "depth": [
+   20,
+   46
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 4000,
+  "seeds": [
+   18350,
+   18351,
+   18352,
+   18353,
+   18354,
+   18355,
+   18356,
+   18357,
+   18358,
+   18359,
+   18360,
+   18361
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 10, normal level, long arrows"
+ },
+ {
+  "id": 184,
+  "rows": 28,
+  "cols": 20,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 24,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   96
+  ],
+  "depth": [
+   32,
+   200
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 3000,
+  "seeds": [
+   18400,
+   18401,
+   18402,
+   18403,
+   18404,
+   18405,
+   18406,
+   18407,
+   18408,
+   18409,
+   18410,
+   18411
+  ],
+  "maxShortShare": 0.1,
+  "tier": "hard",
+  "note": "chapter 10, hard level, long arrows"
+ },
+ {
+  "id": 185,
+  "rows": 21,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 22,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   90
+  ],
+  "depth": [
+   20,
+   46
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 4000,
+  "seeds": [
+   18550,
+   18551,
+   18552,
+   18553,
+   18554,
+   18555,
+   18556,
+   18557,
+   18558,
+   18559,
+   18560,
+   18561
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 10, one-life level (normal board, a single heart), long arrows",
+  "lives": 1
+ },
+ {
+  "id": 186,
+  "rows": 21,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 22,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.7,
+  "minCoverage": 0.97,
+  "score": [
+   76,
+   90
+  ],
+  "depth": [
+   26,
+   46
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 4000,
+  "seeds": [
+   18600,
+   18601,
+   18602,
+   18603,
+   18604,
+   18605,
+   18606,
+   18607,
+   18608,
+   18609,
+   18610,
+   18611
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 10, normal level, long arrows"
+ },
+ {
+  "id": 187,
+  "shape": "ring",
+  "rows": 26,
+  "cols": 20,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 16,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 3,
+  "minMeanLength": 5,
+  "minCoverage": 0.93,
+  "score": [
+   64,
+   100
+  ],
+  "maxFree": 8,
+  "attempts": 20,
+  "repairRounds": 3000,
+  "deepen": 3000,
+  "refineSteps": 0,
+  "seeds": [
+   18720,
+   18721,
+   18722,
+   18723,
+   18724,
+   18725,
+   18726,
+   18727,
+   18728,
+   18729,
+   18730,
+   18731
+  ],
+  "maxShortShare": 0.15,
+  "tier": "hard",
+  "note": "chapter 10, shaped hard level (ring outline), long arrows",
+  "depth": [
+   31,
+   200
+  ]
+ },
+ {
+  "id": 188,
+  "rows": 21,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 22,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   90
+  ],
+  "depth": [
+   20,
+   46
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 4000,
+  "seeds": [
+   18850,
+   18851,
+   18852,
+   18853,
+   18854,
+   18855,
+   18856,
+   18857,
+   18858,
+   18859,
+   18860,
+   18861
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 10, normal level, long arrows"
+ },
+ {
+  "id": 189,
+  "rows": 21,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 22,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   90
+  ],
+  "depth": [
+   20,
+   46
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 4000,
+  "seeds": [
+   18950,
+   18951,
+   18952,
+   18953,
+   18954,
+   18955,
+   18956,
+   18957,
+   18958,
+   18959,
+   18960,
+   18961
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 10, normal level, long arrows"
+ },
+ {
+  "id": 190,
+  "name": "INFINITY",
+  "shape": "infinity",
+  "rows": 38,
+  "cols": 30,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 6,
+  "turns": 4,
+  "minLength": 3,
+  "minMeanLength": 4,
+  "minCoverage": 0.96,
+  "score": [
+   76,
+   100
+  ],
+  "attempts": 4,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 0,
+  "seeds": [
+   19090,
+   19091,
+   19092,
+   19093,
+   19094,
+   19095,
+   19096,
+   19097
+  ],
+  "tier": "very hard",
+  "note": "INFINITY, a shaped very hard finale: a 38x30 board filled only inside the infinity outline (tools/shapes.ts), many arrows with chains lengthened by deepening, harder than the chapter 1-5 finales",
+  "depth": [
+   46,
+   400
+  ]
+ },
+ {
+  "id": 191,
+  "rows": 21,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 22,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   90
+  ],
+  "depth": [
+   20,
+   46
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 4000,
+  "seeds": [
+   19150,
+   19151,
+   19152,
+   19153,
+   19154,
+   19155,
+   19156,
+   19157,
+   19158,
+   19159,
+   19160,
+   19161
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 10, normal level, long arrows"
+ },
+ {
+  "id": 192,
+  "rows": 21,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 22,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   90
+  ],
+  "depth": [
+   20,
+   46
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 4000,
+  "seeds": [
+   19250,
+   19251,
+   19252,
+   19253,
+   19254,
+   19255,
+   19256,
+   19257,
+   19258,
+   19259,
+   19260,
+   19261
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 10, normal level, long arrows"
+ },
+ {
+  "id": 193,
+  "rows": 28,
+  "cols": 20,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 24,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   96
+  ],
+  "depth": [
+   18,
+   200
+  ],
+  "maxFree": 6,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 3000,
+  "seeds": [
+   19370,
+   19371,
+   19372,
+   19373,
+   19374,
+   19375,
+   19376,
+   19377,
+   19378,
+   19379,
+   19380,
+   19381
+  ],
+  "maxShortShare": 0.1,
+  "tier": "hard",
+  "note": "chapter 10, hard level, long arrows"
+ },
+ {
+  "id": 194,
+  "rows": 21,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 22,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   90
+  ],
+  "depth": [
+   20,
+   46
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 4000,
+  "seeds": [
+   19450,
+   19451,
+   19452,
+   19453,
+   19454,
+   19455,
+   19456,
+   19457,
+   19458,
+   19459,
+   19460,
+   19461
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 10, normal level, long arrows"
+ },
+ {
+  "id": 195,
+  "rows": 21,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 22,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   90
+  ],
+  "depth": [
+   20,
+   46
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 4000,
+  "seeds": [
+   19550,
+   19551,
+   19552,
+   19553,
+   19554,
+   19555,
+   19556,
+   19557,
+   19558,
+   19559,
+   19560,
+   19561
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 10, normal level, long arrows"
+ },
+ {
+  "id": 196,
+  "shape": "castle",
+  "rows": 26,
+  "cols": 20,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 16,
+  "turns": 5,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 3,
+  "minMeanLength": 5.5,
+  "minCoverage": 0.95,
+  "score": [
+   55,
+   100
+  ],
+  "maxFree": 5,
+  "attempts": 10,
+  "repairRounds": 3000,
+  "deepen": 3000,
+  "refineSteps": 0,
+  "seeds": [
+   19600,
+   19601,
+   19602,
+   19603,
+   19604,
+   19605,
+   19606,
+   19607,
+   19608,
+   19609,
+   19610,
+   19611
+  ],
+  "maxShortShare": 0.15,
+  "tier": "hard",
+  "note": "chapter 10, shaped hard level (castle outline), long arrows"
+ },
+ {
+  "id": 197,
+  "rows": 21,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 22,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   90
+  ],
+  "depth": [
+   20,
+   46
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 4000,
+  "seeds": [
+   19750,
+   19751,
+   19752,
+   19753,
+   19754,
+   19755,
+   19756,
+   19757,
+   19758,
+   19759,
+   19760,
+   19761
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 10, normal level, long arrows"
+ },
+ {
+  "id": 198,
+  "rows": 21,
+  "cols": 15,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 22,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.97,
+  "score": [
+   70,
+   90
+  ],
+  "depth": [
+   20,
+   46
+  ],
+  "maxFree": 3,
+  "attempts": 40,
+  "deepen": 4000,
+  "seeds": [
+   19850,
+   19851,
+   19852,
+   19853,
+   19854,
+   19855,
+   19856,
+   19857,
+   19858,
+   19859,
+   19860,
+   19861
+  ],
+  "maxShortShare": 0.1,
+  "note": "chapter 10, normal level, long arrows"
+ },
+ {
+  "id": 199,
+  "rows": 28,
+  "cols": 20,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 24,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.97,
+  "score": [
+   72,
+   96
+  ],
+  "depth": [
+   32,
+   200
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 3000,
+  "seeds": [
+   19900,
+   19901,
+   19902,
+   19903,
+   19904,
+   19905,
+   19906,
+   19907,
+   19908,
+   19909,
+   19910,
+   19911
+  ],
+  "maxShortShare": 0.1,
+  "tier": "hard",
+  "note": "chapter 10, hard level, long arrows"
+ },
+ {
+  "id": 200,
+  "name": "THE EXIT",
+  "shape": "exit",
+  "rows": 44,
+  "cols": 34,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 6,
+  "turns": 4,
+  "minLength": 3,
+  "minMeanLength": 4,
+  "minCoverage": 0.96,
+  "score": [
+   76,
+   100
+  ],
+  "attempts": 4,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 0,
+  "seeds": [
+   20090,
+   20091,
+   20092,
+   20093,
+   20094,
+   20095,
+   20096,
+   20097
+  ],
+  "tier": "very hard",
+  "note": "THE EXIT, a shaped very hard finale: a 44x34 board filled only inside the exit outline (tools/shapes.ts), many arrows with chains lengthened by deepening, harder than the chapter 1-5 finales",
+  "depth": [
+   46,
+   400
+  ]
+ },
+ {
+  "id": 201,
+  "rows": 22,
+  "cols": 16,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 24,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   24,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4000,
+  "seeds": [
+   20100,
+   20101,
+   20102,
+   20103,
+   20104,
+   20105,
+   20106,
+   20107,
+   20108,
+   20109,
+   20110,
+   20111
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 11, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 202,
+  "rows": 22,
+  "cols": 16,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 24,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   24,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4000,
+  "seeds": [
+   20200,
+   20201,
+   20202,
+   20203,
+   20204,
+   20205,
+   20206,
+   20207,
+   20208,
+   20209,
+   20210,
+   20211
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 11, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 203,
+  "rows": 22,
+  "cols": 16,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 24,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   24,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4000,
+  "seeds": [
+   20320,
+   20321,
+   20322,
+   20323,
+   20324,
+   20325,
+   20326,
+   20327,
+   20328,
+   20329,
+   20330,
+   20331,
+   20332,
+   20333,
+   20334,
+   20335
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 11, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 204,
+  "rows": 28,
+  "cols": 21,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.98,
+  "score": [
+   76,
+   100
+  ],
+  "depth": [
+   34,
+   300
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 4000,
+  "seeds": [
+   20420,
+   20421,
+   20422,
+   20423,
+   20424,
+   20425,
+   20426,
+   20427,
+   20428,
+   20429,
+   20430,
+   20431,
+   20432,
+   20433,
+   20434,
+   20435
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 11, hard maze, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.11,
+  "minLongRange": 0.68
+ },
+ {
+  "id": 205,
+  "rows": 22,
+  "cols": 16,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 24,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   24,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4000,
+  "seeds": [
+   20500,
+   20501,
+   20502,
+   20503,
+   20504,
+   20505,
+   20506,
+   20507,
+   20508,
+   20509,
+   20510,
+   20511
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 11, one-life level (normal board, a single heart), full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "lives": 1,
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 206,
+  "rows": 22,
+  "cols": 16,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 24,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   24,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4000,
+  "seeds": [
+   20620,
+   20621,
+   20622,
+   20623,
+   20624,
+   20625,
+   20626,
+   20627,
+   20628,
+   20629,
+   20630,
+   20631,
+   20632,
+   20633,
+   20634,
+   20635
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 11, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 207,
+  "rows": 32,
+  "cols": 24,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.3,
+  "minCoverage": 0.98,
+  "score": [
+   78,
+   100
+  ],
+  "depth": [
+   40,
+   300
+  ],
+  "maxFree": 7,
+  "attempts": 8,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 5000,
+  "seeds": [
+   20720,
+   20721,
+   20722,
+   20723,
+   20724,
+   20725,
+   20726,
+   20727,
+   20728,
+   20729,
+   20730,
+   20731,
+   20732,
+   20733,
+   20734,
+   20735
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 11, maze special: a large full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.25,
+  "maxFreeShare": 0.1,
+  "minLongRange": 0.7
+ },
+ {
+  "id": 208,
+  "rows": 22,
+  "cols": 16,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 24,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   24,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4000,
+  "seeds": [
+   20820,
+   20821,
+   20822,
+   20823,
+   20824,
+   20825,
+   20826,
+   20827,
+   20828,
+   20829,
+   20830,
+   20831,
+   20832,
+   20833,
+   20834,
+   20835
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 11, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 209,
+  "rows": 22,
+  "cols": 16,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 24,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   24,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4000,
+  "seeds": [
+   20920,
+   20921,
+   20922,
+   20923,
+   20924,
+   20925,
+   20926,
+   20927,
+   20928,
+   20929,
+   20930,
+   20931,
+   20932,
+   20933,
+   20934,
+   20935
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 11, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 210,
+  "name": "THE PLANET",
+  "shape": "planet",
+  "rows": 44,
+  "cols": 34,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 6,
+  "turns": 4,
+  "minLength": 3,
+  "minMeanLength": 4,
+  "minCoverage": 0.96,
+  "score": [
+   78,
+   100
+  ],
+  "depth": [
+   50,
+   400
+  ],
+  "maxFree": 22,
+  "attempts": 4,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 30,
+  "seeds": [
+   21040,
+   21041,
+   21042,
+   21043,
+   21044,
+   21045,
+   21046,
+   21047,
+   21048,
+   21049,
+   21050,
+   21051,
+   21052,
+   21053,
+   21054,
+   21055
+  ],
+  "tier": "very hard",
+  "note": "THE PLANET, a chapter 11 finale: a 44x34 board filled only inside the fat planet outline (tools/shapes.ts), few free arrows at the start, chains lengthened by deepening, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.1,
+  "minLongRange": 0.72
+ },
+ {
+  "id": 211,
+  "rows": 22,
+  "cols": 16,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 24,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   24,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4000,
+  "seeds": [
+   21100,
+   21101,
+   21102,
+   21103,
+   21104,
+   21105,
+   21106,
+   21107,
+   21108,
+   21109,
+   21110,
+   21111
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 11, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 212,
+  "rows": 22,
+  "cols": 16,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 24,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   24,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4000,
+  "seeds": [
+   21200,
+   21201,
+   21202,
+   21203,
+   21204,
+   21205,
+   21206,
+   21207,
+   21208,
+   21209,
+   21210,
+   21211
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 11, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 213,
+  "rows": 28,
+  "cols": 21,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.98,
+  "score": [
+   76,
+   100
+  ],
+  "depth": [
+   34,
+   300
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 4000,
+  "seeds": [
+   21320,
+   21321,
+   21322,
+   21323,
+   21324,
+   21325,
+   21326,
+   21327,
+   21328,
+   21329,
+   21330,
+   21331,
+   21332,
+   21333,
+   21334,
+   21335
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 11, hard maze, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.11,
+  "minLongRange": 0.68
+ },
+ {
+  "id": 214,
+  "rows": 22,
+  "cols": 16,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 24,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   24,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4000,
+  "seeds": [
+   21400,
+   21401,
+   21402,
+   21403,
+   21404,
+   21405,
+   21406,
+   21407,
+   21408,
+   21409,
+   21410,
+   21411
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 11, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 215,
+  "rows": 22,
+  "cols": 16,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 24,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   24,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4000,
+  "seeds": [
+   21500,
+   21501,
+   21502,
+   21503,
+   21504,
+   21505,
+   21506,
+   21507,
+   21508,
+   21509,
+   21510,
+   21511
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 11, one-life level (normal board, a single heart), full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "lives": 1,
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 216,
+  "rows": 32,
+  "cols": 24,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.3,
+  "minCoverage": 0.98,
+  "score": [
+   78,
+   100
+  ],
+  "depth": [
+   40,
+   300
+  ],
+  "maxFree": 5,
+  "attempts": 8,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 5000,
+  "seeds": [
+   21600,
+   21601,
+   21602,
+   21603,
+   21604,
+   21605,
+   21606,
+   21607,
+   21608,
+   21609,
+   21610,
+   21611
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 11, maze special: a large full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.25,
+  "maxFreeShare": 0.09,
+  "minLongRange": 0.7
+ },
+ {
+  "id": 217,
+  "rows": 22,
+  "cols": 16,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 24,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   24,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4000,
+  "seeds": [
+   21700,
+   21701,
+   21702,
+   21703,
+   21704,
+   21705,
+   21706,
+   21707,
+   21708,
+   21709,
+   21710,
+   21711
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 11, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 218,
+  "rows": 22,
+  "cols": 16,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 24,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   24,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4000,
+  "seeds": [
+   21800,
+   21801,
+   21802,
+   21803,
+   21804,
+   21805,
+   21806,
+   21807,
+   21808,
+   21809,
+   21810,
+   21811
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 11, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 219,
+  "rows": 28,
+  "cols": 21,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.98,
+  "score": [
+   76,
+   100
+  ],
+  "depth": [
+   34,
+   300
+  ],
+  "maxFree": 4,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 4000,
+  "seeds": [
+   21900,
+   21901,
+   21902,
+   21903,
+   21904,
+   21905,
+   21906,
+   21907,
+   21908,
+   21909,
+   21910,
+   21911
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 11, hard maze, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.1,
+  "minLongRange": 0.68
+ },
+ {
+  "id": 220,
+  "name": "THE ROBOT",
+  "shape": "robot",
+  "rows": 44,
+  "cols": 34,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 6,
+  "turns": 4,
+  "minLength": 3,
+  "minMeanLength": 4,
+  "minCoverage": 0.96,
+  "score": [
+   78,
+   100
+  ],
+  "depth": [
+   50,
+   400
+  ],
+  "maxFree": 22,
+  "attempts": 4,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 30,
+  "seeds": [
+   22080,
+   22081,
+   22082,
+   22083,
+   22084,
+   22085,
+   22086,
+   22087,
+   22088,
+   22089,
+   22090,
+   22091,
+   22092,
+   22093,
+   22094,
+   22095
+  ],
+  "tier": "very hard",
+  "note": "THE ROBOT, a chapter 11 finale: a 44x34 board filled only inside the fat robot outline (tools/shapes.ts), few free arrows at the start, chains lengthened by deepening, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.1,
+  "minLongRange": 0.72
+ },
+ {
+  "id": 221,
+  "rows": 23,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.15,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   26,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4500,
+  "seeds": [
+   22100,
+   22101,
+   22102,
+   22103,
+   22104,
+   22105,
+   22106,
+   22107,
+   22108,
+   22109,
+   22110,
+   22111
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 12, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 222,
+  "rows": 23,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.15,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   26,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4500,
+  "seeds": [
+   22200,
+   22201,
+   22202,
+   22203,
+   22204,
+   22205,
+   22206,
+   22207,
+   22208,
+   22209,
+   22210,
+   22211
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 12, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 223,
+  "rows": 23,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.15,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   26,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4500,
+  "seeds": [
+   22300,
+   22301,
+   22302,
+   22303,
+   22304,
+   22305,
+   22306,
+   22307,
+   22308,
+   22309,
+   22310,
+   22311
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 12, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 224,
+  "rows": 29,
+  "cols": 22,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.98,
+  "score": [
+   76,
+   100
+  ],
+  "depth": [
+   36,
+   300
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 4000,
+  "seeds": [
+   22420,
+   22421,
+   22422,
+   22423,
+   22424,
+   22425,
+   22426,
+   22427,
+   22428,
+   22429,
+   22430,
+   22431,
+   22432,
+   22433,
+   22434,
+   22435
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 12, hard maze, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.11,
+  "minLongRange": 0.68
+ },
+ {
+  "id": 225,
+  "rows": 23,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.15,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   26,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4500,
+  "seeds": [
+   22500,
+   22501,
+   22502,
+   22503,
+   22504,
+   22505,
+   22506,
+   22507,
+   22508,
+   22509,
+   22510,
+   22511
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 12, one-life level (normal board, a single heart), full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "lives": 1,
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 226,
+  "rows": 23,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.15,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   26,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4500,
+  "seeds": [
+   22600,
+   22601,
+   22602,
+   22603,
+   22604,
+   22605,
+   22606,
+   22607,
+   22608,
+   22609,
+   22610,
+   22611
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 12, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 227,
+  "rows": 33,
+  "cols": 25,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.3,
+  "minCoverage": 0.98,
+  "score": [
+   78,
+   100
+  ],
+  "depth": [
+   42,
+   300
+  ],
+  "maxFree": 7,
+  "attempts": 8,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 5000,
+  "seeds": [
+   22720,
+   22721,
+   22722,
+   22723,
+   22724,
+   22725,
+   22726,
+   22727,
+   22728,
+   22729,
+   22730,
+   22731,
+   22732,
+   22733,
+   22734,
+   22735
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 12, maze special: a large full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.25,
+  "maxFreeShare": 0.1,
+  "minLongRange": 0.7
+ },
+ {
+  "id": 228,
+  "rows": 23,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.15,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   26,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4500,
+  "seeds": [
+   22800,
+   22801,
+   22802,
+   22803,
+   22804,
+   22805,
+   22806,
+   22807,
+   22808,
+   22809,
+   22810,
+   22811
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 12, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 229,
+  "rows": 23,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.15,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   26,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4500,
+  "seeds": [
+   22900,
+   22901,
+   22902,
+   22903,
+   22904,
+   22905,
+   22906,
+   22907,
+   22908,
+   22909,
+   22910,
+   22911
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 12, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 230,
+  "name": "THE TROPHY",
+  "shape": "trophy",
+  "rows": 44,
+  "cols": 34,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 6,
+  "turns": 4,
+  "minLength": 3,
+  "minMeanLength": 4,
+  "minCoverage": 0.96,
+  "score": [
+   78,
+   100
+  ],
+  "depth": [
+   55,
+   400
+  ],
+  "maxFree": 14,
+  "attempts": 4,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 30,
+  "seeds": [
+   23000,
+   23001,
+   23002,
+   23003,
+   23004,
+   23005,
+   23006,
+   23007
+  ],
+  "tier": "very hard",
+  "note": "THE TROPHY, a chapter 12 finale: a 44x34 board filled only inside the fat trophy outline (tools/shapes.ts), few free arrows at the start, chains lengthened by deepening, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.08,
+  "minLongRange": 0.72
+ },
+ {
+  "id": 231,
+  "rows": 23,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.15,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   26,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4500,
+  "seeds": [
+   23100,
+   23101,
+   23102,
+   23103,
+   23104,
+   23105,
+   23106,
+   23107,
+   23108,
+   23109,
+   23110,
+   23111
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 12, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 232,
+  "rows": 23,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.15,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   26,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4500,
+  "seeds": [
+   23200,
+   23201,
+   23202,
+   23203,
+   23204,
+   23205,
+   23206,
+   23207,
+   23208,
+   23209,
+   23210,
+   23211
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 12, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 233,
+  "rows": 29,
+  "cols": 22,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.98,
+  "score": [
+   76,
+   100
+  ],
+  "depth": [
+   36,
+   300
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 4000,
+  "seeds": [
+   23320,
+   23321,
+   23322,
+   23323,
+   23324,
+   23325,
+   23326,
+   23327,
+   23328,
+   23329,
+   23330,
+   23331,
+   23332,
+   23333,
+   23334,
+   23335
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 12, hard maze, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.11,
+  "minLongRange": 0.68
+ },
+ {
+  "id": 234,
+  "rows": 23,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.15,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   24,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4500,
+  "seeds": [
+   23420,
+   23421,
+   23422,
+   23423,
+   23424,
+   23425,
+   23426,
+   23427,
+   23428,
+   23429,
+   23430,
+   23431,
+   23432,
+   23433,
+   23434,
+   23435
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 12, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 235,
+  "rows": 23,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.15,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   26,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4500,
+  "seeds": [
+   23500,
+   23501,
+   23502,
+   23503,
+   23504,
+   23505,
+   23506,
+   23507,
+   23508,
+   23509,
+   23510,
+   23511
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 12, one-life level (normal board, a single heart), full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "lives": 1,
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 236,
+  "rows": 33,
+  "cols": 25,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.3,
+  "minCoverage": 0.98,
+  "score": [
+   78,
+   100
+  ],
+  "depth": [
+   42,
+   300
+  ],
+  "maxFree": 7,
+  "attempts": 8,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 5000,
+  "seeds": [
+   23620,
+   23621,
+   23622,
+   23623,
+   23624,
+   23625,
+   23626,
+   23627,
+   23628,
+   23629,
+   23630,
+   23631,
+   23632,
+   23633,
+   23634,
+   23635
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 12, maze special: a large full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.25,
+  "maxFreeShare": 0.1,
+  "minLongRange": 0.7
+ },
+ {
+  "id": 237,
+  "rows": 23,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.15,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   26,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4500,
+  "seeds": [
+   23700,
+   23701,
+   23702,
+   23703,
+   23704,
+   23705,
+   23706,
+   23707,
+   23708,
+   23709,
+   23710,
+   23711
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 12, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 238,
+  "rows": 23,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.15,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   26,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 4500,
+  "seeds": [
+   23800,
+   23801,
+   23802,
+   23803,
+   23804,
+   23805,
+   23806,
+   23807,
+   23808,
+   23809,
+   23810,
+   23811
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 12, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 239,
+  "rows": 29,
+  "cols": 22,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.98,
+  "score": [
+   76,
+   100
+  ],
+  "depth": [
+   36,
+   300
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 4000,
+  "seeds": [
+   23920,
+   23921,
+   23922,
+   23923,
+   23924,
+   23925,
+   23926,
+   23927,
+   23928,
+   23929,
+   23930,
+   23931,
+   23932,
+   23933,
+   23934,
+   23935
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 12, hard maze, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.11,
+  "minLongRange": 0.68
+ },
+ {
+  "id": 240,
+  "name": "THE ANCHOR",
+  "shape": "anchor",
+  "rows": 44,
+  "cols": 34,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 6,
+  "turns": 4,
+  "minLength": 3,
+  "minMeanLength": 4,
+  "minCoverage": 0.96,
+  "score": [
+   78,
+   100
+  ],
+  "depth": [
+   55,
+   400
+  ],
+  "maxFree": 14,
+  "attempts": 4,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 30,
+  "seeds": [
+   24000,
+   24001,
+   24002,
+   24003,
+   24004,
+   24005,
+   24006,
+   24007
+  ],
+  "tier": "very hard",
+  "note": "THE ANCHOR, a chapter 12 finale: a 44x34 board filled only inside the fat anchor outline (tools/shapes.ts), few free arrows at the start, chains lengthened by deepening, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.08,
+  "minLongRange": 0.72
+ },
+ {
+  "id": 241,
+  "rows": 24,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 28,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.3,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   28,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5000,
+  "seeds": [
+   24100,
+   24101,
+   24102,
+   24103,
+   24104,
+   24105,
+   24106,
+   24107,
+   24108,
+   24109,
+   24110,
+   24111
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 13, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 242,
+  "rows": 24,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 28,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.3,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   24,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5000,
+  "seeds": [
+   24220,
+   24221,
+   24222,
+   24223,
+   24224,
+   24225,
+   24226,
+   24227,
+   24228,
+   24229,
+   24230,
+   24231,
+   24232,
+   24233,
+   24234,
+   24235
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 13, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 243,
+  "rows": 24,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 28,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.3,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   28,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5000,
+  "seeds": [
+   24300,
+   24301,
+   24302,
+   24303,
+   24304,
+   24305,
+   24306,
+   24307,
+   24308,
+   24309,
+   24310,
+   24311
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 13, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 244,
+  "rows": 30,
+  "cols": 22,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.98,
+  "score": [
+   76,
+   100
+  ],
+  "depth": [
+   38,
+   300
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 4000,
+  "seeds": [
+   24420,
+   24421,
+   24422,
+   24423,
+   24424,
+   24425,
+   24426,
+   24427,
+   24428,
+   24429,
+   24430,
+   24431,
+   24432,
+   24433,
+   24434,
+   24435
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 13, hard maze, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.11,
+  "minLongRange": 0.68
+ },
+ {
+  "id": 245,
+  "rows": 24,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 28,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.3,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   28,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5000,
+  "seeds": [
+   24500,
+   24501,
+   24502,
+   24503,
+   24504,
+   24505,
+   24506,
+   24507,
+   24508,
+   24509,
+   24510,
+   24511
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 13, one-life level (normal board, a single heart), full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "lives": 1,
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 246,
+  "rows": 24,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 28,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.3,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   28,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5000,
+  "seeds": [
+   24600,
+   24601,
+   24602,
+   24603,
+   24604,
+   24605,
+   24606,
+   24607,
+   24608,
+   24609,
+   24610,
+   24611
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 13, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 247,
+  "rows": 34,
+  "cols": 26,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.3,
+  "minCoverage": 0.98,
+  "score": [
+   78,
+   100
+  ],
+  "depth": [
+   40,
+   300
+  ],
+  "maxFree": 8,
+  "attempts": 8,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 5000,
+  "seeds": [
+   24740,
+   24741,
+   24742,
+   24743,
+   24744,
+   24745,
+   24746,
+   24747,
+   24748,
+   24749,
+   24750,
+   24751,
+   24752,
+   24753,
+   24754,
+   24755
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 13, maze special: a large full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.25,
+  "maxFreeShare": 0.11,
+  "minLongRange": 0.7
+ },
+ {
+  "id": 248,
+  "rows": 24,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 28,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.3,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   24,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5000,
+  "seeds": [
+   24820,
+   24821,
+   24822,
+   24823,
+   24824,
+   24825,
+   24826,
+   24827,
+   24828,
+   24829,
+   24830,
+   24831,
+   24832,
+   24833,
+   24834,
+   24835
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 13, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 249,
+  "rows": 24,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 28,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.3,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   28,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5000,
+  "seeds": [
+   24900,
+   24901,
+   24902,
+   24903,
+   24904,
+   24905,
+   24906,
+   24907,
+   24908,
+   24909,
+   24910,
+   24911
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 13, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 250,
+  "name": "THE CLOVER",
+  "shape": "clover",
+  "rows": 44,
+  "cols": 34,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 6,
+  "turns": 4,
+  "minLength": 3,
+  "minMeanLength": 4,
+  "minCoverage": 0.96,
+  "score": [
+   78,
+   100
+  ],
+  "depth": [
+   52,
+   400
+  ],
+  "maxFree": 18,
+  "attempts": 4,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 30,
+  "seeds": [
+   25020,
+   25021,
+   25022,
+   25023,
+   25024,
+   25025,
+   25026,
+   25027,
+   25028,
+   25029,
+   25030,
+   25031,
+   25032,
+   25033,
+   25034,
+   25035
+  ],
+  "tier": "very hard",
+  "note": "THE CLOVER, a chapter 13 finale: a 44x34 board filled only inside the fat clover outline (tools/shapes.ts), few free arrows at the start, chains lengthened by deepening, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.09,
+  "minLongRange": 0.72
+ },
+ {
+  "id": 251,
+  "rows": 24,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 28,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.3,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   28,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5000,
+  "seeds": [
+   25100,
+   25101,
+   25102,
+   25103,
+   25104,
+   25105,
+   25106,
+   25107,
+   25108,
+   25109,
+   25110,
+   25111
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 13, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 252,
+  "rows": 24,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 28,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.3,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   24,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5000,
+  "seeds": [
+   25220,
+   25221,
+   25222,
+   25223,
+   25224,
+   25225,
+   25226,
+   25227,
+   25228,
+   25229,
+   25230,
+   25231,
+   25232,
+   25233,
+   25234,
+   25235
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 13, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 253,
+  "rows": 30,
+  "cols": 22,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.98,
+  "score": [
+   76,
+   100
+  ],
+  "depth": [
+   38,
+   300
+  ],
+  "maxFree": 4,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 4000,
+  "seeds": [
+   25300,
+   25301,
+   25302,
+   25303,
+   25304,
+   25305,
+   25306,
+   25307,
+   25308,
+   25309,
+   25310,
+   25311
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 13, hard maze, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.1,
+  "minLongRange": 0.68
+ },
+ {
+  "id": 254,
+  "rows": 24,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 28,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.3,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   28,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5000,
+  "seeds": [
+   25400,
+   25401,
+   25402,
+   25403,
+   25404,
+   25405,
+   25406,
+   25407,
+   25408,
+   25409,
+   25410,
+   25411
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 13, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 255,
+  "rows": 24,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 28,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.3,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   24,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5000,
+  "seeds": [
+   25520,
+   25521,
+   25522,
+   25523,
+   25524,
+   25525,
+   25526,
+   25527,
+   25528,
+   25529,
+   25530,
+   25531,
+   25532,
+   25533,
+   25534,
+   25535
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 13, one-life level (normal board, a single heart), full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "lives": 1,
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 256,
+  "rows": 34,
+  "cols": 26,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.3,
+  "minCoverage": 0.98,
+  "score": [
+   78,
+   100
+  ],
+  "depth": [
+   44,
+   300
+  ],
+  "maxFree": 7,
+  "attempts": 8,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 5000,
+  "seeds": [
+   25620,
+   25621,
+   25622,
+   25623,
+   25624,
+   25625,
+   25626,
+   25627,
+   25628,
+   25629,
+   25630,
+   25631,
+   25632,
+   25633,
+   25634,
+   25635
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 13, maze special: a large full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.25,
+  "maxFreeShare": 0.1,
+  "minLongRange": 0.7
+ },
+ {
+  "id": 257,
+  "rows": 24,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 28,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.3,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   28,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5000,
+  "seeds": [
+   25700,
+   25701,
+   25702,
+   25703,
+   25704,
+   25705,
+   25706,
+   25707,
+   25708,
+   25709,
+   25710,
+   25711
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 13, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 258,
+  "rows": 24,
+  "cols": 17,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 28,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.3,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   28,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5000,
+  "seeds": [
+   25800,
+   25801,
+   25802,
+   25803,
+   25804,
+   25805,
+   25806,
+   25807,
+   25808,
+   25809,
+   25810,
+   25811
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 13, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 259,
+  "rows": 30,
+  "cols": 22,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.98,
+  "score": [
+   76,
+   100
+  ],
+  "depth": [
+   38,
+   300
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 4000,
+  "seeds": [
+   25920,
+   25921,
+   25922,
+   25923,
+   25924,
+   25925,
+   25926,
+   25927,
+   25928,
+   25929,
+   25930,
+   25931,
+   25932,
+   25933,
+   25934,
+   25935
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 13, hard maze, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.11,
+  "minLongRange": 0.68
+ },
+ {
+  "id": 260,
+  "name": "THE LOCK",
+  "shape": "lock",
+  "rows": 44,
+  "cols": 34,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 6,
+  "turns": 4,
+  "minLength": 3,
+  "minMeanLength": 4,
+  "minCoverage": 0.96,
+  "score": [
+   78,
+   100
+  ],
+  "depth": [
+   55,
+   400
+  ],
+  "maxFree": 14,
+  "attempts": 4,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 30,
+  "seeds": [
+   26000,
+   26001,
+   26002,
+   26003,
+   26004,
+   26005,
+   26006,
+   26007
+  ],
+  "tier": "very hard",
+  "note": "THE LOCK, a chapter 13 finale: a 44x34 board filled only inside the fat lock outline (tools/shapes.ts), few free arrows at the start, chains lengthened by deepening, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.08,
+  "minLongRange": 0.72
+ },
+ {
+  "id": 261,
+  "rows": 25,
+  "cols": 18,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 30,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.45,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   24,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5500,
+  "seeds": [
+   26140,
+   26141,
+   26142,
+   26143,
+   26144,
+   26145,
+   26146,
+   26147,
+   26148,
+   26149,
+   26150,
+   26151,
+   26152,
+   26153,
+   26154,
+   26155
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 14, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.16,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 262,
+  "rows": 25,
+  "cols": 18,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 30,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.45,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   26,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5500,
+  "seeds": [
+   26220,
+   26221,
+   26222,
+   26223,
+   26224,
+   26225,
+   26226,
+   26227,
+   26228,
+   26229,
+   26230,
+   26231,
+   26232,
+   26233,
+   26234,
+   26235
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 14, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 263,
+  "rows": 25,
+  "cols": 18,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 30,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.45,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   30,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5500,
+  "seeds": [
+   26300,
+   26301,
+   26302,
+   26303,
+   26304,
+   26305,
+   26306,
+   26307,
+   26308,
+   26309,
+   26310,
+   26311
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 14, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 264,
+  "rows": 31,
+  "cols": 23,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.98,
+  "score": [
+   76,
+   100
+  ],
+  "depth": [
+   40,
+   300
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 4000,
+  "seeds": [
+   26420,
+   26421,
+   26422,
+   26423,
+   26424,
+   26425,
+   26426,
+   26427,
+   26428,
+   26429,
+   26430,
+   26431,
+   26432,
+   26433,
+   26434,
+   26435
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 14, hard maze, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.11,
+  "minLongRange": 0.68
+ },
+ {
+  "id": 265,
+  "rows": 25,
+  "cols": 18,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 30,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.45,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   30,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5500,
+  "seeds": [
+   26500,
+   26501,
+   26502,
+   26503,
+   26504,
+   26505,
+   26506,
+   26507,
+   26508,
+   26509,
+   26510,
+   26511
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 14, one-life level (normal board, a single heart), full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "lives": 1,
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 266,
+  "rows": 25,
+  "cols": 18,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 30,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.45,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   26,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5500,
+  "seeds": [
+   26620,
+   26621,
+   26622,
+   26623,
+   26624,
+   26625,
+   26626,
+   26627,
+   26628,
+   26629,
+   26630,
+   26631,
+   26632,
+   26633,
+   26634,
+   26635
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 14, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 267,
+  "rows": 35,
+  "cols": 27,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.3,
+  "minCoverage": 0.98,
+  "score": [
+   78,
+   100
+  ],
+  "depth": [
+   46,
+   300
+  ],
+  "maxFree": 7,
+  "attempts": 8,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 5000,
+  "seeds": [
+   26720,
+   26721,
+   26722,
+   26723,
+   26724,
+   26725,
+   26726,
+   26727,
+   26728,
+   26729,
+   26730,
+   26731,
+   26732,
+   26733,
+   26734,
+   26735
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 14, maze special: a large full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.25,
+  "maxFreeShare": 0.1,
+  "minLongRange": 0.7
+ },
+ {
+  "id": 268,
+  "rows": 25,
+  "cols": 18,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 30,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.45,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   26,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5500,
+  "seeds": [
+   26820,
+   26821,
+   26822,
+   26823,
+   26824,
+   26825,
+   26826,
+   26827,
+   26828,
+   26829,
+   26830,
+   26831,
+   26832,
+   26833,
+   26834,
+   26835
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 14, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 269,
+  "rows": 25,
+  "cols": 18,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 30,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.45,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   30,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5500,
+  "seeds": [
+   26900,
+   26901,
+   26902,
+   26903,
+   26904,
+   26905,
+   26906,
+   26907,
+   26908,
+   26909,
+   26910,
+   26911
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 14, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 270,
+  "name": "THE DIAMOND",
+  "shape": "diamond",
+  "rows": 44,
+  "cols": 34,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 6,
+  "turns": 4,
+  "minLength": 3,
+  "minMeanLength": 4,
+  "minCoverage": 0.96,
+  "score": [
+   78,
+   100
+  ],
+  "depth": [
+   50,
+   400
+  ],
+  "maxFree": 22,
+  "attempts": 4,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 30,
+  "seeds": [
+   27040,
+   27041,
+   27042,
+   27043,
+   27044,
+   27045,
+   27046,
+   27047,
+   27048,
+   27049,
+   27050,
+   27051,
+   27052,
+   27053,
+   27054,
+   27055
+  ],
+  "tier": "very hard",
+  "note": "THE DIAMOND, a chapter 14 finale: a 44x34 board filled only inside the fat diamond outline (tools/shapes.ts), few free arrows at the start, chains lengthened by deepening, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.1,
+  "minLongRange": 0.72
+ },
+ {
+  "id": 271,
+  "rows": 25,
+  "cols": 18,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 30,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.45,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   26,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5500,
+  "seeds": [
+   27120,
+   27121,
+   27122,
+   27123,
+   27124,
+   27125,
+   27126,
+   27127,
+   27128,
+   27129,
+   27130,
+   27131,
+   27132,
+   27133,
+   27134,
+   27135
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 14, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 272,
+  "rows": 25,
+  "cols": 18,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 30,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.45,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   30,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5500,
+  "seeds": [
+   27200,
+   27201,
+   27202,
+   27203,
+   27204,
+   27205,
+   27206,
+   27207,
+   27208,
+   27209,
+   27210,
+   27211
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 14, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 273,
+  "rows": 31,
+  "cols": 23,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.98,
+  "score": [
+   76,
+   100
+  ],
+  "depth": [
+   40,
+   300
+  ],
+  "maxFree": 4,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 4000,
+  "seeds": [
+   27300,
+   27301,
+   27302,
+   27303,
+   27304,
+   27305,
+   27306,
+   27307,
+   27308,
+   27309,
+   27310,
+   27311
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 14, hard maze, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.1,
+  "minLongRange": 0.68
+ },
+ {
+  "id": 274,
+  "rows": 25,
+  "cols": 18,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 30,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.45,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   30,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5500,
+  "seeds": [
+   27400,
+   27401,
+   27402,
+   27403,
+   27404,
+   27405,
+   27406,
+   27407,
+   27408,
+   27409,
+   27410,
+   27411
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 14, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 275,
+  "rows": 25,
+  "cols": 18,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 30,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.45,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   30,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5500,
+  "seeds": [
+   27500,
+   27501,
+   27502,
+   27503,
+   27504,
+   27505,
+   27506,
+   27507,
+   27508,
+   27509,
+   27510,
+   27511
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 14, one-life level (normal board, a single heart), full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "lives": 1,
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 276,
+  "rows": 35,
+  "cols": 27,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.3,
+  "minCoverage": 0.98,
+  "score": [
+   78,
+   100
+  ],
+  "depth": [
+   46,
+   300
+  ],
+  "maxFree": 5,
+  "attempts": 8,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 5000,
+  "seeds": [
+   27600,
+   27601,
+   27602,
+   27603,
+   27604,
+   27605,
+   27606,
+   27607,
+   27608,
+   27609,
+   27610,
+   27611
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 14, maze special: a large full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.25,
+  "maxFreeShare": 0.09,
+  "minLongRange": 0.7
+ },
+ {
+  "id": 277,
+  "rows": 25,
+  "cols": 18,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 30,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.45,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   30,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5500,
+  "seeds": [
+   27700,
+   27701,
+   27702,
+   27703,
+   27704,
+   27705,
+   27706,
+   27707,
+   27708,
+   27709,
+   27710,
+   27711
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 14, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 278,
+  "rows": 25,
+  "cols": 18,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 30,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.45,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   26,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 5500,
+  "seeds": [
+   27820,
+   27821,
+   27822,
+   27823,
+   27824,
+   27825,
+   27826,
+   27827,
+   27828,
+   27829,
+   27830,
+   27831,
+   27832,
+   27833,
+   27834,
+   27835
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 14, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 279,
+  "rows": 31,
+  "cols": 23,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.98,
+  "score": [
+   76,
+   100
+  ],
+  "depth": [
+   40,
+   300
+  ],
+  "maxFree": 4,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 4000,
+  "seeds": [
+   27900,
+   27901,
+   27902,
+   27903,
+   27904,
+   27905,
+   27906,
+   27907,
+   27908,
+   27909,
+   27910,
+   27911
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 14, hard maze, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.1,
+  "minLongRange": 0.68
+ },
+ {
+  "id": 280,
+  "name": "THE GAMEPAD",
+  "shape": "gamepad",
+  "rows": 44,
+  "cols": 34,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 6,
+  "turns": 4,
+  "minLength": 3,
+  "minMeanLength": 4,
+  "minCoverage": 0.96,
+  "score": [
+   78,
+   100
+  ],
+  "depth": [
+   52,
+   400
+  ],
+  "maxFree": 18,
+  "attempts": 4,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 30,
+  "seeds": [
+   28020,
+   28021,
+   28022,
+   28023,
+   28024,
+   28025,
+   28026,
+   28027,
+   28028,
+   28029,
+   28030,
+   28031,
+   28032,
+   28033,
+   28034,
+   28035
+  ],
+  "tier": "very hard",
+  "note": "THE GAMEPAD, a chapter 14 finale: a 44x34 board filled only inside the fat gamepad outline (tools/shapes.ts), few free arrows at the start, chains lengthened by deepening, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.09,
+  "minLongRange": 0.72
+ },
+ {
+  "id": 281,
+  "rows": 26,
+  "cols": 19,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 32,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.6,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   28,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 6000,
+  "seeds": [
+   28120,
+   28121,
+   28122,
+   28123,
+   28124,
+   28125,
+   28126,
+   28127,
+   28128,
+   28129,
+   28130,
+   28131,
+   28132,
+   28133,
+   28134,
+   28135
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 15, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 282,
+  "rows": 26,
+  "cols": 19,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 32,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.6,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   28,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 6000,
+  "seeds": [
+   28220,
+   28221,
+   28222,
+   28223,
+   28224,
+   28225,
+   28226,
+   28227,
+   28228,
+   28229,
+   28230,
+   28231,
+   28232,
+   28233,
+   28234,
+   28235
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 15, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 283,
+  "rows": 26,
+  "cols": 19,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 32,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.6,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   28,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 6000,
+  "seeds": [
+   28320,
+   28321,
+   28322,
+   28323,
+   28324,
+   28325,
+   28326,
+   28327,
+   28328,
+   28329,
+   28330,
+   28331,
+   28332,
+   28333,
+   28334,
+   28335
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 15, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 284,
+  "rows": 32,
+  "cols": 24,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.98,
+  "score": [
+   76,
+   100
+  ],
+  "depth": [
+   42,
+   300
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 4000,
+  "seeds": [
+   28420,
+   28421,
+   28422,
+   28423,
+   28424,
+   28425,
+   28426,
+   28427,
+   28428,
+   28429,
+   28430,
+   28431,
+   28432,
+   28433,
+   28434,
+   28435
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 15, hard maze, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.11,
+  "minLongRange": 0.68
+ },
+ {
+  "id": 285,
+  "rows": 26,
+  "cols": 19,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 32,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.6,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   28,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 6000,
+  "seeds": [
+   28520,
+   28521,
+   28522,
+   28523,
+   28524,
+   28525,
+   28526,
+   28527,
+   28528,
+   28529,
+   28530,
+   28531,
+   28532,
+   28533,
+   28534,
+   28535
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 15, one-life level (normal board, a single heart), full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "lives": 1,
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 286,
+  "rows": 26,
+  "cols": 19,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 32,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.6,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   28,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 6000,
+  "seeds": [
+   28620,
+   28621,
+   28622,
+   28623,
+   28624,
+   28625,
+   28626,
+   28627,
+   28628,
+   28629,
+   28630,
+   28631,
+   28632,
+   28633,
+   28634,
+   28635
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 15, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 287,
+  "rows": 36,
+  "cols": 28,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.3,
+  "minCoverage": 0.98,
+  "score": [
+   78,
+   100
+  ],
+  "depth": [
+   44,
+   300
+  ],
+  "maxFree": 8,
+  "attempts": 8,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 5000,
+  "seeds": [
+   28740,
+   28741,
+   28742,
+   28743,
+   28744,
+   28745,
+   28746,
+   28747,
+   28748,
+   28749,
+   28750,
+   28751,
+   28752,
+   28753,
+   28754,
+   28755
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 15, maze special: a large full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.25,
+  "maxFreeShare": 0.11,
+  "minLongRange": 0.7
+ },
+ {
+  "id": 288,
+  "rows": 26,
+  "cols": 19,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 32,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.6,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   28,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 6000,
+  "seeds": [
+   28820,
+   28821,
+   28822,
+   28823,
+   28824,
+   28825,
+   28826,
+   28827,
+   28828,
+   28829,
+   28830,
+   28831,
+   28832,
+   28833,
+   28834,
+   28835
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 15, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 289,
+  "rows": 26,
+  "cols": 19,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 32,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.6,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   32,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 6000,
+  "seeds": [
+   28900,
+   28901,
+   28902,
+   28903,
+   28904,
+   28905,
+   28906,
+   28907,
+   28908,
+   28909,
+   28910,
+   28911
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 15, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 290,
+  "name": "THE SHIP",
+  "shape": "ship",
+  "rows": 44,
+  "cols": 34,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 6,
+  "turns": 4,
+  "minLength": 3,
+  "minMeanLength": 4,
+  "minCoverage": 0.96,
+  "score": [
+   78,
+   100
+  ],
+  "depth": [
+   50,
+   400
+  ],
+  "maxFree": 22,
+  "attempts": 4,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 30,
+  "seeds": [
+   29040,
+   29041,
+   29042,
+   29043,
+   29044,
+   29045,
+   29046,
+   29047,
+   29048,
+   29049,
+   29050,
+   29051,
+   29052,
+   29053,
+   29054,
+   29055
+  ],
+  "tier": "very hard",
+  "note": "THE SHIP, a chapter 15 finale: a 44x34 board filled only inside the fat ship outline (tools/shapes.ts), few free arrows at the start, chains lengthened by deepening, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.1,
+  "minLongRange": 0.72
+ },
+ {
+  "id": 291,
+  "rows": 26,
+  "cols": 19,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 32,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.6,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   28,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 6000,
+  "seeds": [
+   29120,
+   29121,
+   29122,
+   29123,
+   29124,
+   29125,
+   29126,
+   29127,
+   29128,
+   29129,
+   29130,
+   29131,
+   29132,
+   29133,
+   29134,
+   29135
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 15, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 292,
+  "rows": 26,
+  "cols": 19,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 32,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.6,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   28,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 6000,
+  "seeds": [
+   29220,
+   29221,
+   29222,
+   29223,
+   29224,
+   29225,
+   29226,
+   29227,
+   29228,
+   29229,
+   29230,
+   29231,
+   29232,
+   29233,
+   29234,
+   29235
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 15, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 293,
+  "rows": 32,
+  "cols": 24,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.98,
+  "score": [
+   76,
+   100
+  ],
+  "depth": [
+   42,
+   300
+  ],
+  "maxFree": 5,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 4000,
+  "seeds": [
+   29320,
+   29321,
+   29322,
+   29323,
+   29324,
+   29325,
+   29326,
+   29327,
+   29328,
+   29329,
+   29330,
+   29331,
+   29332,
+   29333,
+   29334,
+   29335
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 15, hard maze, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.11,
+  "minLongRange": 0.68
+ },
+ {
+  "id": 294,
+  "rows": 26,
+  "cols": 19,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 32,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.6,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   32,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 6000,
+  "seeds": [
+   29400,
+   29401,
+   29402,
+   29403,
+   29404,
+   29405,
+   29406,
+   29407,
+   29408,
+   29409,
+   29410,
+   29411
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 15, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 295,
+  "rows": 26,
+  "cols": 19,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 32,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.6,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   32,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 6000,
+  "seeds": [
+   29500,
+   29501,
+   29502,
+   29503,
+   29504,
+   29505,
+   29506,
+   29507,
+   29508,
+   29509,
+   29510,
+   29511
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 15, one-life level (normal board, a single heart), full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "lives": 1,
+  "curl": 0.15,
+  "maxFreeShare": 0.14,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 296,
+  "rows": 36,
+  "cols": 28,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.3,
+  "minCoverage": 0.98,
+  "score": [
+   78,
+   100
+  ],
+  "depth": [
+   48,
+   300
+  ],
+  "maxFree": 7,
+  "attempts": 8,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 5000,
+  "seeds": [
+   29620,
+   29621,
+   29622,
+   29623,
+   29624,
+   29625,
+   29626,
+   29627,
+   29628,
+   29629,
+   29630,
+   29631,
+   29632,
+   29633,
+   29634,
+   29635
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 15, maze special: a large full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.25,
+  "maxFreeShare": 0.1,
+  "minLongRange": 0.7
+ },
+ {
+  "id": 297,
+  "rows": 26,
+  "cols": 19,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 32,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.6,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   28,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 6000,
+  "seeds": [
+   29720,
+   29721,
+   29722,
+   29723,
+   29724,
+   29725,
+   29726,
+   29727,
+   29728,
+   29729,
+   29730,
+   29731,
+   29732,
+   29733,
+   29734,
+   29735
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 15, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 298,
+  "rows": 26,
+  "cols": 19,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 32,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 7.6,
+  "minCoverage": 0.98,
+  "score": [
+   72,
+   100
+  ],
+  "depth": [
+   28,
+   200
+  ],
+  "maxFree": 3,
+  "attempts": 30,
+  "deepen": 6000,
+  "seeds": [
+   29820,
+   29821,
+   29822,
+   29823,
+   29824,
+   29825,
+   29826,
+   29827,
+   29828,
+   29829,
+   29830,
+   29831,
+   29832,
+   29833,
+   29834,
+   29835
+  ],
+  "maxShortShare": 0.2,
+  "note": "chapter 15, normal level, full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.15,
+  "maxFreeShare": 0.15,
+  "minLongRange": 0.62
+ },
+ {
+  "id": 299,
+  "rows": 32,
+  "cols": 24,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 26,
+  "turns": 6,
+  "bend": 0.4,
+  "maxStraight": 5,
+  "minLength": 4,
+  "minMeanLength": 6.5,
+  "minCoverage": 0.98,
+  "score": [
+   76,
+   100
+  ],
+  "depth": [
+   42,
+   300
+  ],
+  "maxFree": 4,
+  "attempts": 12,
+  "repairRounds": 3000,
+  "refineSteps": 30,
+  "deepen": 4000,
+  "seeds": [
+   29900,
+   29901,
+   29902,
+   29903,
+   29904,
+   29905,
+   29906,
+   29907,
+   29908,
+   29909,
+   29910,
+   29911
+  ],
+  "maxShortShare": 0.2,
+  "tier": "hard",
+  "note": "chapter 15, hard maze, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.1,
+  "minLongRange": 0.68
+ },
+ {
+  "id": 300,
+  "name": "THE FINAL GRID",
+  "rows": 36,
+  "cols": 28,
+  "fill": true,
+  "arrows": [
+   1,
+   999
+  ],
+  "length": 6,
+  "turns": 4,
+  "minLength": 3,
+  "minMeanLength": 4,
+  "minCoverage": 1,
+  "score": [
+   78,
+   100
+  ],
+  "depth": [
+   60,
+   400
+  ],
+  "maxFree": 8,
+  "attempts": 4,
+  "repairRounds": 5000,
+  "deepen": 10000,
+  "refineSteps": 0,
+  "seeds": [
+   30000,
+   30001,
+   30002,
+   30003,
+   30004,
+   30005,
+   30006,
+   30007
+  ],
+  "tier": "very hard",
+  "note": "THE FINAL GRID, the last level: a full 36x28 board, few free arrows at the start, chains lengthened by deepening, spiral and hook arrows, bottleneck and long blockers",
+  "curl": 0.2,
+  "maxFreeShare": 0.08,
+  "minLongRange": 0.72
  }
 ]

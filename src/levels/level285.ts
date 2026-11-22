@@ -1,0 +1,35 @@
+import { levelFromMap } from './levelMap';
+
+/** Level 285 — chapter 15, one-life level (normal board, a single heart), full board, long arrows, few free arrows, spiral and hook arrows, bottleneck and long blockers, generated from tools/level-plan.json (seed 28520, attempt 11), score 80 (Very hard). */
+export default levelFromMap(
+  285,
+  [
+    'A   A   A   A   A   A>  g0  g0  g0  C^  E   E   E   E>  C   C   C   C   C',
+    'A   G   G   G   G>  I^  K^  O   g0  C   C   C   C   C   C   X   X   X   C',
+    'A   G   M<  M   M   I   K   Ov  g0  g0  g0  Q   Q   Q>  S^  X   C   X   C',
+    'A   G   G   G   M   I   K   U   U   U   g0  Q   T<  T   S   X   C   X   C',
+    'M   M   M   M   M   I   K   U   K   Uv  g0  Q   Q   Q   S   X   C   X   C',
+    'I   I   I   I   I   I   K   K   K   V   g0  S   S   S   S   X   C   C   C',
+    'g0  g0  g0  g0  g0  g0  V<  V   V   V   g0  S   W<  W   W   X   X   X   X>',
+    'g0  c0  Y<  Y   Y   g0  g0  g0  g0  g0  g0  S   S   S   W   Z<  Z   a0< a0',
+    'g0  c0  b0^ e0  Y   Y   c0^ d0  d0> f0  f0  f0  f0  S   W   W   Z   Z   Z',
+    'g0  c0  b0  e0v c0  c0  c0  d0  a   a   a   S   f0  S   e   e   e   e   Z',
+    'g0  c0  b0  b0  c0  s   s   d0  h0  h0  a   S   f0v S   e   f   f   e   Z',
+    'g0v c0  c0  c0  c0  s   c   d0  i0  h0v a   S   S   S   e   d   f   e   Z',
+    's   s   s   s   s   s   c   d0  i0  i0> av  p   p   p   e   d   f   e   Z',
+    's   b   b   b   b   b>  c   c   c   c   c   c   c>  p   e   dv  f   e   Z',
+    's   s   k   k   k   k   k   v   v   v   v   v   p   p   e   e   f   ev  f^',
+    'r   s   g<  g   g   g   k   v   l   l   l   l   p   e   h^  e   f   f   f',
+    'r   s   m   m   m   i^  k   v   j   j   j>  l   p   e   h   e   u   z   z',
+    'r   s   m   i   i   i   kv  v   l<  l   l   l   p   e   h   e   u   q   z',
+    'r   s   mv  n   n   n   n>  v   o   o   o   o>  pv  e   e   e   u   qv  z',
+    'rv  s   s   s   s   s   s>  v   v   v   v   v   v   t   t   t>  u   u>  z',
+    'N   N   N   N   N   N   P   P   P   P   P   P   vv  t   w^  y   y   y   z',
+    'N   F   F   F   F   F   P   x<  x   x   x   P   P   t   w   y   w   yv  zv',
+    'N   F   H   H   H   F   P   B   B   B>  x   x   P   t   w   w   w   D   R',
+    'N   F   H   F   H   F   P   x   x   x   J   x   P   t   L   D<  D   D   R',
+    'N   Fv  Hv  F   F   F   P   x   J<  J   J   x   P   t   L   L   L   L>  R',
+    'Nv  P<  P   P   P   P   P   x   x   x   x   x   P   P   R<  R   R   R   R',
+  ],
+  { lives: 1 },
+);

@@ -998,5 +998,2005 @@
    "depth": 59,
    "maxBlockers": 16
   }
+ },
+ {
+  "id": 101,
+  "solution": "E A F D a b c d j y C B z u x v q m h f g e n t s r p i o l k w",
+  "stats": {
+   "arrows": 32,
+   "initialFree": 3,
+   "depth": 24,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 102,
+  "solution": "I H F E C A D G c b a d k j i v f e n z p t o m s x y B w r u h q l g",
+  "stats": {
+   "arrows": 35,
+   "initialFree": 3,
+   "depth": 18,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 103,
+  "solution": "a b c d k e f g h i j l n p q r u w D C x E F o v y t s A B z m",
+  "stats": {
+   "arrows": 32,
+   "initialFree": 3,
+   "depth": 18,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 104,
+  "solution": "H a c b d e g0 h i j l k m o q J K O Q T V S R e0 f0 N C D r s u t v w x A p f g n y B b0 h0 a0 Z d0 c0 Y X W E U P F z L M I G",
+  "stats": {
+   "arrows": 60,
+   "initialFree": 5,
+   "depth": 28,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 105,
+  "solution": "F H E A G m l t k a d p q u v x y w z B i e f j o D C r s h g b c n",
+  "stats": {
+   "arrows": 34,
+   "initialFree": 3,
+   "depth": 19,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 106,
+  "solution": "I G H E F D B C A n q r j v s k i w x z h a u o y t l p g e c b d f m",
+  "stats": {
+   "arrows": 35,
+   "initialFree": 2,
+   "depth": 18,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 107,
+  "solution": "b f0 h a d c f B G g e j i l m q s0 r0 X L Y o0 j0 k0 l0 p0 S Z q0 m0 c0 K n0 d0 u n y t x P O N R M A V i0 h0 o F J T e0 E H I a0 g0 w z C D b0 v Q U W r s p k",
+  "stats": {
+   "arrows": 71,
+   "initialFree": 4,
+   "depth": 28,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 108,
+  "solution": "B D C A y z o d q i a n x w j b c m v p l k f g e h r s t u",
+  "stats": {
+   "arrows": 30,
+   "initialFree": 2,
+   "depth": 24,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 109,
+  "solution": "I A c e s d r x G D E n h a b f g j k i m l o p q t v u w z y B H F C",
+  "stats": {
+   "arrows": 35,
+   "initialFree": 2,
+   "depth": 20,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 110,
+  "solution": "A0 A1 B0 D E0 J1 K1 N1 O N M O1 Q1 R1 U1 F0 S1 V V1 T1 a b b0 c c0 d0 e d f g h i j j0 k l l0 a0 m m0 P n o p q L q1 r s A s1 i1 M0 p0 t u u0 W v B g0 w F G Q o0 H1 x H y R G0 N0 R0 S X h1 o1 z C E J K Z f0 k0 r0 z0 J0 z1 G1 P1 L1 C1 y1 g1 W0 D0 i0 I T U Y e0 h0 n0 t0 C0 s0 q0 w0 H0 O0 y0 x0 v0 K0 S0 X0 T0 Y0 b1 t1 F1 I1 M1 E1 B1 D1 j1 k1 p1 c1 u1 Z0 I0 r1 l1 v1 d1 a1 w1 x1 n1 Q0 P0 V0 U0 L0 e1 m1 f1",
+  "stats": {
+   "arrows": 152,
+   "initialFree": 30,
+   "depth": 46,
+   "maxBlockers": 15
+  }
+ },
+ {
+  "id": 111,
+  "solution": "H b d e h g k t B A G D E I r l s o x w n m p y j a c f q F u z i v C",
+  "stats": {
+   "arrows": 35,
+   "initialFree": 3,
+   "depth": 20,
+   "maxBlockers": 7
+  }
+ },
+ {
+  "id": 112,
+  "solution": "E A C c b a d f h j k l g m e i o n p q r s u t v w D x y B z",
+  "stats": {
+   "arrows": 31,
+   "initialFree": 3,
+   "depth": 19,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 113,
+  "solution": "d c b j i h g a e f k l n0 m0 l0 k0 e0 f0 H D g0 h0 d0 i0 j0 c0 b0 Y S T G K R L V Z a0 X P J U O M W q w t E x F y z n m o r I N Q A B s u p v C",
+  "stats": {
+   "arrows": 66,
+   "initialFree": 2,
+   "depth": 32,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 114,
+  "solution": "a r B D w p i n q m d b g h j s y z A x e k C u v t l f c o",
+  "stats": {
+   "arrows": 30,
+   "initialFree": 2,
+   "depth": 21,
+   "maxBlockers": 8
+  }
+ },
+ {
+  "id": 115,
+  "solution": "F G a y n x w s r t k u D p q g b o i e c d h v z A B C E m f l j",
+  "stats": {
+   "arrows": 33,
+   "initialFree": 3,
+   "depth": 21,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 116,
+  "solution": "I H W Y a u J O U Q D E F V C X A p x y z B r i b c d e f h g j m q s K t v L M G w n k R T S N P o l",
+  "stats": {
+   "arrows": 51,
+   "initialFree": 3,
+   "depth": 27,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 117,
+  "solution": "F J I a n p u E G H D q t z A B C v x y k e d c b f i j l m r s o g h w",
+  "stats": {
+   "arrows": 36,
+   "initialFree": 3,
+   "depth": 23,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 118,
+  "solution": "J I G x y C D F H E A B s u k w v h r t z l j c b f e a d i g m q o p n",
+  "stats": {
+   "arrows": 36,
+   "initialFree": 2,
+   "depth": 23,
+   "maxBlockers": 7
+  }
+ },
+ {
+  "id": 119,
+  "solution": "a b c d d0 e0 f0 g0 h j n A p s u e f l k i g r F t w x z I O T K y C B G H J E D L Q X b0 a0 W S R V Z c0 U P Y o m q M N v",
+  "stats": {
+   "arrows": 59,
+   "initialFree": 4,
+   "depth": 27,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 120,
+  "solution": "J J1 I1 M0 N0 N1 T T1 S1 V0 W a a0 b1 c0 d c b e f h j1 m0 s s0 k g j r0 t0 u t u1 i1 l1 a1 t1 x r i q p n o m l w x1 y F G K X d0 y0 x0 z0 A0 B0 G0 G1 O0 H0 I0 J0 D0 O1 P1 K1 M1 Q1 R1 H1 E1 D1 F1 L1 T0 m1 B1 C1 v1 y1 z1 A1 s1 w1 r1 p1 k1 n1 q1 o1 h1 g1 c1 e1 C0 n0 g0 B C L M b0 u0 o0 e0 h0 z N O P Y v A E D F0 H I L0 E0 Q S R V U Z i0 w0 P0 Z0 f1 d1 W0 Q0 R0 K0 S0 U0 X0 Y0 k0 f0 j0 p0 v0 l0 q0",
+  "stats": {
+   "arrows": 150,
+   "initialFree": 21,
+   "depth": 50,
+   "maxBlockers": 16
+  }
+ },
+ {
+  "id": 121,
+  "solution": "I C G D E J B K F H a b c d e n y z o i j A r s t p h q k l w x u f g m v",
+  "stats": {
+   "arrows": 37,
+   "initialFree": 3,
+   "depth": 22,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 122,
+  "solution": "F C D G H I J K E B a b y z t c e h j l n s w x g d f k m i o q v A r p u",
+  "stats": {
+   "arrows": 37,
+   "initialFree": 3,
+   "depth": 27,
+   "maxBlockers": 8
+  }
+ },
+ {
+  "id": 123,
+  "solution": "a b n A J H K I z v j d c g h e f k i l m o q p r C s x y w F B D E t u G",
+  "stats": {
+   "arrows": 37,
+   "initialFree": 2,
+   "depth": 24,
+   "maxBlockers": 14
+  }
+ },
+ {
+  "id": 124,
+  "solution": "a b c d h0 T m v i f h l s r x C M X P J E D O N U f0 a0 e0 b0 c0 d0 Q g0 o e g j n p z q t H K u A B V W Z G w y S R L I F k Y",
+  "stats": {
+   "arrows": 60,
+   "initialFree": 4,
+   "depth": 32,
+   "maxBlockers": 15
+  }
+ },
+ {
+  "id": 125,
+  "solution": "G J A B H I K C E L F D z u v r w s i e d k l p t x n f b a g j m q y o h c",
+  "stats": {
+   "arrows": 38,
+   "initialFree": 2,
+   "depth": 20,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 126,
+  "solution": "a b e f d c g h i j k l m n o p r q s t u v w y B D E F H I K z x A C J G",
+  "stats": {
+   "arrows": 37,
+   "initialFree": 3,
+   "depth": 20,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 127,
+  "solution": "J K U c0 a0 d0 e0 f0 g0 V Z b0 j b r a f N M L Q P Y X S O R H C T I E D G B F W e g h u w l t x m c d n o p q k i s z y A v",
+  "stats": {
+   "arrows": 59,
+   "initialFree": 4,
+   "depth": 29,
+   "maxBlockers": 16
+  }
+ },
+ {
+  "id": 128,
+  "solution": "J v t i a b c d e f k l m A I H G K n u p o y F B E j q r D s w C z h g x",
+  "stats": {
+   "arrows": 37,
+   "initialFree": 2,
+   "depth": 21,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 129,
+  "solution": "I G E H F J a b c e f d g m C B A D v y x w l p s r k i z h j o n q u t",
+  "stats": {
+   "arrows": 36,
+   "initialFree": 3,
+   "depth": 21,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 130,
+  "solution": "D E I0 J0 F0 N P Q0 R0 V0 U0 W0 X0 Y c a b c0 d1 e d f0 g D0 M0 g0 h0 i1 j j0 j1 k n n0 o1 r1 k1 T0 P0 O0 b1 c1 n1 h1 a1 g1 f1 l1 s r0 A0 s1 q1 m1 e1 p1 Y0 S0 G0 N0 Z0 K0 L0 H0 E0 B0 C0 m w0 x0 l0 i0 y0 v0 z0 u0 t0 s0 m0 o0 p0 q0 z r i f l h o p q t G H M u A v C B F L w x I K J O Q y R S U V W Z d0 e0 b0 a0 k0 X T",
+  "stats": {
+   "arrows": 123,
+   "initialFree": 20,
+   "depth": 47,
+   "maxBlockers": 17
+  }
+ },
+ {
+  "id": 131,
+  "solution": "K H J I B E G A F m n s q i o w y z v u g a b c d f e k l C r j h x D t p",
+  "stats": {
+   "arrows": 37,
+   "initialFree": 1,
+   "depth": 21,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 132,
+  "solution": "K L E G a b c d e h l q C J I y m f r g j i k o A p v u H F B D w n s z x t",
+  "stats": {
+   "arrows": 38,
+   "initialFree": 3,
+   "depth": 22,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 133,
+  "solution": "a a0 b c d e f h0 H j i k l m q s u v D C K L N V i0 f0 W Q j0 k0 Y X g0 T U F P w p o n r t G J M z E S e0 R Z d0 c0 b0 O I A B y x g h",
+  "stats": {
+   "arrows": 63,
+   "initialFree": 4,
+   "depth": 34,
+   "maxBlockers": 15
+  }
+ },
+ {
+  "id": 134,
+  "solution": "J F K M I L E H C G B D z u x A y w k b a c h f d e i l m p q r s t v n g o j",
+  "stats": {
+   "arrows": 39,
+   "initialFree": 2,
+   "depth": 22,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 135,
+  "solution": "b a c d m l p r q u B A G H i h t F J E I C D x w y v k z o n j e f g s",
+  "stats": {
+   "arrows": 36,
+   "initialFree": 1,
+   "depth": 24,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 136,
+  "solution": "K L Z a a0 T E X b b0 Y W U N S V Q B C R O H P M I c e f g i p o q r x y D t n h j k l m F G A J w d z s u v",
+  "stats": {
+   "arrows": 54,
+   "initialFree": 5,
+   "depth": 26,
+   "maxBlockers": 14
+  }
+ },
+ {
+  "id": 137,
+  "solution": "D H E I s m b g h a d k y z A t w F B G C u r c j p x v o n q l i f e",
+  "stats": {
+   "arrows": 35,
+   "initialFree": 2,
+   "depth": 21,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 138,
+  "solution": "c d b a e f i j k l m g h q u C B D F J H z p s n o t E y x w v A G K L I r",
+  "stats": {
+   "arrows": 38,
+   "initialFree": 2,
+   "depth": 26,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 139,
+  "solution": "a b d e f m0 P I E D S R Q c f0 g0 h O h0 l0 i0 U T e0 Z N k0 d0 M C c0 Y b0 a0 j0 W o r k l w z q v j g i t F G V X L n x J K B A y u H s p m",
+  "stats": {
+   "arrows": 65,
+   "initialFree": 4,
+   "depth": 27,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 140,
+  "solution": "A0 A1 B1 C1 D1 G0 H0 K1 L1 M1 N1 O P1 Q1 J1 O1 H1 R1 V0 a b c d d1 e f f1 h i0 m l n r s E q s0 t1 u1 w D v x x1 m1 c1 l1 b1 k1 w1 I1 G1 F1 E1 Z0 s1 h1 J0 k0 v1 U0 F0 T0 E0 y1 z0 z1 o1 r1 X0 n1 e1 w0 n0 t0 u0 x0 I0 Q0 B0 C0 b0 e0 V L H J W S g1 q1 p1 j1 i1 a1 Y0 D0 j0 o0 f0 P M N K I G B F C R Q Y p0 l0 t o u p z j i A g k y T U a0 Z X d0 P0 S0 c0 h0 r0 y0 m0 q0 N0 R0 K0 L0 M0 O0 W0 v0 g0",
+  "stats": {
+   "arrows": 148,
+   "initialFree": 26,
+   "depth": 51,
+   "maxBlockers": 19
+  }
+ },
+ {
+  "id": 141,
+  "solution": "M L K I c y F B G J E H C D u o w x v t k a b d e j h i g f l m n r s A p q z",
+  "stats": {
+   "arrows": 39,
+   "initialFree": 3,
+   "depth": 23,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 142,
+  "solution": "K a c b d e j n p u v w C D F H A B G E z y q m f h i g k o s I J x l r t",
+  "stats": {
+   "arrows": 37,
+   "initialFree": 3,
+   "depth": 23,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 143,
+  "solution": "K I H G J a n y z m r v h f k c e b d E B A F D C j l o p w x u q s t i g",
+  "stats": {
+   "arrows": 37,
+   "initialFree": 3,
+   "depth": 26,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 144,
+  "solution": "a e d c b f g h i j k l m o p q n r F s0 t u H s A B C D J N Q R w v x E I S y z G K M b0 a0 d0 j0 k0 t0 u0 p0 r0 q0 i0 h0 Y l0 T L P O U W V g0 c0 f0 m0 n0 e0 X Z o0",
+  "stats": {
+   "arrows": 73,
+   "initialFree": 4,
+   "depth": 31,
+   "maxBlockers": 15
+  }
+ },
+ {
+  "id": 145,
+  "solution": "L D J I F G E H K C B b i r n p s w x y z q f e d g c a h j k o t v u l m A",
+  "stats": {
+   "arrows": 38,
+   "initialFree": 2,
+   "depth": 25,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 146,
+  "solution": "E F G C A D B a i m w n x u q y v t z s f r o p k c g b h d e j l",
+  "stats": {
+   "arrows": 33,
+   "initialFree": 2,
+   "depth": 22,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 147,
+  "solution": "C R K Z Q J X c d0 f0 o p d a b e g f j k i m F q h n l E r B u t s v w x L M y z D I H A G O W b0 c0 V N P U Y T S a0 e0",
+  "stats": {
+   "arrows": 58,
+   "initialFree": 8,
+   "depth": 27,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 148,
+  "solution": "K I C a c b f g i l v F J y H E B A u z s x r o D p q k j n m d e w G h t",
+  "stats": {
+   "arrows": 37,
+   "initialFree": 3,
+   "depth": 22,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 149,
+  "solution": "b g h f e d a c i j k n m B J G A H I K l r q t w y z E F D x v u C s p o",
+  "stats": {
+   "arrows": 37,
+   "initialFree": 1,
+   "depth": 22,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 150,
+  "solution": "E0 D0 E1 F0 G0 J1 D1 I1 H1 K K1 S T T0 K0 C0 U1 O1 Z0 a a1 a2 Z1 b b2 V1 P1 d f e c f1 f2 g h i i2 g2 e2 R1 d2 h2 c2 X1 Q1 Y1 C1 S1 W1 L1 M1 B1 F1 G1 N1 T1 k l1 Y0 e1 m l j m0 n o p A r s1 t1 u E L U b0 f0 o0 w w1 k1 x0 x1 y y0 L0 H0 g1 n0 y1 z0 M0 q1 h1 m1 U0 P0 g0 D Y p0 q0 z1 A1 i1 r1 Q0 A0 h0 V i0 M F G H x s v q t B O V0 n1 u1 v1 p1 j1 o1 d1 c1 R0 B0 b1 W0 X0 j0 N r0 k0 z C J W X c0 Z d0 a0 w0 O0 N0 S0 I0 v0 P I Q R u0 J0 s0 e0 l0 t0",
+  "stats": {
+   "arrows": 165,
+   "initialFree": 27,
+   "depth": 55,
+   "maxBlockers": 17
+  }
+ },
+ {
+  "id": 151,
+  "solution": "H F I J G B C E A h b a c z D s x w y t n o l m d g f i j p u v r e k q",
+  "stats": {
+   "arrows": 36,
+   "initialFree": 2,
+   "depth": 23,
+   "maxBlockers": 8
+  }
+ },
+ {
+  "id": 152,
+  "solution": "c b e h i a d k n p D K H C I J t x w o s g f j m r A q B l z y E u F G v",
+  "stats": {
+   "arrows": 37,
+   "initialFree": 1,
+   "depth": 26,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 153,
+  "solution": "D d c b a e f g h i j k l m m0 n q A v y I N X d0 g0 o0 l0 i0 k0 K V j0 n0 Y O z u p C o t s r w E x F J L M W U T Q P R S e0 Z h0 a0 b0 G H B c0 f0",
+  "stats": {
+   "arrows": 67,
+   "initialFree": 3,
+   "depth": 36,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 154,
+  "solution": "I G C F E D B H a c k y r e b s A q i t w z p n o l h m u x v j f g d",
+  "stats": {
+   "arrows": 35,
+   "initialFree": 3,
+   "depth": 22,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 155,
+  "solution": "H I J E G F D C b a t k c d e f h g i j l n m o r z u p q s v x y A B w",
+  "stats": {
+   "arrows": 36,
+   "initialFree": 3,
+   "depth": 24,
+   "maxBlockers": 8
+  }
+ },
+ {
+  "id": 156,
+  "solution": "P c h h0 i j m a d k g f l D o M t v u z A H L O U X W V Z e0 d0 c0 N g0 b0 f0 a0 w n p E I J K C S T Y B q r s x y R Q F G b e",
+  "stats": {
+   "arrows": 60,
+   "initialFree": 5,
+   "depth": 27,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 157,
+  "solution": "M b c a e m d f g k j i h l n o p F K L N H v A t y x u C B E D J s G r q w I z",
+  "stats": {
+   "arrows": 40,
+   "initialFree": 3,
+   "depth": 23,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 158,
+  "solution": "E F G C D B r t k j o z A q y w v i u s m g e a f h b c d n p l x",
+  "stats": {
+   "arrows": 33,
+   "initialFree": 1,
+   "depth": 23,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 159,
+  "solution": "a b h g f e d c j k i l m C n o p q r r0 s s0 t t0 h0 u u0 v w O P W Y d0 e0 l0 x B y G J L M V X z A D E H I K N Q R T U c0 g0 f0 a0 Z b0 i0 j0 k0 p0 q0 n0 m0 o0 S F",
+  "stats": {
+   "arrows": 73,
+   "initialFree": 5,
+   "depth": 29,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 160,
+  "solution": "O B C U0 L0 W X a S b c d0 g g0 h0 i j k0 j0 l0 m0 n0 o n o0 t s u0 v x D E H K L R e0 Y Z M F G p y k l d e f h u z w A J N Q V c0 I R0 Q0 P0 T0 S0 c1 d1 b1 U h1 g1 b0 P T a0 l1 k1 j1 e1 i1 a1 f1 Y0 Z0 X0 W0 O0 G0 A0 N0 K0 E0 V0 q0 t0 i0 p0 r m q r0 s0 v0 x0 C0 I0 w0 y0 D0 H0 M0 J0 F0 B0 f0 z0",
+  "stats": {
+   "arrows": 116,
+   "initialFree": 18,
+   "depth": 52,
+   "maxBlockers": 20
+  }
+ },
+ {
+  "id": 161,
+  "solution": "a m w y E M J K L B H r s u A N v d i t h x p k b e f c g j l D q o z C G I F n",
+  "stats": {
+   "arrows": 40,
+   "initialFree": 2,
+   "depth": 27,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 162,
+  "solution": "K B M L J D a z t n b c d e f g h v F G C E I s l i k m j o q p r w H y x u A",
+  "stats": {
+   "arrows": 39,
+   "initialFree": 3,
+   "depth": 24,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 163,
+  "solution": "O F E D N M L H C K I J G a c n j k l e s t h u w z A B v x r o p q g d b f m i y",
+  "stats": {
+   "arrows": 41,
+   "initialFree": 3,
+   "depth": 25,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 164,
+  "solution": "V W a c b f j l l0 S I m m0 f0 g0 X a0 e0 i0 n0 h0 o0 j0 Y d0 T U k0 M N E B s r g A u J K v z i e d n w C D F Z P Q b0 x p y q h o k t G L R O H c0",
+  "stats": {
+   "arrows": 67,
+   "initialFree": 5,
+   "depth": 31,
+   "maxBlockers": 15
+  }
+ },
+ {
+  "id": 165,
+  "solution": "H A F I D E C p s t v G w r h g a l y z u q n m d i k j b e x B o f c",
+  "stats": {
+   "arrows": 35,
+   "initialFree": 1,
+   "depth": 25,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 166,
+  "solution": "a b c f h o r v z K H B F J I y t p D G C u w x E s k j n g e d m l q A i",
+  "stats": {
+   "arrows": 37,
+   "initialFree": 3,
+   "depth": 21,
+   "maxBlockers": 8
+  }
+ },
+ {
+  "id": 167,
+  "solution": "G S b d0 f0 e0 c0 T U W Z a0 b0 X u g a c d f e i j m l o t y L R N D F x B O Q P H C z p q A w I M J K E s v k h V Y r n",
+  "stats": {
+   "arrows": 58,
+   "initialFree": 5,
+   "depth": 26,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 168,
+  "solution": "M G F L I J C D E K H y u z A B p c b a f g h i k x m l n s w t r o d j q v e",
+  "stats": {
+   "arrows": 39,
+   "initialFree": 2,
+   "depth": 25,
+   "maxBlockers": 14
+  }
+ },
+ {
+  "id": 169,
+  "solution": "P O J N G I a b c i o s t m d l k n A D C M L K F w B x y u v H j f z g e h p q r E",
+  "stats": {
+   "arrows": 42,
+   "initialFree": 2,
+   "depth": 25,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 170,
+  "solution": "A1 A2 B2 G2 F2 E2 D2 C2 H2 I2 J J2 P0 Q0 V0 b b1 D0 c c1 R0 W0 X0 Y0 d0 d1 d2 e f i j E j2 o o2 p0 p2 P1 Q1 R1 q0 r2 v v2 w K W h0 i0 w0 o0 w2 x0 E0 F0 x2 t2 a2 y0 y2 h2 z2 i2 g2 f2 u2 b2 s2 m2 Z1 n2 e2 l2 k2 q2 B1 K1 C1 D1 E1 L1 X P Y1 S1 T1 U1 V1 W1 X1 c2 O1 N1 M1 I1 J1 H1 e1 f1 g1 O0 N0 U0 m0 n0 c0 O D C N M n m B l p a d g h k r1 u t s A H L r q Y h1 i1 m1 s1 S0 r0 x y F G Z z I Q R S T V U b0 a0 g0 v0 a1 q1 z0 A0 B0 C0 s0 G0 K0 L0 T0 Z0 t0 t1 j0 e0 f0 k0 I0 M0 l0 J0 H0 j1 n1 u0 x1 k1 o1 p1 l1 u1 v1 w1 z1 F1 G1 y1",
+  "stats": {
+   "arrows": 192,
+   "initialFree": 21,
+   "depth": 55,
+   "maxBlockers": 16
+  }
+ },
+ {
+  "id": 171,
+  "solution": "a b c d e g k j n s r q t F E J M N O D p l i h f m o u v w x y z A C B H L G K I",
+  "stats": {
+   "arrows": 41,
+   "initialFree": 3,
+   "depth": 21,
+   "maxBlockers": 8
+  }
+ },
+ {
+  "id": 172,
+  "solution": "O L N J K B M m b d j g i h l p q w A I H u z D G C y E x v s t F o r f c a e n k",
+  "stats": {
+   "arrows": 41,
+   "initialFree": 1,
+   "depth": 28,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 173,
+  "solution": "a b g i h e f d c j m k l p o n q r r0 s u0 w0 v0 m0 q0 k0 p0 i0 j0 n0 l0 o0 t0 g0 h0 W c0 f0 s0 x y I P Y Z O J K a0 U b0 d0 e0 T H C N X u w v B t Q V S M R L E A D z F G",
+  "stats": {
+   "arrows": 75,
+   "initialFree": 5,
+   "depth": 34,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 174,
+  "solution": "K e d c b a g f h i j k G L E H I M F J D A B C r x y v m n o p w t q s u z l",
+  "stats": {
+   "arrows": 39,
+   "initialFree": 2,
+   "depth": 25,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 175,
+  "solution": "I a b e d c f g h l o n j p y A B x w v L N s q C M r D F u E O z t m i k H J G K",
+  "stats": {
+   "arrows": 41,
+   "initialFree": 3,
+   "depth": 21,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 176,
+  "solution": "T N Z a c b d e f h k n o g i j l m p u C A S r s z L U R F x t q I v w J E y K Q Y V G H M O D B P X W",
+  "stats": {
+   "arrows": 52,
+   "initialFree": 7,
+   "depth": 32,
+   "maxBlockers": 16
+  }
+ },
+ {
+  "id": 177,
+  "solution": "K N M I L A H E D B J G C F a b e h q t z x y u v r m s g c l n p o j k w i d f",
+  "stats": {
+   "arrows": 40,
+   "initialFree": 3,
+   "depth": 21,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 178,
+  "solution": "J N a n A G B O K q w i b c d m t C F D M H L E p u o k l j e r s v x y z I g h f",
+  "stats": {
+   "arrows": 41,
+   "initialFree": 3,
+   "depth": 22,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 179,
+  "solution": "a e d c b f h i j n q0 s s0 t L M t0 d0 m0 b0 i0 l0 K g0 h0 w z p g k l m q H I A r F a0 c0 e0 k0 r0 U o0 Z n0 p0 V N f0 j0 Q B C D X R O J Y T S W P o v E G u y x",
+  "stats": {
+   "arrows": 72,
+   "initialFree": 5,
+   "depth": 30,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 180,
+  "solution": "B F0 E0 D0 G0 J L1 T1 K1 P1 Y a b c c2 d d2 W1 U1 V1 X1 e e2 g2 a2 b2 C1 J1 Z1 f2 S1 Y1 R1 I1 O1 N1 F1 M1 Q1 A1 B1 G1 H1 E1 D1 i h g f i0 O0 N0 j k l m m1 n1 o A p n p0 q r r1 Z0 f1 a1 s t t0 H0 u v w C K x0 B0 x1 y1 z z1 s1 g1 t1 i1 j1 W0 b1 c1 e0 k1 l0 l1 o1 p1 T q1 X0 u1 V0 v1 w1 h1 d1 e1 M0 Y0 U0 S0 T0 R0 Q0 J0 P0 L0 K0 I0 C0 j0 g0 y0 Z q0 u0 r0 a0 P z0 A0 d0 k0 L F G U V v0 s0 m0 w0 o0 h0 f0 n0 c0 O S R N W X b0 I H M E D Q y x",
+  "stats": {
+   "arrows": 163,
+   "initialFree": 21,
+   "depth": 54,
+   "maxBlockers": 17
+  }
+ },
+ {
+  "id": 181,
+  "solution": "J L N C B A E H D F K M I G t z r s x y w v p u n a b e o j f q c l m k i d g h",
+  "stats": {
+   "arrows": 40,
+   "initialFree": 3,
+   "depth": 23,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 182,
+  "solution": "A N M E G c b a d e i k f h l n o J q I K v t r g w x z F y m p u D H L B s j C",
+  "stats": {
+   "arrows": 40,
+   "initialFree": 3,
+   "depth": 22,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 183,
+  "solution": "N C G H a b d c f i h g l n m r s q t o u v w x B z A D y p e E F M J I L K k j",
+  "stats": {
+   "arrows": 40,
+   "initialFree": 3,
+   "depth": 24,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 184,
+  "solution": "B0 A0 E i h x0 t0 u0 y0 z0 k0 w0 o0 v0 a0 J K P Q s0 g0 S h0 b0 V c0 z c a b d e f j m n l o t u x A O n0 d0 Y e0 p g k p0 Z q0 r s B q v w C D F L T f0 l0 m0 X W r0 j0 i0 U R M y G H I N",
+  "stats": {
+   "arrows": 80,
+   "initialFree": 5,
+   "depth": 36,
+   "maxBlockers": 15
+  }
+ },
+ {
+  "id": 185,
+  "solution": "N O c n z C I M P K H L y s b a d f l D J G E F B t u w e j m o v x A g h i k q r p",
+  "stats": {
+   "arrows": 42,
+   "initialFree": 2,
+   "depth": 28,
+   "maxBlockers": 8
+  }
+ },
+ {
+  "id": 186,
+  "solution": "J D K C I H A G F E v B x z w y u e d c a b f k t q j l m g n o r s i h p",
+  "stats": {
+   "arrows": 37,
+   "initialFree": 2,
+   "depth": 30,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 187,
+  "solution": "P O U a g k0 l m0 l0 h0 i0 j0 c0 f0 g0 u t z D y G C B S m d k v H A E I J K Q V Z a0 d0 w r s h L e0 W X T Y b0 R p e b c n i f j F N M q o x",
+  "stats": {
+   "arrows": 65,
+   "initialFree": 8,
+   "depth": 36,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 188,
+  "solution": "N A b a c d e g i k l m n o p r v w E J O P Q I M L K B H z x s F G y h f j D C t u q",
+  "stats": {
+   "arrows": 43,
+   "initialFree": 3,
+   "depth": 23,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 189,
+  "solution": "P Q c b a f e d g h i j k A l m o n p q s r u w x t G v C D E H K R O N M L y z B F I J",
+  "stats": {
+   "arrows": 44,
+   "initialFree": 2,
+   "depth": 23,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 190,
+  "solution": "A1 B2 E2 F G H2 I2 L N2 J2 O2 A2 D2 S X1 Z0 P0 R0 W0 a a1 b b0 c e2 f0 g0 i1 m0 n P n0 G0 H0 f1 g1 o o2 p2 d2 r C K J s2 f2 t t0 F0 V0 s0 t2 v1 J1 K1 L1 v2 c2 h2 Q1 w1 x0 M0 O0 l1 I1 b2 y0 y2 W1 z i0 z1 t1 u1 c1 Q0 d1 e1 E0 D0 w0 e0 x R f e d j B A I H a0 k Q i h g m p q l s s1 v w Z Y X O y E N W V U c0 d0 k0 r0 q0 p0 B1 o0 T D h0 S0 X0 j0 l0 F1 E1 m1 i2 n1 j2 v0 u0 A0 B0 T0 y1 z2 F2 K2 C2 L2 G2 M2 V1 k1 N0 C0 K0 U0 Y0 m2 u2 a2 x2 n2 g2 w2 q2 Z1 r2 l2 k2 S1 z0 I0 J0 L0 b1 D1 U1 Y1 R1 M M1 T1 N1 h1 o1 p1 j1 C1 r1 q1 u x1 G1 H1 O1 P1",
+  "stats": {
+   "arrows": 197,
+   "initialFree": 24,
+   "depth": 55,
+   "maxBlockers": 19
+  }
+ },
+ {
+  "id": 191,
+  "solution": "P L H I M N O J K F B G a b c v i j g k o u w C D E s h n l m x e d A z y q t f p r",
+  "stats": {
+   "arrows": 42,
+   "initialFree": 2,
+   "depth": 25,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 192,
+  "solution": "P M R H Q O a b c d e g A B C E h i o p n q t x m j k G N r y u s v w z F D l f J I L K",
+  "stats": {
+   "arrows": 44,
+   "initialFree": 3,
+   "depth": 21,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 193,
+  "solution": "E0 A0 F0 B0 C0 D0 G0 c i j n0 o0 q0 b0 V a0 u u0 x0 y G F I M i0 x y0 s0 z0 h0 T r h b a e g f d k m l o q w H w0 v0 z D E J K c0 U L j0 e0 k0 s n N p B t v O P Q Y Z l0 f0 d0 g0 S R C A m0 t0 p0 X W r0",
+  "stats": {
+   "arrows": 85,
+   "initialFree": 5,
+   "depth": 42,
+   "maxBlockers": 15
+  }
+ },
+ {
+  "id": 194,
+  "solution": "B a c d e b f g i j h k l n m o q r p s v C F L M H E w t u x A y D I J O N P K z G",
+  "stats": {
+   "arrows": 42,
+   "initialFree": 2,
+   "depth": 26,
+   "maxBlockers": 15
+  }
+ },
+ {
+  "id": 195,
+  "solution": "N L E F M J I O K A C H G D v w s x y r t u o d c k h l m n j e z g a p i b f q B",
+  "stats": {
+   "arrows": 41,
+   "initialFree": 2,
+   "depth": 21,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 196,
+  "solution": "L a c g k l s B N j0 n0 o0 q0 r0 v0 y0 i0 X F E x0 s0 w0 p0 u0 l0 d0 Y e0 b0 W c0 Z I f0 g0 U V h0 a0 K J H G C Q M k0 t h i q w m0 t0 x z D d m n o p r v u A P S y e O T j f b R",
+  "stats": {
+   "arrows": 77,
+   "initialFree": 5,
+   "depth": 36,
+   "maxBlockers": 15
+  }
+ },
+ {
+  "id": 197,
+  "solution": "O R I K A E G Q M N P L d i q t c b a e f g j h k l n m o r s u x w y z C D F H B J v p",
+  "stats": {
+   "arrows": 44,
+   "initialFree": 3,
+   "depth": 22,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 198,
+  "solution": "L a c d m n w H G J K A I y x h i r o p s z B C E F D j b g f k e l q u v t",
+  "stats": {
+   "arrows": 38,
+   "initialFree": 3,
+   "depth": 21,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 199,
+  "solution": "A0 B0 C0 D0 c d p A t Q d0 E0 c0 p0 s P s0 t0 W g0 z0 m0 n0 V U k b a l0 w0 v0 O E D l u0 y0 k0 T G I H j e g i o q r r0 q0 j0 x0 b0 z N M L S Y i0 o0 h0 f0 a0 e0 Z X K J R y w h f m n u F v x B C",
+  "stats": {
+   "arrows": 83,
+   "initialFree": 4,
+   "depth": 36,
+   "maxBlockers": 20
+  }
+ },
+ {
+  "id": 200,
+  "solution": "C E0 I1 J1 A1 K1 L1 M0 P1 U Z1 T1 a b b0 b2 c c2 d d2 X1 U1 S1 V1 Y1 a2 W1 f g g1 h j j0 k0 l l1 m o p M q r s t u B L S T i0 h0 g0 f0 e0 v q0 N0 h1 w c0 w1 x W y D z P z0 z1 B1 C1 n1 Z0 o1 i1 O0 F0 P0 U0 V a1 j1 k1 G0 l0 N O X Y p1 Q0 A0 H0 B0 V0 R0 r0 m0 s0 t0 n0 d0 u0 Z E F A G H I C0 a0 b1 c1 o0 q1 D1 E1 F1 M1 N1 G1 H1 d1 S0 r1 v0 I0 w0 p0 x1 y0 K0 L0 W0 X0 f1 m1 v1 u1 t1 e1 O1 R1 Q1 y1 s1 Y0 T0 D0 J J0 Q k i K x0 R n e",
+  "stats": {
+   "arrows": 160,
+   "initialFree": 23,
+   "depth": 50,
+   "maxBlockers": 21
+  }
+ },
+ {
+  "id": 201,
+  "solution": "R S O P Q L H F G J N T K B M E A I b r a h V c U W X d e j k l p q t u w v y x z D C f m i n o s g",
+  "stats": {
+   "arrows": 50,
+   "initialFree": 2,
+   "depth": 28,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 202,
+  "solution": "Q R T e j l n C D B A M L P I O N E H J K v w y t o p V a c b q f x z r g h i d S U k m s G F u",
+  "stats": {
+   "arrows": 48,
+   "initialFree": 3,
+   "depth": 26,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 203,
+  "solution": "H D I F J G M y C j l t o a O s x d K L P u r T N R A E f i S Q c e b g h v w q p m k z B n",
+  "stats": {
+   "arrows": 46,
+   "initialFree": 3,
+   "depth": 25,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 204,
+  "solution": "F0 W c0 g n q s0 O w B0 o m p0 N L J P R T Z d0 h0 j0 n0 t0 b0 X V f0 G H D i B i0 k l0 p h A0 C j d E0 G0 r r0 I k0 e0 m0 s u0 Q A Y K M v e D0 u v0 w0 q0 x x0 f o0 S U F a0 c a y y0 z E C0 b g0 z0 I0 l H0 t",
+  "stats": {
+   "arrows": 87,
+   "initialFree": 5,
+   "depth": 44,
+   "maxBlockers": 18
+  }
+ },
+ {
+  "id": 205,
+  "solution": "W o k U l m p V K O q g h r s t j n f e b c T i a R S Q d L v x I P G E F N M J C y A u H w D B z",
+  "stats": {
+   "arrows": 49,
+   "initialFree": 3,
+   "depth": 25,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 206,
+  "solution": "k d R K C F I n h i Q E N P j g o p t v M O T b z L U u s H r q w x y B A D G J S f c V e l m a",
+  "stats": {
+   "arrows": 48,
+   "initialFree": 3,
+   "depth": 26,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 207,
+  "solution": "G0 a0 R0 Z0 A C E O L0 Q b0 a d1 e1 m0 N0 P0 j0 g0 E0 H0 d0 p0 b1 c e0 Y0 v0 y0 K0 B0 X0 s0 T0 S V0 p D0 l0 n F o0 J0 M0 A0 H D N P r v x0 u0 f0 i0 r0 T c0 Z X R J L V B b d g1 h i1 O0 h0 x c1 z j W0 l m1 t Q0 U f k1 U0 n0 q0 t0 q u k K w0 y o Y S0 a1 C0 F0 I0 G k0 w g i e h1 j1 W I z0 M s m l1 f1",
+  "stats": {
+   "arrows": 117,
+   "initialFree": 4,
+   "depth": 50,
+   "maxBlockers": 17
+  }
+ },
+ {
+  "id": 208,
+  "solution": "A C D G N T X i p v u h W J I M L K R Q w x z B E V f k o y H F O P S U b j q s a c m e d g l t r n",
+  "stats": {
+   "arrows": 50,
+   "initialFree": 2,
+   "depth": 27,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 209,
+  "solution": "U V Q T K M a X f h W b k c e i n G H D o p s v w x m y C I L N O R F B E P J S l d g j q r u t z A",
+  "stats": {
+   "arrows": 50,
+   "initialFree": 3,
+   "depth": 25,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 210,
+  "solution": "A0 C1 E0 H I0 I1 M0 P0 P1 T0 T1 U0 Y G1 Y1 B a2 b0 c2 d a f f2 g1 U1 h2 j2 X1 k1 E1 A1 c1 Y0 Q0 j m n1 n2 o1 M1 o2 q1 C0 d0 a0 d2 J1 F1 Z1 d1 Z0 q X U t g0 v1 w l2 p2 F0 J0 s2 N1 h1 w0 e0 h0 k0 n0 w1 Q1 s1 g2 T W b k2 K l1 R1 e p r2 s N Q N0 V1 f0 u2 y y0 W1 z j0 u1 z0 z1 D1 H1 J X0 D0 b1 b2 L1 f1 j1 H0 L0 q0 r1 t0 S V A P M S1 O B0 E L g r0 v v0 x m1 o0 l0 i0 i1 x0 V0 n e1 c u0 B1 I R m0 p0 w2 a1 W0 s0 S0 O1 y1 u t2 q2 m2 r C p1 Z c0 R0 t1 x1 O0 F K0 G0 h k v2 i D G o l K1 e2 i2",
+  "stats": {
+   "arrows": 179,
+   "initialFree": 22,
+   "depth": 52,
+   "maxBlockers": 21
+  }
+ },
+ {
+  "id": 211,
+  "solution": "H q u v w z y B C x A D E F G I J L M N K Q a O P R S g h m o r s t p j T k c b d f e l n i",
+  "stats": {
+   "arrows": 46,
+   "initialFree": 3,
+   "depth": 32,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 212,
+  "solution": "L M I N O P J Q K R F H G E B A C D r u w s x h y q o p i l n v j k z m e f W a U V d T g S b X c t",
+  "stats": {
+   "arrows": 50,
+   "initialFree": 3,
+   "depth": 28,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 213,
+  "solution": "G M Z V a N o0 q K g0 x y a0 J T A U b0 d0 i o d W w0 X m0 g c0 i0 y0 p t L r0 H l e f0 u D m C l0 u0 F w j z s0 j0 O x0 e0 n n0 h0 z0 R B s c k Y f Q I k0 E b q0 t0 P h p0 r v S v0",
+  "stats": {
+   "arrows": 78,
+   "initialFree": 5,
+   "depth": 39,
+   "maxBlockers": 17
+  }
+ },
+ {
+  "id": 214,
+  "solution": "T U V W X a b c d e h i j k l n m r D J P K Q R H M S s v A B C I y E O u w F G N L x z q t p o f g",
+  "stats": {
+   "arrows": 50,
+   "initialFree": 3,
+   "depth": 28,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 215,
+  "solution": "v r o b q n x s t u p w m l y N U V H D E c d j e z L T Q R h i k f a g X W S K P O A I C B G F J M",
+  "stats": {
+   "arrows": 50,
+   "initialFree": 3,
+   "depth": 27,
+   "maxBlockers": 9
+  }
+ },
+ {
+  "id": 216,
+  "solution": "d0 j0 l0 V0 i0 P f0 V b N0 b1 c0 X Z N R T L J F D l m o0 m0 I0 t v T0 F0 H0 e0 S b0 A I r p n x J0 K o x0 z B f Z0 h0 j h d X0 d1 P0 D0 R0 L0 G Y W k c1 K0 U0 a1 i g n0 H S0 g0 k0 E q q0 r0 s w y a G0 Q0 O0 M0 E0 W0 C0 a0 A0 u M p0 O C y0 z0 Q U B0 t0 v0 e c Y0 s0 u0 w0",
+  "stats": {
+   "arrows": 108,
+   "initialFree": 5,
+   "depth": 50,
+   "maxBlockers": 14
+  }
+ },
+ {
+  "id": 217,
+  "solution": "d I e a f c K h j y E C t u l g i k m q n r s w v x z D F G H J O P b o p B A L N M",
+  "stats": {
+   "arrows": 42,
+   "initialFree": 3,
+   "depth": 28,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 218,
+  "solution": "t u v F N H x E D J a w y z B A C G I P K O T U S R Q L M V W d g q p m j s r n i o k l h b c f e",
+  "stats": {
+   "arrows": 49,
+   "initialFree": 3,
+   "depth": 28,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 219,
+  "solution": "D F H J P R T V L N X Z b0 d0 f C0 f0 j j0 h0 l0 p0 r r0 v0 z0 a c i G p q q0 b d t w x S o0 E I U a0 c0 e0 Q g0 i0 W Y k0 m0 y0 s0 A0 w0 u0 u y k l n0 t0 B0 e n x0 s B A C v z K M O o h g m",
+  "stats": {
+   "arrows": 81,
+   "initialFree": 4,
+   "depth": 40,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 220,
+  "solution": "A1 E1 F0 I J F J0 N0 N1 O0 R0 R1 S1 O1 T1 U0 I0 X1 P1 Y0 Z0 g2 h1 V0 d1 d2 i i1 e2 i2 j0 j f k D2 m2 L n1 n p p1 l1 V1 a p2 l2 h2 Z1 r r1 O q2 S0 m1 W1 t t1 F1 e t2 u2 v v1 m0 w1 Q0 s1 C0 E A e0 x A2 B E2 I2 d h Y1 Y k2 l s2 U1 o1 o2 M1 Q1 c2 I1 g1 M0 h0 M H2 k0 k1 c1 n0 q0 P0 t0 w0 w2 V x1 B1 J1 T x2 N u1 y2 z0 b0 S P o w s T0 g c z2 v2 b2 f2 j2 n2 D1 r2 L1 j1 z1 H1 E0 f1 B0 b1 X0 g0 d0 s0 v0 a0 X L0 H0 W0 p0 C2 q1 f0 y y0 y1 i0 B2 C Q R U l0 F2 o0 r0 D0 C1 a1 a2 G2 b z D H K1 W m G Z c0 K0 A0 G0 u u0 x0 q K e1 G1",
+  "stats": {
+   "arrows": 191,
+   "initialFree": 20,
+   "depth": 57,
+   "maxBlockers": 18
+  }
+ },
+ {
+  "id": 221,
+  "solution": "w i M F B E Q a h o u f T I N e l t x A D J L z C G H K P n s d W S R O y V U g b c k j m p r q v",
+  "stats": {
+   "arrows": 49,
+   "initialFree": 2,
+   "depth": 30,
+   "maxBlockers": 14
+  }
+ },
+ {
+  "id": 222,
+  "solution": "E Q d l w x v y z A B C D F I J L O T H G K N M P R S U V W a c f b e g X m q u k h p s t o i n r j",
+  "stats": {
+   "arrows": 50,
+   "initialFree": 3,
+   "depth": 29,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 223,
+  "solution": "q t u l p b Q U n T J I H m h e d N K G A B F E C D L P f O M x z i r j c g a y w R v k s o S",
+  "stats": {
+   "arrows": 47,
+   "initialFree": 3,
+   "depth": 28,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 224,
+  "solution": "A Q S U a0 A0 I0 c0 e0 g K g0 i0 k k0 q0 y0 Y W e m0 J I o0 s0 w0 u0 G0 E0 C0 K0 M0 O0 L R a c H i C Z j0 p0 H0 N0 P0 q G w N x x0 y z D B F p v t j r n h l f d B0 b v0 t0 T E M O V L0 f0 P d0 z0 D0 F0 J0 l0 X r0 b0 s u o m h0 n0",
+  "stats": {
+   "arrows": 94,
+   "initialFree": 4,
+   "depth": 45,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 225,
+  "solution": "a e f g h i j k l p q o t F C D m n r v A w x s u G J M N U c X y z B E H K L S V b0 b a0 W T Y P I O R Q Z d",
+  "stats": {
+   "arrows": 54,
+   "initialFree": 3,
+   "depth": 26,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 226,
+  "solution": "f y k Z l m p W q s t u v x r z h w n R S X o j e T N O i d g c U V Y a J G I E D P M F H L K Q b C A B",
+  "stats": {
+   "arrows": 52,
+   "initialFree": 2,
+   "depth": 27,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 227,
+  "solution": "Y0 a0 c b0 X0 d0 B0 e0 e1 V b1 V0 S0 D0 P0 A0 G0 J0 m0 o0 f0 P i0 B D n p0 r0 L u0 y0 j1 Q0 N0 W0 h1 s q u K I S Q v0 a m s0 H0 K0 E0 T0 j0 Z0 f1 g0 c1 g l1 i n1 t0 w k0 w0 O0 y A p1 k C E G M r1 o e h0 C0 R0 a1 d1 i1 h F0 W k1 n0 q0 q1 z z0 I0 J X m1 p U0 g1 r t j Y s1 b d f x c0 v H T N R o1 L0 O U l F Z l0 M0 x0",
+  "stats": {
+   "arrows": 123,
+   "initialFree": 7,
+   "depth": 46,
+   "maxBlockers": 19
+  }
+ },
+ {
+  "id": 228,
+  "solution": "Z z B t w y q x v p a o n m j b l i W k s c P L J M H A C D E F Q K G R S U h f d X I O V e g r u a0 Y T N",
+  "stats": {
+   "arrows": 53,
+   "initialFree": 2,
+   "depth": 34,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 229,
+  "solution": "t q u w j m s v r l k h i o p n e W f c a V d g Q U K b G T I R H S O N F P L D E M J B z x y A C",
+  "stats": {
+   "arrows": 49,
+   "initialFree": 3,
+   "depth": 29,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 230,
+  "solution": "F0 J0 L0 N0 P R0 V0 W1 S1 Z0 d1 d2 Z1 V1 f b h1 j a2 m m1 W0 S0 a0 E0 E2 X B0 n p1 q t k1 g1 c1 u0 w1 x1 B1 F1 h2 Y l2 p2 t2 u x2 J1 S l1 q0 t1 N1 R1 i O1 K U c2 e M a A B2 G h0 w0 O0 K0 i1 C2 Z R O U1 Y1 v r x D J V e0 t0 n0 y z0 C0 a1 b0 e1 e2 i2 B k0 q1 s U0 d g2 h l p A2 s1 u1 N C w z I0 A1 M0 d0 k2 I1 o2 p0 s2 w2 Q1 M1 E1 Y0 o1 s0 g0 D1 j0 k n1 n2 v0 Q0 I v2 b2 X1 b1 y0 m0 L F L1 X0 f0 K1 G1 T0 T1 r1 H0 r2 g c f2 H1 P0 H P1 f1 j1 o D2 j2 v1 r0 z1 z2 D0 A0 W o0 x0 i0 l0 c0 Q E T m2 q2 u2 y1 y2 C1 G0",
+  "stats": {
+   "arrows": 187,
+   "initialFree": 14,
+   "depth": 59,
+   "maxBlockers": 21
+  }
+ },
+ {
+  "id": 231,
+  "solution": "p m Q H l k o n j T L M G U a d e i f g b c h q s S O R N K A w r x z I F J P C B E D u v t y",
+  "stats": {
+   "arrows": 47,
+   "initialFree": 2,
+   "depth": 29,
+   "maxBlockers": 14
+  }
+ },
+ {
+  "id": 232,
+  "solution": "t e X f u r n a b o s v k d R E F C D G I P Q w p i S T l q c M H L A B V g U N x y z K h m j O J W",
+  "stats": {
+   "arrows": 50,
+   "initialFree": 3,
+   "depth": 29,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 233,
+  "solution": "H J L N P R T b0 B0 f l n d C0 b j h G0 Q n0 k o A B E F C c0 u0 s0 O v0 a x y0 m0 e0 w0 q0 A0 E0 k0 i0 a0 Y S K U o0 G g0 M I D W D0 q r t u m c x0 p j0 p0 f0 h0 e g s i Z X d0 t0 F0 z0 l0 r0 v w z y V",
+  "stats": {
+   "arrows": 85,
+   "initialFree": 5,
+   "depth": 41,
+   "maxBlockers": 18
+  }
+ },
+ {
+  "id": 234,
+  "solution": "C B E D I M F G T V W Z k j m v s h o n g r q t u f L H K w y z e d c A J x S P O N Q R U X b i l a Y p",
+  "stats": {
+   "arrows": 52,
+   "initialFree": 3,
+   "depth": 26,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 235,
+  "solution": "B C D E F I Q y x s w z A G H N M L Y a k j v n u g q m r t p i l V K f o h e d b c S O P J R T U W X",
+  "stats": {
+   "arrows": 51,
+   "initialFree": 3,
+   "depth": 30,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 236,
+  "solution": "Y0 D0 b1 e e1 f f0 h1 V0 i0 V l0 P R T F X j o0 p0 N0 K0 t w0 a0 d0 g0 i M Y U0 s0 b0 v0 f1 m1 y t0 p N A0 c0 L n v w x0 M0 P0 S0 r0 Z u0 H d b l h x z p1 r X0 L0 a1 n1 E k Q S Q0 T0 o1 q1 G I U r1 n0 s1 a y0 B0 W0 Z0 j0 i1 A m0 E0 H0 c c1 C k1 g s u q K o m e0 h0 O W l1 q0 I0 F0 k0 t1 O0 j1 d1 R0 z0 B D J g1 C0 G0 J0",
+  "stats": {
+   "arrows": 124,
+   "initialFree": 6,
+   "depth": 52,
+   "maxBlockers": 19
+  }
+ },
+ {
+  "id": 237,
+  "solution": "G I H A L N M O P J K Q R S T U W Y a b c V X Z a0 d e f i h g j k n o l r D s B t C m w y z E F p q v u x",
+  "stats": {
+   "arrows": 53,
+   "initialFree": 3,
+   "depth": 26,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 238,
+  "solution": "w v u y O j f m r R K B A C D P g h s x H J e o q p t T c G k l i n d S Q L I z M F N E a b",
+  "stats": {
+   "arrows": 46,
+   "initialFree": 1,
+   "depth": 29,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 239,
+  "solution": "G I K M O Q W S U b B0 c0 a0 Y d d0 e0 g0 j k0 l m0 o0 q0 r0 p0 t v e w0 x y0 A0 C0 i0 E0 a g i r F T V N P s0 u u0 z A H J X Z b0 p t0 f h F0 D0 j0 R E z0 B v0 m c k n o q s x0 y C w L n0 l0 h0 D f0",
+  "stats": {
+   "arrows": 84,
+   "initialFree": 5,
+   "depth": 39,
+   "maxBlockers": 15
+  }
+ },
+ {
+  "id": 240,
+  "solution": "A0 D0 F0 G0 I J0 N0 O1 S X a Q R1 L1 W0 c0 h0 b0 G Y V e0 P d1 h1 e1 k1 n0 I0 a0 c1 p0 q1 r t S1 u0 P0 v G1 s K v1 a1 w b f1 w1 t1 x0 I1 n1 x1 z1 F1 C1 T W d g j f0 m p H E B j0 q0 v0 H0 K0 l1 k y N P1 Z m0 i0 k0 o0 E0 B0 r1 y0 s0 T0 A1 D1 J1 Z0 u1 q C0 l0 s1 U F R X0 n p1 K1 J D A M Q1 R0 i l E1 u o f x c L0 T1 N1 g0 y1 B1 Y0 b1 z z0 m1 j1 U0 V0 S0 M0 O0 g1 H1 t0 w0 d0 L O C o1 Q0 i1 M1 h e r0",
+  "stats": {
+   "arrows": 150,
+   "initialFree": 14,
+   "depth": 62,
+   "maxBlockers": 17
+  }
+ },
+ {
+  "id": 241,
+  "solution": "A B C D F E H J L G N P Q S X Y o x w v y u i c r t h l V W d m M I K O R U T g a e k j s q z f b Z n p",
+  "stats": {
+   "arrows": 52,
+   "initialFree": 3,
+   "depth": 28,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 242,
+  "solution": "A M q z B y n m t s u v w x r o p k l c j i f a h d b e g V Z a0 Y X P W G U T L N O S R E D J I C F K H Q",
+  "stats": {
+   "arrows": 53,
+   "initialFree": 3,
+   "depth": 34,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 243,
+  "solution": "A B y t u z x k Y Z j w s f n m c Q W G C H N O R d e l h a L M X b g o v q S T U V I E D F J K i P p r",
+  "stats": {
+   "arrows": 52,
+   "initialFree": 3,
+   "depth": 31,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 244,
+  "solution": "H C0 F D B R X V h0 j0 l0 q0 k0 G E C K J a0 e n0 r b d l v v0 x n p t h M0 M f I0 G0 E0 j Q0 O0 y0 A0 W Q Y g0 m o c Z t0 u u0 w N0 L0 J0 S a P0 w0 o0 I c0 z K0 s0 U m0 i0 e0 P O N L y A H0 B0 k q s i x0 r0 T b0 d0 f0 p0 D0 z0 F0 g",
+  "stats": {
+   "arrows": 95,
+   "initialFree": 5,
+   "depth": 40,
+   "maxBlockers": 14
+  }
+ },
+ {
+  "id": 245,
+  "solution": "B F G E K L T H I J p y z m d j l n q u x C o s i b h g k w a c t a0 X N Y R b0 Z P A Q O M r D v e U S V W f",
+  "stats": {
+   "arrows": 54,
+   "initialFree": 3,
+   "depth": 30,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 246,
+  "solution": "A C D E F G H I J K L M N Q O P R S U T V W Y Z a b0 a0 X c e g i n o r B u p q s y v m l z j x w k f b d h t",
+  "stats": {
+   "arrows": 54,
+   "initialFree": 3,
+   "depth": 28,
+   "maxBlockers": 16
+  }
+ },
+ {
+  "id": 247,
+  "solution": "f c B1 g1 l0 A0 r0 G0 o0 i0 f0 c0 k1 u0 i x0 D0 J0 M0 P0 S0 e1 h1 b1 Y0 V0 k m n1 G o U q1 a d t1 u w1 y C y1 v1 s1 X0 a1 L0 J O0 R0 C0 D b0 d1 i1 j1 m1 e0 H n0 p1 k0 R h0 P U0 I0 F0 j q0 F t0 B t v v0 S w0 x1 z0 N h c1 e g0 u1 E I q s d0 H0 w A j0 z1 M g K K0 Q Q0 X V Z L T Z0 m0 f1 n A1 s0 a0 x z r p l b r1 W0 o1 E0 O l1 N0 Y W y0 T0 p0 B0",
+  "stats": {
+   "arrows": 132,
+   "initialFree": 5,
+   "depth": 45,
+   "maxBlockers": 18
+  }
+ },
+ {
+  "id": 248,
+  "solution": "q B F J c l n r R U v u C z s t w x y A E G H D K N O P S T V W X a d e b f g j i h k m M o p Q L I",
+  "stats": {
+   "arrows": 50,
+   "initialFree": 3,
+   "depth": 26,
+   "maxBlockers": 14
+  }
+ },
+ {
+  "id": 249,
+  "solution": "u r v i w p t P m q h g s l e C H f j k o n c S K D x z I Q U R G M L J y A B E F O N V W b d a T",
+  "stats": {
+   "arrows": 49,
+   "initialFree": 3,
+   "depth": 30,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 250,
+  "solution": "B0 E F1 J0 F0 N0 N1 P1 R0 U V0 Z0 d d1 R1 n I a0 o2 p1 B1 l1 Z1 r2 L1 n2 H1 s s2 k2 g2 c2 Y1 Q1 t0 u1 q0 D1 T0 P0 L0 H0 D0 j1 f1 b1 X0 n0 v2 T1 w R t w0 w1 U1 I0 I1 M1 E0 E1 A1 U0 g1 M0 k1 o0 r0 s1 A0 N B Y0 o1 Q0 c1 Z c0 H i0 l0 m u0 x W1 q1 m1 u2 W0 S0 u S V i1 O0 K0 m0 P k0 h0 e0 r x0 K Q g p M j k S1 x1 h2 d2 q t2 x2 h O z z1 o q2 l v1 J G i f m2 O1 W T f0 v j2 z2 f2 y c b2 X1 A a2 a1 X n1 p0 r1 s0 b y1 y2 D b0 Y e2 i2 z0 C1 G1 K1 C0 e1 G0 g0 C e J1 V1 p2 l2 a t1 h1 v0 y0 d0 j0 L F A2 w2",
+  "stats": {
+   "arrows": 183,
+   "initialFree": 18,
+   "depth": 61,
+   "maxBlockers": 21
+  }
+ },
+ {
+  "id": 251,
+  "solution": "U P H G I F V M Q T J R K O N S D E X k u A x t y d h n r s v z C L B j W a b c g w o m q f p e l i",
+  "stats": {
+   "arrows": 50,
+   "initialFree": 3,
+   "depth": 28,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 252,
+  "solution": "R a c g b c0 h i Z U T W Q P A O S d f j n v y z B G J N u r a0 b0 s k e m q p t w D F C I l o x E M L H K V X Y",
+  "stats": {
+   "arrows": 55,
+   "initialFree": 3,
+   "depth": 29,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 253,
+  "solution": "X J0 O V Z a f0 d0 H0 g0 l0 j0 F0 b0 o0 s t0 D0 B0 r0 p0 h0 m n0 T0 L0 v0 i w0 y0 z0 N0 x0 V0 c k P0 E I R0 U Q0 c0 e e0 g A0 o r P N T u K0 q A w i0 y C G M K Q S a0 Y W k0 q0 s0 C0 E0 m0 I0 f u0 O0 U0 n p D l W0 G0 M0 j L J d h v B z x t R H F b S0",
+  "stats": {
+   "arrows": 101,
+   "initialFree": 3,
+   "depth": 42,
+   "maxBlockers": 17
+  }
+ },
+ {
+  "id": 254,
+  "solution": "a b0 T M U G N V b d c Q Y Z f a0 R O X W S P r H K J g e j i k u A v t x q F o z C D w n m h I L B y s l p E",
+  "stats": {
+   "arrows": 54,
+   "initialFree": 3,
+   "depth": 28,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 255,
+  "solution": "A C D E F G H L N O U y z B x m K J S W V T e f q v p o j n k d i b X Y a u w R P Q a0 c Z h M I g r s t l",
+  "stats": {
+   "arrows": 53,
+   "initialFree": 3,
+   "depth": 34,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 256,
+  "solution": "D0 G0 D F J0 P0 R V0 j0 g0 d0 a0 Q0 j1 m0 B0 W0 o0 Z A0 N S0 X i0 V P l0 f0 p0 r0 u0 v0 x x0 T c0 M0 H i j o K0 w w0 J L Z0 v X0 p h U0 h1 t y0 s0 E0 z B b f n d r l I0 h0 k0 b0 c c1 e1 Y0 o1 p1 n1 l1 y A C G O Q S n0 U f1 L0 b1 d1 O0 R0 F0 C0 q g1 k s t0 z0 q0 K W a i1 T0 H0 N0 I M Y E e0 u a1 m1 k1 g m e",
+  "stats": {
+   "arrows": 120,
+   "initialFree": 7,
+   "depth": 51,
+   "maxBlockers": 18
+  }
+ },
+ {
+  "id": 257,
+  "solution": "N Q T U S R a b c d f e h l m k o p s t u y z A E D G P O M x q j g i r n v B w K L H C I F J",
+  "stats": {
+   "arrows": 47,
+   "initialFree": 3,
+   "depth": 28,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 258,
+  "solution": "h i d b c0 f j s e a n m q k l r u J t v K R S T U Y Z X g I b0 L a0 P D c V w A B O Q N G M E F x y H z C p o W",
+  "stats": {
+   "arrows": 55,
+   "initialFree": 3,
+   "depth": 28,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 259,
+  "solution": "B D J0 L0 P R T V X Z b0 d0 f0 D0 h0 B0 H0 e k K l0 m0 n0 v A0 t x0 j0 g p0 r0 w I L y O I0 d f h x j l O0 n C0 U W o a z r p M0 b z0 F0 q e0 w0 E0 K0 G0 y0 u0 o0 Q m q0 C E S k0 g0 i0 Y a0 c0 J s0 A t0 N0 c i u s F H G N M v0",
+  "stats": {
+   "arrows": 93,
+   "initialFree": 5,
+   "depth": 44,
+   "maxBlockers": 15
+  }
+ },
+ {
+  "id": 260,
+  "solution": "C E1 J1 B2 O0 P1 O2 S O T U1 X X1 Z2 a a1 c2 e3 T0 f1 i2 m n0 X0 o p1 u1 d2 k1 O1 w2 B Z r2 I1 N1 S1 B0 D1 V0 m2 o1 V E2 x2 F2 N2 J2 R2 V2 d3 e q G K W i0 b1 m0 q0 G0 g1 u u0 K0 l1 q1 v1 A1 y1 t1 R0 N0 h2 l0 x0 t0 p0 z2 M0 F Q0 U0 Z0 F0 J0 b3 d0 J e1 Q2 g2 h h0 j1 l l2 U2 Y2 q2 C1 U v2 w0 A0 I D2 H2 L2 Q1 V1 f3 x1 E0 H1 c1 z G2 K2 F1 S2 Z1 i3 r0 v0 D M N Q R W2 c3 m3 p w1 B1 h1 m1 a2 Y I0 c0 j3 z0 T1 b z1 Y1 f b0 j H L n2 s2 l3 h3 i j2 y e0 a0 o2 y0 C0 S0 C2 K1 W0 r t2 y2 e2 a3 n P P0 v j0 f0 k b2 d W1 o3 s1 E L1 G1 r1 u2 x t I2 k3 g3 R1 M1 A2 M2 Y0 c d1 i1 n1 A g n3 w s0 o0 X2 L0 H0 D0 P2 T2 g0 k0 f2 s k2 p2",
+  "stats": {
+   "arrows": 223,
+   "initialFree": 14,
+   "depth": 68,
+   "maxBlockers": 21
+  }
+ },
+ {
+  "id": 261,
+  "solution": "u o r n i c f j v g U L V W l x e T q m d p t s w y z D E F P M C A B H N O Q a k b X J S K I G R h",
+  "stats": {
+   "arrows": 50,
+   "initialFree": 3,
+   "depth": 26,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 262,
+  "solution": "A D G I H V a0 j k v C F i T Q E J M L K N O P R S U Y X Z b0 c e f g x y z B s u w l b W d q a r h p o m n t",
+  "stats": {
+   "arrows": 54,
+   "initialFree": 3,
+   "depth": 26,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 263,
+  "solution": "v q y M O P a c g n z A B C Q R W x w k t u e X j l J F D G H E I K L N S U V T b h r s o p m f d i",
+  "stats": {
+   "arrows": 50,
+   "initialFree": 3,
+   "depth": 30,
+   "maxBlockers": 14
+  }
+ },
+ {
+  "id": 264,
+  "solution": "O0 V Y a0 c0 d0 e0 I0 g0 k0 A C U0 W b0 Z m0 C0 g i0 E0 n0 L o0 s s0 t J T R N p v O i Q0 S0 k q0 u0 q X D0 H0 w0 K0 x t0 f0 E m v0 x0 y w y0 A0 o e c a I S G Q M K u T0 h z h0 U j j0 W0 l0 J0 N0 B D P F H P0 V0 b d L0 X0 R0 p0 r0 B0 z0 F0 M0 G0 l n r f",
+  "stats": {
+   "arrows": 102,
+   "initialFree": 5,
+   "depth": 53,
+   "maxBlockers": 19
+  }
+ },
+ {
+  "id": 265,
+  "solution": "w t f v u r o n m p q j M O N s x y A z D F G H E I e l T Q S k i d W P J L K R c U V a b C B h g",
+  "stats": {
+   "arrows": 49,
+   "initialFree": 2,
+   "depth": 32,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 266,
+  "solution": "A C E F G H L K J I M N O P R S U V W Y Z X Q a0 a b b0 r s t v y p q u D B w o z x n m k l j i g c c0 e d T f h",
+  "stats": {
+   "arrows": 55,
+   "initialFree": 3,
+   "depth": 33,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 267,
+  "solution": "J L0 X0 m0 B0 E0 W0 g l1 p0 r f Y0 D0 A0 c k1 o0 I r0 B1 X d1 a1 l0 s0 N0 u G0 L E1 Z b0 u0 w x A D N e1 i C1 F1 S0 x0 y0 Q0 T0 d a M C0 f1 i1 v0 G1 c1 x1 J1 y I0 k0 v1 z0 U v S i0 p s g0 w0 s1 P0 G V0 l o L1 p1 K1 F O0 t q z1 H1 I1 J0 t1 w1 q1 h1 M0 b1 d0 f0 V T R P b e j1 z C y1 U0 F0 g1 n h m1 R0 h0 j0 k t0 u1 K0 H0 Z0 o1 B E H K O Q n0 W n1 q0 Y a0 j A1 c0 e0 m r1 D1",
+  "stats": {
+   "arrows": 142,
+   "initialFree": 7,
+   "depth": 52,
+   "maxBlockers": 20
+  }
+ },
+ {
+  "id": 268,
+  "solution": "A C E I M O R S G Q K T U W X Y a0 Z b0 c0 d d0 e0 a e f f0 g g0 b h h0 c i m n w F H P s x j o u v y z B L N q l k p D J t r V",
+  "stats": {
+   "arrows": 60,
+   "initialFree": 2,
+   "depth": 28,
+   "maxBlockers": 14
+  }
+ },
+ {
+  "id": 269,
+  "solution": "v u t q m f A r n s h p I b k i j o U c d P g V e a T S R Q w G K O N M J B C D E L y x z F H l",
+  "stats": {
+   "arrows": 48,
+   "initialFree": 2,
+   "depth": 30,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 270,
+  "solution": "A2 D1 F F0 J0 B0 K K1 N0 O1 Q0 L2 S1 V0 R0 V1 W2 S2 P X1 c d d0 f i1 j0 k2 k1 k0 k n0 H0 b2 p0 B N Y2 Z h0 l q e1 m G L p1 N1 R1 i C e J1 l1 h1 d1 Z0 r0 s2 I0 s P1 t0 R t1 w2 A1 Q1 g2 w1 x0 V l0 J U2 c2 p I2 I1 E0 M2 Y0 t M1 Q2 E2 U Y1 c1 h E1 A0 U1 U0 o2 o1 x g1 T2 r1 s1 x1 B1 F1 V2 Z1 d2 h2 l2 F2 J2 p2 N2 B2 S t2 x2 a R2 a0 G0 e0 m1 j2 M Q f2 H1 g0 g b1 f1 L0 T W1 a2 j o o0 P2 q1 u u1 w Y c0 s0 w0 M0 A E I H2 D0 T1 X2 D2 y z1 v1 C1 C0 W X0 G1 n1 j1 u0 y0 a1 W0 m2 H O2 i2 D z K2 G2 C2 O K0 O0 i0 m0 q0 S0 u2 y1 e2 y2 b0 f0 q2 v z2 L1 v2 T0 P0 r2 n2 z0 v0 r n X b",
+  "stats": {
+   "arrows": 207,
+   "initialFree": 19,
+   "depth": 55,
+   "maxBlockers": 25
+  }
+ },
+ {
+  "id": 271,
+  "solution": "A E H D B J K L T C G N Z u w x z v t o d e q s F m r h y p f0 I X g f j i U a a0 Y c0 d0 l n k c b b0 S M O P Q R V e0 W",
+  "stats": {
+   "arrows": 58,
+   "initialFree": 3,
+   "depth": 30,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 272,
+  "solution": "A C E G H B D F I J K M O P Q S N Y X b e0 Z a0 b0 c0 d c f0 g h r s t u v w x k U V i l m o e f j n y z L a d0 W R T p q",
+  "stats": {
+   "arrows": 58,
+   "initialFree": 3,
+   "depth": 31,
+   "maxBlockers": 15
+  }
+ },
+ {
+  "id": 273,
+  "solution": "Q U E0 Y L f h0 i l0 D0 C P0 a0 g M m d0 B i0 p0 V0 E j0 t0 C0 Z r u e s0 u0 v0 w y y0 h B0 K N e0 N0 k n q H0 Q0 T b0 t K0 z k0 T0 W0 n0 c I c0 L0 q0 F w0 S R I0 z0 l W F0 O0 o x f0 D x0 b H v O P M0 m0 S0 p j A0 V J0 G0 g0 J s X o0 a r0 d A U0 R0 G",
+  "stats": {
+   "arrows": 101,
+   "initialFree": 4,
+   "depth": 41,
+   "maxBlockers": 14
+  }
+ },
+ {
+  "id": 274,
+  "solution": "A H B D F J L N k q i b Y M R Z h a v x y t u p e0 f0 X Q E K C G I P O T U S V W a0 b0 c0 d0 g f g0 e c d r z m o s n l j w",
+  "stats": {
+   "arrows": 59,
+   "initialFree": 3,
+   "depth": 30,
+   "maxBlockers": 15
+  }
+ },
+ {
+  "id": 275,
+  "solution": "A E G I O P R W f0 H J L N F D B q u x o y v z w n s t p c0 d d0 j l m k f e g a0 h g0 X Y Q K V S C M b0 i a b c Z r U T e0",
+  "stats": {
+   "arrows": 59,
+   "initialFree": 2,
+   "depth": 36,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 276,
+  "solution": "a0 d0 h1 T k1 D0 p j p0 K0 a c S c1 Z0 m0 q r0 t0 w1 a1 U w0 x F N d1 C0 W E K g1 O0 j1 m1 y e Q0 g0 j0 H0 i1 y0 l1 o1 v0 s0 B0 E0 T0 N0 W0 f1 m v1 t1 i I R0 C n0 o O q0 F0 s b0 G M h0 r1 g k Y A V X b u u0 b1 n1 P0 q1 c0 e1 S0 f0 i0 l d n t H u1 w Q L0 k0 I0 e0 r x0 l0 A0 z0 p1 v B z D J0 G0 M0 V0 Z Y0 L R P J o0 f s1 h X0 U0",
+  "stats": {
+   "arrows": 127,
+   "initialFree": 5,
+   "depth": 55,
+   "maxBlockers": 16
+  }
+ },
+ {
+  "id": 277,
+  "solution": "G E C A K N L H J O M P S U W X Y m l k o p s q t u r i v D y x z B n j d a e0 g e g0 R I V Z Q T a0 b0 c0 f0 h b c d0 f w F",
+  "stats": {
+   "arrows": 59,
+   "initialFree": 2,
+   "depth": 31,
+   "maxBlockers": 14
+  }
+ },
+ {
+  "id": 278,
+  "solution": "C v w x y s z l Y M T V e h j n t u p m o q r i X f b Z W I a Q F B A E H N R c S J D G K L P O d U k g",
+  "stats": {
+   "arrows": 52,
+   "initialFree": 3,
+   "depth": 31,
+   "maxBlockers": 14
+  }
+ },
+ {
+  "id": 279,
+  "solution": "X H Z L a0 i0 R T B V P f0 F c0 N j l n n0 p z h Q0 r t U0 v m0 x D J z0 L0 R0 Z0 S a k C c1 e0 m q w0 G0 u0 D0 s0 Q a1 Y0 f d i g x0 l0 j0 g0 d0 T0 V0 c p0 r0 v0 X0 A O b1 t0 B0 P0 y0 A0 W0 I0 b O0 M0 K0 E0 C0 S0 Y h0 q0 I u N0 F0 H0 J0 o G E M K W s y w e U k0 o0 b0",
+  "stats": {
+   "arrows": 107,
+   "initialFree": 4,
+   "depth": 41,
+   "maxBlockers": 17
+  }
+ },
+ {
+  "id": 280,
+  "solution": "N0 Q0 R B B0 F0 J0 S2 T0 T1 U0 Q1 U1 D b D0 c f1 h h1 l0 O1 c0 m2 n1 P1 L1 H1 D1 H2 j1 L2 C0 b1 X0 X1 p0 V F Z d r1 s0 t M0 W1 N2 t0 u u1 v2 K w2 l1 x x0 h0 x2 y0 z T P d1 q1 C2 K1 G1 i2 M e2 m1 Y i1 o0 I E A s2 R0 S P2 D2 m q t2 R1 N1 J1 F1 Z0 p2 l2 V2 R2 d2 h2 r0 z1 v1 b2 W A1 E2 a0 z2 r2 n2 i e C a j2 e0 f2 y G O O0 i0 m0 o1 M1 o2 U2 Q2 M2 I2 k2 g2 q0 v r v0 z0 k1 g1 c1 u0 K0 I1 O2 Y0 c2 d0 N J l n j Y1 p W2 G2 K2 a2 e1 y2 u2 q2 S1 C1 E0 I0 y1 A0 w0 Q g0 W0 a1 V0 L H k0 n0 S0 j0 B1 Z1 p1 H0 L0 s U k w o F2 J2 B2 P0 A2 V1 f x1 X b0 f0 E1 G0 T2 w1 s1 t1 g",
+  "stats": {
+   "arrows": 205,
+   "initialFree": 16,
+   "depth": 62,
+   "maxBlockers": 19
+  }
+ },
+ {
+  "id": 281,
+  "solution": "E C H B D F J L O M A K P N Q U Z u g c f0 g0 a e0 T S Y b0 d0 c0 e h0 n w m j t I G a0 b d k l p x v q r o y z h f i s X W R V",
+  "stats": {
+   "arrows": 60,
+   "initialFree": 3,
+   "depth": 31,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 282,
+  "solution": "A C E G H I K N L J F O M P Q R S T X d0 f0 e0 V W U Y a a0 c g0 Z f k q z B x l o g b d e r w m h s D t u v b0 c0 i j p n y",
+  "stats": {
+   "arrows": 59,
+   "initialFree": 3,
+   "depth": 31,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 283,
+  "solution": "E G O U X K M T W f0 B N P d e0 b o R H z y J F D L x w s t f u r q m p v g h j k n i e i0 l c a h0 g0 d0 a0 A C I Q S V Y b0 c0 Z",
+  "stats": {
+   "arrows": 61,
+   "initialFree": 2,
+   "depth": 37,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 284,
+  "solution": "D0 N0 a0 T0 A a d0 i l0 B0 j0 g0 F0 o r0 p0 n0 t0 u0 v0 w0 x0 H0 P0 z0 Z0 k m L0 R0 X0 b1 g q s u E w y E0 U0 c1 H Z e0 b0 h i0 f0 c0 T J R V N B D W0 X F P L j l r d n t K0 v x p f a1 S0 b q0 M G I K C Q Y W U Y0 h0 o0 I0 O S k0 m0 C0 M0 s0 Q0 y0 A0 G0 O0 c e J0 V0 z",
+  "stats": {
+   "arrows": 107,
+   "initialFree": 5,
+   "depth": 51,
+   "maxBlockers": 19
+  }
+ },
+ {
+  "id": 285,
+  "solution": "C E N P F H S X Q r v p x J R L z u t D s g g0 A I K V W c0 Y Z a0 f m y q e h o n k w B d c b f0 d0 i l j a i0 h0 U O G M T b0 e0",
+  "stats": {
+   "arrows": 61,
+   "initialFree": 3,
+   "depth": 34,
+   "maxBlockers": 15
+  }
+ },
+ {
+  "id": 286,
+  "solution": "A C E G I M O Q K S U Y Z d0 e0 f0 a h h0 i j0 k q B F r D N l i0 d j u y X V v T R P H J w x z L s o e k0 c b f t p c0 W a0 l0 m n g g0 b0",
+  "stats": {
+   "arrows": 64,
+   "initialFree": 3,
+   "depth": 33,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 287,
+  "solution": "F0 I0 C0 R0 O0 S A J1 V Y Y0 f1 j1 d n1 t0 U0 L0 g E Z b1 m1 p1 H1 Q1 s1 u w0 w1 L I x D K0 N0 b0 J M e0 P P1 D1 o0 o1 G1 c1 l1 q0 R r M1 Z0 W0 f G A1 g0 e i0 o l c i S1 r1 u1 Q0 v0 x1 T0 H0 B0 E0 i1 n q F1 e1 x0 y0 k h X s0 F V0 J0 S0 m0 k0 a0 s p m z0 X0 a1 N1 d1 g1 E1 B1 B W j l0 j0 h0 v1 y H T y1 U d0 n0 z O1 C w L1 G0 t I1 b P0 h1 K1 N K Q a f0 k1 C1 R1 q1 t1 u0 v c0 D0 M0 A0 r0 z1 O p0",
+  "stats": {
+   "arrows": 149,
+   "initialFree": 7,
+   "depth": 48,
+   "maxBlockers": 18
+  }
+ },
+ {
+  "id": 288,
+  "solution": "A J L N R c0 h n r t v F x D B H w u y z k s o p U Z V P C G K E I O M S q f i c a d d0 W Y f0 g0 b0 Q T a0 e0 X g b l e m j",
+  "stats": {
+   "arrows": 59,
+   "initialFree": 3,
+   "depth": 32,
+   "maxBlockers": 10
+  }
+ },
+ {
+  "id": 289,
+  "solution": "D F H J B T c a f q l e0 S O W C A E P Q V d0 R Y e y t n u v h m k d b X Z M G I K L N g j p w z x s o i r c0 U b0 a0",
+  "stats": {
+   "arrows": 57,
+   "initialFree": 2,
+   "depth": 38,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 290,
+  "solution": "C0 D E0 F1 G0 I0 K0 K1 L1 M0 O0 Q0 R S0 U0 W0 W1 Y0 a1 b f E g2 h i e i2 j1 H1 D1 j2 Q W k0 l G S m1 S1 i1 e1 n1 j T o0 A0 o1 c2 Y1 U1 g k1 p2 J1 N1 R1 p1 q1 O1 s1 t2 h1 m0 u P h0 r u1 w1 x0 y0 g0 v0 s0 y1 C1 G1 e2 a2 m2 q2 a x q0 v1 y2 u2 V T0 n0 o J M A Y b0 e0 r1 t0 D0 w0 P0 L0 H0 X0 b1 b2 f1 f2 N X1 B T1 l0 v M1 q z L w Z0 z0 r2 z1 K P1 m o2 u0 r0 Z k2 C k O z2 v2 y c1 g1 Q1 V0 c d B2 h2 l2 x2 V1 Z1 d2 B1 N0 I R0 d0 p0 x1 l1 t1 J0 t I1 E1 A1 i0 f0 s2 p w2 A2 n a0 F0 B0 d1 j0 F c0 n2 H s U X",
+  "stats": {
+   "arrows": 184,
+   "initialFree": 22,
+   "depth": 58,
+   "maxBlockers": 19
+  }
+ },
+ {
+  "id": 291,
+  "solution": "C K N T S I R U V W X Y c0 c d0 g0 o p H F P L J D B d n s u w r t x z i m l y v g e j k b a h0 b0 f0 e0 a0 Z Q M E O A G f h q",
+  "stats": {
+   "arrows": 60,
+   "initialFree": 3,
+   "depth": 28,
+   "maxBlockers": 15
+  }
+ },
+ {
+  "id": 292,
+  "solution": "A C F G N Q e D B a M I K H E O U V X Z w z u b0 Y W J L P R T S a0 d c f g o q s v x y p j h b t l m k r n i",
+  "stats": {
+   "arrows": 54,
+   "initialFree": 3,
+   "depth": 28,
+   "maxBlockers": 11
+  }
+ },
+ {
+  "id": 293,
+  "solution": "A0 D0 J0 R a0 f0 l0 m0 U0 j0 S0 Q0 M0 g0 K0 d0 H0 g1 e1 g i C A K I S N0 Q O e0 h1 n f1 o t0 V0 w0 R0 r H B L X G0 o0 r0 u0 x0 i0 V P N J F T Z t T0 l b j p h X0 Z0 L0 I0 F0 n0 G v C0 y0 v0 s0 p0 B0 E0 W0 Y0 a a1 e k s q U h0 q0 u y E w M Y b0 W b1 k0 z z0 d1 d j1 D l1 f x P0 m i1 O0 c0 c1 k1 c",
+  "stats": {
+   "arrows": 116,
+   "initialFree": 5,
+   "depth": 50,
+   "maxBlockers": 17
+  }
+ },
+ {
+  "id": 294,
+  "solution": "K I G O S A C E Q T V U M W X d0 h0 g0 j0 B u k c o y v l b0 Y a0 c0 a b d D F N h q r e0 f0 m s H J w i0 e f i j x z P L R t n Z p g",
+  "stats": {
+   "arrows": 62,
+   "initialFree": 3,
+   "depth": 33,
+   "maxBlockers": 13
+  }
+ },
+ {
+  "id": 295,
+  "solution": "E Y C A K S G I M Q U W a a0 c0 d0 e e0 b0 f0 h0 i l0 m m0 i0 d g0 h g R V Z J H j k0 j0 n f k l o p t s q x r u y L b c O v w B F X D T z P N",
+  "stats": {
+   "arrows": 65,
+   "initialFree": 2,
+   "depth": 36,
+   "maxBlockers": 16
+  }
+ },
+ {
+  "id": 296,
+  "solution": "J0 f0 f1 i0 k0 l0 h1 o C0 U u0 Y0 r0 G0 d o0 V0 F w1 H z1 v B P D0 S0 P0 A0 M0 x0 q1 e1 k1 t1 a C1 g j m J L g0 B0 i1 A1 A W f l1 n1 D p p1 Q K M S F0 I0 U0 L0 O0 G g1 k j0 R T V b0 W0 m0 n q b1 r o1 D1 C s1 u1 v1 w w0 n0 Y a0 c0 e0 y1 z0 E0 X d0 q0 t0 h0 I T0 Z t H0 v0 x N p0 j1 s0 y0 K0 r1 N0 Z0 c1 e h s x1 u a1 d1 z B1 E1 b m1 c i O l y Q0 R0 X0 E",
+  "stats": {
+   "arrows": 135,
+   "initialFree": 7,
+   "depth": 55,
+   "maxBlockers": 20
+  }
+ },
+ {
+  "id": 297,
+  "solution": "A C I L O M K T a0 Q R U d d0 e e0 a g k p H l f h0 m n q D r u h b0 G E V W S X Y Z g0 f0 c0 b c i x t s w v y N P z F B J o j",
+  "stats": {
+   "arrows": 60,
+   "initialFree": 3,
+   "depth": 28,
+   "maxBlockers": 12
+  }
+ },
+ {
+  "id": 298,
+  "solution": "B a e n d h p b0 M F d0 l h0 j Z f b T q v r H O g i k o s J L G I X g0 e0 f0 Y a0 R E Q V W c0 U S P w c u t x y C K A N m z D",
+  "stats": {
+   "arrows": 60,
+   "initialFree": 3,
+   "depth": 30,
+   "maxBlockers": 14
+  }
+ },
+ {
+  "id": 299,
+  "solution": "a0 k0 K0 i0 g0 G0 m0 a1 o o0 x0 e0 K j L c0 r R T V N X Z D F H P J b b1 Z0 d V0 G Q0 E0 M0 O0 f X0 J0 L0 f0 B p q S p0 O h0 j0 r0 t v h R0 N0 T0 P0 F0 H0 B0 D0 b0 Q Y W n n0 w x y z l z0 l0 a t0 M U A e g i k W0 S0 A0 U0 Y0 d0 I0 u0 q0 s0 v0 y0 c m u E I C s C0 w0",
+  "stats": {
+   "arrows": 106,
+   "initialFree": 2,
+   "depth": 45,
+   "maxBlockers": 20
+  }
+ },
+ {
+  "id": 300,
+  "solution": "D J1 J3 P1 K1 T Y c0 X d0 d1 e j K3 F3 A3 M2 A0 R2 S C2 H2 N I O1 W2 b3 l1 o Y0 M Q2 f0 b2 K O2 p1 I0 E0 g3 i2 n2 U0 Q0 d2 Y1 o0 H C k0 E3 L2 g0 b0 j1 m p2 t2 v3 w0 w2 x r2 x2 k1 g1 M0 y t l3 q3 E1 s2 u1 V2 j0 K2 g2 P l2 q2 v2 A2 y2 O Z0 H3 c3 k2 o2 a f L1 G1 B1 q0 W1 L a0 G2 X1 r o3 F2 R1 M1 H1 C1 O0 m0 s1 x3 C3 V0 J E G3 R0 N0 f2 p0 z z1 c1 z3 B2 L0 S1 H0 V c f1 h I3 j3 e3 Z2 U2 P2 m2 n1 K0 G0 C0 i0 i1 e1 n3 s3 F A e0 Z l g b i3 B3 F1 J2 d3 Y2 j2 l0 u3 N1 Q b1 D3 X0 D0 w3 X2 S2 N2 I2 u a2 w1 J0 e2 A1 r1 v1 Z1 U1 q1 m3 h0 x0 z0 I1 F0 B0 p r3 m1 t0 Q1 k D2 T2 h3 h1 q S0 U W0 u0 v y0 a1 x1 t3 o1 a3 R W d i P0 s0 t1 w y1 f3 k3 c2 n n0 B G p3 h2 r0 z2 u2 V1 E2 y3 T0 s v0 T1 D1",
+  "stats": {
+   "arrows": 245,
+   "initialFree": 8,
+   "depth": 61,
+   "maxBlockers": 26
+  }
  }
 ]

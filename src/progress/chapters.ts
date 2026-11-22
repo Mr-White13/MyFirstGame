@@ -14,7 +14,23 @@ import { canPlayLevel, UNLOCK_ALL_LEVELS_FOR_TESTING } from './testUnlock';
 export const CHAPTER_SIZE = 20;
 
 /** Chapter name messages, in order (chapters without one are just numbered). */
-const CHAPTER_NAME_KEYS = ['home.chapterName1', 'home.chapterName2', 'home.chapterName3', 'home.chapterName4', 'home.chapterName5'] as const satisfies readonly MessageKey[];
+const CHAPTER_NAME_KEYS = [
+  'home.chapterName1',
+  'home.chapterName2',
+  'home.chapterName3',
+  'home.chapterName4',
+  'home.chapterName5',
+  'home.chapterName6',
+  'home.chapterName7',
+  'home.chapterName8',
+  'home.chapterName9',
+  'home.chapterName10',
+  'home.chapterName11',
+  'home.chapterName12',
+  'home.chapterName13',
+  'home.chapterName14',
+  'home.chapterName15',
+] as const satisfies readonly MessageKey[];
 
 /** Chapter names in English (the source text), in order. Shown text goes through chapterName / chapterTitle. */
 export const CHAPTER_NAMES: readonly string[] = CHAPTER_NAME_KEYS.map((key) => translate('en', key));

@@ -192,14 +192,18 @@ function failure(reason: string, attempts: number, closestScore: number | null):
 
 // ---------------------------------------------------------------- refinement
 
-/** Valid, solvable and readable: no arrows that read as one, none that touch themselves. */
-export function isPlayable(level: LevelData): boolean {
+/**
+ * Valid, solvable and readable: no arrows that read as one, and (unless
+ * `allowCurls`, for levels built with spiral and hook arrows on purpose) none
+ * that touch themselves.
+ */
+export function isPlayable(level: LevelData, allowCurls = false): boolean {
   try {
     validateLevel(level);
   } catch {
     return false;
   }
-  return countAmbiguousJoins(level) === 0 && level.arrows.every((a) => !isSelfTouching(a.cells));
+  return countAmbiguousJoins(level) === 0 && (allowCurls || level.arrows.every((a) => !isSelfTouching(a.cells)));
 }
 
 /**

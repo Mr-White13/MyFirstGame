@@ -33,7 +33,7 @@ import { analyzeDifficulty, dependencyGraph, type DifficultyReport } from '../sr
 import { validateLevel } from '../src/core/levelValidation';
 import type { LevelData } from '../src/core/types';
 import { fillLevel } from '../src/levelgen/fillLevel';
-import { generateLevel, layoutSimilarity } from '../src/levelgen/generateLevel';
+import { generateLevel, isSelfTouching, layoutSimilarity } from '../src/levelgen/generateLevel';
 import { LEVELS } from '../src/levels';
 import { levelToMap } from '../src/levels/levelMap';
 import { shapeMask } from './shapes';
@@ -199,6 +199,9 @@ interface FileOptions {
   readonly name?: string;
   readonly outline?: boolean;
   readonly tier?: LevelData['tier'];
+  readonly lives?: number;
+  /** The level has spiral or hook arrows (see levelFromMap). */
+  readonly curls?: boolean;
 }
 
 function levelFile(level: LevelData, note: string, o: FileOptions = {}): string {
@@ -207,6 +210,8 @@ function levelFile(level: LevelData, note: string, o: FileOptions = {}): string 
     o.name === undefined ? '' : `name: '${o.name}'`,
     o.outline ? 'outline: true' : '',
     o.tier === undefined ? '' : `tier: '${o.tier}'`,
+    o.lives === undefined ? '' : `lives: ${o.lives}`,
+    o.curls ? 'curls: true' : '',
   ].filter(Boolean);
   if (options.length === 0) {
     const rows = levelToMap(level).map((row) => `  '${row}',`);
@@ -320,6 +325,12 @@ interface PlanEntry {
   readonly deepen?: number;
   /** Fill mode: score-steering edits per attempt (default 200; each one is a full analysis, slow on large boards). */
   readonly refineSteps?: number;
+  /** Fill mode: share of paths allowed to curl into spiral and hook arrows (fillLevel curlChance; default 0). */
+  readonly curl?: number;
+  /** Fill mode: bottleneck, highest average share of free arrows during a solve (fillLevel maxFreeShare). */
+  readonly maxFreeShare?: number;
+  /** Fill mode: long blockers, lowest share of blocking links from 3+ cells away (fillLevel minLongRangeShare). */
+  readonly minLongRange?: number;
   /** Display name written into the level file (see LevelData.name). */
   readonly name?: string;
   /** Fill mode: fill only this shape from tools/shapes.ts (the level then draws only its outline's cells). */
@@ -328,6 +339,8 @@ interface PlanEntry {
   readonly tier?: LevelData['tier'];
   /** Layout revision written into the file (see LevelData.revision). */
   readonly revision?: number;
+  /** Lives at the start, written into the file (see LevelData.lives): 1 for a one-life level. */
+  readonly lives?: number;
   readonly note?: string;
 }
 
@@ -373,6 +386,9 @@ function plan(args: Args): void {
             repairRounds: entry.repairRounds,
             deepenSteps: entry.deepen,
             refineSteps: entry.refineSteps,
+            curlChance: entry.curl,
+            maxFreeShare: entry.maxFreeShare,
+            minLongRangeShare: entry.minLongRange,
             mask: entry.shape === undefined ? undefined : shapeMask(entry.shape, rows, cols),
             avoid: known.filter((l) => l.id !== entry.id),
           })
@@ -414,7 +430,7 @@ function plan(args: Args): void {
     known.push(level);
     const note = `${entry.note ? `${entry.note}, ` : ''}generated from tools/level-plan.json (seed ${seed}, attempt ${attempt}), score ${report.score} (${report.category}).`;
     if (fs.existsSync(target) && !force) fail(`${target} already exists; use --force to replace it`);
-    fs.writeFileSync(target, levelFile(level, note, { revision: entry.revision, name: entry.name, outline: entry.shape !== undefined, tier: entry.tier }));
+    fs.writeFileSync(target, levelFile(level, note, { revision: entry.revision, name: entry.name, outline: entry.shape !== undefined, tier: entry.tier, lives: entry.lives, curls: level.arrows.some((a) => isSelfTouching(a.cells)) }));
     console.log(
       `Level ${entry.id}: ${rows}×${cols}, ${level.arrows.length} arrows, score ${report.score}, depth ${report.exact.depth}, free ${report.exact.initialFree}, density ${Math.round(report.exact.density * 100)}%, mean length ${report.exact.meanLength.toFixed(1)}, empty square ${report.exact.largestEmptySquare} (${((Date.now() - started) / 1000).toFixed(1)} s) → ${path.relative(process.cwd(), target)}`,
     );

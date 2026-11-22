@@ -50,10 +50,17 @@ function initiallyBlocked(level: LevelData): string[] {
 }
 
 describe('lives and mistakes', () => {
-  it.each(LEVELS.map((l) => [l.id, l] as const))('level %i starts with 3 lives and no mistakes', (_id, level) => {
+  it.each(LEVELS.map((l) => [l.id, l] as const))('level %i starts with its lives (3, or 1 on a one-life level) and no mistakes', (_id, level) => {
     const s = new GameState(level).snapshot();
-    expect(s).toMatchObject({ lives: STARTING_LIVES, mistakes: 0, activated: 0, status: 'playing' });
+    expect(s).toMatchObject({ lives: level.lives ?? STARTING_LIVES, mistakes: 0, activated: 0, status: 'playing' });
     expect(STARTING_LIVES).toBe(3);
+    expect([undefined, 1]).toContain(level.lives);
+  });
+
+  it('exactly fifteen levels are one-life levels, all after Level 100 and on normal boards', () => {
+    const oneLife = LEVELS.filter((l) => l.lives === 1);
+    expect(oneLife.map((l) => l.id)).toEqual([105, 125, 145, 165, 185, 205, 215, 225, 235, 245, 255, 265, 275, 285, 295]);
+    expect(oneLife.every((l) => l.tier === undefined && l.name === undefined)).toBe(true);
   });
 
   it('a blocked tap costs exactly one life and activates the arrow', () => {
@@ -184,6 +191,44 @@ describe('stars', () => {
     const state = new GameState(fork);
     ['a', 'b', 'c'].forEach((id) => state.tryMove(id));
     expect(state.snapshot()).toMatchObject({ status: 'won', mistakes: 2, stars: 1 });
+  });
+});
+
+describe('one-life levels', () => {
+  const oneLife: LevelData = { ...fork, id: 4, lives: 1 };
+
+  it('start with one heart: the first mistake ends the attempt', () => {
+    const state = new GameState(oneLife);
+    expect(state.snapshot()).toMatchObject({ lives: 1 });
+    expect(state.maxLives).toBe(1);
+    state.tryMove('a');
+    expect(state.snapshot()).toMatchObject({ lives: 0, mistakes: 1, status: 'failed', stars: 0 });
+  });
+
+  it('a flawless clear is still 3 stars; continuing after the mistake (ad) finishes with 2', () => {
+    const flawless = new GameState(oneLife);
+    ['c', 'a', 'b'].forEach((id) => flawless.tryMove(id));
+    expect(flawless.snapshot()).toMatchObject({ won: true, stars: 3 });
+
+    const continued = new GameState(oneLife);
+    continued.tryMove('a');
+    expect(continued.revive()).toBe(true);
+    expect(continued.snapshot()).toMatchObject({ status: 'playing', lives: 1 });
+    ['c', 'b'].forEach((id) => continued.tryMove(id));
+    expect(continued.snapshot()).toMatchObject({ won: true, mistakes: 1, stars: 2 });
+  });
+
+  it('switching levels sets the lives each level starts with', () => {
+    const state = new GameState(fork);
+    state.load(oneLife);
+    expect(state.snapshot().lives).toBe(1);
+    state.load(fork);
+    expect(state.snapshot().lives).toBe(STARTING_LIVES);
+  });
+
+  it('a simulation override still wins over the level (difficulty analysis)', () => {
+    const state = new GameState(oneLife, { startingLives: 50 });
+    expect(state.snapshot().lives).toBe(50);
   });
 });
 

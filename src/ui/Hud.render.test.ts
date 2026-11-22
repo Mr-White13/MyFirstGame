@@ -92,6 +92,19 @@ describe('Hud render (golden)', () => {
 });
 
 describe('Hud markup coupling', () => {
+  it('a one-life level shows a single heart and ONE LIFE under the title; other levels and challenges show three', () => {
+    const hud = new Hud((id) => (id === 105 ? { lives: 1 } : undefined));
+    const name = byId('hud-name');
+    const visibleHearts = () => byId('hud-hearts').children.filter((h) => !h.classList.contains('heart--absent')).length;
+    hud.update(snapshot({ levelId: 105, lives: 1 }));
+    expect([visibleHearts(), name.hidden, name.textContent, name.classList.contains('hud__name--one-life')]).toEqual([1, false, 'ONE LIFE', true]);
+    hud.update(snapshot({ levelId: 106 }));
+    expect([visibleHearts(), name.hidden]).toEqual([3, true]);
+    hud.setChallenge(CHALLENGE);
+    hud.update(snapshot({ levelId: 105 }));
+    expect(visibleHearts()).toBe(3);
+  });
+
   it('writes "/N" into the text node after the energy counter', () => {
     const hud = new Hud();
     const wrap = byId('hud-energy-wrap');

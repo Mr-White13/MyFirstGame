@@ -21,12 +21,12 @@ describe('testing flag: all levels playable', () => {
     expect(testUnlockEnabled({ DEV: false, PROD: true, VITE_UNLOCK_ALL_LEVELS: '1' })).toBe(true);
   });
 
-  it('is on in the test (development) build and opens every level (all 100)', () => {
+  it('is on in the test (development) build and opens every level (all 300)', () => {
     expect(UNLOCK_ALL_LEVELS_FOR_TESTING).toBe(true);
     for (const level of LEVELS) expect(canPlayLevel(fresh, level.id, LEVELS.length)).toBe(true);
     expect(canPlayLevel(fresh, 0, LEVELS.length)).toBe(false);
-    expect(LEVELS.length).toBe(100);
-    expect(canPlayLevel(fresh, 101, LEVELS.length)).toBe(false);
+    expect(LEVELS.length).toBe(300);
+    expect(canPlayLevel(fresh, 301, LEVELS.length)).toBe(false);
   });
 
   it('with the flag off, the normal unlock rules apply unchanged', () => {
